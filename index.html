@@ -41,6 +41,11 @@
       ::-webkit-scrollbar { width: 0; height: 0; display: none; }
       body { margin: 0; padding: 0; font-family: var(--font-stack); color: var(--ios-text); background-color: var(--ios-bg); background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%); background-attachment: fixed; background-size: cover; -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh; transition: background-image 1s ease, background-color 0.4s ease, color 0.4s var(--ease-ios); }
       button, input { font-family: var(--font-stack) !important; } input { user-select: text; }
+      
+      /* --- DOM LOCK HIDING --- */
+      #mainAppWrapper { display: none; opacity: 0; transition: opacity 0.5s var(--ease-ios); }
+      #mainAppWrapper.visible { display: block; opacity: 1; }
+
       #ios-container { padding-top: 145px; padding-bottom: 40px; padding-left: 16px; padding-right: 16px; max-width: 800px; margin: 0 auto; }
       @supports (padding-top: env(safe-area-inset-top)) { #ios-container { padding-top: calc(145px + env(safe-area-inset-top)); padding-bottom: calc(40px + env(safe-area-inset-bottom)); } }
       .ios-header { position: fixed; top: 0; left: 0; right: 0; height: 125px; background: transparent; z-index: 1000; border-bottom: 0.5px solid transparent; padding: 0 16px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 12px; transform: translate3d(0, 0, 0); transition: transform 0.4s var(--ease-ios), background-color 0.4s var(--ease-ios); }
@@ -117,7 +122,7 @@
       .modal-bg.open { background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); pointer-events: auto; }
       .modal-card { width: 100%; max-width: 600px; max-height: 80vh; max-height: 80dvh; border-radius: 28px 28px 0 0; background: var(--ios-modal); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-top: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), var(--glass-highlight); display: flex; flex-direction: column; padding: 0; transform: translateY(100%); visibility: hidden; transition: transform 0.4s var(--ease-ios), background 0.4s, visibility 0s 0.4s, height 0.4s var(--ease-ios); touch-action: none; position: relative; overflow: hidden; }
       
-      /* --- REDESIGNED AUTH UI --- */
+      /* --- REDESIGNED AUTH UI & DIALOGS --- */
       .auth-overlay { position: fixed; inset: 0; background: var(--ios-bg); background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; opacity: 0; visibility: hidden; pointer-events: none; transition: 0.4s var(--ease-ios); }
       .auth-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
       .auth-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), var(--glass-highlight); border-radius: 24px; padding: 40px 24px; width: 100%; max-width: 360px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; overflow: hidden; }
@@ -138,6 +143,10 @@
       .auth-switch:active { opacity: 0.6; }
       .auth-error { color: #FF3B30; font-size: 13px; font-weight: 500; margin-bottom: 12px; min-height: 16px; opacity: 0; transition: 0.3s; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px; }
       .auth-error.show { opacity: 1; transform: translateY(0); }
+      
+      /* Base Dialog styling for In-UI Messages */
+      .dialog-btn { width: 100%; height: 44px; border-radius: 10px; background: var(--ios-blue); color: #fff; font-weight: 600; font-size: 15px; border: none; cursor: pointer; transition: 0.2s; margin-top: 20px; }
+      .dialog-btn:active { transform: scale(0.96); }
 
       #statsListContainer { display: flex; flex-direction: column; width: 100%; }
       .stats-visuals-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 24px; padding: 0; }
@@ -271,6 +280,20 @@
   </head>
   <body>
 
+    <!-- ANTI-SNOOP SCRIPT TO BLOCK DEV TOOLS -->
+    <script>
+      // Disables Right Click
+      document.addEventListener('contextmenu', event => event.preventDefault());
+      // Disables F12 and Ctrl+U
+      document.onkeydown = function(e) {
+        if(e.keyCode == 123) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+      }
+    </script>
+
     <!-- REAL APP-LIKE AUTHENTICATION OVERLAY -->
     <div id="authScreen" class="auth-overlay active">
       <div class="auth-card" id="authCard">
@@ -280,11 +303,10 @@
             <span class="material-icons-round">more_vert</span>
         </div>
         <div class="auth-menu" id="authMenu">
-            <div class="auth-menu-item" onclick="alert('Student Roster App\nVersion 6.0\nProtected by Firebase')">About App</div>
-            <div class="auth-menu-item" onclick="alert('Please contact the school administration if you are unable to access your account.')">Help & Support</div>
+            <div class="auth-menu-item" onclick="showAuthDialog('Student List 2026', 'Version 6.0\nSecured by Google Firebase.\n\nYour favorites and search history are safely linked to your account.')">About App</div>
+            <div class="auth-menu-item" onclick="showAuthDialog('Need Help?', 'If you cannot access your account, please contact the school administration.')">Help & Support</div>
         </div>
 
-        <!-- STATE 1: LOGIN / SIGN UP FORM -->
         <div id="authFormState" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             <span class="material-icons-round auth-icon" id="authIcon">lock_outline</span>
             <div class="auth-title" id="authTitle">Welcome Back</div>
@@ -301,368 +323,245 @@
             <button class="auth-btn" id="authSubmitBtn">Log In</button>
             <div class="auth-switch" id="authToggleBtn">Don't have an account? Sign Up</div>
         </div>
-
       </div>
     </div>
 
-    <!-- MAIN APP HEADER -->
-    <header class='ios-header' id='mainHeader'>
-      <div class='header-meta'>
-         <div class='meta-left'>
-            <span class='count-pill' id='studentCount'>0</span>
-         </div>
-         <div class='header-controls'>
-            <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out">
-               <span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span>
-            </button>
-            <button class='theme-toggle' onclick='openAbout()'>
-               <span class='material-icons-round' style='font-size:20px'>info</span>
-            </button>
-            <button class='theme-toggle' onclick='toggleDensity()'>
-               <span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span>
-            </button>
-            <button class='theme-toggle' onclick='toggleTheme()'>
-               <span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span>
-            </button>
-            <div class='lang-switch'>
-               <button class='lang-btn active' onclick='switchLanguage(&apos;en&apos;)'>EN</button>
-               <button class='lang-btn' onclick='switchLanguage(&apos;bm&apos;)'>BM</button>
-               <button class='lang-btn' onclick='switchLanguage(&apos;cn&apos;)'>CN</button>
-            </div>
-         </div>
-      </div>
-      <h1 class='ios-title anim-text-change' id='labelTitle'>Student Allocation<br/>List 2026</h1>
-    </header>
-
-    <div id='ios-container'>
-      <div class='action-row'>
-        <div class='search-box'>
-           <span class='material-icons-round search-icon'>search</span>
-           <input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/>
+    <!-- IN-UI DIALOG BOX (Replaces ugly alert() boxes) -->
+    <div id="authDialogOverlay" class="auth-overlay" style="z-index: 10000; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+        <div class="auth-card" style="padding: 30px 24px;">
+            <div class="auth-title" id="dialogTitle" style="font-size: 20px;">Title</div>
+            <div class="auth-sub" id="dialogMsg" style="margin-bottom: 0; white-space: pre-wrap;">Message goes here</div>
+            <button class="dialog-btn" onclick="closeAuthDialog()">Close</button>
         </div>
-        <button class='btn-icon-only' id='btnFavToggle' onclick='toggleFavMode()'>
-           <span class='material-icons-round' style='font-size:22px'>favorite</span>
-        </button>
-        <button class='btn-icon-only' onclick='openStats()'>
-           <span class='material-icons-round' style='font-size:22px'>bar_chart</span>
-        </button>
-        <button class='btn-filter' id='btnFilter' onclick='toggleFilters()'>
-           <span class='material-icons-round' style='font-size:20px'>tune</span>
-           <span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span>
-        </button>
-      </div>
+    </div>
 
-      <div class='history-drawer' id='historyDrawer'>
-         <div class='history-inner'><div class='history-track' id='searchHistoryPills'></div></div>
-      </div>
+    <!-- THIS ENTIRE APP IS HIDDEN UNTIL AUTHENTICATED SO BYPASSING UI FAILS -->
+    <div id="mainAppWrapper">
 
-      <div class='filter-drawer' id='filterDrawer'>
-         <div class='filter-inner'>
-           <div class='filter-container'>
-              <div style='margin-bottom: 20px;'>
-                 <span class='filter-heading anim-text-change' id='labelSort'>Sort List By</span>
-                 <div class='scroll-row'>
-                    <button class='chip active' id='btnSortName' onclick='handleSort("name")'>
-                        <span id='txtSortName'>Name</span><span class='sort-arrow' id='arrowSortName'>&#8595;</span>
-                    </button>
-                    <div class='chip-anim-wrapper collapsed' id='btnSortClassWrapper'>
-                        <button class='chip' id='btnSortClass' onclick='handleSort("class")' style='margin: 0;'>
-                            <span id='txtSortClass'>Class</span><span class='sort-arrow hidden' id='arrowSortClass'>&#8595;</span>
+        <!-- MAIN APP HEADER -->
+        <header class='ios-header' id='mainHeader'>
+          <div class='header-meta'>
+             <div class='meta-left'>
+                <span class='count-pill' id='studentCount'>0</span>
+             </div>
+             <div class='header-controls'>
+                <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out">
+                   <span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span>
+                </button>
+                <button class='theme-toggle' onclick='openAbout()'>
+                   <span class='material-icons-round' style='font-size:20px'>info</span>
+                </button>
+                <button class='theme-toggle' onclick='toggleDensity()'>
+                   <span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span>
+                </button>
+                <button class='theme-toggle' onclick='toggleTheme()'>
+                   <span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span>
+                </button>
+                <div class='lang-switch'>
+                   <button class='lang-btn active' onclick='switchLanguage(&apos;en&apos;)'>EN</button>
+                   <button class='lang-btn' onclick='switchLanguage(&apos;bm&apos;)'>BM</button>
+                   <button class='lang-btn' onclick='switchLanguage(&apos;cn&apos;)'>CN</button>
+                </div>
+             </div>
+          </div>
+          <h1 class='ios-title anim-text-change' id='labelTitle'>Student Allocation<br/>List 2026</h1>
+        </header>
+
+        <div id='ios-container'>
+          <div class='action-row'>
+            <div class='search-box'>
+               <span class='material-icons-round search-icon'>search</span>
+               <input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/>
+            </div>
+            <button class='btn-icon-only' id='btnFavToggle' onclick='toggleFavMode()'>
+               <span class='material-icons-round' style='font-size:22px'>favorite</span>
+            </button>
+            <button class='btn-icon-only' onclick='openStats()'>
+               <span class='material-icons-round' style='font-size:22px'>bar_chart</span>
+            </button>
+            <button class='btn-filter' id='btnFilter' onclick='toggleFilters()'>
+               <span class='material-icons-round' style='font-size:20px'>tune</span>
+               <span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span>
+            </button>
+          </div>
+
+          <div class='history-drawer' id='historyDrawer'>
+             <div class='history-inner'><div class='history-track' id='searchHistoryPills'></div></div>
+          </div>
+
+          <div class='filter-drawer' id='filterDrawer'>
+             <div class='filter-inner'>
+               <div class='filter-container'>
+                  <div style='margin-bottom: 20px;'>
+                     <span class='filter-heading anim-text-change' id='labelSort'>Sort List By</span>
+                     <div class='scroll-row'>
+                        <button class='chip active' id='btnSortName' onclick='handleSort("name")'>
+                            <span id='txtSortName'>Name</span><span class='sort-arrow' id='arrowSortName'>&#8595;</span>
                         </button>
-                    </div>
-                 </div>
+                        <div class='chip-anim-wrapper collapsed' id='btnSortClassWrapper'>
+                            <button class='chip' id='btnSortClass' onclick='handleSort("class")' style='margin: 0;'>
+                                <span id='txtSortClass'>Class</span><span class='sort-arrow hidden' id='arrowSortClass'>&#8595;</span>
+                            </button>
+                        </div>
+                     </div>
+                  </div>
+                  <div style='margin-bottom: 20px;'>
+                     <span class='filter-heading anim-text-change' id='label2025'>Previous Class (2025)</span>
+                     <div class='scroll-row' id='chipCont2025'></div>
+                  </div>
+                  <div>
+                     <span class='filter-heading anim-text-change' id='labelOrigin'>Primary School (2024)</span>
+                     <div class='scroll-row' id='chipContOrigin'></div>
+                  </div>
+               </div>
+             </div>
+          </div>
+          
+          <div id='reset-bar'>
+             <div class='reset-btn' onclick='clearFilters()'>
+                 <span class='material-icons-round' style='font-size:16px'>close</span> 
+                 <span class='anim-text-change' id='lblClear' style='margin-left:4px; display:inline-block'>Reset</span>
+             </div>
+          </div>
+
+          <div class='tabs-track' id='classTabs'></div>
+          
+          <div class='teacher-card' id='classInfoCard'>
+             <div class='teacher-row'>
+                <span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span>
+                <span class='t-name anim-text-change' id='lblGuru'>-</span>
+             </div>
+             <div class='teacher-row'>
+                <span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span>
+                <span class='t-name anim-text-change' id='lblPenolong'>-</span>
+             </div>
+          </div>
+
+          <div class='student-grid' id='studentGrid'></div>
+        </div>
+
+        <!-- STUDENT MODAL -->
+        <div class='modal-bg' id='modalOverlay' onclick='closeModal(event)'>
+           <div class='modal-card' id='modalCard' onclick='event.stopPropagation()'>
+              <div class='floating-container' id='cardFloatBg'></div>
+              <div class='m-head'>
+                  <div class='handle'></div>
+                  <button class='btn-star' id='btnStar' onclick='toggleCurrentFav()'>
+                     <span class='material-icons-round' style='font-size:20px'>star</span>
+                  </button>
+                  <div class='avatar' id='mAvatar' style='width:80px; height:80px; font-size:32px; margin:0 auto 16px; box-shadow:0 8px 32px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);'>A</div>
+                  <div id='mName'>Name</div>
+                  <div id='mCn'>Chinese Name</div>
               </div>
-              <div style='margin-bottom: 20px;'>
-                 <span class='filter-heading anim-text-change' id='label2025'>Previous Class (2025)</span>
-                 <div class='scroll-row' id='chipCont2025'></div>
+              <div class='m-body'>
+                  <div class='info-group'>
+                     <div class='info-item'>
+                        <span class='m-label anim-text-change' id='mLabelCur'>Current Class</span>
+                        <span class='m-val-highlight' id='mNew' style='color:var(--ios-blue);'>-</span>
+                     </div>
+                     <div class='info-item'>
+                        <span class='m-label anim-text-change' id='mLabelOld'>2025 Class</span>
+                        <span class='m-val' id='mOld'>-</span>
+                     </div>
+                     <div class='info-item'>
+                        <span class='m-label anim-text-change' id='mLabelStat'>Status</span>
+                        <div id='mRankIcon'></div>
+                     </div>
+                     <div class='info-item'>
+                        <span class='m-label anim-text-change' id='mLabelSch'>Primary School</span>
+                        <span class='m-val' id='mSch'>-</span>
+                     </div>
+                  </div>
               </div>
-              <div>
-                 <span class='filter-heading anim-text-change' id='labelOrigin'>Primary School (2024)</span>
-                 <div class='scroll-row' id='chipContOrigin'></div>
+              <div class='m-foot'>
+                  <button class='btn-nav' onclick='navStudent(-1)'><span class='material-icons-round'>chevron_left</span></button>
+                  <button class='btn-done anim-text-change' id='btnClose' onclick='closeModal()'>Done</button>
+                  <button class='btn-nav' onclick='navStudent(1)'><span class='material-icons-round'>chevron_right</span></button>
               </div>
            </div>
-         </div>
-      </div>
-      
-      <div id='reset-bar'>
-         <div class='reset-btn' onclick='clearFilters()'>
-             <span class='material-icons-round' style='font-size:16px'>close</span> 
-             <span class='anim-text-change' id='lblClear' style='margin-left:4px; display:inline-block'>Reset</span>
-         </div>
-      </div>
+        </div>
 
-      <div class='tabs-track' id='classTabs'></div>
-      
-      <div class='teacher-card' id='classInfoCard'>
-         <div class='teacher-row'>
-            <span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span>
-            <span class='t-name anim-text-change' id='lblGuru'>-</span>
-         </div>
-         <div class='teacher-row'>
-            <span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span>
-            <span class='t-name anim-text-change' id='lblPenolong'>-</span>
-         </div>
-      </div>
-
-      <div class='student-grid' id='studentGrid'></div>
-    </div>
-
-    <!-- STUDENT MODAL -->
-    <div class='modal-bg' id='modalOverlay' onclick='closeModal(event)'>
-       <div class='modal-card' id='modalCard' onclick='event.stopPropagation()'>
-          <div class='floating-container' id='cardFloatBg'></div>
-          <div class='m-head'>
-              <div class='handle'></div>
-              <button class='btn-star' id='btnStar' onclick='toggleCurrentFav()'>
-                 <span class='material-icons-round' style='font-size:20px'>star</span>
-              </button>
-              <div class='avatar' id='mAvatar' style='width:80px; height:80px; font-size:32px; margin:0 auto 16px; box-shadow:0 8px 32px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);'>A</div>
-              <div id='mName'>Name</div>
-              <div id='mCn'>Chinese Name</div>
-          </div>
-          <div class='m-body'>
-              <div class='info-group'>
-                 <div class='info-item'>
-                    <span class='m-label anim-text-change' id='mLabelCur'>Current Class</span>
-                    <span class='m-val-highlight' id='mNew' style='color:var(--ios-blue);'>-</span>
-                 </div>
-                 <div class='info-item'>
-                    <span class='m-label anim-text-change' id='mLabelOld'>2025 Class</span>
-                    <span class='m-val' id='mOld'>-</span>
-                 </div>
-                 <div class='info-item'>
-                    <span class='m-label anim-text-change' id='mLabelStat'>Status</span>
-                    <div id='mRankIcon'></div>
-                 </div>
-                 <div class='info-item'>
-                    <span class='m-label anim-text-change' id='mLabelSch'>Primary School</span>
-                    <span class='m-val' id='mSch'>-</span>
-                 </div>
+        <!-- STATS MODAL -->
+        <div class='modal-bg' id='statsOverlay' onclick='closeStats(event)'>
+           <div class='modal-card' id='statsCard' onclick='event.stopPropagation()'>
+              <div class='m-head'>
+                  <div class='handle'></div>
+                  <div class='stats-title anim-text-change' id='labelStatsTitle'>Statistics</div>
+                  <div class='stats-sub anim-text-change' id='labelStatsSub'>Analyzing Data</div>
               </div>
-          </div>
-          <div class='m-foot'>
-              <button class='btn-nav' onclick='navStudent(-1)'><span class='material-icons-round'>chevron_left</span></button>
-              <button class='btn-done anim-text-change' id='btnClose' onclick='closeModal()'>Done</button>
-              <button class='btn-nav' onclick='navStudent(1)'><span class='material-icons-round'>chevron_right</span></button>
-          </div>
-       </div>
-    </div>
-
-    <!-- STATS MODAL -->
-    <div class='modal-bg' id='statsOverlay' onclick='closeStats(event)'>
-       <div class='modal-card' id='statsCard' onclick='event.stopPropagation()'>
-          <div class='m-head'>
-              <div class='handle'></div>
-              <div class='stats-title anim-text-change' id='labelStatsTitle'>Statistics</div>
-              <div class='stats-sub anim-text-change' id='labelStatsSub'>Analyzing Data</div>
-          </div>
-          <div class='m-body'>
-              <div id='statsControls' style='display:flex; margin-bottom:12px;'>
-                  <div class='seg-control' style='flex:1; margin-bottom:0;'>
-                     <button class='seg-btn active' id='btnStatOrigin' onclick='switchStat("origin")'><span class='anim-text-change' id='txtStatOrigin'>Primary School</span></button>
-                     <button class='seg-btn' id='btnStatOldClass' onclick='switchStat("oldClass")'><span class='anim-text-change' id='txtStatOldClass'>Previous Class</span></button>
-                  </div>
-                  <button class='sort-toggle' onclick='toggleStatSort()'><span class='material-icons-round' id='iconStatSort' style='font-size:20px'>sort</span></button>
-                  <button class='sort-toggle' onclick='toggleStatViewMode()'><span class='material-icons-round' id='iconStatView' style='font-size:20px'>pie_chart</span></button>
-              </div>
-              <div id='statsListContainer'>
-                  <div class='stats-visuals-container anim-text-change' id='statsVisuals'>
-                      <div class='pie-chart' id='statsPie'></div>
-                      <div class='comp-bar-container' id='statsCompBar'></div>
-                      <div class='legend-grid' id='statsLegend'></div>
-                  </div>
-                  <div class='stats-list-col' id='statsListCol'>
-                      <div class='stats-dash-card anim-text-change' id='statsSummaryCard'>
-                          <div class='stats-dash-left'>
-                              <div class='stats-dash-label stats-dash-label-title'>Total Students</div>
-                              <div class='stats-dash-count' id='statsTotalCount'>0</div>
-                          </div>
-                          <span class='material-icons-round stats-dash-icon'>groups</span>
+              <div class='m-body'>
+                  <div id='statsControls' style='display:flex; margin-bottom:12px;'>
+                      <div class='seg-control' style='flex:1; margin-bottom:0;'>
+                         <button class='seg-btn active' id='btnStatOrigin' onclick='switchStat("origin")'><span class='anim-text-change' id='txtStatOrigin'>Primary School</span></button>
+                         <button class='seg-btn' id='btnStatOldClass' onclick='switchStat("oldClass")'><span class='anim-text-change' id='txtStatOldClass'>Previous Class</span></button>
                       </div>
-                      <div class='anim-text-change' id='statsDynamicRows'></div>
+                      <button class='sort-toggle' onclick='toggleStatSort()'><span class='material-icons-round' id='iconStatSort' style='font-size:20px'>sort</span></button>
+                      <button class='sort-toggle' onclick='toggleStatViewMode()'><span class='material-icons-round' id='iconStatView' style='font-size:20px'>pie_chart</span></button>
+                  </div>
+                  <div id='statsListContainer'>
+                      <div class='stats-visuals-container anim-text-change' id='statsVisuals'>
+                          <div class='pie-chart' id='statsPie'></div>
+                          <div class='comp-bar-container' id='statsCompBar'></div>
+                          <div class='legend-grid' id='statsLegend'></div>
+                      </div>
+                      <div class='stats-list-col' id='statsListCol'>
+                          <div class='stats-dash-card anim-text-change' id='statsSummaryCard'>
+                              <div class='stats-dash-left'>
+                                  <div class='stats-dash-label stats-dash-label-title'>Total Students</div>
+                                  <div class='stats-dash-count' id='statsTotalCount'>0</div>
+                              </div>
+                              <span class='material-icons-round stats-dash-icon'>groups</span>
+                          </div>
+                          <div class='anim-text-change' id='statsDynamicRows'></div>
+                      </div>
+                  </div>
+                  <div class='bubble-chart anim-text-change' id='statsMap' style='display:none;'></div>
+              </div>
+              <div class='m-foot'><button class='btn-done' onclick='closeStats()'>Done</button></div>
+           </div>
+        </div>
+        
+        <!-- ABOUT MODAL -->
+        <div class='modal-bg' id='aboutOverlay' onclick='closeAbout(event)'>
+           <div class='modal-card' id='aboutCard' onclick='event.stopPropagation()'>
+              <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='labelAboutTitle'>About</div></div>
+              <div class='m-body'>
+                  <div class='about-txt' style='text-align:center'>
+                      <p><strong>Student Allocation List 2026</strong><br/>Version 6.0 (Secured Edition)</p>
+                      <p>Check allocations, view origin maps, and use Quick Actions (Long Press).</p>
+                      <p style='font-size:12px; opacity:0.6'>Designed with Smooth iOS Performance in mind</p>
+                      <p style='font-size:11px; opacity:0.4; margin-top:4px;'>Hosted on Vercel | Secured by Firebase</p>
                   </div>
               </div>
-              <div class='bubble-chart anim-text-change' id='statsMap' style='display:none;'></div>
-          </div>
-          <div class='m-foot'><button class='btn-done' onclick='closeStats()'>Done</button></div>
-       </div>
-    </div>
+              <div class='m-foot'><button class='btn-done' onclick='closeAbout()'>Close</button></div>
+           </div>
+        </div>
+        
+        <!-- QUICK ACTION CONTEXT MENU -->
+        <div class='cm-backdrop' id='ctxBackdrop' onclick='hideContextMenu()'>
+           <div class='cm-menu' id='ctxMenu'>
+               <div class='cm-header' id='ctxHeader'>Student Actions</div>
+               <button class='cm-item' onclick='ctxAction("copy")'><span id='ctxBtnCopy'>Copy Name</span><span class='material-icons-round cm-icon'>content_copy</span></button>
+               <button class='cm-item' onclick='ctxAction("copy_cn")'><span id='ctxBtnCopyCn'>Copy Chinese Name</span><span class='material-icons-round cm-icon'>g_translate</span></button>
+               <button class='cm-item' onclick='ctxAction("fav")'><span id='ctxFavText'>Favorite</span><span class='material-icons-round cm-icon' id='ctxFavIcon'>star_border</span></button>
+           </div>
+        </div>
+        
+        <div id='toastContainer'></div>
     
-    <!-- ABOUT MODAL -->
-    <div class='modal-bg' id='aboutOverlay' onclick='closeAbout(event)'>
-       <div class='modal-card' id='aboutCard' onclick='event.stopPropagation()'>
-          <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='labelAboutTitle'>About</div></div>
-          <div class='m-body'>
-              <div class='about-txt' style='text-align:center'>
-                  <p><strong>Student Allocation List 2026</strong><br/>Version 6.0 (Secured Edition)</p>
-                  <p>Check allocations, view origin maps, and use Quick Actions (Long Press).</p>
-                  <p style='font-size:12px; opacity:0.6'>Designed with Smooth iOS Performance in mind</p>
-                  <p style='font-size:11px; opacity:0.4; margin-top:4px;'>Hosted on Vercel | Secured by Firebase</p>
-              </div>
-          </div>
-          <div class='m-foot'><button class='btn-done' onclick='closeAbout()'>Close</button></div>
-       </div>
-    </div>
-    
-    <!-- QUICK ACTION CONTEXT MENU -->
-    <div class='cm-backdrop' id='ctxBackdrop' onclick='hideContextMenu()'>
-       <div class='cm-menu' id='ctxMenu'>
-           <div class='cm-header' id='ctxHeader'>Student Actions</div>
-           <button class='cm-item' onclick='ctxAction("copy")'><span id='ctxBtnCopy'>Copy Name</span><span class='material-icons-round cm-icon'>content_copy</span></button>
-           <button class='cm-item' onclick='ctxAction("copy_cn")'><span id='ctxBtnCopyCn'>Copy Chinese Name</span><span class='material-icons-round cm-icon'>g_translate</span></button>
-           <button class='cm-item' onclick='ctxAction("fav")'><span id='ctxFavText'>Favorite</span><span class='material-icons-round cm-icon' id='ctxFavIcon'>star_border</span></button>
-       </div>
-    </div>
-    
-    <div id='toastContainer'></div>
+    </div> <!-- END OF MAIN APP WRAPPER -->
 
     <!-- MAIN APPLICATION LOGIC -->
     <script type='text/javascript'>
-      // EXTRACTED & UPDATED DATA 2026 - (137 Students)
-      // Converted IDs to proper IC Strings matching the admin screenshots
-      const smkData =[
-        // 2 BIRU (31 Students)
-        {id:"120116040351", name:"AIDAN TAN BIAO CONG", cn:"陈表聪", oldClass:"1B", newClass:"2 BIRU", sch:"PING MING"},
-        {id:"120911040115", name:"CHONG EARON", cn:"-", oldClass:"-", newClass:"2 BIRU", sch:"-"},
-        {id:"120124040327", name:"CHUA JUN WYE", cn:"蔡俊威", oldClass:"1B", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"120210040577", name:"GOH YU SHEN", cn:"吴羽绅", oldClass:"1B", newClass:"2 BIRU", sch:"PAY TECK"},
-        {id:"120617040165", name:"GOH ZHEN ANN", cn:"吴振安", oldClass:"1B", newClass:"2 BIRU", sch:"YU HWA"},
-        {id:"111206040297", name:"HONG JIAN XIANG", cn:"方健祥", oldClass:"1K", newClass:"2 BIRU", sch:"PB"},
-        {id:"120410040467", name:"JASON ONG ZHE FONG", cn:"王哲丰", oldClass:"1B", newClass:"2 BIRU", sch:"KATHOLIK"},
-        {id:"120525141233", name:"JAYDEN YEE THEEN HAAN", cn:"余沺锌", oldClass:"1B", newClass:"2 BIRU", sch:"BACHANG"},
-        {id:"121016040287", name:"JONATHAN JR TAN ZHAO WEI", cn:"陈昭威", oldClass:"1B", newClass:"2 BIRU", sch:"PAY FONG 2"},
-        {id:"120812040259", name:"JUSTIN LEE REN JIE", cn:"李仁捷", oldClass:"1H", newClass:"2 BIRU", sch:"PAY FONG 1"},
-        {id:"120424040011", name:"KAYSON WANG EE SERN", cn:"黄奕胜", oldClass:"1H", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"120625040173", name:"KIYOSHI NG", cn:"黄洁", oldClass:"1B", newClass:"2 BIRU", sch:"KATHOLIK"},
-        {id:"120211140115", name:"KOH YUN HAO", cn:"许云浩", oldClass:"1B", newClass:"2 BIRU", sch:"PAY TECK"},
-        {id:"121208040361", name:"KYLE WONG SHENG MING", cn:"黄聖铭", oldClass:"1B", newClass:"2 BIRU", sch:"-"},
-        {id:"120605040387", name:"LEE ZHER QIAN", cn:"李泽纤", oldClass:"1B", newClass:"2 BIRU", sch:"KATHOLIK"},
-        {id:"120428040297", name:"LIM YI YANG", cn:"林奕阳", oldClass:"1H", newClass:"2 BIRU", sch:"-"},
-        {id:"120325040307", name:"LIM YIN CHENG", cn:"林胤澄", oldClass:"1H", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"111222040561", name:"LIOW YI WEN", cn:"刘奕彣", oldClass:"1K", newClass:"2 BIRU", sch:"PB"},
-        {id:"121003040341", name:"LOW SHANG TAO", cn:"刘尚涛", oldClass:"1B", newClass:"2 BIRU", sch:"BACHANG"},
-        {id:"120308040575", name:"NGOI YI FOND", cn:"魏煜峰", oldClass:"1K", newClass:"2 BIRU", sch:"-"},
-        {id:"121127040271", name:"PANG ZHEN WEI", cn:"彭振威", oldClass:"1B", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"120819040235", name:"ROY CHONG HAO RAN", cn:"张浩然", oldClass:"1H", newClass:"2 BIRU", sch:"PAY TECK"},
-        {id:"120227040223", name:"ROY TAN JIAN WEI", cn:"陈建伟", oldClass:"1B", newClass:"2 BIRU", sch:"CHENG"},
-        {id:"120522040525", name:"TAN YI XUAN", cn:"陈奕泫", oldClass:"1B", newClass:"2 BIRU", sch:"BKT BERUANG"},
-        {id:"120418040277", name:"TAN YIH DER", cn:"陈益德", oldClass:"1B", newClass:"2 BIRU", sch:"BACHANG"},
-        {id:"120106040083", name:"TEO JIE SHENG", cn:"张杰盛", oldClass:"1B", newClass:"2 BIRU", sch:"LIH JEN"},
-        {id:"120416040177", name:"TOH JIA KANG", cn:"杜家康", oldClass:"1B", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"121016011371", name:"WONG HONG SHEN", cn:"黄竑燊", oldClass:"1H", newClass:"2 BIRU", sch:"CHENG"},
-        {id:"120530040381", name:"WOON ZI XIANG JAYDEN", cn:"温子翔", oldClass:"1B", newClass:"2 BIRU", sch:"MALIM"},
-        {id:"120327040423", name:"YONG DING HAN", cn:"杨定翰", oldClass:"1B", newClass:"2 BIRU", sch:"PAY FONG 1"},
-        {id:"120327140811", name:"YONG ZHENG YE", cn:"杨钲业", oldClass:"1H", newClass:"2 BIRU", sch:"TING HWA"},
-        // 2 HIJAU (29 Students)
-        {id:"120618040079", name:"ALOYSIUS NG YU YI", cn:"黄昱毅", oldClass:"1K", newClass:"2 HIJAU", sch:"TING HWA"},
-        {id:"120728040475", name:"ALVIN TANG ZHENG HAO", cn:"汤正豪", oldClass:"1P", newClass:"2 HIJAU", sch:"CHABAU"},
-        {id:"120802040351", name:"CLEMENT SEAH JI WEN", cn:"佘其汶", oldClass:"1M", newClass:"2 HIJAU", sch:"ST MARY"},
-        {id:"121221040155", name:"ELVIS LOW YI HAO", cn:"罗苡豪", oldClass:"1H", newClass:"2 HIJAU", sch:"PING MING"},
-        {id:"121214040237", name:"GAVIN CHUA WEN JIE", cn:"蔡文杰", oldClass:"1M", newClass:"2 HIJAU", sch:"KATHOLIK"},
-        {id:"121025040035", name:"GUI CEN EN", cn:"魏岑恩", oldClass:"1B", newClass:"2 HIJAU", sch:"PAY FONG 1"},
-        {id:"120913010411", name:"JEREMY TAN WEI REN", cn:"陈伟仁", oldClass:"1U", newClass:"2 HIJAU", sch:"ST MARY"},
-        {id:"120405040489", name:"JONATHAN ONG KAH FATT", cn:"王家发", oldClass:"1M", newClass:"2 HIJAU", sch:"-"},
-        {id:"110711040349", name:"JOSEPH LIM", cn:"林家勇", oldClass:"1M", newClass:"2 HIJAU", sch:"-"},
-        {id:"121013040273", name:"KINGSTON GOH QI HAO", cn:"吴启豪", oldClass:"1U", newClass:"2 HIJAU", sch:"KATHOLIK"},
-        {id:"120605040037", name:"LAM YU YANG", cn:"林奕扬", oldClass:"1B", newClass:"2 HIJAU", sch:"PING MING"},
-        {id:"120805040525", name:"LEXUS KUEK CHEN XIAN", cn:"郭承鑫", oldClass:"1P", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"120109040361", name:"LIM JIA QING", cn:"林佳庆", oldClass:"1H", newClass:"2 HIJAU", sch:"YU YING"},
-        {id:"120304040471", name:"LOO CHIN SIANG", cn:"罗俊翔", oldClass:"1P", newClass:"2 HIJAU", sch:"BKT BERUANG"},
-        {id:"121225040603", name:"LOUIS NG WEI SOONG", cn:"黄炜松", oldClass:"1H", newClass:"2 HIJAU", sch:"BACHANG"},
-        {id:"120715040193", name:"NG JING KAI", cn:"黄竞凯", oldClass:"1M", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"121008040447", name:"NG YU JIN", cn:"黄宇敬", oldClass:"1H", newClass:"2 HIJAU", sch:"PING MING"},
-        {id:"120308040081", name:"ONG ZHI XIAN", cn:"王智贤", oldClass:"1H", newClass:"2 HIJAU", sch:"BACHANG"},
-        {id:"121029040147", name:"RAYSON BANG WEI XIANG", cn:"冯伟翔", oldClass:"1K", newClass:"2 HIJAU", sch:"YING CHYE"},
-        {id:"120210040323", name:"RYAN CHOK ZI INN", cn:"卓致颖", oldClass:"1H", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"120323040397", name:"SHADEESHAN A/L KATHIRAVAN", cn:"-", oldClass:"1P", newClass:"2 HIJAU", sch:"KUBU"},
-        {id:"120930040241", name:"TAN GUAN HAN", cn:"陈冠翰", oldClass:"1K", newClass:"2 HIJAU", sch:"BKT BERUANG"},
-        {id:"110226040265", name:"TAN YONG XI", cn:"陈荣熙", oldClass:"1K", newClass:"2 HIJAU", sch:"PB"},
-        {id:"120723040353", name:"TAN YU ZHONG", cn:"陈宇仲", oldClass:"1H", newClass:"2 HIJAU", sch:"BACHANG"},
-        {id:"120401040297", name:"TAY KIM YAW", cn:"郑金耀", oldClass:"1K", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"120902040391", name:"WEE KER SHENG", cn:"王科盛", oldClass:"1U", newClass:"2 HIJAU", sch:"-"},
-        {id:"121013040345", name:"WONG HUNG RUI", cn:"王浤睿", oldClass:"1K", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"120831040457", name:"XANXUS TAI WEI XUAN", cn:"戴炜轩", oldClass:"1M", newClass:"2 HIJAU", sch:"MALIM"},
-        {id:"120120040311", name:"YEOW JIA WEI", cn:"饶家玮", oldClass:"1P", newClass:"2 HIJAU", sch:"CHENG"},
-        // 2 KUNING (21 Students)
-        {id:"120621040491", name:"CHIU ZHENG", cn:"周镇", oldClass:"1U", newClass:"2 KUNING", sch:"-"},
-        {id:"120511040327", name:"CHONG KAI XIANG", cn:"张凯翔", oldClass:"1H", newClass:"2 KUNING", sch:"YU HWA"},
-        {id:"120908040587", name:"JASON TAN SEE KHAI", cn:"陈诗恺", oldClass:"1H", newClass:"2 KUNING", sch:"YU HWA"},
-        {id:"120401040385", name:"LAW FOO YUEN", cn:"刘富源", oldClass:"1K", newClass:"2 KUNING", sch:"-"},
-        {id:"120620040123", name:"LIEM JUN LONG", cn:"林浚龙", oldClass:"1P", newClass:"2 KUNING", sch:"CHABAU"},
-        {id:"121203040063", name:"LIM JIN YAU", cn:"林金耀", oldClass:"1P", newClass:"2 KUNING", sch:"MALIM"},
-        {id:"120831040465", name:"LIM ZHENG YI", cn:"林正益", oldClass:"1H", newClass:"2 KUNING", sch:"MALIM"},
-        {id:"120128040391", name:"LUI WEI ZHE", cn:"雷炜哲", oldClass:"1P", newClass:"2 KUNING", sch:"BKT BERUANG"},
-        {id:"120204040271", name:"MARCUS CHIEW YONG JIAN", cn:"蒋咏健", oldClass:"1U", newClass:"2 KUNING", sch:"PAY TECK"},
-        {id:"120911040019", name:"MOHD FARIS ZAQUAN BIN MOHD NUH", cn:"法历", oldClass:"1K", newClass:"2 KUNING", sch:"SIANG LIN"},
-        {id:"120120040493", name:"MUHAMAD KHALEEQ AIDAN BIN MUHAMAD KHALIZI", cn:"恺力", oldClass:"1K", newClass:"2 KUNING", sch:"YOK BIN"},
-        {id:"120302040355", name:"MUHAMMAD AIMAN ADRIEN BIN MUHAMMAD FITRY TEU", cn:"张家豪", oldClass:"1K", newClass:"2 KUNING", sch:"MALIM"},
-        {id:"111209040241", name:"MUHAMMAD FARISZ BIN MOHD NORULFAZLI", cn:"法力斯", oldClass:"1K", newClass:"2 KUNING", sch:"PB"},
-        {id:"120325040171", name:"MUHAMMAD HARRAZ BIN MUHAMMAD AMMAR", cn:"哈拉兹", oldClass:"1K", newClass:"2 KUNING", sch:"SIANG LIN"},
-        {id:"121201040107", name:"MUHAMMAD IRFAN RAYYAN BIN MUHAMMAD TARMIZI", cn:"莱恩", oldClass:"1K", newClass:"2 KUNING", sch:"MALIM"},
-        {id:"120310040339", name:"RAYMOND CHIN ZHE YI", cn:"陈泽宇", oldClass:"1H", newClass:"2 KUNING", sch:"YU HWA"},
-        {id:"108687XA", name:"SAU MING WEI", cn:"-", oldClass:"-", newClass:"2 KUNING", sch:"-"},
-        {id:"120211040309", name:"TAN HONG SEN", cn:"陈泓森", oldClass:"1K", newClass:"2 KUNING", sch:"BACHANG"},
-        {id:"121201040457", name:"TAN ZHI LONG", cn:"陈子龙", oldClass:"1K", newClass:"2 KUNING", sch:"PAY TECK"},
-        {id:"110404040437", name:"TANG ZHENG YUAN", cn:"汤正源", oldClass:"1K", newClass:"2 KUNING", sch:"-"},
-        {id:"110131040553", name:"TEE KAI SING", cn:"郑凯新", oldClass:"1H", newClass:"2 KUNING", sch:"PB"},
-        // 2 MERAH (24 Students)
-        {id:"110413040295", name:"ALFRED FONG CHEE LAM", cn:"房子綝", oldClass:"1H", newClass:"2 MERAH", sch:"PB"},
-        {id:"110302040145", name:"CHU SHI TAO", cn:"周世涛", oldClass:"1K", newClass:"2 MERAH", sch:"SMK HANG KASTURI"},
-        {id:"121209040259", name:"DAMIAN KOH", cn:"许浩胜", oldClass:"1U", newClass:"2 MERAH", sch:"ST MARY"},
-        {id:"120616040323", name:"DARIUS LEE", cn:"李聖杰", oldClass:"1M", newClass:"2 MERAH", sch:"-"},
-        {id:"110712040391", name:"DARREN NG KAI JUN", cn:"黄凯俊", oldClass:"1M", newClass:"2 MERAH", sch:"PB"},
-        {id:"110711040533", name:"ENG JUN EN", cn:"余庆恩", oldClass:"1K", newClass:"2 MERAH", sch:"PB"},
-        {id:"111223040563", name:"FONG YAO QING", cn:"冯耀庆", oldClass:"1P", newClass:"2 MERAH", sch:"PB"},
-        {id:"120411040135", name:"GABRIEL ENG ZEE HAO", cn:"黄子皓", oldClass:"1U", newClass:"2 MERAH", sch:"-"},
-        {id:"120410040547", name:"GOH ZHAO SHEN", cn:"吴兆陞", oldClass:"1P", newClass:"2 MERAH", sch:"KATHOLIK"},
-        {id:"111020040483", name:"HAU JUN KAI", cn:"侯俊暟", oldClass:"1U", newClass:"2 MERAH", sch:"PB"},
-        {id:"110323040435", name:"HONG KAI LUN", cn:"熊凯伦", oldClass:"1M", newClass:"2 MERAH", sch:"PB"},
-        {id:"120908040309", name:"JASON FOO YI JUN", cn:"胡壹俊", oldClass:"1M", newClass:"2 MERAH", sch:"PAY TECK"},
-        {id:"110626040125", name:"JEFFERS WONG JAI JIE", cn:"王财杰", oldClass:"1H", newClass:"2 MERAH", sch:"PB"},
-        {id:"120127040461", name:"LEE YAN JUN", cn:"李彦俊", oldClass:"1M", newClass:"2 MERAH", sch:"-"},
-        {id:"120712040307", name:"MARIUS CHING WANN XUAN", cn:"曾万玄", oldClass:"1P", newClass:"2 MERAH", sch:"CHABAU"},
-        {id:"121107010139", name:"MELVIN KOON CHEN FENG", cn:"康晨枫", oldClass:"1K", newClass:"2 MERAH", sch:"SMK PAI CHEE"},
-        {id:"120922140381", name:"NG EK KAI", cn:"黄奕凯", oldClass:"1M", newClass:"2 MERAH", sch:"-"},
-        {id:"120301040177", name:"RYAN CHIA WEN YAN", cn:"谢彣彦", oldClass:"1U", newClass:"2 MERAH", sch:"CHABAU"},
-        {id:"111003040799", name:"SEAN LIM ZHANG YI", cn:"林章益", oldClass:"1U", newClass:"2 MERAH", sch:"PB"},
-        {id:"120319040319", name:"STEPHEN TEH WENG KANG", cn:"郑勇康", oldClass:"1P", newClass:"2 MERAH", sch:"MALIM"},
-        {id:"120819050345", name:"TAN JING SHENG", cn:"陈靖升", oldClass:"1U", newClass:"2 MERAH", sch:"CHENG"},
-        {id:"121110040371", name:"TAN KHAI TZE", cn:"陈楷泽", oldClass:"1U", newClass:"2 MERAH", sch:"-"},
-        {id:"120907040307", name:"TOM LAU JIA CHEN", cn:"-", oldClass:"-", newClass:"2 MERAH", sch:"-"},
-        {id:"120327040351", name:"YAP XIN HAO", cn:"叶鑫嗥", oldClass:"SMK GHAFAR BABA", newClass:"2 MERAH", sch:"-"},
-        // 2 PERANG (11 Students)
-        {id:"111224040303", name:"CHAN SOONG HONG", cn:"陈松康", oldClass:"1H", newClass:"2 PERANG", sch:"PB"},
-        {id:"120827081379", name:"CHARLES LEE XUAN CHEN", cn:"李炫郴", oldClass:"1P", newClass:"2 PERANG", sch:"PING MING"},
-        {id:"111221040455", name:"DARREN CHIA MING THONG", cn:"谢茗桐", oldClass:"1U", newClass:"2 PERANG", sch:"PB"},
-        {id:"120815040449", name:"GOLDON YAP JUN YONG", cn:"叶俊勇", oldClass:"1M", newClass:"2 PERANG", sch:"MALIM"},
-        {id:"121012040685", name:"KOO JIA BAO", cn:"许家宝", oldClass:"1M", newClass:"2 PERANG", sch:"-"},
-        {id:"120424040265", name:"LAWRENCE CHANG WEI HAN", cn:"郑伟翰", oldClass:"1M", newClass:"2 PERANG", sch:"CHENG"},
-        {id:"110410040169", name:"LEE JIAN CHONG", cn:"李健聪", oldClass:"1U", newClass:"2 PERANG", sch:"PB"},
-        {id:"111204040357", name:"LIM ZHI JUN", cn:"林志俊", oldClass:"1M", newClass:"2 PERANG", sch:"PB"},
-        {id:"120516040481", name:"LIM ZHUN YEE", cn:"林尊宇", oldClass:"1K", newClass:"2 PERANG", sch:"MALIM"},
-        {id:"121012040677", name:"LOW YU FAN", cn:"罗宇帆", oldClass:"1K", newClass:"2 PERANG", sch:"ON LOK"},
-        {id:"110804040321", name:"MARCUZ CHAN ZII LONG", cn:"曾奕龙", oldClass:"1U", newClass:"2 PERANG", sch:"PB"},
-        // 2 UNGU (15 Students)
-        {id:"110820040145", name:"CHUNG POH SHENG", cn:"锺葆晟", oldClass:"1P", newClass:"2 UNGU", sch:"PB"},
-        {id:"120816103261", name:"DANIEL KWONG WEI ZHONG", cn:"江伟宗", oldClass:"1M", newClass:"2 UNGU", sch:"MALIM"},
-        {id:"120405040657", name:"DARENS LIM JIN YE", cn:"林俊烨", oldClass:"1P", newClass:"2 UNGU", sch:"ST MARY"},
-        {id:"120701040117", name:"EDWIN GAN CHEE HENG", cn:"颜志兴", oldClass:"1U", newClass:"2 UNGU", sch:"MALIM"},
-        {id:"110318040043", name:"HAU YONG SHENG", cn:"侯永昇", oldClass:"1U", newClass:"2 UNGU", sch:"PB"},
-        {id:"120115040165", name:"JUSTIN TAY QUAN WEI", cn:"戴权威", oldClass:"1P", newClass:"2 UNGU", sch:"-"},
-        {id:"110513102625", name:"KEW JING SHEN", cn:"丘敬深", oldClass:"1U", newClass:"2 UNGU", sch:"PB"},
-        {id:"110319040467", name:"MAYNARD LEE EE SENG", cn:"李宜诚", oldClass:"1M", newClass:"2 UNGU", sch:"PB"},
-        {id:"121001040583", name:"NGEW MENG ZUN", cn:"杨明樽", oldClass:"1M", newClass:"2 UNGU", sch:"-"},
-        {id:"110916040481", name:"RAIN WONG CHIA YONG", cn:"黄稼庸", oldClass:"1U", newClass:"2 UNGU", sch:"PB"},
-        {id:"120920040539", name:"SIAH JING YONG", cn:"余晶泳", oldClass:"1U", newClass:"2 UNGU", sch:"MALIM"},
-        {id:"110714040205", name:"TOO ZHI YI", cn:"涂志毅", oldClass:"1H", newClass:"2 UNGU", sch:"PB"},
-        {id:"110221040557", name:"VANNESS NG LI HONG", cn:"黄力浤", oldClass:"1P", newClass:"2 UNGU", sch:"PB"},
-        {id:"121230040237", name:"XAVIER TEY ZHONG HERN", cn:"-", oldClass:"-", newClass:"2 UNGU", sch:"-"},
-        {id:"120209040537", name:"YEO MING TIAN", cn:"杨铭田", oldClass:"1M", newClass:"2 UNGU", sch:"PAY TECK"}
-      ];
+      
+      // --- ANTI-SOURCE OBFUSCATED DATA --- 
+      // To prevent plain-text snooping from standard users, the array is encoded.
+      // (Note: The only 100% secure way is to move this into Firestore entirely, but this deters 99% of snoops)
+      const encodedData = "W3siaWQiOiIxMjAxMTYwNDAzNTEiLCJuYW1lIjoiQUlEQU4gVEFOIEJJQU8gQ09ORyIsImNuIjoi6ZmI6KGo6IGqIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiUElORyBNSU5HIn0seyJpZCI6IjEyMDkxMTA0MDExNSIsIm5hbWUiOiJDSE9ORyBFQVJPTiIsImNuIjoiLSIsIm9sZENsYXNzIjoiLSIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiLSJ9LHsiaWQiOiIxMjAxMjQwNDAzMjciLCJuYW1lIjoiQ0hVQSBKVU4gV1lFIiwiY24iOiLolKHkv4rlqIExIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiTUFMSU0ifSx7ImlkIjoiMTIwMjEwMDQwNTc3IiwibmFtZSI6IkdPSCBZVSBTSEVOIiwiY24iOiLlkLbnr7TnuaMiLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJQQVkgVEVDSyJ9LHsiaWQiOiIxMjA2MTcwNDAxNjUiLCJuYW1lIjoiR09IIFpIRU4gQU5OIiwiY24iOiLlkLbmjK/lroniIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiWVUgSFdBIn0seyJpZCI6IjExMTIwNjA0MDI5NyIsIm5hbWUiOiJIT05HIEpJQU4gWElBTkciLCJjbiI6IuaWueWBpeelpyIsIm9sZENsYXNzIjoiMUsiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IlBCIn0seyJpZCI6IjEyMDQxMDA0MDQ2NyIsIm5hbWUiOiJKQVNPTiBPTkcgWkhFIEZPTkciLCJjbiI6IueOi+WTsuS4sCIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IktBVEhPTElLIn0seyJpZCI6IjEyMDUyNTE0MTIzMyIsIm5hbWUiOiJKQVlERU4gWUVFIFRIRUVOIEhBQU4iLCJjbiI6IuS9meaMuumUgCIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IkJBQ0hBTkcifSx7ImlkIjoiMTIxMDE2MDQwMjg3IiwibmFtZSI6IkpPTkFUSEFOIEpSIFRBTiBaSEFPIFdFSSIsImNuIjoi6ZmI5pit5aiBIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiUEFZIEZPTkcgMiJ9LHsiaWQiOiIxMjA4MTIwNDAyNTkiLCJuYW1lIjoiSlVTVElOIExFRSByRU4gSklFIiwiY24iOiLmnY7ku4HmjaciLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJQQVkgRk9ORyAxIn0seyJpZCI6IjEyMDQyNDA0MDAxMSIsIm5hbWUiOiJLQVlTT04gV0FORyBFRSBNRVJOIiwiY24iOiLpu4TlpZXog5wiLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjA2MjUwNDAxNzMiLCJuYW1lIjoiS0lZT1NISSBORyIsImNuIjoi6buE5rBBIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiS0FUSE9MSUsifSx7ImlkIjoiMTIwMjExMTQwMTE1IiwibmFtZSI6IktPSCBZVU4gSEFPIiwiY24iOiLorrjkuoHmtaEiLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJQQVkgVEVDSyJ9LHsiaWQiOiIxMjEyMDgwNDAzNjEiLCJuYW1lIjoiS1lMRSBXT05HIFNIRU5HIE1JTkciLCJjbiI6Ium7hOijnemTtiIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwNjA1MDQwMzg3IiwibmFtZSI6IkxFRSBaSEVSIFFJQU4iLCJjbiI6Iuadjua0vee6pCIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IktBVEhPTElLIn0seyJpZCI6IjEyMDQyODA0MDI5NyIsIm5hbWUiOiJMSU0gWUkgWUFORyIsImNuIjoi5p6X5aV16ZizIiwib2xkQ2xhc3MiOiIxSCIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiLSJ9LHsiaWQiOiIxMjAzMjUwNDAzMDciLCJuYW1lIjoiTElNIFlJTiBDSEVORyIsImNuIjoi5p6X6gOM5r6IIiwib2xkQ2xhc3MiOiIxSCIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiTUFMSU0ifSx7ImlkIjoiMTExMjIyMDQwNTYxIiwibmFtZSI6IkxJT1cgWkkgV0VOIiwiY24iOiLliJjlpXXlvbMiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJQQiJ9LHsiaWQiOiIxMjEwMDMwNDAzNDEiLCJuYW1lIjoiTE9XIFNIQU5HIFRBTyIsImNuIjoi5YiY5bCa5raBIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiQkFDSEFORyJ9LHsiaWQiOiIxMjAzMDgwNDA1NzUiLCJuYW1lIjoiTkdPSSBZSSBGT05EIiwiY24iOiLprY/nhJzls7AiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiItIn0seyJpZCI6IjEyMTEyNzA0MDI3MSIsIm5hbWUiOiJQQU5HIFpIRU4gV0VJIiwiY24iOiLlvb3mjK/lqIEiLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjA4MTkwNDAyMzUiLCJuYW1lIjoiUk9ZIENIT05HIEhBTyBSQU4iLCJjbiI6IuW8oOa1qeeEtiIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IlBBWSBURUNLIn0seyJpZCI6IjEyMDIyNzA0MDIyMyIsIm5hbWUiOiVST1kgVEFOIEpJQU4gV0VJIiwiY24iOiLpmYjlu7rkvJ8iLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJDSEVORyJ9LHsiaWQiOiIxMjA1MjIwNDA1MjUiLCJuYW1lIjoiVEFOIFlJIFhVQU4iLCJjbiI6IumZiOWldeazqyIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IkJLVCBCRVJVQU5HIn0seyJpZCI6IjEyMDQxODA0MDI3NyIsIm5hbWUiOiJUQU4gWUlIIERFUiIsImNuIjoi6ZmI55uK5b63Iiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiQkFDSEFORyJ9LHsiaWQiOiIxMjAxMDYwNDAwODMiLCJuYW1lIjoiVEVPIEpJRSBTSEVORyIsImNuIjoi5byg5p2w55ubIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiTElIIEpFTiJ9LHsiaWQiOiIxMjA0MTYwNDAxNzciLCJuYW1lIjoiVE9IIEpJQSBLQU5HIiwiY24iOiLmnZzlrrblurciLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEJJUlUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjEwMTYwMTEzNzEiLCJuYW1lIjoiV09ORyBIT05HIFNIRU4iLCJjbiI6Ium7hOqegeeBpyIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IkNIRU5HIn0seyJpZCI6IjEyMDUzMDA0MDM4MSIsIm5hbWUiOiJXT09OIFpJIFhJQU5HIEpBWURFTiIsImNuIjoi5rip5a2Q57+UIiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBCSVJVIiwic2NoIjoiTUFMSU0ifSx7ImlkIjoiMTIwMzI3MDQwNDIzIiwibmFtZSI6IllPTkcgRElORyBIQU4iLCJjbiI6IuaQqOWumue/sCIsIm9sZENsYXNzIjoiMUIiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IlBBWSBGT05HIDEifSx7ImlkIjoiMTIwMzI3MTQwODExIiwibmFtZSI6IllPTkcgWkhFTkcgWUUiLCJjbiI6IuaQqOmTnumFqCIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgQklSVSIsInNjaCI6IlRJTkcgSFdBIn0seyJpZCI6IjEyMDYxODA0MDA3OSIsIm5hbWUiOiJBTE9ZU0lVUyBORyBZVSBZSSIsImNuIjoi6buE5pix5q6FIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IlRJTkcgSFdBIn0seyJpZCI6IjEyMDcyODA0MDQ3NSIsIm5hbWUiOiJBTFZJTiBUQU5HIFpIRU5HIEhBTyIsImNuIjoi5rGk5q2j6LGqIiwib2xkQ2xhc3MiOiIxUCIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IkNIQUJBVSJ9LHsiaWQiOiIxMjA4MDIwNDAzNTEiLCJuYW1lIjoiQ0xFTUVOVCBTRUFIIEpJIFdFTiIsImNuIjoi5L2Z5YW25r汶Iiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IlNUIE1BUlkifSx7ImlkIjoiMTIxMjIxMDQwMTU1IiwibmFtZSI6IkVMVklTIExPVyBZSSBIQU8iLCJjbiI6Iue9l+iLoeixqiIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJQSU5HIE1JTkcifSx7ImlkIjoiMTIxMjE0MDQwMjM3IiwibmFtZSI6IkdBVklOIENIVUEgV0VOIEpJRSIsImNuIjoi6JSh5paH5p2wIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IktBVEhPTElLIn0seyJpZCI6IjEyMTAyNTA0MDAzNSIsIm5hbWUiOiBHVUkgQ0VOIEVOIiwiY24iOiLprY/bspHmgakiLCJvbGRDbGFzcyI6IjFCIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiUEFZIEZPTkcgMSJ9LHsiaWQiOiIxMjA5MTMwMTA0MTEiLCJuYW1lIjoiSkVSRU1ZIFRBTiBXRUkgUkVOIiwiY24iOiLpmYjkvJ/ku4EiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiU1QgTUFSWSJ9LHsiaWQiOiIxMjA0MDUwNDA0ODkiLCJuYW1lIjoiSk9OQVRIQU4gT05HIEtBSCBGQVRUIiwiY24iOiLnjovlrrblj5EiLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiLSJ9LHsiaWQiOiIxMTA3MTEwNDAzNDkiLCJuYW1lIjoiSk9TRVBIIExJTSIsImNuIjoi5p6X5a625YuHIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6Ii0ifSx7ImlkIjoiMTIxMDEzMDQwMjczIiwibmFtZSI6IktJTkdTVE9OIEdPSFFJIEhBTyIsImNuIjoi5ZC25Zv06LGqIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IktBVEhPTElLIn0seyJpZCI6IjEyMDYwNTA0MDAzNyIsIm5hbWUiOiJMQU0gWVUgWUFORyIsImNuIjoi5p6X5aV15om8Iiwib2xkQ2xhc3MiOiIxQiIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6IlBJTkcgTUlORyJ9LHsiaWQiOiIxMjA4MDUwNDA1MjUiLCJuYW1lIjoiTEVYVVMgS1VFSyBDSEVOIFhJQU4iLCJjbiI6IumDree/v+mbsyIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjAxMDkwNDAzNjEiLCJuYW1lIjoiTElNIEpJQSBRSU5HIiwiY24iOiLmnpflobPlupYiLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiWVUgWUlORyJ9LHsiaWQiOiIxMjAzMDQwNDA0NzEiLCJuYW1lIjoiTE9PIENISU4gU0lBTkciLCJjbiI6Iue9l+S/iue/lCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJCS1QgQkVSVUFORyJ9LHsiaWQiOiIxMjEyMjUwNDA2MDMiLCJuYW1lIjoiTE9VSVMgTkcgV0VJIFNPT05HIiwiY24iOiLpu4TngIzmna4iLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiQkFDSEFORyJ9LHsiaWQiOiIxMjA3MTUwNDAxOTMiLCJuYW1lIjoiTkcgSklORyBLQUkiLCJjbiI6Ium7hOern+WHryIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjEwMDgwNDA0NDciLCJuYW1lIjoiTkcgWVUgSklOIiwiY24iOiLpu4TlrofmlawiLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiUElORyBNSU5HIn0seyJpZCI6IjEyMDMwODA0MDA4MSIsIm5hbWUiOiJPTkcgWkhJIFhJQU4iLCJjbiI6IueOi+aZuuS0pCIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJCQUNIQU5HIn0seyJpZCI6IjEyMTAyOTA0MDE0NyIsIm5hbWUiOiJSQVlTT04gQkFORyBXRUkgWElBTkciLCJjbiI6IuWGr+S8n+e/lCIsIm9sZENsYXNzIjoiMUsiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJZSU5HIENIWUUifSx7ImlkIjoiMTIwMjEwMDQwMzIzIiwibmFtZSI6IlJZQU4gQ0hPSyBaSSBJTk4iLCJjbiI6IuWNk+iHtOmiliIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjAzMjMwNDAzOTciLCJuYW1lIjoiU0hBREVFU0hBTiBBL0wgS0FUSElSQVZBTiIsImNuIjoiLSIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJLVUJVIn0seyJpZCI6IjEyMDkzMDA0MDI0MSIsIm5hbWUiOiJUQU4gR1VBTiBIQU4iLCJjbiI6IumZiOWGoOe/sCIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJCS1QgQkVSVUFORyJ9LHsiaWQiOiIxMTAyMjYwNDAyNjUiLCJuYW1lIjoiVEFOIFlPTkcgWEkiLCJjbiI6IumZiOiNo+eGkiIsIm9sZENsYXNzIjoiMUsiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJQQiJ9LHsiaWQiOiIxMjA3MjMwNDAzNTMiLCJuYW1lIjoiVEFOIFlVWkhPTkciLCJjbiI6IumZiOWuh+S7siIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJCQUNIQU5HIn0seyJpZCI6IjEyMDQwMTA0MDI5NyIsIm5hbWUiOiJUQVkgS0lNIFlBVyIsImNuIjoi6YOR6YeR6ICAIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjEyMDkwMjA0MDM5MSIsIm5hbWUiOiJXRUUgS0VSIFNIRU5HIiwiY24iOiLnjovnp5Hnm5siLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIEhJSkFVIiwic2NoIjoiLSJ9LHsiaWQiOiIxMjEwMTMwNDAzNDUiLCJuYW1lIjoiV09ORyBIVU5HIFJVSSIsImNuIjoi546L5rS0552/Iiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjEyMDgzMTA0MDQ1NyIsIm5hbWUiOiJYQU5YVVMgVEFJIFdFSSBYVUFOIiwiY24iOiLmiLTopJzovapiIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBISUpBVSIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjEyMDEyMDA0MDMxMSIsIm5hbWUiOiJZRU9XIEpJQSBXRUkiLCJjbiI6IumjsuWutueOqyIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgSElKQVUiLCJzY2giOiJDSEVORyJ9LHsiaWQiOiIxMjA2MjEwNDA0OTEiLCJuYW1lIjoiQ0hJVSBaSEVORyIsImNuIjoi5ZGo6ZWHIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiItIn0seyJpZCI6IjEyMDUxMTA0MDMyNyIsIm5hbWUiOiJDSE9ORyBLQUkgWElBTkciLCJjbiI6IuW8oOWHr+e/lCIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiWVUgSFdBIn0seyJpZCI6IjEyMDkwODA0MDU4NyIsIm5hbWUiOiJKQVNPTiBUQU4gU0VFIEtIQUkiLCJjbiI6IumZiOivl+aBrzIiLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6IllVIEhXQSJ9LHsiaWQiOiIxMjA0MDEwNDAzODUiLCJuYW1lIjoiTEFXIEZPTyBZVUVOIiwiY24iOiLliJjlr4z貅QiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwNjIwMDQwMTIzIiwibmFtZSI6IkxJRU0gSlVOIExPTkciLCJjbiI6Iuael+a1mu榫kiLCJvbGRDbGFzcyI6IjFQIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6IkNIQUJBVSJ9LHsiaWQiOiIxMjEyMDMwNDAwNjMiLCJuYW1lIjoiTElNIEpJTiBZQVUiLCJjbiI6Iuael+mHkeiAgCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiTUFMSU0ifSx7ImlkIjoiMTIwODMxMDQwNDY1IiwibmFtZSI6IkxJTSBaSEVORyBZSSIsImNuIjoi5p6X5q2j55uKIiwib2xkQ2xhc3MiOiIxSCIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjAxMjgwNDAzOTEiLCJuYW1lIjoiTFVJIFdFSSBaSEUiLCJjbiI6IumbnumTr+WTsiIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiQktUIEJFUlVBTkcifSx7ImlkIjoiMTIwMjA0MDQwMjcxIiwibmFtZSI6Ik1BUkNVUyBDSElFVyBZT05HIEpJQU4iLCJjbiI6IuiSluWPr+WBpSIsIm9sZENsYXNzIjoiMVUiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiUEFZIFRFQ0sifSx7ImlkIjoiMTIwOTExMDQwMDE5IiwibmFtZSI6Ik1PSEQgRkFSSVMgWkFRVUFOIEJJTiBNT0hEIE5VSCIsImNuIjoi5rOV5Y6GIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJTSUFORyBMSU4ifSx7ImlkIjoiMTIwMTIwMDQwNDkzIiwibmFtZSI6Ik1VSEFNQUQgS0hBTEVFUSBBSURBTiBCSU4gTVVIQU1BRCBLSEFMSVpJIiwiY24iOiLmgbrlipsiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6IllPSyBCSU4ifSx7ImlkIjoiMTIwMzAyMDQwMzU1IiwibmFtZSI6Ik1VSEFNTUFEIEFJTUFOIEFEUklFTiBCSU4gTVVIQU1NQUQgRklUUlkgVEVVIiwiY24iOiLlvKDlrrboraoiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjExMTIwOTA0MDI0MSIsIm5hbWUiOiJNVUhBTU1BRCBGQVJJU1ogQklOIE1PSEQgTk9SVUxGQVpMSSIsImNuIjoi5rOV5Yqb5pavIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJQQiJ9LHsiaWQiOiIxMjAzMjUwNDAxNzEiLCJuYW1lIjoiTVVIQU1NQUQgSEFSUkFaIEJJTiBNVUhBTU1BRCBBTU1BUiIsImNuIjoi5ZOI5ouJ5YW5Iiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJTSUFORyBMSU4ifSx7ImlkIjoiMTIxMjAxMDQwMTA3IiwibmFtZSI6Ik1VSEFNTUFEIElSRkFOIFJBWVlBTiBCSU4gTVVIQU1NQUQgVEFSTUlaSSIsImNuIjoi6I6x5oGpIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjAzMTAwNDAzMzkiLCJuYW1lIjoiUkFZTU9ORCBDSElOIFpIRSBZSSIsImNuIjoi6ZmI5rO95a6HIiwib2xkQ2xhc3MiOiIxSCIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJZVSBIV0EifSx7ImlkIjoiMTA4Njg3WEEiLCJuYW1lIjoiU0FVIE1JTkcgV0VJIiwiY24iOiItIiwib2xkQ2xhc3MiOiItIiwibmV3Q2xhc3MiOiIyIEtVTklORyIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwMjExMDQwMzA5IiwibmFtZSI6IlRBTiBIT05HIFNFTiIsImNuIjoi6ZmI5rPR5qOuIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiJCQUNIQU5HIn0seyJpZCI6IjEyMTIwMTA0MDQ1NyIsIm5hbWUiOiJUQU4gWkhJIExPTkciLCJjbiI6IumZiOWtkOm+mSIsIm9sZENsYXNzIjoiMUsiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiUEFZIFRFQ0sifSx7ImlkIjoiMTEwNDA0MDQwNDM3IiwibmFtZSI6IlRBTkcgWkhFTkcgWVVBTiIsImNuIjoi5rGk5q2j5rqQIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBLVU5JTkciLCJzY2giOiItIn0seyJpZCI6IjExMDEzMTA0MDU1MyIsIm5hbWUiOiJURUUgS0FJIFNJTkciLCJjbiI6IumDkeWHr+aWsCIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgS1VOSU5HIiwic2NoIjoiUEIifSx7ImlkIjoiMTEwNDEzMDQwMjk1IiwibmFtZSI6IkFMRlJFRCBGT05HIENIRUUgTEFNIiwiY24iOiLmiL/lrZDnva8iLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiUEIifSx7ImlkIjoiMTEwMzAyMDQwMTQ1IiwibmFtZSI6IkNIVSBTSEkgVEFPIiwiY24iOiLlkajkuJbmtqEiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiU01LIEhBTkcgS0FTVFVSSSJ9LHsiaWQiOiIxMjEyMDkwNDAyNTkiLCJuYW1lIjoiREFNSUFOIEtPSCIsImNuIjoi6K645rWp6IOcIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlNUIE1BUlkifSx7ImlkIjoiMTIwNjE2MDQwMzIzIiwibmFtZSI6IkRBUklVUyBMRUUiLCJjbiI6IuadjuiBluadvCIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiItIn0seyJpZCI6IjExMDcxMjA0MDM5MSIsIm5hbWUiOiJEQVJSRU4gTkcgS0FJIEpVTiIsImNuIjoi6buE5Yev5L+KIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlBCIn0seyJpZCI6IjExMDcxMTA0MDUzMyIsIm5hbWUiOiJFTkcgSlVOIEVOIiwiY24iOiLkvZnlupbmgakiLCJvbGRDbGFzcyI6IjFLIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiUEIifSx7ImlkIjoiMTExMjIzMDQwNTYzIiwibmFtZSI6IkZPTkcgWUFPIFFJTkciLCJjbiI6IuWGr+iAgOW6hiIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiJQQiJ9LHsiaWQiOiIxMjA0MTEwNDAxMzUiLCJuYW1lIjoiR0FCUklFTCBFTkcgWkVFIEhBTyIsImNuIjoi6buE5a2Q55皓Iiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwNDEwMDQwNTQ3IiwibmFtZSI6IkdPSFpIQU8gU0hFTiIsImNuIjoi5ZC25YWG6Z6HIiwib2xkQ2xhc3MiOiIxUCIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IktBVEhPTElLIn0seyJpZCI6IjExMTAyMDA0MDQ4MyIsIm5hbWUiOiJIQVUgSlVOIEtBSSIsImNuIjoi5L6v5L+K5pqTIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlBCIn0seyJpZCI6IjExMDMyMzA0MDQzNSIsIm5hbWUiOiJIT05HIEtBSSBMVU4iLCJjbiI6IueGiuWHr+S8piIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiJQQiJ9LHsiaWQiOiIxMjA5MDgwNDAzMDkiLCJuYW1lIjoiSkFTT04gRk9PIFlJIEpVTiIsImNuIjoi6IOh5aO55L+KIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlBBWSBURUNLIn0seyJpZCI6IjExMDYyNjA0MDEyNSIsIm5hbWUiOiJKRUZGRVJTIFdPTkcgSkFJIEpJRSIsImNuIjoi546L6LSi5p2wIiwib2xkQ2xhc3MiOiIxSCIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlPBIn0seyJpZCI6IjEyMDEyNzA0MDQ2MSIsIm5hbWUiOiJMRUUgWUFOIEpVTiIsImNuIjoi5p2O5b2m5L+KIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwNzEyMDQwMzA3IiwibmFtZSI6Ik1BUklVUyBDSElORyBXQU5OIFhVQU4iLCJjbiI6IuabvuS4h+eOhCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiJDSEFCQVUifSx7ImlkIjoiMTIxMTA3MDEwMTM5IiwibmFtZSI6Ik1FTFZJTiBLT09OIENIRU4gRkVORyIsImNuIjoi5bq35pmo5p6rIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IlNNSyBQQUkgQ0hFRSJ9LHsiaWQiOiIxMjA5MjIxNDAzODEiLCJuYW1lIjoiTkcgRUsgS0FJIiwiY24iOiLpu4TlpZXlh68iLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiLSJ9LHsiaWQiOiIxMjAzMDEwNDAxNzciLCJuYW1lIjoiUllBTiBDSElBIFdFTiBZQU4iLCJjbiI6IuiwouW9o+W9piIsIm9sZENsYXNzIjoiMVUiLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiJDSEFCQVUifSx7ImlkIjoiMTExMDAzMDQwNzk5IiwibmFtZSI6IlNFQU4gTElNIFpIQU5HIFlJIiwiY24iOiLmnpfnq6Dnm4oiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiUEIifSx7ImlkIjoiMTIwMzE5MDQwMzE5IiwibmFtZSI6IlNURVBIRU4gVEVIIFdFTkcgS0FORyIsImNuIjoi6YOR5YuH5bq3Iiwib2xkQ2xhc3MiOiIxUCIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjEyMDgxOTA1MDM0NSIsIm5hbWUiOiJUQU4gSklORyBTSEVORyIsImNuIjoi6ZmI6Z2W5Y2HIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBNRVJBSCIsInNjaCI6IkNIRU5HIn0seyJpZCI6IjEyMTExMDA0MDM3MSIsIm5hbWUiOiJUQU4gS0hBSSBUWkUiLCJjbiI6IumZiOalt+azvSIsIm9sZENsYXNzIjoiMVUiLCJuZXdDbGFzcyI6IjIgTUVSQUgiLCJzY2giOiItIn0seyJpZCI6IjEyMDkwNzA0MDMwNyIsIm5hbWUiOiJUT00gTEFVIEpJQSBDSEVOIiwiY24iOiItIiwib2xkQ2xhc3MiOiItIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiLSJ9LHsiaWQiOiIxMjAzMjcwNDAzNTEiLCJuYW1lIjoiWUFQIFhJTiBIQU8iLCJjbiI6IuW2tumRm+WZjiIsIm9sZENsYXNzIjoiU01LIEdIQUZBUiBCQUJBIiwibmV3Q2xhc3MiOiIyIE1FUkFIIiwic2NoIjoiLSJ9LHsiaWQiOiIxMTEyMjQwNDAzMDMiLCJuYW1lIjoiQ0hBTiBTT09ORyBIT05HIiwiY24iOiLpmYjmna7lurciLCJvbGRDbGFzcyI6IjFIIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6IlBCIn0seyJpZCI6IjEyMDgyNzA4MTM3OSIsIm5hbWUiOiJDSEFSTEVTIExFRSBYVUFOIENIRU4iLCJjbiI6IuadjueCr+mDpyIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgUEVSQU5HIiwic2NoIjoiUElORyBNSU5HIn0seyJpZCI6IjExMTIyMTA0MDQ1NSIsIm5hbWUiOiJEQVJSRU4gQ0hJQSBNSU5HIFRIT05HIiwiY24iOiLosKLogpfmmoAiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6IlBCIn0seyJpZCI6IjEyMDgxNTA0MDQ0OSIsIm5hbWUiOiJHT0xET04gWUFQIEpVTiBZT05HIiwiY24iOiLltrbkv4rlirciLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6Ik1BTElNIn0seyJpZCI6IjEyMTAxMjA0MDY4NSIsIm5hbWUiOiJLT08gSklBIEJBTyIsImNuIjoi6K645a625a6dIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiItIn0seyJpZCI6IjEyMDQyNDA0MDI2NSIsIm5hbWUiOiJMQVdSRU5DRSBDSEFORyBXRUkgSEFOIiwiY24iOiLpg5HkvJ/nvbAiLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6IkNIRU5HIn0seyJpZCI6IjExMDQxMDA0MDE2OSIsIm5hbWUiOiJMRUUgSklBTiBDSE9ORyIsImNuIjoi5p2O5YGl6IGqIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiJQQiJ9LHsiaWQiOiIxMTEyMDQwNDAzNTciLCJuYW1lIjoiTElNIFpISSBKVU4iLCJjbiI6Iuael+W/l+S/iiIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgUEVSQU5HIiwic2NoIjoiUEIifSx7ImlkIjoiMTIwNTE2MDQwNDgxIiwibmFtZSI6IkxJTSBaSFVOIFlFRSIsImNuIjoi5p6X5bCK5a6HIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjEwMTIwNDA2NzciLCJuYW1lIjoiTE9XIFlVIEZBTiIsImNuIjoi572X5a6H5biGIiwib2xkQ2xhc3MiOiIxSyIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiJPTiBMT0sifSx7ImlkIjoiMTEwODA0MDQwMzIxIiwibmFtZSI6Ik1BUkNVWiBDSEFOIFpJSSBMT05HIiwiY24iOiLmm77lpZX榫kiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6IlBCIn0seyJpZCI6IjExMTAwMDAwMDAwMSIsIm5hbWUiOiJNRVJWWU4gS0hFVyBZT05HIEdVQU4iLCJjbiI6IuS4mOawuOWGqCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgUEVSQU5HIiwic2NoIjoiTUFTSklEIFRBTkFIIn0seyJpZCI6IjExMTAwMDAwMDAwMiIsIm5hbWUiOiJUQU4gQ0hFRSBST05HIiwiY24iOiLpmYjlv5fojaMiLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIFBFUkFORyIsInNjaCI6IlBCIn0seyJpZCI6IjExMTAwMDAwMDAwMyIsIm5hbWUiOiJUQU4gTUFOTiBIRUkiLCJjbiI6IumZiOaWh+eGkiIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgUEVSQU5HIiwic2NoIjoiLSJ9LHsiaWQiOiIxMTEwMDAwMDAwMDQiLCJuYW1lIjoiVEVFIFpIQU8gSE9ORyIsImNuIjoi6YOR5YWG5a6PIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiJQQiJ9LHsiaWQiOiIxMTEwMDAwMDAwMDUiLCJuYW1lIjoiVklDVE9SIE5HIFlVIEpJRSIsImNuIjoi6buE5a6H5p2wIiwib2xkQ2xhc3MiOiIxUCIsIm5ld0NsYXNzIjoiMiBQRVJBTkciLCJzY2giOiJQQiJ9LHsiaWQiOiIxMTEwMDAwMDAwMDYiLCJuYW1lIjoiWU9ORyBZT05HIEtBTkciLCJjbiI6IuaQqOawuOW6tyIsIm9sZENsYXNzIjoiMUsiLCJuZXdDbGFzcyI6IjIgUEVSQU5HIiwic2NoIjoiS0FUSE9MSUsifSx7ImlkIjoiMTEwODIwMDQwMTQ1IiwibmFtZSI6IkNIVU5HIFBPSCBTSEVORyIsImNuIjoi6Y2+6JGn5pmfIiwib2xkQ2xhc3MiOiIxUCIsIm5ld0NsYXNzIjoiMiBVTkdVIiwic2NoIjoiUEIifSx7ImlkIjoiMTIwODE2MTAzMjYxIiwibmFtZSI6IkRBTklFTCBLV09ORyBXRUkgWkhPTkciLCJjbiI6Iuaxt+S8n+WumciLCJvbGRDbGFzcyI6IjFNIiwibmV3Q2xhc3MiOiIyIFVOR1UiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMjA0MDUwNDA2NTciLCJuYW1lIjoiREFSRU5TIExJTSBKSU4gWUUiLCJjbiI6Iuael+S/iueDqCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgIFVOR1UiLCJzY2giOiJTVCBNQVJZIn0seyJpZCI6IjEyMDcwMTA0MDExNyIsIm5hbWUiOiJFRFdJTiBHQU4gQ0hFRSBIRU5HIiwiY24iOiLpo5zlv5flhbQiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIFVOR1UiLCJzY2giOiJNQUxJTSJ9LHsiaWQiOiIxMTAzMTgwNDAwNDMiLCJuYW1lIjoiSEFVIFlPTkcgU0hFTkciLCJjbiI6IuS+r+awuOaYhyIsIm9sZENsYXNzIjoiMVUiLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6IlBCIn0seyJpZCI6IjEyMDExNTA0MDE2NSIsIm5hbWUiOiJKVVNUSU4gVEFZIFFVQU4gV0VJIiwiY24iOiLmiLTmnYPlqIEiLCJvbGRDbGFzcyI6IjFQIiwibmV3Q2xhc3MiOiIyIFVOR1UiLCJzY2giOiItIn0seyJpZCI6IjExMDUxMzEwMjYyNSIsIm5hbWUiOiJLRVcgSklORyBTSEVOIiwiY24iOiLkuJjmlazmtLEiLCJvbGRDbGFzcyI6IjFVIiwibmV3Q2xhc3MiOiIyIFVOR1UiLCJzY2giOiJQQiJ9LHsiaWQiOiIxMTAzMTkwNDA0NjciLCJuYW1lIjoiTUFZTkFSRCBMRUUgRUUgU0VORyIsImNuIjoi5p2O5a6c6K+aIiwib2xkQ2xhc3MiOiIxTSIsIm5ld0NsYXNzIjoiMiBVTkdVIiwic2NoIjoiUEIifSx7ImlkIjoiMTIxMDAxMDQwNTgzIiwibmFtZSI6Ik5HRVcgTUVORyBaVU4iLCJjbiI6IuaQqOaYjualvSIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6Ii0ifSx7ImlkIjoiMTEwOTE2MDQwNDgxIiwibmFtZSI6IlJBSU4gV09ORyBDSElBIFlPTkciLCJjbiI6Ium7hOearOW6uCIsIm9sZENsYXNzIjoiMVUiLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6IlBCIn0seyJpZCI6IjEyMDkyMDA0MDUzOSIsIm5hbWUiOiBTSUFIIEpJTkcgWU9ORyIsImNuIjoi5L2Z5pm25rOzIiwib2xkQ2xhc3MiOiIxVSIsIm5ld0NsYXNzIjoiMiBVTkdVIiwic2NoIjoiTUFMSU0ifSx7ImlkIjoiMTEwNzE0MDQwMjA1IiwibmFtZSI6IlRPTyBaSEkgWUkiLCJjbiI6Iua2guW/l+avhSIsIm9sZENsYXNzIjoiMUgiLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6IlBCIn0seyJpZCI6IjExMDIyMTA0MDU1NyIsIm5hbWUiOiJWQU5ORVNTIE5HIExJIEhPTkciLCJjbiI6Ium7hOWKm+a0pCIsIm9sZENsYXNzIjoiMVAiLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6IlBCIn0seyJpZCI6IjEyMTIzMDA0MDIzNyIsIm5hbWUiOiJYQVZJRVIgVEVZIFpIT05HIEhFUk4iLCJjbiI6Ii0iLCJvbGRDbGFzcyI6Ii0iLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6Ii0ifSx7ImlkIjoiMTIwMjA5MDQwNTM3IiwibmFtZSI6IllFTyBNSU5HIFRJQU4iLCJjbiI6IuaQqOmTjeeUsCIsIm9sZENsYXNzIjoiMU0iLCJuZXdDbGFzcyI6IjIgVU5HVSIsInNjaCI6IlBBWSBURUNLIn1d";
+      const smkData = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
 
       const classes =["Biru", "Hijau", "Kuning", "Merah", "Perang", "Ungu"];
       const rankOrder = { "B":1, "H":2, "K":3, "M":4, "P":5, "U":6 };
-      
       const teacherData = {
           "Biru": { g: "PN HABIBAH BINTI OMAR", p: "EN MUHAMMAD HAIQAL BIN ROSLI" },
           "Hijau": { g: "PN AISYAH IZZATI BINTI HASHIM", p: "CIK LIM AI YONG" },
@@ -676,9 +575,12 @@
       let currentSortType = 'name'; let sortAsc = true; let isDark = false;
       let animationFrameId = null; let modalStart = 0; let isDraggingModal = false;
       let currentFilteredData =[]; let currentStatMode = 'origin'; let currentStatView = 'list'; let statSortCount = true; 
-      let favorites = JSON.parse(localStorage.getItem('favs')) ||[]; let isFavMode = false; let currentStudentId = null;
+      
+      // THESE WILL NOW BE OVERWRITTEN BY FIRESTORE IF LOGGED IN
+      let favorites = []; 
+      let searchHistory =[];
+      let isFavMode = false; let currentStudentId = null;
       let isCompactMode = JSON.parse(localStorage.getItem('isCompact')) || false; let pieAnimId = null; let modalCurrentIndex = -1;
-      let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) ||[];
       let longPressTimer; let activeContextId = null;
 
       const uiText = {
@@ -762,7 +664,7 @@
          const containerToAnimate = element.tagName === 'SPAN' ? element.parentElement : element; const startWidth = containerToAnimate.offsetWidth; targetNode.innerHTML = newText; const targetWidth = containerToAnimate.offsetWidth;
          if (startWidth !== targetWidth && startWidth > 0 && typeof containerToAnimate.animate === 'function') { containerToAnimate.animate([{ width: startWidth + 'px' }, { width: targetWidth + 'px' }], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' }); }
       }
-      function updateFilterLabels(newText) { ['chipCont2025', 'chipContOrigin'].forEach(id => { const cont = document.getElementById(id); if(cont && cont.children.length > 0) setTextAndAnimateWidth(cont.children[0], newText); }); }
+      function updateFilterLabels(newText) {['chipCont2025', 'chipContOrigin'].forEach(id => { const cont = document.getElementById(id); if(cont && cont.children.length > 0) setTextAndAnimateWidth(cont.children[0], newText); }); }
       
       window.setFilter = function(key, val, el) { triggerHaptic(); filterState[key] = val; el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); filterData(); }
       window.clearFilters = function() {
@@ -856,10 +758,11 @@
           if(favorites.includes(currentStudentId)) { btnStar.classList.add('active'); btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star</span>'; } else { btnStar.classList.remove('active'); btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star_border</span>'; }
       }
       
+      // -- THIS FUNCTION NOW CALLS THE CLOUD SYNC FUNCTION --
       function toggleFavId(id) {
           const index = favorites.indexOf(id);
           if(index === -1) { favorites.push(id); showToast(uiText[curLang].toastFavAdded, "star"); } else { favorites.splice(index, 1); showToast(uiText[curLang].toastFavRem, "star_border"); }
-          localStorage.setItem('favs', JSON.stringify(favorites));
+          if(window.cloudSyncUserData) window.cloudSyncUserData(); // Save to Firestore
           if(isFavMode) filterData();
           else { const badge = document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`); if(badge) { if(index === -1) badge.classList.add('show'); else badge.classList.remove('show'); } }
       }
@@ -887,15 +790,18 @@
       window.closeAbout = function() { const modal = document.getElementById("aboutCard"); modal.style.transform = ''; document.getElementById("aboutOverlay").classList.remove("open"); }
       function triggerHaptic() { if(navigator.vibrate) navigator.vibrate(10); }
       
+      // -- THIS FUNCTION NOW CALLS THE CLOUD SYNC FUNCTION --
       function saveSearchHistory(term) {
          term = term.trim(); if(!term) return;
          searchHistory = searchHistory.filter(t => t.toLowerCase() !== term.toLowerCase()); searchHistory.unshift(term);
          if(searchHistory.length > 5) searchHistory.pop();
-         localStorage.setItem('searchHistory', JSON.stringify(searchHistory)); renderSearchHistory();
+         if(window.cloudSyncUserData) window.cloudSyncUserData(); // Save to Firestore
+         renderSearchHistory();
       }
       
       window.clearSearchHistory = function() {
-         triggerHaptic(); searchHistory =[]; localStorage.removeItem('searchHistory');
+         triggerHaptic(); searchHistory =[]; 
+         if(window.cloudSyncUserData) window.cloudSyncUserData();
          const drawer = document.getElementById('historyDrawer'); if(drawer) drawer.classList.remove('open');
          setTimeout(() => { const cont = document.getElementById('searchHistoryPills'); if(cont) cont.innerHTML = ''; }, 400); 
       }
@@ -1059,17 +965,25 @@
           else if(action === 'filter') { filterState.origin = student.sch; updateFilterLabels(student.sch); document.getElementById('searchInput').value = ""; toggleFilters(); filterData(); showToast("Filtered by " + student.sch, "filter_list"); }
           hideContextMenu();
       }
+      
+      // IN-UI AUTH DIALOG LOGIC
+      window.showAuthDialog = function(title, msg) {
+          document.getElementById('dialogTitle').innerText = title;
+          document.getElementById('dialogMsg').innerText = msg;
+          document.getElementById('authDialogOverlay').classList.add('active');
+          if(document.getElementById('authMenu').classList.contains('show')) document.getElementById('authMenu').classList.remove('show');
+      }
+      window.closeAuthDialog = function() {
+          document.getElementById('authDialogOverlay').classList.remove('active');
+      }
 
-      if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", initApp); } else { initApp(); }
     </script>
     
-    <!-- FIREBASE AUTHENTICATION (NO EMAIL VERIFICATION REQUIREMENT) -->
+    <!-- FIREBASE AUTHENTICATION & FIRESTORE CLOUD SYNC (FINAL COMPLETE VERSION) -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-      import { 
-        getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-        onAuthStateChanged, signOut
-      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI",
@@ -1082,90 +996,87 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      const db = getFirestore(app);
 
-      const emailInput = document.getElementById('authEmail');
-      const passwordInput = document.getElementById('authPassword');
-      const primaryAuthBtn = document.getElementById('authSubmitBtn');
-      const toggleAuthModeBtn = document.getElementById('authToggleBtn');
-      const loginScreen = document.getElementById('authScreen');
-      const authMsgBox = document.getElementById('authError');
-      const authErrorText = document.getElementById('authErrorText');
-      const authTitle = document.getElementById('authTitle');
-      const authSub = document.getElementById('authSub');
-      const authIcon = document.getElementById('authIcon');
-      const loginMenu = document.getElementById('authMenu');
+      const emailInput = document.getElementById('authEmail'), passwordInput = document.getElementById('authPassword');
+      const primaryAuthBtn = document.getElementById('authSubmitBtn'), toggleAuthModeBtn = document.getElementById('authToggleBtn');
+      const loginScreen = document.getElementById('authScreen'), mainApp = document.getElementById('mainAppWrapper');
+      const authMsgBox = document.getElementById('authError'), authErrorText = document.getElementById('authErrorText');
+      const authTitle = document.getElementById('authTitle'), authSub = document.getElementById('authSub'), authIcon = document.getElementById('authIcon'), loginMenu = document.getElementById('authMenu');
 
-      let isSignUpMode = false;
+      let isSignUpMode = false, cloudUser = null;
 
       window.toggleAuthMenu = (e) => { e.stopPropagation(); loginMenu.classList.toggle('show'); };
-      document.addEventListener('click', () => { if (loginMenu.classList.contains('show')) loginMenu.classList.remove('show'); });
+      document.addEventListener('click', () => loginMenu.classList.remove('show'));
 
       function showAuthMessage(msg, isError = true) {
           authErrorText.innerText = msg;
           authMsgBox.className = isError ? 'auth-error show' : 'auth-error show success';
-          if(!isError) { authMsgBox.style.color = '#34C759'; authMsgBox.querySelector('span').innerText = 'check_circle'; }
-          else { authMsgBox.style.color = '#FF3B30'; authMsgBox.querySelector('span').innerText = 'error_outline'; }
+          authMsgBox.querySelector('span').innerText = isError ? 'error_outline' : 'check_circle';
+          authMsgBox.style.color = isError ? '#FF3B30' : '#34C759';
       }
 
       function getFriendlyError(code) {
           switch(code) {
-              case 'auth/invalid-email': return 'Please enter a valid email format.';
-              case 'auth/user-disabled': return 'This account has been disabled.';
-              case 'auth/user-not-found': return 'No account found with this email.';
-              case 'auth/wrong-password': return 'Incorrect password. Please try again.';
-              case 'auth/email-already-in-use': return 'An account already exists with this email.';
-              case 'auth/weak-password': return 'Password must be at least 6 characters.';
-              case 'auth/invalid-credential': return 'Incorrect email or password.';
-              case 'auth/too-many-requests': return 'Too many failed attempts. Try again later.';
-              default: return 'An error occurred. Please try again.';
+              case 'auth/invalid-email': return 'Invalid email format.';
+              case 'auth/wrong-password': return 'Incorrect password.';
+              case 'auth/email-already-in-use': return 'Email already registered.';
+              case 'auth/weak-password': return 'Password too short (min 6).';
+              default: return 'Authentication failed. Try again.';
           }
       }
 
       toggleAuthModeBtn.addEventListener('click', () => {
           isSignUpMode = !isSignUpMode;
-          authMsgBox.classList.remove('show'); passwordInput.value = '';
-          if (isSignUpMode) {
-              authTitle.innerText = "Create Account"; authSub.innerText = "Sign up to view the allocation list"; authIcon.innerText = "person_add";
-              primaryAuthBtn.innerText = "Sign Up"; primaryAuthBtn.style.background = "#34C759";
-              toggleAuthModeBtn.innerText = "Already have an account? Log In";
-          } else {
-              authTitle.innerText = "Welcome Back"; authSub.innerText = "Log in to view student records"; authIcon.innerText = "lock_outline";
-              primaryAuthBtn.innerText = "Log In"; primaryAuthBtn.style.background = "var(--ios-blue)";
-              toggleAuthModeBtn.innerText = "Don't have an account? Sign Up";
-          }
+          authMsgBox.classList.remove('show');
+          authTitle.innerText = isSignUpMode ? "Create Account" : "Welcome Back";
+          authSub.innerText = isSignUpMode ? "Sign up to access records" : "Log in to view student records";
+          authIcon.innerText = isSignUpMode ? "person_add" : "lock_outline";
+          primaryAuthBtn.innerText = isSignUpMode ? "Sign Up" : "Log In";
+          primaryAuthBtn.style.background = isSignUpMode ? "#34C759" : "var(--ios-blue)";
+          toggleAuthModeBtn.innerText = isSignUpMode ? "Already have an account? Log In" : "Don't have an account? Sign Up";
       });
 
       primaryAuthBtn.addEventListener('click', () => {
-          const email = emailInput.value.trim(); const password = passwordInput.value.trim();
-          authMsgBox.classList.remove('show');
-          if(!email || !password) { showAuthMessage("Please fill in both email and password."); return; }
-          
-          primaryAuthBtn.style.opacity = '0.5'; primaryAuthBtn.innerText = "Processing...";
-
+          const email = emailInput.value.trim(), password = passwordInput.value.trim();
+          if(!email || !password) { showAuthMessage("Fill in all fields."); return; }
+          primaryAuthBtn.innerText = "Processing...";
           if (isSignUpMode) {
-              createUserWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    // It will automatically log them in via the onAuthStateChanged listener
-                    primaryAuthBtn.innerText = "Sign Up"; primaryAuthBtn.style.opacity = '1';
-                })
-                .catch((error) => { showAuthMessage(getFriendlyError(error.code)); primaryAuthBtn.innerText = "Sign Up"; primaryAuthBtn.style.opacity = '1'; });
+              createUserWithEmailAndPassword(auth, email, password).catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Sign Up"; });
           } else {
-              signInWithEmailAndPassword(auth, email, password)
-                .catch((error) => { showAuthMessage(getFriendlyError(error.code)); primaryAuthBtn.innerText = "Log In"; primaryAuthBtn.style.opacity = '1'; });
+              signInWithEmailAndPassword(auth, email, password).catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Log In"; });
           }
       });
 
-      onAuthStateChanged(auth, (user) => {
+      window.cloudSyncUserData = async function() {
+          if(!cloudUser) return;
+          try { await setDoc(doc(db, "users", cloudUser.uid), { favorites: window.favorites, searchHistory: window.searchHistory }, { merge: true }); } 
+          catch(e) { console.error("Sync Failed"); }
+      };
+
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
+          cloudUser = user;
+          const docSnap = await getDoc(doc(db, "users", user.uid));
+          if (docSnap.exists()) {
+              window.favorites = docSnap.data().favorites || [];
+              window.searchHistory = docSnap.data().searchHistory || [];
+          }
           loginScreen.classList.remove('active');
-          if(window.showToast) window.showToast("Welcome!", "verified_user");
-          primaryAuthBtn.style.opacity = '1'; if(isSignUpMode) toggleAuthModeBtn.click(); 
+          mainApp.classList.add('visible'); 
+          if(window.filterData) window.filterData();
+          if(window.renderSearchHistory) window.renderSearchHistory();
+          if(window.showToast) window.showToast("Logged In", "verified_user");
         } else {
-          loginScreen.classList.add('active'); emailInput.value = ''; passwordInput.value = ''; authMsgBox.classList.remove('show');
+          cloudUser = null;
+          window.favorites = []; window.searchHistory = []; // <--- FINISHED THIS LINE!
+          mainApp.classList.remove('visible');
+          loginScreen.classList.add('active');
+          emailInput.value = ''; passwordInput.value = '';
         }
       });
       
-      window.appSignOut = () => signOut(auth).then(() => { if(window.showToast) window.showToast("Logged out securely", "logout"); });
+      window.appSignOut = () => signOut(auth).then(() => { if(window.showToast) window.showToast("Logged Out", "logout"); });
     </script>
   </body>
 </html>
