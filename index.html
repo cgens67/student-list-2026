@@ -138,7 +138,6 @@
       .auth-switch:active { opacity: 0.6; }
       .auth-error { color: #FF3B30; font-size: 13px; font-weight: 500; margin-bottom: 12px; min-height: 16px; opacity: 0; transition: 0.3s; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px; }
       .auth-error.show { opacity: 1; transform: translateY(0); }
-      #authVerifyState { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeUp 0.4s var(--ease-ios); }
 
       #statsListContainer { display: flex; flex-direction: column; width: 100%; }
       .stats-visuals-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 24px; padding: 0; }
@@ -260,8 +259,7 @@
 
       .cm-backdrop { position: fixed; top:0; left:0; right:0; bottom:0; z-index: 2900; background: rgba(0,0,0,0.1); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
       .cm-backdrop.active { opacity: 1; pointer-events: auto; }
-      .cm-menu { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) scale(0.9); width: 250px; background: rgba(255,255,255,0.85); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; z-index: 3000; box-shadow: var(--shadow-lg), var(--glass-highlight); opacity: 0; pointer-events: none; transition: all 0.4s var(--ease-spring); transform-origin: center bottom; }
-      [data-theme="dark"] .cm-menu { background: rgba(30,30,30,0.85); }
+      .cm-menu { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) scale(0.9); width: 250px; background: rgba(255,255,255,0.85); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; z-index: 3000; box-shadow: var(--shadow-lg), var(--glass-highlight); opacity: 0; pointer-events: none; transition: all 0.4s var(--ease-spring); transform-origin: center bottom; }[data-theme="dark"] .cm-menu { background: rgba(30,30,30,0.85); }
       .cm-backdrop.active .cm-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) scale(1); bottom: 50px; }
       .cm-item { padding: 14px 16px; width: 100%; border: none; background: transparent; text-align: left; font-size: 16px; color: var(--ios-text); border-bottom: 1px solid var(--ios-sep); display: flex; align-items: center; justify-content: space-between; }
       .cm-item:last-child { border-bottom: none; }
@@ -302,15 +300,6 @@
             
             <button class="auth-btn" id="authSubmitBtn">Log In</button>
             <div class="auth-switch" id="authToggleBtn">Don't have an account? Sign Up</div>
-        </div>
-
-        <!-- STATE 2: VERIFICATION SENT -->
-        <div id="authVerifyState" style="display: none; flex-direction: column; align-items: center; width: 100%;">
-            <span class="material-icons-round auth-icon" style="background: rgba(52, 199, 89, 0.15); color: #34C759;">mark_email_read</span>
-            <div class="auth-title">Verify Email</div>
-            <div class="auth-sub" style="margin-bottom: 24px;">We've sent a secure verification link to your email. Check your inbox and click it to continue.</div>
-            <button class="auth-btn" id="verifyDoneBtn" style="background: #34C759;">I've Verified My Email</button>
-            <div class="auth-switch" id="verifyBackBtn" style="color: var(--ios-text-sec);">Back to Log In</div>
         </div>
 
       </div>
@@ -1074,12 +1063,12 @@
       if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", initApp); } else { initApp(); }
     </script>
     
-    <!-- FIREBASE AUTHENTICATION WITH IN-UI ERRORS -->
+    <!-- FIREBASE AUTHENTICATION (NO EMAIL VERIFICATION REQUIREMENT) -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import { 
         getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-        onAuthStateChanged, signOut, sendEmailVerification 
+        onAuthStateChanged, signOut
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
       const firebaseConfig = {
@@ -1155,11 +1144,9 @@
 
           if (isSignUpMode) {
               createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    sendEmailVerification(userCredential.user).then(() => { 
-                        document.getElementById('authFormState').style.display = 'none';
-                        document.getElementById('authVerifyState').style.display = 'flex';
-                    });
+                .then(() => {
+                    // It will automatically log them in via the onAuthStateChanged listener
+                    primaryAuthBtn.innerText = "Sign Up"; primaryAuthBtn.style.opacity = '1';
                 })
                 .catch((error) => { showAuthMessage(getFriendlyError(error.code)); primaryAuthBtn.innerText = "Sign Up"; primaryAuthBtn.style.opacity = '1'; });
           } else {
@@ -1167,23 +1154,11 @@
                 .catch((error) => { showAuthMessage(getFriendlyError(error.code)); primaryAuthBtn.innerText = "Log In"; primaryAuthBtn.style.opacity = '1'; });
           }
       });
-      
-      document.getElementById('verifyBackBtn').addEventListener('click', () => {
-          document.getElementById('authVerifyState').style.display = 'none';
-          document.getElementById('authFormState').style.display = 'flex';
-          toggleAuthModeBtn.click(); signOut(auth);
-      });
-      document.getElementById('verifyDoneBtn').addEventListener('click', () => { window.location.reload(); });
 
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          if (user.emailVerified === false) {
-              document.getElementById('authFormState').style.display = 'none';
-              document.getElementById('authVerifyState').style.display = 'flex';
-              return;
-          }
           loginScreen.classList.remove('active');
-          if(window.showToast) window.showToast("Welcome back!", "verified_user");
+          if(window.showToast) window.showToast("Welcome!", "verified_user");
           primaryAuthBtn.style.opacity = '1'; if(isSignUpMode) toggleAuthModeBtn.click(); 
         } else {
           loginScreen.classList.add('active'); emailInput.value = ''; passwordInput.value = ''; authMsgBox.classList.remove('show');
