@@ -979,7 +979,7 @@
 
     </script>
     
-    <!-- FIREBASE AUTHENTICATION & FIRESTORE CLOUD SYNC (FINAL COMPLETE VERSION) -->
+    <!-- FIREBASE AUTHENTICATION & FIRESTORE CLOUD SYNC -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
@@ -998,16 +998,31 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
+      // DOM Elements
       const emailInput = document.getElementById('authEmail'), passwordInput = document.getElementById('authPassword');
       const primaryAuthBtn = document.getElementById('authSubmitBtn'), toggleAuthModeBtn = document.getElementById('authToggleBtn');
       const loginScreen = document.getElementById('authScreen'), mainApp = document.getElementById('mainAppWrapper');
       const authMsgBox = document.getElementById('authError'), authErrorText = document.getElementById('authErrorText');
-      const authTitle = document.getElementById('authTitle'), authSub = document.getElementById('authSub'), authIcon = document.getElementById('authIcon'), loginMenu = document.getElementById('authMenu');
+      const authTitle = document.getElementById('authTitle'), authSub = document.getElementById('authSub');
+      const authIcon = document.getElementById('authIcon'), loginMenu = document.getElementById('authMenu');
 
-      let isSignUpMode = false, cloudUser = null;
+      let isSignUpMode = false;
+      window.cloudUser = null;
 
+      // --- Menu Toggles ---
       window.toggleAuthMenu = (e) => { e.stopPropagation(); loginMenu.classList.toggle('show'); };
       document.addEventListener('click', () => loginMenu.classList.remove('show'));
+
+      // --- Auth Dialog (FIXED: Added missing function for About & Help) ---
+      window.showAuthDialog = function(title, msg) {
+          document.getElementById('dialogTitle').innerText = title;
+          document.getElementById('dialogMsg').innerText = msg;
+          document.getElementById('authDialogOverlay').classList.add('active');
+          loginMenu.classList.remove('show');
+      }
+      window.closeAuthDialog = function() {
+          document.getElementById('authDialogOverlay').classList.remove('active');
+      }
 
       function showAuthMessage(msg, isError = true) {
           authErrorText.innerText = msg;
@@ -1017,13 +1032,11 @@
       }
 
       function getFriendlyError(code) {
-          switch(code) {
-              case 'auth/invalid-email': return 'Invalid email format.';
-              case 'auth/wrong-password': return 'Incorrect password.';
-              case 'auth/email-already-in-use': return 'Email already registered.';
-              case 'auth/weak-password': return 'Password too short (min 6).';
-              default: return 'Authentication failed. Try again.';
-          }
+          if(code.includes('invalid-email')) return 'Invalid email format.';
+          if(code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect email or password.';
+          if(code.includes('email-already-in-use')) return 'Email already registered.';
+          if(code.includes('weak-password')) return 'Password too short (min 6).';
+          return 'Authentication failed. Try again.';
       }
 
       toggleAuthModeBtn.addEventListener('click', () => {
@@ -1042,33 +1055,46 @@
           if(!email || !password) { showAuthMessage("Fill in all fields."); return; }
           primaryAuthBtn.innerText = "Processing...";
           if (isSignUpMode) {
-              createUserWithEmailAndPassword(auth, email, password).catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Sign Up"; });
+              createUserWithEmailAndPassword(auth, email, password)
+              .then(() => { primaryAuthBtn.innerText = "Success!"; })
+              .catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Sign Up"; });
           } else {
-              signInWithEmailAndPassword(auth, email, password).catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Log In"; });
+              signInWithEmailAndPassword(auth, email, password)
+              .then(() => { primaryAuthBtn.innerText = "Success!"; })
+              .catch(err => { showAuthMessage(getFriendlyError(err.code)); primaryAuthBtn.innerText = "Log In"; });
           }
       });
 
       window.cloudSyncUserData = async function() {
-          if(!cloudUser) return;
-          try { await setDoc(doc(db, "users", cloudUser.uid), { favorites: window.favorites, searchHistory: window.searchHistory }, { merge: true }); } 
-          catch(e) { console.error("Sync Failed"); }
+          if(!window.cloudUser) return;
+          try { await setDoc(doc(db, "users", window.cloudUser.uid), { favorites: window.favorites ||[], searchHistory: window.searchHistory ||[] }, { merge: true }); } 
+          catch(e) { console.error("Sync Failed", e); }
       };
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          cloudUser = user;
-          const docSnap = await getDoc(doc(db, "users", user.uid));
-          if (docSnap.exists()) {
-              window.favorites = docSnap.data().favorites || [];
-              window.searchHistory = docSnap.data().searchHistory || [];
+          window.cloudUser = user;
+          
+          // TRY/CATCH FIX: Prevent Database errors from breaking the login flow!
+          try {
+            const docSnap = await getDoc(doc(db, "users", user.uid));
+            if (docSnap.exists()) {
+                window.favorites = docSnap.data().favorites || [];
+                window.searchHistory = docSnap.data().searchHistory ||[];
+            }
+          } catch(e) { 
+            console.warn("Firestore Read Denied - Check Rules!", e); 
+            window.favorites = []; window.searchHistory =[]; 
           }
+          
           loginScreen.classList.remove('active');
           mainApp.classList.add('visible'); 
+          
           if(window.filterData) window.filterData();
           if(window.renderSearchHistory) window.renderSearchHistory();
           if(window.showToast) window.showToast("Logged In", "verified_user");
         } else {
-          cloudUser = null;
+          window.cloudUser = null;
           window.favorites = []; window.searchHistory = []; // <--- FINISHED THIS LINE!
           mainApp.classList.remove('visible');
           loginScreen.classList.add('active');
