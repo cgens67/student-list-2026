@@ -12,10 +12,14 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
 :root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-text:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-bg:#FFFFFF;--chip-border:#D1D1D6;--chip-shadow:0 1px 3px rgba(0,0,0,0.06);--chip-txt:#1D1D1F;--chip-act-bg:var(--ios-blue);--chip-act-border:var(--ios-blue);--chip-act-txt:#FFFFFF;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-ios:cubic-bezier(0.25,1,0.5,1);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans SC",sans-serif}
-body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364;--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
+body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
+body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}
+body.bg-christmas:not([data-theme="dark"]){--grad-1:#0f9b0f;--grad-2:#e6d3a3;--grad-3:#d32f2f}
+[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364;--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;transition:background-image 1s ease,background-color .4s ease,color .4s var(--ease-ios)}
-button,input{font-family:var(--font-stack)!important}input{user-select:text}
+button,input,textarea,select{font-family:var(--font-stack)!important}input,textarea,select{user-select:text}
 #mainAppWrapper{display:none;opacity:0;transition:opacity .5s var(--ease-ios)}#mainAppWrapper.visible{display:block;opacity:1}
 #ios-container{padding-top:145px;padding-bottom:40px;padding-left:16px;padding-right:16px;max-width:800px;margin:0 auto}
 @supports (padding-top:env(safe-area-inset-top)){#ios-container{padding-top:calc(145px + env(safe-area-inset-top));padding-bottom:calc(40px + env(safe-area-inset-bottom))}}
@@ -103,7 +107,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <div class='header-meta'>
       <div class='meta-left'><span class='count-pill' id='studentCount'>0</span></div>
       <div class='header-controls'>
-        <button class='theme-toggle' id='adminControlBtn' onclick='openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
+        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
         <button class='theme-toggle' onclick='openAbout()'><span class='material-icons-round' style='font-size:20px'>info</span></button>
         <button class='theme-toggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
@@ -224,22 +228,32 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     </div>
   </div>
 
-  <div class='modal-bg' id='adminOverlay' onclick='closeAdminPanel(event)'>
+  <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel(event)'>
     <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="max-height: 90vh;">
       <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Manage Database & Settings</div></div>
       <div class='m-body' style="display:flex; flex-direction:column; gap:15px;">
         <div style="font-size:13px; color:var(--ios-text-sec);">
-          <strong>Warning:</strong> You are editing live database records. Ensure JSON formatting is correct.
+          <strong>Warning:</strong> You are editing live database records. Ensure JSON formatting is correct before saving.
         </div>
+        
+        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
+        <select id="adminThemeSelect" style="width:100%; height:40px; border-radius:10px; padding:0 10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-size:14px; outline:none;">
+          <option value="dynamic">Dynamic (Time of Day)</option>
+          <option value="morning">Morning Theme</option>
+          <option value="afternoon">Afternoon/Day Theme</option>
+          <option value="night">Night Theme</option>
+          <option value="christmas">Festive Christmas Theme</option>
+        </select>
+
         <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Student Data (JSON)</label>
         <textarea id="adminStudentsInput" style="width:100%; height:200px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
 
         <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Teacher Data (JSON)</label>
         <textarea id="adminTeachersInput" style="width:100%; height:120px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
 
-        <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; margin-top:10px;" onclick='saveAdminData()'>Save to Database</button>
+        <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; margin-top:10px;" onclick='window.saveAdminData()'>Save to Database</button>
       </div>
-      <div class='m-foot'><button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text);" onclick='closeAdminPanel()'>Cancel</button></div>
+      <div class='m-foot'><button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text);" onclick='window.closeAdminPanel()'>Cancel</button></div>
     </div>
   </div>
   
@@ -256,8 +270,13 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 </div>
 
 <script>
-var smkData = [];
+// ==========================================
+// 🚨 GLOBAL DATA VARIABLES
+// ==========================================
+var smkData =[];
 var teacherData = {};
+var globalSettings = { theme: 'dynamic' };
+
 const classes =["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
 const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 
@@ -266,12 +285,28 @@ let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilte
 const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任"}};
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initDesktopScroll()}
-function checkTimeOfDay(){const hour=new Date().getHours();const body=document.body;body.classList.remove('bg-morning','bg-afternoon','bg-night');if(hour>=7&&hour<11)body.classList.add('bg-morning');else if(hour>=11&&hour<18)body.classList.add('bg-afternoon');else body.classList.add('bg-night')}
+function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
+
+window.applyGlobalTheme = function() {
+  const body = document.body;
+  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas');
+  const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+  
+  if (themeMode === 'dynamic') {
+    const hour = new Date().getHours();
+    if(hour>=7 && hour<11) body.classList.add('bg-morning');
+    else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
+    else body.classList.add('bg-night');
+  } else {
+    body.classList.add('bg-' + themeMode);
+  }
+}
+function checkTimeOfDay(){ applyGlobalTheme(); }
+
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout()}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();}
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 function toggleTheme(){triggerHaptic();enableDark(!isDark)}
 function enableDark(bool){isDark=bool;document.body.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('iconTheme').innerText=isDark?'light_mode':'dark_mode';localStorage.setItem('theme',isDark?'dark':'light');updateAppThemeColor(currentClass);const modal=document.querySelector('.modal-card');if(modal&&document.getElementById('modalOverlay').classList.contains('open')){const nameEl=document.getElementById('mName');if(nameEl){const student=smkData.find(s=>s.name===nameEl.innerText);if(student)applyModalColors(student)}}}
@@ -328,6 +363,21 @@ window.ctxAction=function(action){if(!activeContextId)return;const student=smkDa
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
+
+// ==========================================
+// 🚨 ADMIN PANEL LOGIC
+// ==========================================
+window.openAdminPanel = () => {
+  document.getElementById('adminStudentsInput').value = JSON.stringify(window.smkData, null, 2);
+  document.getElementById('adminTeachersInput').value = JSON.stringify(window.teacherData, null, 2);
+  document.getElementById('adminThemeSelect').value = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+  document.getElementById('adminOverlay').classList.add('open');
+};
+
+window.closeAdminPanel = (e) => {
+  document.getElementById('adminOverlay').classList.remove('open');
+};
+
 </script>
 
 <script type="module">
@@ -346,7 +396,46 @@ let isSignUpMode=!1;window.cloudUser=null;
 // Change this to the exact email address you use to log in!
 // Only this email will see the Admin button.
 // ==========================================
-const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; 
+const ADMIN_EMAIL = "your.email@gmail.com"; // <--- CHANGE THIS BEFORE SAVING
+
+
+window.saveAdminData = async () => {
+  const btn = document.getElementById('adminSaveBtn');
+  btn.innerText = "Saving to Database...";
+  try {
+    const newStudents = JSON.parse(document.getElementById('adminStudentsInput').value);
+    const newTeachers = JSON.parse(document.getElementById('adminTeachersInput').value);
+    const newTheme = document.getElementById('adminThemeSelect').value;
+    
+    // Save to Firebase securely
+    await setDoc(doc(db, "appData", "schoolInfo"), {
+      students: newStudents,
+      teachers: newTeachers,
+      settings: { theme: newTheme }
+    });
+    
+    // Update local variables instantly
+    window.smkData = newStudents;
+    window.teacherData = newTeachers;
+    window.globalSettings = { theme: newTheme };
+    
+    // Re-render UI
+    if(window.initFilterChips) window.initFilterChips();
+    if(window.renderTabs) window.renderTabs();
+    if(window.filterData) window.filterData();
+    if(window.applyGlobalTheme) window.applyGlobalTheme();
+    
+    btn.innerText = "Saved Successfully!";
+    setTimeout(() => { 
+      btn.innerText = "Save to Database"; 
+      window.closeAdminPanel(); 
+    }, 1500);
+  } catch(e) {
+    alert("Error! Check your JSON formatting.\n\n" + e.message);
+    btn.innerText = "Save to Database";
+  }
+};
+
 
 window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show')};document.addEventListener('click',()=>loginMenu.classList.remove('show'));
 function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
@@ -380,7 +469,9 @@ onAuthStateChanged(auth, async (user) => {
       if (schoolSnap.exists()) {
         window.smkData = schoolSnap.data().students ||[];
         window.teacherData = schoolSnap.data().teachers || {};
+        window.globalSettings = schoolSnap.data().settings || { theme: 'dynamic' };
         
+        if(window.applyGlobalTheme) window.applyGlobalTheme();
         if(window.initFilterChips) window.initFilterChips();
         if(window.renderTabs) window.renderTabs();
         if(window.filterData) window.filterData();
