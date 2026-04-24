@@ -65,6 +65,11 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .anim-text-change{transition:opacity .25s cubic-bezier(0.25,1,0.5,1),transform .25s cubic-bezier(0.25,1,0.5,1);opacity:1;transform:translate3d(0,0,0)}.blur-fade-out{opacity:0;transform:scale(.95) translateY(5px);filter:blur(8px);transition:all .3s cubic-bezier(0.25,1,0.5,1)}.blur-fade-in{opacity:1;transform:scale(1) translateY(0);filter:blur(0);transition:all .4s cubic-bezier(0.25,1,0.5,1)}.anim-text-change.fade-out{opacity:0;transform:translate3d(0,-10px,0)}.anim-text-change.fade-in{opacity:1;transform:translate3d(0,0,0)}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:rgba(0,0,0,0.6);color:#FFF;padding:12px 24px;border-radius:50px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 16px 32px rgba(0,0,0,0.3);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:3000;transition:all .5s var(--ease-spring);display:flex;align-items:center;gap:8px;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);white-space:nowrap;max-width:90vw}@supports (padding-bottom:env(safe-area-inset-bottom)){.toast{bottom:calc(30px + env(safe-area-inset-bottom))}}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}[data-theme="dark"] .toast{background:rgba(255,255,255,0.7);color:#000;border-color:rgba(0,0,0,0.1)}
 .cm-backdrop{position:fixed;top:0;left:0;right:0;bottom:0;z-index:2900;background:rgba(0,0,0,0.1);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s}.cm-backdrop.active{opacity:1;pointer-events:auto}.cm-menu{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) scale(.9);width:250px;background:rgba(255,255,255,0.85);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;z-index:3000;box-shadow:var(--shadow-lg),var(--glass-highlight);opacity:0;pointer-events:none;transition:all .4s var(--ease-spring);transform-origin:center bottom}[data-theme="dark"] .cm-menu{background:rgba(30,30,30,0.85)}.cm-backdrop.active .cm-menu{opacity:1;pointer-events:auto;transform:translateX(-50%) scale(1);bottom:50px}.cm-item{padding:14px 16px;width:100%;border:none;background:0 0;text-align:left;font-size:16px;color:var(--ios-text);border-bottom:1px solid var(--ios-sep);display:flex;align-items:center;justify-content:space-between}.cm-item:last-child{border-bottom:none}.cm-item:active{background:rgba(255,255,255,0.2)}[data-theme="dark"] .cm-item:active{background:rgba(0,0,0,0.2)}.cm-icon{font-size:20px;color:var(--ios-blue)}.cm-header{padding:10px 16px;font-size:12px;font-weight:600;color:var(--ios-text-sec);text-align:center;background:rgba(0,0,0,0.05)}[data-theme="dark"] .cm-header{background:rgba(255,255,255,0.05)}
+
+/* ADMIN UI CUSTOM CSS */
+.admin-input { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); outline:none; }
+[data-theme="dark"] .admin-input { background: rgba(0,0,0,0.3); }
+.admin-tab { display: none; }
 </style>
 </head>
 <body>
@@ -228,32 +233,77 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     </div>
   </div>
 
+  <!-- NEW ADMIN DASHBOARD MODAL -->
   <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel(event)'>
-    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="max-height: 90vh;">
-      <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Manage Database & Settings</div></div>
-      <div class='m-body' style="display:flex; flex-direction:column; gap:15px;">
-        <div style="font-size:13px; color:var(--ios-text-sec);">
-          <strong>Warning:</strong> You are editing live database records. Ensure JSON formatting is correct before saving.
-        </div>
+    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="max-height: 85vh;">
+      <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Changes save to 'Update Queue' locally</div></div>
+      
+      <div class='m-body' style="display:flex; flex-direction:column; gap:15px; padding-top:10px;">
         
-        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
-        <select id="adminThemeSelect" style="width:100%; height:40px; border-radius:10px; padding:0 10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-size:14px; outline:none;">
-          <option value="dynamic">Dynamic (Time of Day)</option>
-          <option value="morning">Morning Theme</option>
-          <option value="afternoon">Afternoon/Day Theme</option>
-          <option value="night">Night Theme</option>
-          <option value="christmas">Festive Christmas Theme</option>
-        </select>
+        <!-- TABS NAVIGATION -->
+        <div class="seg-control" style="margin-bottom:0;">
+          <button class="seg-btn active" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
+          <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Teachers</button>
+          <button class="seg-btn" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
+        </div>
 
-        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Student Data (JSON)</label>
-        <textarea id="adminStudentsInput" style="width:100%; height:200px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
+        <!-- TAB 1: STUDENTS -->
+        <div id="adminTab-students" class="admin-tab" style="display:block;">
+          <select id="adminStudentSelect" onchange="window.loadAdminStudentForm()" class="admin-input">
+            <option value="NEW">-- ➕ Add New Student --</option>
+          </select>
+          
+          <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+            <input type="text" id="adminStId" placeholder="Student ID (e.g. 120116040351)" class="admin-input">
+            <input type="text" id="adminStName" placeholder="Full Name" class="admin-input">
+            <input type="text" id="adminStCn" placeholder="Chinese Name (or -)" class="admin-input">
+            <input type="text" id="adminStOld" placeholder="Old Class (e.g. 1B)" class="admin-input">
+            <select id="adminStNew" class="admin-input">
+              <option value="2 BIRU">2 BIRU</option><option value="2 HIJAU">2 HIJAU</option><option value="2 KUNING">2 KUNING</option><option value="2 MERAH">2 MERAH</option><option value="2 PERANG">2 PERANG</option><option value="2 UNGU">2 UNGU</option>
+            </select>
+            <input type="text" id="adminStSch" placeholder="Primary School" class="admin-input">
+            
+            <div style="display:flex; gap:8px; margin-top:5px;">
+              <button onclick="window.adminApplyStudent()" style="flex:2; background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Update Queue</button>
+              <button onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
+            </div>
+          </div>
+        </div>
 
-        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Teacher Data (JSON)</label>
-        <textarea id="adminTeachersInput" style="width:100%; height:120px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
+        <!-- TAB 2: TEACHERS -->
+        <div id="adminTab-teachers" class="admin-tab" style="display:none;">
+          <select id="adminTeacherClassSelect" onchange="window.loadAdminTeacherForm()" class="admin-input">
+             <option value="Biru">2 Biru</option><option value="Hijau">2 Hijau</option><option value="Kuning">2 Kuning</option><option value="Merah">2 Merah</option><option value="Perang">2 Perang</option><option value="Ungu">2 Ungu</option>
+          </select>
+          <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+             <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
+             <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
+             <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
+             <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
+             <button onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
+          </div>
+        </div>
 
-        <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; margin-top:10px;" onclick='window.saveAdminData()'>Save to Database</button>
+        <!-- TAB 3: SETTINGS -->
+        <div id="adminTab-settings" class="admin-tab" style="display:none;">
+           <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
+           <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px;">This updates the live background for everyone instantly.</p>
+           <select id="adminThemeSelect" class="admin-input" style="margin-top:8px;">
+              <option value="dynamic">Dynamic (Changes by Time of Day)</option>
+              <option value="morning">Locked to Morning Theme</option>
+              <option value="afternoon">Locked to Afternoon/Day Theme</option>
+              <option value="night">Locked to Night Theme</option>
+              <option value="christmas">Locked to Festive Christmas Theme</option>
+           </select>
+        </div>
+
       </div>
-      <div class='m-foot'><button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text);" onclick='window.closeAdminPanel()'>Cancel</button></div>
+      
+      <!-- FIXED BOTTOM BUTTONS -->
+      <div class='m-foot' style="display:flex; gap:10px; justify-content:space-between; padding-top:10px; border-top:1px solid var(--glass-border);">
+        <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeAdminPanel()'>Cancel</button>
+        <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; flex:1.5;" onclick='window.saveAdminData()'>Save Database</button>
+      </div>
     </div>
   </div>
   
@@ -271,7 +321,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
 <script>
 // ==========================================
-// 🚨 GLOBAL DATA VARIABLES
+// GLOBAL DATA VARIABLES
 // ==========================================
 var smkData =[];
 var teacherData = {};
@@ -285,13 +335,12 @@ let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilte
 const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任"}};
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initDesktopScroll()}
 
 window.applyGlobalTheme = function() {
   const body = document.body;
   body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas');
   const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
-  
   if (themeMode === 'dynamic') {
     const hour = new Date().getHours();
     if(hour>=7 && hour<11) body.classList.add('bg-morning');
@@ -305,8 +354,8 @@ function checkTimeOfDay(){ applyGlobalTheme(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout()}
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 function toggleTheme(){triggerHaptic();enableDark(!isDark)}
 function enableDark(bool){isDark=bool;document.body.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('iconTheme').innerText=isDark?'light_mode':'dark_mode';localStorage.setItem('theme',isDark?'dark':'light');updateAppThemeColor(currentClass);const modal=document.querySelector('.modal-card');if(modal&&document.getElementById('modalOverlay').classList.contains('open')){const nameEl=document.getElementById('mName');if(nameEl){const student=smkData.find(s=>s.name===nameEl.innerText);if(student)applyModalColors(student)}}}
@@ -365,17 +414,125 @@ window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').c
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
-// 🚨 ADMIN PANEL LOGIC
+// 🚨 NEW ADMIN DASHBOARD LOGIC (No JSON)
 // ==========================================
+window.adminTempStudents =[];
+window.adminTempTeachers = {};
+
 window.openAdminPanel = () => {
-  document.getElementById('adminStudentsInput').value = JSON.stringify(window.smkData, null, 2);
-  document.getElementById('adminTeachersInput').value = JSON.stringify(window.teacherData, null, 2);
+  // Clone data so we don't accidentally edit live data until we press save
+  window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
+  window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
+  
   document.getElementById('adminThemeSelect').value = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+  
+  window.refreshAdminStudentDropdown();
+  window.loadAdminTeacherForm();
+  window.switchAdminTab('students');
   document.getElementById('adminOverlay').classList.add('open');
 };
 
-window.closeAdminPanel = (e) => {
+window.closeAdminPanel = () => {
   document.getElementById('adminOverlay').classList.remove('open');
+};
+
+window.switchAdminTab = (tab) => {
+  ['students', 'teachers', 'settings'].forEach(t => {
+    document.getElementById('adminTab-' + t).style.display = (t === tab) ? 'block' : 'none';
+    document.getElementById('tabBtn-' + t).classList.toggle('active', t === tab);
+  });
+};
+
+// --- Students Tab Logic ---
+window.refreshAdminStudentDropdown = (selectId = "NEW") => {
+  const sel = document.getElementById('adminStudentSelect');
+  let html = '<option value="NEW">-- ➕ Add New Student --</option>';
+  const sorted = [...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
+  sorted.forEach(s => {
+    html += `<option value="${s.id}">${s.name} (${s.newClass})</option>`;
+  });
+  sel.innerHTML = html;
+  sel.value = selectId;
+  window.loadAdminStudentForm();
+};
+
+window.loadAdminStudentForm = () => {
+  const id = document.getElementById('adminStudentSelect').value;
+  if (id === "NEW") {
+    document.getElementById('adminStId').value = '';
+    document.getElementById('adminStId').disabled = false; // Let them type a new ID
+    document.getElementById('adminStName').value = '';
+    document.getElementById('adminStCn').value = '';
+    document.getElementById('adminStOld').value = '';
+    document.getElementById('adminStNew').value = '2 BIRU';
+    document.getElementById('adminStSch').value = '';
+  } else {
+    const student = window.adminTempStudents.find(s => s.id === id);
+    if(student) {
+      document.getElementById('adminStId').value = student.id;
+      document.getElementById('adminStId').disabled = true; // Lock ID to prevent weird bugs
+      document.getElementById('adminStName').value = student.name;
+      document.getElementById('adminStCn').value = student.cn || "-";
+      document.getElementById('adminStOld').value = student.oldClass || "-";
+      document.getElementById('adminStNew').value = student.newClass || "2 BIRU";
+      document.getElementById('adminStSch').value = student.sch || "-";
+    }
+  }
+};
+
+window.adminApplyStudent = () => {
+  const id = document.getElementById('adminStId').value.trim();
+  const name = document.getElementById('adminStName').value.trim().toUpperCase();
+  if(!id || !name) {
+    if(window.showToast) window.showToast("ID and Name are required", "error_outline");
+    return;
+  }
+  
+  const existingIndex = window.adminTempStudents.findIndex(s => s.id === id);
+  const newObj = {
+    id: id, 
+    name: name, 
+    cn: document.getElementById('adminStCn').value.trim() || "-", 
+    oldClass: document.getElementById('adminStOld').value.trim() || "-", 
+    newClass: document.getElementById('adminStNew').value, 
+    sch: document.getElementById('adminStSch').value.trim() || "-"
+  };
+
+  if (existingIndex >= 0) {
+    window.adminTempStudents[existingIndex] = newObj;
+    if(window.showToast) window.showToast("Student Updated in Queue", "list_alt");
+  } else {
+    window.adminTempStudents.push(newObj);
+    if(window.showToast) window.showToast("New Student Added to Queue", "person_add");
+  }
+  window.refreshAdminStudentDropdown(id);
+};
+
+window.adminDeleteStudent = () => {
+  const id = document.getElementById('adminStudentSelect').value;
+  if (id === "NEW") return;
+  if(confirm("Are you sure you want to delete this student?\n\nThis will NOT be final until you click 'Save Database' at the bottom.")) {
+    window.adminTempStudents = window.adminTempStudents.filter(s => s.id !== id);
+    window.refreshAdminStudentDropdown("NEW");
+    if(window.showToast) window.showToast("Student Removed from Queue", "delete");
+  }
+};
+
+// --- Teachers Tab Logic ---
+window.loadAdminTeacherForm = () => {
+  const cls = document.getElementById('adminTeacherClassSelect').value;
+  const tData = window.adminTempTeachers[cls] || {g: "", p: ""};
+  document.getElementById('adminTg').value = tData.g;
+  document.getElementById('adminTp').value = tData.p;
+};
+
+window.adminApplyTeacher = () => {
+  const cls = document.getElementById('adminTeacherClassSelect').value;
+  window.adminTempTeachers[cls] = {
+    g: document.getElementById('adminTg').value.trim(),
+    p: document.getElementById('adminTp').value.trim()
+  };
+  if(window.showToast) window.showToast("Teacher Updated in Queue", "school");
 };
 
 </script>
@@ -393,33 +550,29 @@ let isSignUpMode=!1;window.cloudUser=null;
 
 // ==========================================
 // 🚨 ADMIN EMAIL SETTING
-// Change this to the exact email address you use to log in!
-// Only this email will see the Admin button.
 // ==========================================
-const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; // <--- CHANGE THIS BEFORE SAVING
+const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; // <--- CHANGE THIS TO YOUR EXACT EMAIL
 
 
 window.saveAdminData = async () => {
   const btn = document.getElementById('adminSaveBtn');
   btn.innerText = "Saving to Database...";
   try {
-    const newStudents = JSON.parse(document.getElementById('adminStudentsInput').value);
-    const newTeachers = JSON.parse(document.getElementById('adminTeachersInput').value);
     const newTheme = document.getElementById('adminThemeSelect').value;
     
-    // Save to Firebase securely
+    // Save the completely modified queues straight to Firebase securely
     await setDoc(doc(db, "appData", "schoolInfo"), {
-      students: newStudents,
-      teachers: newTeachers,
+      students: window.adminTempStudents,
+      teachers: window.adminTempTeachers,
       settings: { theme: newTheme }
     });
     
-    // Update local variables instantly
-    window.smkData = newStudents;
-    window.teacherData = newTeachers;
+    // Overwrite the live UI variables
+    window.smkData = window.adminTempStudents;
+    window.teacherData = window.adminTempTeachers;
     window.globalSettings = { theme: newTheme };
     
-    // Re-render UI
+    // Re-render everything instantly!
     if(window.initFilterChips) window.initFilterChips();
     if(window.renderTabs) window.renderTabs();
     if(window.filterData) window.filterData();
@@ -427,12 +580,12 @@ window.saveAdminData = async () => {
     
     btn.innerText = "Saved Successfully!";
     setTimeout(() => { 
-      btn.innerText = "Save to Database"; 
+      btn.innerText = "Save Database"; 
       window.closeAdminPanel(); 
     }, 1500);
   } catch(e) {
-    alert("Error! Check your JSON formatting.\n\n" + e.message);
-    btn.innerText = "Save to Database";
+    alert("Database Save Error!\n\n" + e.message);
+    btn.innerText = "Save Database";
   }
 };
 
@@ -450,7 +603,6 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     window.cloudUser = user;
 
-    // Show Admin Button if it matches the ADMIN_EMAIL
     if (user.email === ADMIN_EMAIL) {
       document.getElementById('adminControlBtn').style.display = 'flex';
     } else {
@@ -475,20 +627,16 @@ onAuthStateChanged(auth, async (user) => {
         if(window.initFilterChips) window.initFilterChips();
         if(window.renderTabs) window.renderTabs();
         if(window.filterData) window.filterData();
-      } else {
-        if(window.showToast) window.showToast("No data found in database.", "error");
       }
 
     } catch (e) {
       console.error("Data error: ", e);
-      if(window.showToast) window.showToast("Could not load data. Check console.", "error");
     }
 
     loginScreen.classList.remove('active');
     mainApp.classList.add('visible');
     if (window.filterData) window.filterData();
     if (window.renderSearchHistory) window.renderSearchHistory();
-    if (window.showToast) window.showToast("Logged In", "verified_user");
     
   } else {
     // SECURITY: Completely wipe sensitive data from memory on logout
