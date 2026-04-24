@@ -12,11 +12,20 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
 :root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-text:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-bg:#FFFFFF;--chip-border:#D1D1D6;--chip-shadow:0 1px 3px rgba(0,0,0,0.06);--chip-txt:#1D1D1F;--chip-act-bg:var(--ios-blue);--chip-act-border:var(--ios-blue);--chip-act-txt:#FFFFFF;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-ios:cubic-bezier(0.25,1,0.5,1);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans SC",sans-serif}
+/* LIGHT MODE DYNAMIC THEMES */
 body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
 body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
 body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}
 body.bg-christmas:not([data-theme="dark"]){--grad-1:#0f9b0f;--grad-2:#e6d3a3;--grad-3:#d32f2f}
-[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364;--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+/* DARK MODE BASE */
+[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+/* DARK MODE DYNAMIC THEMES */
+body[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
+body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#180924}
+body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
+body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
+body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:#3b0909}
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;transition:background-image 1s ease,background-color .4s ease,color .4s var(--ease-ios)}
 button,input,textarea,select{font-family:var(--font-stack)!important}input,textarea,select{user-select:text}
@@ -70,6 +79,21 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .admin-input { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); outline:none; }
 [data-theme="dark"] .admin-input { background: rgba(0,0,0,0.3); }
 .admin-tab { display: none; }
+
+/* IN-UI CUSTOM DROPDOWN */
+.custom-select-container { position:relative; width:100%; }
+.custom-select-header { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.custom-select-dropdown { position:absolute; top:45px; left:0; right:0; background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-md); border-radius:12px; padding:10px; z-index:100; display:none; flex-direction:column; }
+.custom-select-dropdown.show { display:flex; animation: fadeUp 0.3s forwards; }
+.custom-option { padding:10px; border-bottom:1px solid var(--ios-sep); font-size:14px; color:var(--ios-text); cursor:pointer; }
+.custom-option:last-child { border-bottom:none; }
+.custom-option:active { background:rgba(0,0,0,0.05); }
+
+/* UPDATE PROMPT BANNER */
+.update-prompt { position:fixed; bottom: -100px; left:50%; transform:translateX(-50%); background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:16px; padding:12px 16px; z-index:4000; width:90%; max-width:400px; transition:bottom 0.5s var(--ease-spring); display:flex; align-items:center; gap:12px; }
+.update-prompt.show { bottom: 30px; }
+@supports (padding-bottom:env(safe-area-inset-bottom)){.update-prompt.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
+.update-btn { background:var(--ios-blue); color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(0,122,255,0.3); }
 </style>
 </head>
 <body>
@@ -156,6 +180,12 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
     <div class='tabs-track' id='classTabs'></div>
     
+    <!-- CLASS NOTICE BANNER -->
+    <div id="classNoticeBanner" style="display:none; background:rgba(255,149,0,0.15); border:1px solid rgba(255,149,0,0.3); border-radius:12px; padding:12px; margin-bottom:16px; align-items:flex-start; gap:8px;">
+        <span class="material-icons-round" style="color:#FF9500; font-size:20px;">info</span>
+        <div id="classNoticeText" style="font-size:13px; color:var(--ios-text); line-height:1.4; flex:1;"></div>
+    </div>
+
     <div class='teacher-card' id='classInfoCard'>
       <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
       <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
@@ -234,28 +264,34 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
 
   <!-- NEW ADMIN DASHBOARD MODAL -->
-  <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel(event)'>
-    <!-- Changed to 85dvh (Dynamic Viewport Height) so it resizes when mobile keyboard opens -->
+  <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel()'>
     <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="height: 85dvh; max-height: 800px; display: flex; flex-direction: column;">
       
       <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Changes save to 'Update Queue' locally</div></div>
       
-      <!-- Added min-height: 0 so the scrollbar stays inside the body and doesn't push the header off screen -->
       <div class='m-body' style="flex: 1; min-height: 0; overflow-y: auto; padding-top: 10px;">
         <div style="display:flex; flex-direction:column; gap:15px; padding-bottom: 20px;">
           
           <!-- TABS NAVIGATION -->
           <div class="seg-control" style="margin-bottom:0; flex-shrink: 0;">
             <button class="seg-btn active" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
-            <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Teachers</button>
+            <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Classes</button>
             <button class="seg-btn" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
           </div>
 
           <!-- TAB 1: STUDENTS -->
           <div id="adminTab-students" class="admin-tab" style="display:block;">
-            <select id="adminStudentSelect" onchange="window.loadAdminStudentForm()" class="admin-input">
-              <option value="NEW">-- ➕ Add New Student --</option>
-            </select>
+            
+            <!-- Custom In-UI Dropdown -->
+            <div class="custom-select-container">
+              <div class="custom-select-header" id="adminStudentSelectHeader" onclick="window.toggleStudentDropdown()">
+                 <span>-- ➕ Add New Student --</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminStudentDropdown">
+                 <input type="text" id="adminStudentSearch" placeholder="Search by name..." onkeyup="window.filterAdminStudents()" class="admin-input" style="margin-bottom:8px;" autocomplete="off">
+                 <div id="adminStudentList" style="max-height:180px; overflow-y:auto; touch-action:pan-y;"></div>
+              </div>
+            </div>
             
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
               <input type="text" id="adminStId" placeholder="Student ID (e.g. 120116040351)" class="admin-input">
@@ -274,16 +310,22 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
             </div>
           </div>
 
-          <!-- TAB 2: TEACHERS -->
+          <!-- TAB 2: CLASSES & TEACHERS -->
           <div id="adminTab-teachers" class="admin-tab" style="display:none;">
             <select id="adminTeacherClassSelect" onchange="window.loadAdminTeacherForm()" class="admin-input">
                <option value="Biru">2 Biru</option><option value="Hijau">2 Hijau</option><option value="Kuning">2 Kuning</option><option value="Merah">2 Merah</option><option value="Perang">2 Perang</option><option value="Ungu">2 Ungu</option>
             </select>
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+               
+               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Class Notice / Warning Banner</label>
+               <textarea id="adminClassNotice" placeholder="e.g. Information may be inaccurate due to..." class="admin-input" style="height:60px; padding:8px;"></textarea>
+               <hr style="border:none; border-top:1px solid var(--ios-sep); margin:5px 0;">
+
                <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
                <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
                <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
                <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
+               
                <button onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
             </div>
           </div>
@@ -321,6 +363,16 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
       <button class='cm-item' onclick='ctxAction("fav")'><span id='ctxFavText'>Favorite</span><span class='material-icons-round cm-icon' id='ctxFavIcon'>star_border</span></button>
     </div>
   </div>
+
+  <!-- UPDATE PROMPT BANNER -->
+  <div id="updatePromptBanner" class="update-prompt">
+    <span class="material-icons-round" style="color:#007AFF; font-size:28px;">sync</span>
+    <div style="flex:1;">
+        <div style="font-weight:700; font-size:14px; color:var(--ios-text);">Database Updated</div>
+        <div style="font-size:12px; color:var(--ios-text-sec);">New student/class info is available.</div>
+    </div>
+    <button onclick="window.applyPendingUpdate()" class="update-btn">Update Now</button>
+  </div>
   
   <div id='toastContainer'></div>
 </div>
@@ -329,9 +381,12 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 // ==========================================
 // GLOBAL DATA VARIABLES
 // ==========================================
-var smkData =[];
-var teacherData = {};
-var globalSettings = { theme: 'dynamic' };
+window.smkData =[];
+window.teacherData = {};
+window.globalSettings = { theme: 'dynamic' };
+window.classNotices = {};
+window.isInitialLoad = true;
+window.pendingDataUpdate = null;
 
 const classes =["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
 const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
@@ -341,7 +396,7 @@ let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilte
 const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任"}};
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
 
 window.applyGlobalTheme = function() {
   const body = document.body;
@@ -356,22 +411,22 @@ window.applyGlobalTheme = function() {
     body.classList.add('bg-' + themeMode);
   }
 }
-function checkTimeOfDay(){ applyGlobalTheme(); }
+function checkTimeOfDay(){ window.applyGlobalTheme(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout()}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();}
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 function toggleTheme(){triggerHaptic();enableDark(!isDark)}
-function enableDark(bool){isDark=bool;document.body.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('iconTheme').innerText=isDark?'light_mode':'dark_mode';localStorage.setItem('theme',isDark?'dark':'light');updateAppThemeColor(currentClass);const modal=document.querySelector('.modal-card');if(modal&&document.getElementById('modalOverlay').classList.contains('open')){const nameEl=document.getElementById('mName');if(nameEl){const student=smkData.find(s=>s.name===nameEl.innerText);if(student)applyModalColors(student)}}}
+function enableDark(bool){isDark=bool;document.body.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('iconTheme').innerText=isDark?'light_mode':'dark_mode';localStorage.setItem('theme',isDark?'dark':'light');updateAppThemeColor(currentClass);const modal=document.querySelector('.modal-card');if(modal&&document.getElementById('modalOverlay').classList.contains('open')){const nameEl=document.getElementById('mName');if(nameEl){const student=window.smkData.find(s=>s.name===nameEl.innerText);if(student)applyModalColors(student)}}}
 function initDensity(){applyDensity(isCompactMode)}
 window.toggleDensity=function(){triggerHaptic();isCompactMode=!isCompactMode;localStorage.setItem('isCompact',isCompactMode);applyDensity(isCompactMode);showToast(isCompactMode?uiText[curLang].toastCompact:uiText[curLang].toastComfort,"view_headline")}
 function applyDensity(compact){const grid=document.getElementById('studentGrid'),icon=document.getElementById('iconDensity');if(compact){grid.classList.add('compact-mode');icon.innerText="view_agenda"}else{grid.classList.remove('compact-mode');icon.innerText="view_headline"}}
 function toggleFilters(){triggerHaptic();isFilterOpen=!isFilterOpen;const drawer=document.getElementById("filterDrawer"),btn=document.getElementById("btnFilter");if(isFilterOpen){drawer.classList.add("open");btn.style.opacity="0.5"}else{drawer.classList.remove("open");btn.style.opacity="1"}}
 function handleSort(type){triggerHaptic();if(currentSortType===type)sortAsc=!sortAsc;else{currentSortType=type;sortAsc=!0}updateSortUI();filterData()}
 function updateSortUI(){const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass");if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip")}else{arrowName.classList.add("flip");arrowClass.classList.add("flip")}if(currentSortType==='name'){btnName.classList.add("active");btnClass.classList.remove("active");arrowName.classList.remove("hidden");arrowClass.classList.add("hidden")}else{btnName.classList.remove("active");btnClass.classList.add("active");arrowClass.classList.remove("hidden");arrowName.classList.add("hidden")}}
-function getDistinct(key){return[...new Set(smkData.map(s=>s[key]))].filter(v=>v&&v!=='').sort()}
+function getDistinct(key){return[...new Set(window.smkData.map(s=>s[key]))].filter(v=>v&&v!=='').sort()}
 function initFilterChips(){renderChipRow("chipCont2025",getDistinct("oldClass"),"year2025");renderChipRow("chipContOrigin",getDistinct("sch"),"origin")}
 function renderChipRow(containerId,list,stateKey){const cont=document.getElementById(containerId);if(!cont)return;let html=`<button class="chip active" onclick="setFilter('${stateKey}', '', this)">${uiText[curLang].all}</button>`;list.forEach(val=>{html+=`<button class="chip" onclick="setFilter('${stateKey}', '${val}', this)">${val}</button>`});cont.innerHTML=html}
 function setTextAndAnimateWidth(element,newText){if(!element)return;const targetNode=element.tagName==='SPAN'?element:(element.querySelector('span')||element);if(targetNode.innerHTML===newText)return;const containerToAnimate=element.tagName==='SPAN'?element.parentElement:element;const startWidth=containerToAnimate.offsetWidth;targetNode.innerHTML=newText;const targetWidth=containerToAnimate.offsetWidth;if(startWidth!==targetWidth&&startWidth>0&&typeof containerToAnimate.animate==='function'){containerToAnimate.animate([{width:startWidth+'px'},{width:targetWidth+'px'}],{duration:300,easing:'cubic-bezier(0.25, 1, 0.5, 1)'})}}
@@ -407,40 +462,40 @@ function updateStatsUI(mode,view){const card=document.getElementById('statsCard'
 window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
 function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 function updateCounter(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
-function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed")}else{clearBtn.style.display='none';tabs.style.display='flex';const data=teacherData[currentClass];if(data){const wasShowing=tCard.classList.contains('show');const startHeight=wasShowing?tCard.offsetHeight:0;document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!wasShowing){tCard.classList.add('show')}else{tCard.style.height='auto';const newHeight=tCard.offsetHeight;if(startHeight!==newHeight&&startHeight>0){tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.3s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.transition='';tCard.style.height='auto'},300)}}}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(currentSortType==='class')handleSort('name')}let filtered;if(isGlobalMode)filtered=smkData.slice();else filtered=smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else{const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="openStudent(event, '${student.id}')" ontouchstart="handleTouchStart(event, '${student.id}')" ontouchend="handleTouchEnd(event)" ontouchmove="handleTouchMove(event)" oncontextmenu="handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
+function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){const wasShowing=tCard.classList.contains('show');const startHeight=wasShowing?tCard.offsetHeight:0;document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!wasShowing){tCard.classList.add('show')}else{tCard.style.height='auto';const newHeight=tCard.offsetHeight;if(startHeight!==newHeight&&startHeight>0){tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.3s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.transition='';tCard.style.height='auto'},300)}}}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(currentSortType==='class')handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else{const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="openStudent(event, '${student.id}')" ontouchstart="handleTouchStart(event, '${student.id}')" ontouchend="handleTouchEnd(event)" ontouchmove="handleTouchMove(event)" oncontextmenu="handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
 window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{showContextMenu(id)},500)}
 window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
 window.handleTouchMove=function(){clearTimeout(longPressTimer)}
 window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;showContextMenu(id)}
-function showContextMenu(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
+function showContextMenu(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
 window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
-window.ctxAction=function(action){if(!activeContextId)return;const student=smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";toggleFilters();filterData();showToast("Filtered by "+student.sch,"filter_list")}hideContextMenu()}
+window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";toggleFilters();filterData();showToast("Filtered by "+student.sch,"filter_list")}hideContextMenu()}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
-// 🚨 NEW ADMIN DASHBOARD LOGIC (No JSON)
+// NEW ADMIN DASHBOARD LOGIC (In-UI Dropdown)
 // ==========================================
 window.adminTempStudents =[];
 window.adminTempTeachers = {};
+window.adminTempNotices = {};
+window.adminSelectedStudentId = "NEW";
 
 window.openAdminPanel = () => {
-  // Clone data so we don't accidentally edit live data until we press save
   window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
   window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
+  window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
   
   document.getElementById('adminThemeSelect').value = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
   
-  window.refreshAdminStudentDropdown();
+  window.refreshAdminStudentDropdown("NEW");
   window.loadAdminTeacherForm();
   window.switchAdminTab('students');
   document.getElementById('adminOverlay').classList.add('open');
 };
 
-window.closeAdminPanel = () => {
-  document.getElementById('adminOverlay').classList.remove('open');
-};
+window.closeAdminPanel = () => { document.getElementById('adminOverlay').classList.remove('open'); };
 
 window.switchAdminTab = (tab) => {
   ['students', 'teachers', 'settings'].forEach(t => {
@@ -449,38 +504,63 @@ window.switchAdminTab = (tab) => {
   });
 };
 
-// --- Students Tab Logic ---
-window.refreshAdminStudentDropdown = (selectId = "NEW") => {
-  const sel = document.getElementById('adminStudentSelect');
-  let html = '<option value="NEW">-- ➕ Add New Student --</option>';
-  const sorted = [...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
-  sorted.forEach(s => {
-    html += `<option value="${s.id}">${s.name} (${s.newClass})</option>`;
+// In-UI Dropdown functionality
+window.toggleStudentDropdown = () => {
+  document.getElementById('adminStudentDropdown').classList.toggle('show');
+  document.getElementById('adminStudentSearch').value = '';
+  window.filterAdminStudents();
+  document.getElementById('adminStudentSearch').focus();
+};
+
+document.addEventListener('click', (e) => {
+  const drop = document.getElementById('adminStudentDropdown');
+  const header = document.getElementById('adminStudentSelectHeader');
+  if(drop && drop.classList.contains('show') && !drop.contains(e.target) && !header.contains(e.target)){ drop.classList.remove('show'); }
+});
+
+window.filterAdminStudents = () => {
+  const query = document.getElementById('adminStudentSearch').value.toLowerCase();
+  document.querySelectorAll('.custom-option.student-opt').forEach(el => {
+    if(el.innerText.toLowerCase().includes(query)) el.style.display = 'block';
+    else el.style.display = 'none';
   });
-  sel.innerHTML = html;
-  sel.value = selectId;
+};
+
+window.selectAdminStudent = (id, nameText, preventToggle = false) => {
+  window.adminSelectedStudentId = id;
+  document.getElementById('adminStudentSelectHeader').innerHTML = `<span>${nameText}</span><span class="material-icons-round">expand_more</span>`;
+  if(!preventToggle) document.getElementById('adminStudentDropdown').classList.remove('show');
   window.loadAdminStudentForm();
 };
 
+window.refreshAdminStudentDropdown = (selectId = "NEW") => {
+  const list = document.getElementById('adminStudentList');
+  let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '-- ➕ Add New Student --')"><strong>-- ➕ Add New Student --</strong></div>`;
+  const sorted =[...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
+  sorted.forEach(s => { html += `<div class="custom-option student-opt" onclick="window.selectAdminStudent('${s.id}', '${s.name.replace(/'/g, "\\'")}')">${s.name} <span style="opacity:0.5;font-size:12px;">(${s.newClass})</span></div>`; });
+  list.innerHTML = html;
+
+  let selectedName = '-- ➕ Add New Student --';
+  if(selectId !== "NEW") {
+    const stu = window.adminTempStudents.find(s=>s.id===selectId);
+    if(stu) selectedName = stu.name;
+  }
+  window.selectAdminStudent(selectId, selectedName, true);
+};
+
 window.loadAdminStudentForm = () => {
-  const id = document.getElementById('adminStudentSelect').value;
+  const id = window.adminSelectedStudentId;
   if (id === "NEW") {
-    document.getElementById('adminStId').value = '';
-    document.getElementById('adminStId').disabled = false; // Let them type a new ID
-    document.getElementById('adminStName').value = '';
-    document.getElementById('adminStCn').value = '';
-    document.getElementById('adminStOld').value = '';
-    document.getElementById('adminStNew').value = '2 BIRU';
+    document.getElementById('adminStId').value = ''; document.getElementById('adminStId').disabled = false; 
+    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
+    document.getElementById('adminStOld').value = ''; document.getElementById('adminStNew').value = '2 BIRU';
     document.getElementById('adminStSch').value = '';
   } else {
     const student = window.adminTempStudents.find(s => s.id === id);
     if(student) {
-      document.getElementById('adminStId').value = student.id;
-      document.getElementById('adminStId').disabled = true; // Lock ID to prevent weird bugs
-      document.getElementById('adminStName').value = student.name;
-      document.getElementById('adminStCn').value = student.cn || "-";
-      document.getElementById('adminStOld').value = student.oldClass || "-";
-      document.getElementById('adminStNew').value = student.newClass || "2 BIRU";
+      document.getElementById('adminStId').value = student.id; document.getElementById('adminStId').disabled = true; 
+      document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
+      document.getElementById('adminStOld').value = student.oldClass || "-"; document.getElementById('adminStNew').value = student.newClass || "2 BIRU";
       document.getElementById('adminStSch').value = student.sch || "-";
     }
   }
@@ -489,64 +569,65 @@ window.loadAdminStudentForm = () => {
 window.adminApplyStudent = () => {
   const id = document.getElementById('adminStId').value.trim();
   const name = document.getElementById('adminStName').value.trim().toUpperCase();
-  if(!id || !name) {
-    if(window.showToast) window.showToast("ID and Name are required", "error_outline");
-    return;
-  }
+  if(!id || !name) { if(window.showToast) window.showToast("ID and Name are required", "error_outline"); return; }
   
   const existingIndex = window.adminTempStudents.findIndex(s => s.id === id);
-  const newObj = {
-    id: id, 
-    name: name, 
-    cn: document.getElementById('adminStCn').value.trim() || "-", 
-    oldClass: document.getElementById('adminStOld').value.trim() || "-", 
-    newClass: document.getElementById('adminStNew').value, 
-    sch: document.getElementById('adminStSch').value.trim() || "-"
-  };
+  const newObj = { id: id, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminStNew').value, sch: document.getElementById('adminStSch').value.trim() || "-" };
 
-  if (existingIndex >= 0) {
-    window.adminTempStudents[existingIndex] = newObj;
-    if(window.showToast) window.showToast("Student Updated in Queue", "list_alt");
-  } else {
-    window.adminTempStudents.push(newObj);
-    if(window.showToast) window.showToast("New Student Added to Queue", "person_add");
-  }
+  if (existingIndex >= 0) { window.adminTempStudents[existingIndex] = newObj; if(window.showToast) window.showToast("Student Updated in Queue", "list_alt"); } 
+  else { window.adminTempStudents.push(newObj); if(window.showToast) window.showToast("New Student Added to Queue", "person_add"); }
   window.refreshAdminStudentDropdown(id);
 };
 
 window.adminDeleteStudent = () => {
-  const id = document.getElementById('adminStudentSelect').value;
+  const id = window.adminSelectedStudentId;
   if (id === "NEW") return;
-  if(confirm("Are you sure you want to delete this student?\n\nThis will NOT be final until you click 'Save Database' at the bottom.")) {
+  if(confirm("Delete this student?\n\nNot final until you click 'Save Database'.")) {
     window.adminTempStudents = window.adminTempStudents.filter(s => s.id !== id);
     window.refreshAdminStudentDropdown("NEW");
     if(window.showToast) window.showToast("Student Removed from Queue", "delete");
   }
 };
 
-// --- Teachers Tab Logic ---
+// --- Teachers & Class Notices ---
 window.loadAdminTeacherForm = () => {
   const cls = document.getElementById('adminTeacherClassSelect').value;
   const tData = window.adminTempTeachers[cls] || {g: "", p: ""};
+  const noticeData = window.adminTempNotices[cls] || "";
   document.getElementById('adminTg').value = tData.g;
   document.getElementById('adminTp').value = tData.p;
+  document.getElementById('adminClassNotice').value = noticeData;
 };
 
 window.adminApplyTeacher = () => {
   const cls = document.getElementById('adminTeacherClassSelect').value;
-  window.adminTempTeachers[cls] = {
-    g: document.getElementById('adminTg').value.trim(),
-    p: document.getElementById('adminTp').value.trim()
-  };
-  if(window.showToast) window.showToast("Teacher Updated in Queue", "school");
+  window.adminTempTeachers[cls] = { g: document.getElementById('adminTg').value.trim(), p: document.getElementById('adminTp').value.trim() };
+  window.adminTempNotices[cls] = document.getElementById('adminClassNotice').value.trim();
+  if(window.showToast) window.showToast("Class Updated in Queue", "school");
 };
 
+// REAL TIME DATA UPDATE ACTION
+window.applyPendingUpdate = () => {
+  if(window.pendingDataUpdate) {
+    window.smkData = window.pendingDataUpdate.students;
+    window.teacherData = window.pendingDataUpdate.teachers;
+    window.classNotices = window.pendingDataUpdate.notices;
+    window.pendingDataUpdate = null;
+
+    if(window.initFilterChips) window.initFilterChips();
+    if(window.filterData) window.filterData();
+
+    document.getElementById('updatePromptBanner').classList.remove('show');
+    if(window.showToast) window.showToast("Data Updated Live", "check_circle");
+  }
+};
 </script>
 
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import{getFirestore,doc,setDoc,getDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+// IMPORT ONSNAPSHOT FOR REAL TIME UPDATES!
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI",authDomain:"studentlist2026.firebaseapp.com",projectId:"studentlist2026",storageBucket:"studentlist2026.firebasestorage.app",messagingSenderId:"867205730183",appId:"1:867205730183:web:534666800bc7b2513fcd22"};
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
@@ -555,9 +636,9 @@ const emailInput=document.getElementById('authEmail'),passwordInput=document.get
 let isSignUpMode=!1;window.cloudUser=null;
 
 // ==========================================
-// 🚨 ADMIN EMAIL SETTING
+// 🚨 ADMIN EMAIL SETTING 🚨
 // ==========================================
-const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; // <--- CHANGE THIS TO YOUR EXACT EMAIL
+const ADMIN_EMAIL = "your.email@gmail.com"; // <--- CHANGE THIS TO YOUR EXACT EMAIL
 
 
 window.saveAdminData = async () => {
@@ -566,29 +647,27 @@ window.saveAdminData = async () => {
   try {
     const newTheme = document.getElementById('adminThemeSelect').value;
     
-    // Save the completely modified queues straight to Firebase securely
+    // Save everything securely
     await setDoc(doc(db, "appData", "schoolInfo"), {
       students: window.adminTempStudents,
       teachers: window.adminTempTeachers,
+      classNotices: window.adminTempNotices,
       settings: { theme: newTheme }
     });
     
-    // Overwrite the live UI variables
+    // Update locally instantly so the Admin doesn't see the "Update" popup!
     window.smkData = window.adminTempStudents;
     window.teacherData = window.adminTempTeachers;
+    window.classNotices = window.adminTempNotices;
     window.globalSettings = { theme: newTheme };
     
-    // Re-render everything instantly!
     if(window.initFilterChips) window.initFilterChips();
     if(window.renderTabs) window.renderTabs();
     if(window.filterData) window.filterData();
     if(window.applyGlobalTheme) window.applyGlobalTheme();
     
     btn.innerText = "Saved Successfully!";
-    setTimeout(() => { 
-      btn.innerText = "Save Database"; 
-      window.closeAdminPanel(); 
-    }, 1500);
+    setTimeout(() => { btn.innerText = "Save Database"; window.closeAdminPanel(); }, 1500);
   } catch(e) {
     alert("Database Save Error!\n\n" + e.message);
     btn.innerText = "Save Database";
@@ -622,18 +701,50 @@ onAuthStateChanged(auth, async (user) => {
         window.searchHistory = docSnap.data().searchHistory ||[];
       }
 
-      const schoolSnap = await getDoc(doc(db, "appData", "schoolInfo"));
-      
-      if (schoolSnap.exists()) {
-        window.smkData = schoolSnap.data().students ||[];
-        window.teacherData = schoolSnap.data().teachers || {};
-        window.globalSettings = schoolSnap.data().settings || { theme: 'dynamic' };
-        
-        if(window.applyGlobalTheme) window.applyGlobalTheme();
-        if(window.initFilterChips) window.initFilterChips();
-        if(window.renderTabs) window.renderTabs();
-        if(window.filterData) window.filterData();
-      }
+      // REAL TIME DATABASE LISTENER
+      window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const newTheme = data.settings?.theme || 'dynamic';
+          const newStudents = data.students ||[];
+          const newTeachers = data.teachers || {};
+          const newNotices = data.classNotices || {};
+
+          // Initial Page Load
+          if (window.isInitialLoad) {
+            window.smkData = newStudents;
+            window.teacherData = newTeachers;
+            window.globalSettings = data.settings || { theme: 'dynamic' };
+            window.classNotices = newNotices;
+            
+            if(window.applyGlobalTheme) window.applyGlobalTheme();
+            if(window.initFilterChips) window.initFilterChips();
+            if(window.renderTabs) window.renderTabs();
+            if(window.filterData) window.filterData();
+            
+            window.isInitialLoad = false;
+          } 
+          else {
+            // Live Update Triggered!
+            
+            // 1. If Admin changed the theme, update it instantly without a prompt
+            if (window.globalSettings.theme !== newTheme) {
+              window.globalSettings.theme = newTheme;
+              if(window.applyGlobalTheme) window.applyGlobalTheme();
+            }
+
+            // 2. If Data changed, show the prompt (unless the Admin caused it)
+            const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
+                                JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
+                                JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
+
+            if (dataChanged) {
+              window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
+              document.getElementById('updatePromptBanner').classList.add('show');
+            }
+          }
+        }
+      });
 
     } catch (e) {
       console.error("Data error: ", e);
@@ -641,11 +752,11 @@ onAuthStateChanged(auth, async (user) => {
 
     loginScreen.classList.remove('active');
     mainApp.classList.add('visible');
-    if (window.filterData) window.filterData();
     if (window.renderSearchHistory) window.renderSearchHistory();
     
   } else {
-    // SECURITY: Completely wipe sensitive data from memory on logout
+    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
+    
     window.cloudUser = null;
     window.favorites = [];
     window.searchHistory = [];
