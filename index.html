@@ -235,75 +235,81 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
   <!-- NEW ADMIN DASHBOARD MODAL -->
   <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel(event)'>
-    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="max-height: 85vh;">
+    <!-- Changed to 85dvh (Dynamic Viewport Height) so it resizes when mobile keyboard opens -->
+    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="height: 85dvh; max-height: 800px; display: flex; flex-direction: column;">
+      
       <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Changes save to 'Update Queue' locally</div></div>
       
-      <div class='m-body' style="display:flex; flex-direction:column; gap:15px; padding-top:10px;">
-        
-        <!-- TABS NAVIGATION -->
-        <div class="seg-control" style="margin-bottom:0;">
-          <button class="seg-btn active" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
-          <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Teachers</button>
-          <button class="seg-btn" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
-        </div>
-
-        <!-- TAB 1: STUDENTS -->
-        <div id="adminTab-students" class="admin-tab" style="display:block;">
-          <select id="adminStudentSelect" onchange="window.loadAdminStudentForm()" class="admin-input">
-            <option value="NEW">-- ➕ Add New Student --</option>
-          </select>
+      <!-- Added min-height: 0 so the scrollbar stays inside the body and doesn't push the header off screen -->
+      <div class='m-body' style="flex: 1; min-height: 0; overflow-y: auto; padding-top: 10px;">
+        <div style="display:flex; flex-direction:column; gap:15px; padding-bottom: 20px;">
           
-          <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
-            <input type="text" id="adminStId" placeholder="Student ID (e.g. 120116040351)" class="admin-input">
-            <input type="text" id="adminStName" placeholder="Full Name" class="admin-input">
-            <input type="text" id="adminStCn" placeholder="Chinese Name (or -)" class="admin-input">
-            <input type="text" id="adminStOld" placeholder="Old Class (e.g. 1B)" class="admin-input">
-            <select id="adminStNew" class="admin-input">
-              <option value="2 BIRU">2 BIRU</option><option value="2 HIJAU">2 HIJAU</option><option value="2 KUNING">2 KUNING</option><option value="2 MERAH">2 MERAH</option><option value="2 PERANG">2 PERANG</option><option value="2 UNGU">2 UNGU</option>
+          <!-- TABS NAVIGATION -->
+          <div class="seg-control" style="margin-bottom:0; flex-shrink: 0;">
+            <button class="seg-btn active" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
+            <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Teachers</button>
+            <button class="seg-btn" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
+          </div>
+
+          <!-- TAB 1: STUDENTS -->
+          <div id="adminTab-students" class="admin-tab" style="display:block;">
+            <select id="adminStudentSelect" onchange="window.loadAdminStudentForm()" class="admin-input">
+              <option value="NEW">-- ➕ Add New Student --</option>
             </select>
-            <input type="text" id="adminStSch" placeholder="Primary School" class="admin-input">
             
-            <div style="display:flex; gap:8px; margin-top:5px;">
-              <button onclick="window.adminApplyStudent()" style="flex:2; background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Update Queue</button>
-              <button onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
+            <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+              <input type="text" id="adminStId" placeholder="Student ID (e.g. 120116040351)" class="admin-input">
+              <input type="text" id="adminStName" placeholder="Full Name" class="admin-input">
+              <input type="text" id="adminStCn" placeholder="Chinese Name (or -)" class="admin-input">
+              <input type="text" id="adminStOld" placeholder="Old Class (e.g. 1B)" class="admin-input">
+              <select id="adminStNew" class="admin-input">
+                <option value="2 BIRU">2 BIRU</option><option value="2 HIJAU">2 HIJAU</option><option value="2 KUNING">2 KUNING</option><option value="2 MERAH">2 MERAH</option><option value="2 PERANG">2 PERANG</option><option value="2 UNGU">2 UNGU</option>
+              </select>
+              <input type="text" id="adminStSch" placeholder="Primary School" class="admin-input">
+              
+              <div style="display:flex; gap:8px; margin-top:5px;">
+                <button onclick="window.adminApplyStudent()" style="flex:2; background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Update Queue</button>
+                <button onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- TAB 2: TEACHERS -->
-        <div id="adminTab-teachers" class="admin-tab" style="display:none;">
-          <select id="adminTeacherClassSelect" onchange="window.loadAdminTeacherForm()" class="admin-input">
-             <option value="Biru">2 Biru</option><option value="Hijau">2 Hijau</option><option value="Kuning">2 Kuning</option><option value="Merah">2 Merah</option><option value="Perang">2 Perang</option><option value="Ungu">2 Ungu</option>
-          </select>
-          <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
-             <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
-             <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
-             <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
-             <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
-             <button onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
+          <!-- TAB 2: TEACHERS -->
+          <div id="adminTab-teachers" class="admin-tab" style="display:none;">
+            <select id="adminTeacherClassSelect" onchange="window.loadAdminTeacherForm()" class="admin-input">
+               <option value="Biru">2 Biru</option><option value="Hijau">2 Hijau</option><option value="Kuning">2 Kuning</option><option value="Merah">2 Merah</option><option value="Perang">2 Perang</option><option value="Ungu">2 Ungu</option>
+            </select>
+            <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
+               <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
+               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
+               <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
+               <button onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
+            </div>
           </div>
-        </div>
 
-        <!-- TAB 3: SETTINGS -->
-        <div id="adminTab-settings" class="admin-tab" style="display:none;">
-           <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
-           <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px;">This updates the live background for everyone instantly.</p>
-           <select id="adminThemeSelect" class="admin-input" style="margin-top:8px;">
-              <option value="dynamic">Dynamic (Changes by Time of Day)</option>
-              <option value="morning">Locked to Morning Theme</option>
-              <option value="afternoon">Locked to Afternoon/Day Theme</option>
-              <option value="night">Locked to Night Theme</option>
-              <option value="christmas">Locked to Festive Christmas Theme</option>
-           </select>
-        </div>
+          <!-- TAB 3: SETTINGS -->
+          <div id="adminTab-settings" class="admin-tab" style="display:none;">
+             <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
+             <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px;">This updates the live background for everyone instantly.</p>
+             <select id="adminThemeSelect" class="admin-input" style="margin-top:8px;">
+                <option value="dynamic">Dynamic (Changes by Time of Day)</option>
+                <option value="morning">Locked to Morning Theme</option>
+                <option value="afternoon">Locked to Afternoon/Day Theme</option>
+                <option value="night">Locked to Night Theme</option>
+                <option value="christmas">Locked to Festive Christmas Theme</option>
+             </select>
+          </div>
 
+        </div>
       </div>
       
       <!-- FIXED BOTTOM BUTTONS -->
-      <div class='m-foot' style="display:flex; gap:10px; justify-content:space-between; padding-top:10px; border-top:1px solid var(--glass-border);">
+      <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; padding-top:15px; border-top:1px solid var(--glass-border);">
         <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeAdminPanel()'>Cancel</button>
         <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; flex:1.5;" onclick='window.saveAdminData()'>Save Database</button>
       </div>
+      
     </div>
   </div>
   
