@@ -103,6 +103,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <div class='header-meta'>
       <div class='meta-left'><span class='count-pill' id='studentCount'>0</span></div>
       <div class='header-controls'>
+        <button class='theme-toggle' id='adminControlBtn' onclick='openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
         <button class='theme-toggle' onclick='openAbout()'><span class='material-icons-round' style='font-size:20px'>info</span></button>
         <button class='theme-toggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
@@ -222,6 +223,25 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
       <div class='m-foot'><button class='btn-done' onclick='closeAbout()'>Close</button></div>
     </div>
   </div>
+
+  <div class='modal-bg' id='adminOverlay' onclick='closeAdminPanel(event)'>
+    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="max-height: 90vh;">
+      <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Manage Database & Settings</div></div>
+      <div class='m-body' style="display:flex; flex-direction:column; gap:15px;">
+        <div style="font-size:13px; color:var(--ios-text-sec);">
+          <strong>Warning:</strong> You are editing live database records. Ensure JSON formatting is correct.
+        </div>
+        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Student Data (JSON)</label>
+        <textarea id="adminStudentsInput" style="width:100%; height:200px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
+
+        <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Teacher Data (JSON)</label>
+        <textarea id="adminTeachersInput" style="width:100%; height:120px; border-radius:10px; padding:10px; background:var(--ios-input); border:1px solid var(--chip-border); color:var(--ios-text); font-family:monospace; font-size:12px;"></textarea>
+
+        <button class='btn-done' id="adminSaveBtn" style="background-color:#34C759; margin-top:10px;" onclick='saveAdminData()'>Save to Database</button>
+      </div>
+      <div class='m-foot'><button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text);" onclick='closeAdminPanel()'>Cancel</button></div>
+    </div>
+  </div>
   
   <div class='cm-backdrop' id='ctxBackdrop' onclick='hideContextMenu()'>
     <div class='cm-menu' id='ctxMenu'>
@@ -236,12 +256,6 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 </div>
 
 <script>
-// ==========================================
-// 🚨 ZERO HARDCODED SENSITIVE DATA
-// All data is securely fetched from Firebase 
-// after login, and wiped on logout.
-// ==========================================
-
 var smkData = [];
 var teacherData = {};
 const classes =["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
@@ -327,6 +341,13 @@ const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFire
 const emailInput=document.getElementById('authEmail'),passwordInput=document.getElementById('authPassword'),primaryAuthBtn=document.getElementById('authSubmitBtn'),toggleAuthModeBtn=document.getElementById('authToggleBtn'),loginScreen=document.getElementById('authScreen'),mainApp=document.getElementById('mainAppWrapper'),authMsgBox=document.getElementById('authError'),authErrorText=document.getElementById('authErrorText'),authTitle=document.getElementById('authTitle'),authSub=document.getElementById('authSub'),authIcon=document.getElementById('authIcon'),loginMenu=document.getElementById('authMenu');
 let isSignUpMode=!1;window.cloudUser=null;
 
+// ==========================================
+// 🚨 ADMIN EMAIL SETTING
+// Change this to the exact email address you use to log in!
+// Only this email will see the Admin button.
+// ==========================================
+const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; 
+
 window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show')};document.addEventListener('click',()=>loginMenu.classList.remove('show'));
 function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
 function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
@@ -339,6 +360,14 @@ window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     window.cloudUser = user;
+
+    // Show Admin Button if it matches the ADMIN_EMAIL
+    if (user.email === ADMIN_EMAIL) {
+      document.getElementById('adminControlBtn').style.display = 'flex';
+    } else {
+      document.getElementById('adminControlBtn').style.display = 'none';
+    }
+
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid));
       if (docSnap.exists()) {
@@ -346,21 +375,16 @@ onAuthStateChanged(auth, async (user) => {
         window.searchHistory = docSnap.data().searchHistory ||[];
       }
 
-      // ==========================================
-      // FETCH SECURE DATA FROM FIRESTORE
-      // ==========================================
       const schoolSnap = await getDoc(doc(db, "appData", "schoolInfo"));
       
       if (schoolSnap.exists()) {
         window.smkData = schoolSnap.data().students ||[];
         window.teacherData = schoolSnap.data().teachers || {};
         
-        // Re-initialize the UI now that we safely loaded the data
         if(window.initFilterChips) window.initFilterChips();
         if(window.renderTabs) window.renderTabs();
         if(window.filterData) window.filterData();
       } else {
-        console.error("School data not found in database! Please run the migration script first.");
         if(window.showToast) window.showToast("No data found in database.", "error");
       }
 
