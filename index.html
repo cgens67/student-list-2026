@@ -17,20 +17,24 @@ body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--gra
 body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
 body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}
 body.bg-christmas:not([data-theme="dark"]){--grad-1:#0f9b0f;--grad-2:#e6d3a3;--grad-3:#d32f2f}
-/* DARK MODE BASE */
-[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+/* DARK MODE BASE */[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--chip-bg:rgba(255,255,255,0.12);--chip-border:rgba(255,255,255,0.15);--chip-shadow:none;--chip-txt:#FFFFFF;--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
 /* DARK MODE DYNAMIC THEMES */
 body[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
 body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#180924}
 body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
 body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
 body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:#3b0909}
+/* DISABLE LIQUID GLASS MODE */
+body.no-glass {--glass-blur: blur(0px); --ios-card: rgba(255,255,255,1); --ios-modal: rgba(255,255,255,1); --ios-input: rgba(240,240,240,1);}
+body.no-glass[data-theme="dark"] {--ios-card: rgba(30,30,30,1); --ios-modal: rgba(40,40,40,1); --ios-input: rgba(50,50,50,1);}
+body.no-glass .ios-header {background: var(--ios-bg) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 1px solid var(--ios-sep);}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;transition:background-image 1s ease,background-color .4s ease,color .4s var(--ease-ios)}
 button,input,textarea,select{font-family:var(--font-stack)!important}input,textarea,select{user-select:text}
-#mainAppWrapper{display:none;opacity:0;transition:opacity .5s var(--ease-ios)}#mainAppWrapper.visible{display:block;opacity:1}
-#ios-container{padding-top:145px;padding-bottom:40px;padding-left:16px;padding-right:16px;max-width:800px;margin:0 auto}
+#mainAppWrapper, #maintenanceScreen {display:none;opacity:0;transition:opacity .5s var(--ease-ios)}
+#mainAppWrapper.visible, #maintenanceScreen.visible {display:flex;opacity:1;flex-direction:column;min-height:100vh;}
+#ios-container{padding-top:145px;padding-bottom:40px;padding-left:16px;padding-right:16px;max-width:800px;margin:0 auto; width:100%;}
 @supports (padding-top:env(safe-area-inset-top)){#ios-container{padding-top:calc(145px + env(safe-area-inset-top));padding-bottom:calc(40px + env(safe-area-inset-bottom))}}
 .ios-header{position:fixed;top:0;left:0;right:0;height:125px;background:0 0;z-index:1000;border-bottom:.5px solid transparent;padding:0 16px;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:12px;transform:translate3d(0,0,0);transition:transform .4s var(--ease-ios),background-color .4s var(--ease-ios)}
 @supports (padding-top:env(safe-area-inset-top)){.ios-header{height:calc(125px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}}
@@ -70,20 +74,22 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;max-width:300px;margin:16px auto 0}.pie-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}.legend-item{font-size:11px;display:flex;align-items:center;gap:4px;color:var(--ios-text-sec);font-weight:500;opacity:0;transform:translateY(10px);animation:fadeUp .4s var(--ease-spring) forwards}.legend-dot{width:8px;height:8px;border-radius:50%}
 .bubble-chart{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:20px 0;min-height:200px}.bubble{background:var(--ios-input);border-radius:50%;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ios-text);transition:transform .3s var(--ease-spring);cursor:pointer}.bubble:active{transform:scale(.9)}.b-count{font-weight:800;line-height:1}.b-label{font-size:10px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
 .comp-bar-container{width:100%;height:20px;display:flex;border-radius:8px;overflow:hidden;margin-bottom:10px;background:rgba(0,0,0,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}[data-theme="dark"] .comp-bar-container{background:rgba(255,255,255,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}.comp-segment{height:100%;transition:width 1s var(--ease-ios);position:relative}.comp-segment:first-child{border-radius:8px 0 0 8px}.comp-segment:last-child{border-radius:0 8px 8px 0}
-.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px}.history-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios),margin-bottom .4s var(--ease-ios);margin-bottom:0}.history-drawer.open{grid-template-rows:1fr;margin-bottom:12px}.history-inner{overflow:hidden;min-height:0}.history-track{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.history-pill{margin-right:8px;background:var(--chip-bg);color:var(--ios-text-sec);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;transition:transform .2s var(--ease-spring)}.history-pill:last-child{margin-right:0}.history-pill:active{transform:scale(.95);opacity:.8}.history-pill.clear-hist{color:#FF3B30;border-color:rgba(255,59,48,0.3);padding:6px 10px}
+.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px; white-space:pre-wrap;}
+.history-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios),margin-bottom .4s var(--ease-ios);margin-bottom:0}.history-drawer.open{grid-template-rows:1fr;margin-bottom:12px}.history-inner{overflow:hidden;min-height:0}.history-track{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.history-pill{margin-right:8px;background:var(--chip-bg);color:var(--ios-text-sec);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;transition:transform .2s var(--ease-spring)}.history-pill:last-child{margin-right:0}.history-pill:active{transform:scale(.95);opacity:.8}.history-pill.clear-hist{color:#FF3B30;border-color:rgba(255,59,48,0.3);padding:6px 10px}
 .anim-text-change{transition:opacity .25s cubic-bezier(0.25,1,0.5,1),transform .25s cubic-bezier(0.25,1,0.5,1);opacity:1;transform:translate3d(0,0,0)}.blur-fade-out{opacity:0;transform:scale(.95) translateY(5px);filter:blur(8px);transition:all .3s cubic-bezier(0.25,1,0.5,1)}.blur-fade-in{opacity:1;transform:scale(1) translateY(0);filter:blur(0);transition:all .4s cubic-bezier(0.25,1,0.5,1)}.anim-text-change.fade-out{opacity:0;transform:translate3d(0,-10px,0)}.anim-text-change.fade-in{opacity:1;transform:translate3d(0,0,0)}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:rgba(0,0,0,0.6);color:#FFF;padding:12px 24px;border-radius:50px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 16px 32px rgba(0,0,0,0.3);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:3000;transition:all .5s var(--ease-spring);display:flex;align-items:center;gap:8px;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);white-space:nowrap;max-width:90vw}@supports (padding-bottom:env(safe-area-inset-bottom)){.toast{bottom:calc(30px + env(safe-area-inset-bottom))}}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}[data-theme="dark"] .toast{background:rgba(255,255,255,0.7);color:#000;border-color:rgba(0,0,0,0.1)}
 .cm-backdrop{position:fixed;top:0;left:0;right:0;bottom:0;z-index:2900;background:rgba(0,0,0,0.1);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s}.cm-backdrop.active{opacity:1;pointer-events:auto}.cm-menu{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) scale(.9);width:250px;background:rgba(255,255,255,0.85);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;z-index:3000;box-shadow:var(--shadow-lg),var(--glass-highlight);opacity:0;pointer-events:none;transition:all .4s var(--ease-spring);transform-origin:center bottom}[data-theme="dark"] .cm-menu{background:rgba(30,30,30,0.85)}.cm-backdrop.active .cm-menu{opacity:1;pointer-events:auto;transform:translateX(-50%) scale(1);bottom:50px}.cm-item{padding:14px 16px;width:100%;border:none;background:0 0;text-align:left;font-size:16px;color:var(--ios-text);border-bottom:1px solid var(--ios-sep);display:flex;align-items:center;justify-content:space-between}.cm-item:last-child{border-bottom:none}.cm-item:active{background:rgba(255,255,255,0.2)}[data-theme="dark"] .cm-item:active{background:rgba(0,0,0,0.2)}.cm-icon{font-size:20px;color:var(--ios-blue)}.cm-header{padding:10px 16px;font-size:12px;font-weight:600;color:var(--ios-text-sec);text-align:center;background:rgba(0,0,0,0.05)}[data-theme="dark"] .cm-header{background:rgba(255,255,255,0.05)}
 
 /* ADMIN UI CUSTOM CSS */
-.admin-input { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); outline:none; }
+.admin-input { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); outline:none; transition: border-color 0.2s;}
+.admin-input:focus { border-color: var(--ios-blue); }
 [data-theme="dark"] .admin-input { background: rgba(0,0,0,0.3); }
 .admin-tab { display: none; }
 
 /* IN-UI CUSTOM DROPDOWN */
 .custom-select-container { position:relative; width:100%; }
 .custom-select-header { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
-.custom-select-dropdown { position:absolute; top:45px; left:0; right:0; background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-md); border-radius:12px; padding:10px; z-index:100; display:none; flex-direction:column; }
+.custom-select-dropdown { position:absolute; top:45px; left:0; right:0; background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-md); border-radius:12px; padding:10px; z-index:100; display:none; flex-direction:column; max-height:220px; overflow-y:auto; touch-action:pan-y;}
 .custom-select-dropdown.show { display:flex; animation: fadeUp 0.3s forwards; }
 .custom-option { padding:10px; border-bottom:1px solid var(--ios-sep); font-size:14px; color:var(--ios-text); cursor:pointer; }
 .custom-option:last-child { border-bottom:none; }
@@ -94,6 +100,12 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .update-prompt.show { bottom: 30px; }
 @supports (padding-bottom:env(safe-area-inset-bottom)){.update-prompt.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
 .update-btn { background:var(--ios-blue); color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(0,122,255,0.3); }
+
+/* MAINTENANCE SCREEN */
+#maintenanceScreen { justify-content:center; align-items:center; text-align:center; padding:20px; }
+.maint-icon { font-size:80px; color:var(--ios-blue); margin-bottom:20px; opacity:0.9; }
+.maint-title { font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:10px; }
+.maint-sub { font-size:15px; color:var(--ios-text-sec); max-width:300px; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -131,6 +143,13 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
 </div>
 
+<div id="maintenanceScreen">
+    <span class="material-icons-round maint-icon">build_circle</span>
+    <div class="maint-title">Under Maintenance</div>
+    <div class="maint-sub">The system is currently undergoing updates. Please check back later.</div>
+    <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
+</div>
+
 <div id="mainAppWrapper">
   <header class='ios-header' id='mainHeader'>
     <div class='header-meta'>
@@ -139,8 +158,8 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
         <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
         <button class='theme-toggle' onclick='openAbout()'><span class='material-icons-round' style='font-size:20px'>info</span></button>
-        <button class='theme-toggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
-        <button class='theme-toggle' onclick='toggleTheme()'><span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span></button>
+        <button class='theme-toggle' id='btnDensityToggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
+        <button class='theme-toggle' id='btnThemeToggle' onclick='toggleTheme()'><span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span></button>
         <div class='lang-switch'>
           <button class='lang-btn active' onclick='switchLanguage(&apos;en&apos;)'>EN</button>
           <button class='lang-btn' onclick='switchLanguage(&apos;bm&apos;)'>BM</button>
@@ -155,7 +174,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <div class='action-row'>
       <div class='search-box'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/></div>
       <button class='btn-icon-only' id='btnFavToggle' onclick='toggleFavMode()'><span class='material-icons-round' style='font-size:22px'>favorite</span></button>
-      <button class='btn-icon-only' onclick='openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
+      <button class='btn-icon-only' id='btnStatsToggle' onclick='openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
       <button class='btn-filter' id='btnFilter' onclick='toggleFilters()'><span class='material-icons-round' style='font-size:20px'>tune</span><span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span></button>
     </div>
 
@@ -168,6 +187,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
             <div class='scroll-row'>
               <button class='chip active' id='btnSortName' onclick='handleSort("name")'><span id='txtSortName'>Name</span><span class='sort-arrow' id='arrowSortName'>&#8595;</span></button>
               <div class='chip-anim-wrapper collapsed' id='btnSortClassWrapper'><button class='chip' id='btnSortClass' onclick='handleSort("class")' style='margin:0;'><span id='txtSortClass'>Class</span><span class='sort-arrow hidden' id='arrowSortClass'>&#8595;</span></button></div>
+              <button class='chip' id='btnSortBday' onclick='handleSort("birthday")'><span id='txtSortBday'>Birthday</span><span class='sort-arrow hidden' id='arrowSortBday'>&#8595;</span></button>
             </div>
           </div>
           <div style='margin-bottom:20px;'><span class='filter-heading anim-text-change' id='label2025'>Previous Class (2025)</span><div class='scroll-row' id='chipCont2025'></div></div>
@@ -252,44 +272,38 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <div class='modal-card' id='aboutCard' onclick='event.stopPropagation()'>
       <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='labelAboutTitle'>About</div></div>
       <div class='m-body'>
-        <div class='about-txt' style='text-align:center'>
-          <p><strong>Student Allocation List 2026</strong><br/>Version 6.0 (Secured Edition)</p>
-          <p>Check allocations, view origin maps, and use Quick Actions (Long Press).</p>
-          <p style='font-size:12px; opacity:0.6'>Designed with Smooth iOS Performance in mind</p>
-          <p style='font-size:11px; opacity:0.4; margin-top:4px;'>Hosted on Vercel | Secured by Firebase</p>
-        </div>
+        <div class='about-txt' id="aboutContent" style='text-align:center'></div>
       </div>
       <div class='m-foot'><button class='btn-done' onclick='closeAbout()'>Close</button></div>
     </div>
   </div>
 
-  <!-- NEW ADMIN DASHBOARD MODAL -->
+  <!-- ADMIN DASHBOARD MODAL -->
   <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel()'>
     <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="height: 85dvh; max-height: 800px; display: flex; flex-direction: column;">
       
-      <div class='m-head'><div class='handle'></div><div class='stats-title'>Admin Dashboard</div><div class='stats-sub'>Changes save to 'Update Queue' locally</div></div>
+      <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id="lblAdminTitle">Admin Dashboard</div><div class='stats-sub anim-text-change' id="lblAdminSub">Changes save to 'Update Queue' locally</div></div>
       
       <div class='m-body' style="flex: 1; min-height: 0; overflow-y: auto; padding-top: 10px;">
         <div style="display:flex; flex-direction:column; gap:15px; padding-bottom: 20px;">
           
           <!-- TABS NAVIGATION -->
           <div class="seg-control" style="margin-bottom:0; flex-shrink: 0;">
-            <button class="seg-btn active" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
-            <button class="seg-btn" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Classes</button>
-            <button class="seg-btn" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
+            <button class="seg-btn active anim-text-change" id="tabBtn-students" onclick="window.switchAdminTab('students')">Students</button>
+            <button class="seg-btn anim-text-change" id="tabBtn-teachers" onclick="window.switchAdminTab('teachers')">Classes</button>
+            <button class="seg-btn anim-text-change" id="tabBtn-settings" onclick="window.switchAdminTab('settings')">Settings</button>
           </div>
 
           <!-- TAB 1: STUDENTS -->
           <div id="adminTab-students" class="admin-tab" style="display:block;">
             
-            <!-- Custom In-UI Dropdown -->
             <div class="custom-select-container">
-              <div class="custom-select-header" id="adminStudentSelectHeader" onclick="window.toggleStudentDropdown()">
+              <div class="custom-select-header" id="adminStudentSelectHeader" onclick="window.toggleCustomSelect('adminStudentDropdown')">
                  <span>-- ➕ Add New Student --</span><span class="material-icons-round">expand_more</span>
               </div>
               <div class="custom-select-dropdown" id="adminStudentDropdown">
                  <input type="text" id="adminStudentSearch" placeholder="Search by name..." onkeyup="window.filterAdminStudents()" class="admin-input" style="margin-bottom:8px;" autocomplete="off">
-                 <div id="adminStudentList" style="max-height:180px; overflow-y:auto; touch-action:pan-y;"></div>
+                 <div id="adminStudentList"></div>
               </div>
             </div>
             
@@ -298,9 +312,21 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
               <input type="text" id="adminStName" placeholder="Full Name" class="admin-input">
               <input type="text" id="adminStCn" placeholder="Chinese Name (or -)" class="admin-input">
               <input type="text" id="adminStOld" placeholder="Old Class (e.g. 1B)" class="admin-input">
-              <select id="adminStNew" class="admin-input">
-                <option value="2 BIRU">2 BIRU</option><option value="2 HIJAU">2 HIJAU</option><option value="2 KUNING">2 KUNING</option><option value="2 MERAH">2 MERAH</option><option value="2 PERANG">2 PERANG</option><option value="2 UNGU">2 UNGU</option>
-              </select>
+              
+              <div class="custom-select-container">
+                  <div class="custom-select-header" id="adminClassSelectHeader" onclick="window.toggleCustomSelect('adminClassDropdown')">
+                     <span>2 BIRU</span><span class="material-icons-round">expand_more</span>
+                  </div>
+                  <div class="custom-select-dropdown" id="adminClassDropdown" data-value="2 BIRU">
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader')">2 BIRU</div>
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 HIJAU', '2 HIJAU', 'adminClassSelectHeader')">2 HIJAU</div>
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 KUNING', '2 KUNING', 'adminClassSelectHeader')">2 KUNING</div>
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 MERAH', '2 MERAH', 'adminClassSelectHeader')">2 MERAH</div>
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 PERANG', '2 PERANG', 'adminClassSelectHeader')">2 PERANG</div>
+                     <div class="custom-option" onclick="window.selectOption('adminClassDropdown', '2 UNGU', '2 UNGU', 'adminClassSelectHeader')">2 UNGU</div>
+                  </div>
+              </div>
+                
               <input type="text" id="adminStSch" placeholder="Primary School" class="admin-input">
               
               <div style="display:flex; gap:8px; margin-top:5px;">
@@ -312,11 +338,22 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
           <!-- TAB 2: CLASSES & TEACHERS -->
           <div id="adminTab-teachers" class="admin-tab" style="display:none;">
-            <select id="adminTeacherClassSelect" onchange="window.loadAdminTeacherForm()" class="admin-input">
-               <option value="Biru">2 Biru</option><option value="Hijau">2 Hijau</option><option value="Kuning">2 Kuning</option><option value="Merah">2 Merah</option><option value="Perang">2 Perang</option><option value="Ungu">2 Ungu</option>
-            </select>
+            
+            <div class="custom-select-container">
+              <div class="custom-select-header" id="adminTClassHeader" onclick="window.toggleCustomSelect('adminTClassDropdown')">
+                 <span>2 Biru</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminTClassDropdown" data-value="Biru">
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Biru</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Hijau</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Kuning</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Merah</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Perang</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Ungu</div>
+              </div>
+            </div>
+
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
-               
                <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Class Notice / Warning Banner</label>
                <textarea id="adminClassNotice" placeholder="e.g. Information may be inaccurate due to..." class="admin-input" style="height:60px; padding:8px;"></textarea>
                <hr style="border:none; border-top:1px solid var(--ios-sep); margin:5px 0;">
@@ -333,14 +370,74 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <!-- TAB 3: SETTINGS -->
           <div id="adminTab-settings" class="admin-tab" style="display:none;">
              <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
-             <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px;">This updates the live background for everyone instantly.</p>
-             <select id="adminThemeSelect" class="admin-input" style="margin-top:8px;">
-                <option value="dynamic">Dynamic (Changes by Time of Day)</option>
-                <option value="morning">Locked to Morning Theme</option>
-                <option value="afternoon">Locked to Afternoon/Day Theme</option>
-                <option value="night">Locked to Night Theme</option>
-                <option value="christmas">Locked to Festive Christmas Theme</option>
-             </select>
+             <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Updates live background for everyone instantly.</p>
+             <div class="custom-select-container">
+              <div class="custom-select-header" id="adminThemeHeader" onclick="window.toggleCustomSelect('adminThemeDropdown')">
+                 <span>Dynamic (Changes by Time of Day)</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminThemeDropdown" data-value="dynamic">
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'dynamic', 'Dynamic (Changes by Time of Day)', 'adminThemeHeader')">Dynamic (Changes by Time of Day)</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'morning', 'Locked to Morning Theme', 'adminThemeHeader')">Locked to Morning Theme</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'afternoon', 'Locked to Afternoon/Day Theme', 'adminThemeHeader')">Locked to Afternoon/Day Theme</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'night', 'Locked to Night Theme', 'adminThemeHeader')">Locked to Night Theme</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'christmas', 'Locked to Festive Christmas Theme', 'adminThemeHeader')">Locked to Festive Christmas Theme</div>
+              </div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
+            
+            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">System Under Maintenance</label>
+            <div class="custom-select-container" style="margin-top:8px;">
+              <div class="custom-select-header" id="adminMaintHeader" onclick="window.toggleCustomSelect('adminMaintDropdown')">
+                 <span>No</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminMaintDropdown" data-value="false">
+                 <div class="custom-option" onclick="window.selectOption('adminMaintDropdown', 'false', 'No', 'adminMaintHeader')">No</div>
+                 <div class="custom-option" style="color:#FF3B30; font-weight:bold;" onclick="window.selectOption('adminMaintDropdown', 'true', 'Yes (Locks out all users)', 'adminMaintHeader')">Yes (Locks out all users)</div>
+              </div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
+
+            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">UI Customization</label>
+            
+            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Disable Liquid Glass Design</p>
+            <div class="custom-select-container">
+              <div class="custom-select-header" id="adminGlassHeader" onclick="window.toggleCustomSelect('adminGlassDropdown')">
+                 <span>No (Keep Glassmorphism)</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminGlassDropdown" data-value="false">
+                 <div class="custom-option" onclick="window.selectOption('adminGlassDropdown', 'false', 'No (Keep Glassmorphism)', 'adminGlassHeader')">No (Keep Glassmorphism)</div>
+                 <div class="custom-option" onclick="window.selectOption('adminGlassDropdown', 'true', 'Yes (Solid Colors)', 'adminGlassHeader')">Yes (Solid Colors)</div>
+              </div>
+            </div>
+
+            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Change Theme' Button</p>
+            <div class="custom-select-container">
+              <div class="custom-select-header" id="adminHideThemeHeader" onclick="window.toggleCustomSelect('adminHideThemeDropdown')">
+                 <span>No</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminHideThemeDropdown" data-value="false">
+                 <div class="custom-option" onclick="window.selectOption('adminHideThemeDropdown', 'false', 'No', 'adminHideThemeHeader')">No</div>
+                 <div class="custom-option" onclick="window.selectOption('adminHideThemeDropdown', 'true', 'Yes', 'adminHideThemeHeader')">Yes</div>
+              </div>
+            </div>
+
+            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Statistics' Button</p>
+            <div class="custom-select-container">
+              <div class="custom-select-header" id="adminHideStatsHeader" onclick="window.toggleCustomSelect('adminHideStatsDropdown')">
+                 <span>No</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminHideStatsDropdown" data-value="false">
+                 <div class="custom-option" onclick="window.selectOption('adminHideStatsDropdown', 'false', 'No', 'adminHideStatsHeader')">No</div>
+                 <div class="custom-option" onclick="window.selectOption('adminHideStatsDropdown', 'true', 'Yes', 'adminHideStatsHeader')">Yes</div>
+              </div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
+            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Edit 'About' Text</label>
+            <textarea id="adminAboutInput" class="admin-input" style="height:120px; padding:10px; margin-top:8px;"></textarea>
+
           </div>
 
         </div>
@@ -383,7 +480,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 // ==========================================
 window.smkData =[];
 window.teacherData = {};
-window.globalSettings = { theme: 'dynamic' };
+window.globalSettings = { theme: 'dynamic', maintenance: false, hideTheme: false, hideStats: false, disableGlass: false, aboutText: "<strong>Student Allocation List 2026</strong>\nVersion 6.0 (Secured Edition)\n\nCheck allocations, view origin maps, and use Quick Actions.\n\nHosted on Vercel | Secured by Firebase" };
 window.classNotices = {};
 window.isInitialLoad = true;
 window.pendingDataUpdate = null;
@@ -393,12 +490,12 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
-const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任"}};
+const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置"}};
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);checkTimeOfDay();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
 
-window.applyGlobalTheme = function() {
+window.applyGlobalSettings = function() {
   const body = document.body;
   body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas');
   const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
@@ -410,8 +507,14 @@ window.applyGlobalTheme = function() {
   } else {
     body.classList.add('bg-' + themeMode);
   }
+  
+  if(window.globalSettings && window.globalSettings.disableGlass === 'true') body.classList.add('no-glass');
+  else body.classList.remove('no-glass');
+  
+  document.getElementById('btnThemeToggle').style.display = (window.globalSettings && window.globalSettings.hideTheme === 'true') ? 'none' : 'flex';
+  document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
+  document.getElementById('aboutContent').innerHTML = (window.globalSettings && window.globalSettings.aboutText) ? window.globalSettings.aboutText : '';
 }
-function checkTimeOfDay(){ window.applyGlobalTheme(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
@@ -425,7 +528,7 @@ window.toggleDensity=function(){triggerHaptic();isCompactMode=!isCompactMode;loc
 function applyDensity(compact){const grid=document.getElementById('studentGrid'),icon=document.getElementById('iconDensity');if(compact){grid.classList.add('compact-mode');icon.innerText="view_agenda"}else{grid.classList.remove('compact-mode');icon.innerText="view_headline"}}
 function toggleFilters(){triggerHaptic();isFilterOpen=!isFilterOpen;const drawer=document.getElementById("filterDrawer"),btn=document.getElementById("btnFilter");if(isFilterOpen){drawer.classList.add("open");btn.style.opacity="0.5"}else{drawer.classList.remove("open");btn.style.opacity="1"}}
 function handleSort(type){triggerHaptic();if(currentSortType===type)sortAsc=!sortAsc;else{currentSortType=type;sortAsc=!0}updateSortUI();filterData()}
-function updateSortUI(){const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass");if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip")}else{arrowName.classList.add("flip");arrowClass.classList.add("flip")}if(currentSortType==='name'){btnName.classList.add("active");btnClass.classList.remove("active");arrowName.classList.remove("hidden");arrowClass.classList.add("hidden")}else{btnName.classList.remove("active");btnClass.classList.add("active");arrowClass.classList.remove("hidden");arrowName.classList.add("hidden")}}
+function updateSortUI(){const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),btnBday=document.getElementById("btnSortBday"),arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass"),arrowBday=document.getElementById("arrowSortBday");if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip");arrowBday.classList.remove("flip")}else{arrowName.classList.add("flip");arrowClass.classList.add("flip");arrowBday.classList.add("flip")}if(currentSortType==='name'){btnName.classList.add("active");btnClass.classList.remove("active");btnBday.classList.remove("active");arrowName.classList.remove("hidden");arrowClass.classList.add("hidden");arrowBday.classList.add("hidden")}else if(currentSortType==='class'){btnName.classList.remove("active");btnClass.classList.add("active");btnBday.classList.remove("active");arrowClass.classList.remove("hidden");arrowName.classList.add("hidden");arrowBday.classList.add("hidden")}else{btnName.classList.remove("active");btnClass.classList.remove("active");btnBday.classList.add("active");arrowClass.classList.add("hidden");arrowName.classList.add("hidden");arrowBday.classList.remove("hidden")}}
 function getDistinct(key){return[...new Set(window.smkData.map(s=>s[key]))].filter(v=>v&&v!=='').sort()}
 function initFilterChips(){renderChipRow("chipCont2025",getDistinct("oldClass"),"year2025");renderChipRow("chipContOrigin",getDistinct("sch"),"origin")}
 function renderChipRow(containerId,list,stateKey){const cont=document.getElementById(containerId);if(!cont)return;let html=`<button class="chip active" onclick="setFilter('${stateKey}', '', this)">${uiText[curLang].all}</button>`;list.forEach(val=>{html+=`<button class="chip" onclick="setFilter('${stateKey}', '${val}', this)">${val}</button>`});cont.innerHTML=html}
@@ -435,7 +538,7 @@ window.setFilter=function(key,val,el){triggerHaptic();filterState[key]=val;el.pa
 window.clearFilters=function(){triggerHaptic();filterState.year2025="";filterState.origin="";document.getElementById("searchInput").value="";document.querySelectorAll('.scroll-row').forEach(cont=>{cont.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(cont.querySelector('.chip'))cont.querySelector('.chip').classList.add('active')});sortAsc=!0;currentSortType='name';updateSortUI();isFavMode=!1;document.getElementById('btnFavToggle').classList.remove('active');document.getElementById('btnFavToggle').querySelector('span').innerText='favorite';renderSearchHistory();filterData();toggleFilters();showToast(uiText[curLang].toastClear,"refresh")}
 window.showToast=function(msg,iconName="check_circle"){const container=document.getElementById("toastContainer");const existing=container.querySelector('.toast');if(existing)existing.remove();const toast=document.createElement("div");toast.className="toast";toast.innerHTML=`<span class="material-icons-round" style="font-size:20px; color:var(--ios-blue)">${iconName}</span><span>${msg}</span>`;container.appendChild(toast);requestAnimationFrame(()=>toast.classList.add("show"));setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),500)},2500)}
 function renderTabs(){const tabContainer=document.getElementById("classTabs");tabContainer.innerHTML=classes.map((c)=>`<div id="tab-${c}" class="tab-item ${c===currentClass?'active':''}" onclick="switchClass('${c}')">2 ${c}</div>`).join('')}
-window.switchLanguage=function(lang){if(lang===curLang)return;triggerHaptic();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');const fadeTargets=document.querySelectorAll('.anim-text-change');const searchInput=document.getElementById("searchInput");const titleEl=document.getElementById("labelTitle");if(titleEl)titleEl.classList.add("blur-fade-out");if(searchInput)searchInput.classList.add("anim-placeholder");const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle'];const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});const tCard=document.getElementById('classInfoCard');const startHeight=tCard?tCard.offsetHeight:0;setTimeout(()=>{if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}curLang=lang;const txt=uiText[lang];if(titleEl)titleEl.innerHTML=txt.title;document.getElementById("btnClose").innerText=txt.btnClose;setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);if(searchInput)searchInput.placeholder=txt.ph;setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);updateFilterLabels(txt.all);document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}if(searchInput)searchInput.classList.remove("anim-placeholder");fadeTargets.forEach(el=>{el.classList.remove('fade-out');if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)}});if(tCard&&tCard.classList.contains('show')){tCard.style.height='auto';const newHeight=tCard.offsetHeight;tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400)}},250)}
+window.switchLanguage=function(lang){if(lang===curLang)return;triggerHaptic();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');const fadeTargets=document.querySelectorAll('.anim-text-change');const searchInput=document.getElementById("searchInput");const titleEl=document.getElementById("labelTitle");if(titleEl)titleEl.classList.add("blur-fade-out");if(searchInput)searchInput.classList.add("anim-placeholder");const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings'];const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});const tCard=document.getElementById('classInfoCard');const startHeight=tCard?tCard.offsetHeight:0;setTimeout(()=>{if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}curLang=lang;const txt=uiText[lang];if(titleEl)titleEl.innerHTML=txt.title;document.getElementById("btnClose").innerText=txt.btnClose;setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);if(searchInput)searchInput.placeholder=txt.ph;setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);updateFilterLabels(txt.all);document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}if(searchInput)searchInput.classList.remove("anim-placeholder");fadeTargets.forEach(el=>{el.classList.remove('fade-out');if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)}});if(tCard&&tCard.classList.contains('show')){tCard.style.height='auto';const newHeight=tCard.offsetHeight;tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400)}},250)}
 window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
@@ -462,7 +565,7 @@ function updateStatsUI(mode,view){const card=document.getElementById('statsCard'
 window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
 function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 function updateCounter(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
-function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){const wasShowing=tCard.classList.contains('show');const startHeight=wasShowing?tCard.offsetHeight:0;document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!wasShowing){tCard.classList.add('show')}else{tCard.style.height='auto';const newHeight=tCard.offsetHeight;if(startHeight!==newHeight&&startHeight>0){tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.3s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.transition='';tCard.style.height='auto'},300)}}}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(currentSortType==='class')handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else{const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="openStudent(event, '${student.id}')" ontouchstart="handleTouchStart(event, '${student.id}')" ontouchend="handleTouchEnd(event)" ontouchmove="handleTouchMove(event)" oncontextmenu="handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
+function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){const wasShowing=tCard.classList.contains('show');const startHeight=wasShowing?tCard.offsetHeight:0;document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!wasShowing){tCard.classList.add('show')}else{tCard.style.height='auto';const newHeight=tCard.offsetHeight;if(startHeight!==newHeight&&startHeight>0){tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.3s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.transition='';tCard.style.height='auto'},300)}}}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(currentSortType==='class')handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).substring(0,6):"999999";const bBday=b.id?String(b.id).substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="openStudent(event, '${student.id}')" ontouchstart="handleTouchStart(event, '${student.id}')" ontouchend="handleTouchEnd(event)" ontouchmove="handleTouchMove(event)" oncontextmenu="handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
 window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{showContextMenu(id)},500)}
 window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
 window.handleTouchMove=function(){clearTimeout(longPressTimer)}
@@ -475,7 +578,22 @@ window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').c
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
-// NEW ADMIN DASHBOARD LOGIC (In-UI Dropdown)
+// GENERIC CUSTOM DROPDOWN LOGIC
+// ==========================================
+window.toggleCustomSelect = (dropdownId) => {
+  document.querySelectorAll('.custom-select-dropdown').forEach(d => { if(d.id !== dropdownId) d.classList.remove('show'); });
+  document.getElementById(dropdownId).classList.toggle('show');
+};
+
+window.selectOption = (dropdownId, value, text, headerId, callbackName = null) => {
+  document.getElementById(headerId).innerHTML = `<span>${text}</span><span class="material-icons-round">expand_more</span>`;
+  document.getElementById(dropdownId).classList.remove('show');
+  document.getElementById(dropdownId).setAttribute('data-value', value);
+  if(callbackName && window[callbackName]) window[callbackName](value);
+};
+
+// ==========================================
+// ADMIN DASHBOARD LOGIC
 // ==========================================
 window.adminTempStudents =[];
 window.adminTempTeachers = {};
@@ -487,8 +605,30 @@ window.openAdminPanel = () => {
   window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
   window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
   
-  document.getElementById('adminThemeSelect').value = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+  // Set UI for Settings Custom Dropdowns
+  const t = window.globalSettings.theme || 'dynamic';
+  document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme'};
+  document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
+  const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
+  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);
+  document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?'Yes (Locks out all users)':'No'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const glass = (window.globalSettings.disableGlass === 'true') ? 'true' : 'false';
+  document.getElementById('adminGlassDropdown').setAttribute('data-value', glass);
+  document.getElementById('adminGlassHeader').innerHTML = `<span>${glass==='true'?'Yes (Solid Colors)':'No (Keep Glassmorphism)'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const hideTh = (window.globalSettings.hideTheme === 'true') ? 'true' : 'false';
+  document.getElementById('adminHideThemeDropdown').setAttribute('data-value', hideTh);
+  document.getElementById('adminHideThemeHeader').innerHTML = `<span>${hideTh==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+
+  const hideSt = (window.globalSettings.hideStats === 'true') ? 'true' : 'false';
+  document.getElementById('adminHideStatsDropdown').setAttribute('data-value', hideSt);
+  document.getElementById('adminHideStatsHeader').innerHTML = `<span>${hideSt==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+
+  document.getElementById('adminAboutInput').value = window.globalSettings.aboutText || "";
+
   window.refreshAdminStudentDropdown("NEW");
   window.loadAdminTeacherForm();
   window.switchAdminTab('students');
@@ -504,8 +644,9 @@ window.switchAdminTab = (tab) => {
   });
 };
 
-// In-UI Dropdown functionality
+// --- Custom Student Selector Logic ---
 window.toggleStudentDropdown = () => {
+  document.querySelectorAll('.custom-select-dropdown').forEach(d => { if(d.id !== 'adminStudentDropdown') d.classList.remove('show'); });
   document.getElementById('adminStudentDropdown').classList.toggle('show');
   document.getElementById('adminStudentSearch').value = '';
   window.filterAdminStudents();
@@ -513,9 +654,10 @@ window.toggleStudentDropdown = () => {
 };
 
 document.addEventListener('click', (e) => {
-  const drop = document.getElementById('adminStudentDropdown');
-  const header = document.getElementById('adminStudentSelectHeader');
-  if(drop && drop.classList.contains('show') && !drop.contains(e.target) && !header.contains(e.target)){ drop.classList.remove('show'); }
+  document.querySelectorAll('.custom-select-dropdown').forEach(drop => {
+    const header = drop.previousElementSibling;
+    if(drop.classList.contains('show') && !drop.contains(e.target) && !header.contains(e.target)){ drop.classList.remove('show'); }
+  });
 });
 
 window.filterAdminStudents = () => {
@@ -553,14 +695,16 @@ window.loadAdminStudentForm = () => {
   if (id === "NEW") {
     document.getElementById('adminStId').value = ''; document.getElementById('adminStId').disabled = false; 
     document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
-    document.getElementById('adminStOld').value = ''; document.getElementById('adminStNew').value = '2 BIRU';
+    document.getElementById('adminStOld').value = ''; 
+    window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
     document.getElementById('adminStSch').value = '';
   } else {
     const student = window.adminTempStudents.find(s => s.id === id);
     if(student) {
       document.getElementById('adminStId').value = student.id; document.getElementById('adminStId').disabled = true; 
       document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
-      document.getElementById('adminStOld').value = student.oldClass || "-"; document.getElementById('adminStNew').value = student.newClass || "2 BIRU";
+      document.getElementById('adminStOld').value = student.oldClass || "-"; 
+      window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
       document.getElementById('adminStSch').value = student.sch || "-";
     }
   }
@@ -572,7 +716,7 @@ window.adminApplyStudent = () => {
   if(!id || !name) { if(window.showToast) window.showToast("ID and Name are required", "error_outline"); return; }
   
   const existingIndex = window.adminTempStudents.findIndex(s => s.id === id);
-  const newObj = { id: id, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminStNew').value, sch: document.getElementById('adminStSch').value.trim() || "-" };
+  const newObj = { id: id, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminClassDropdown').getAttribute('data-value'), sch: document.getElementById('adminStSch').value.trim() || "-" };
 
   if (existingIndex >= 0) { window.adminTempStudents[existingIndex] = newObj; if(window.showToast) window.showToast("Student Updated in Queue", "list_alt"); } 
   else { window.adminTempStudents.push(newObj); if(window.showToast) window.showToast("New Student Added to Queue", "person_add"); }
@@ -591,7 +735,7 @@ window.adminDeleteStudent = () => {
 
 // --- Teachers & Class Notices ---
 window.loadAdminTeacherForm = () => {
-  const cls = document.getElementById('adminTeacherClassSelect').value;
+  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
   const tData = window.adminTempTeachers[cls] || {g: "", p: ""};
   const noticeData = window.adminTempNotices[cls] || "";
   document.getElementById('adminTg').value = tData.g;
@@ -600,7 +744,7 @@ window.loadAdminTeacherForm = () => {
 };
 
 window.adminApplyTeacher = () => {
-  const cls = document.getElementById('adminTeacherClassSelect').value;
+  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
   window.adminTempTeachers[cls] = { g: document.getElementById('adminTg').value.trim(), p: document.getElementById('adminTp').value.trim() };
   window.adminTempNotices[cls] = document.getElementById('adminClassNotice').value.trim();
   if(window.showToast) window.showToast("Class Updated in Queue", "school");
@@ -624,7 +768,6 @@ window.applyPendingUpdate = () => {
 </script>
 
 <script type="module">
-// IMPORT ONSNAPSHOT FOR REAL TIME UPDATES!
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
@@ -645,26 +788,33 @@ window.saveAdminData = async () => {
   const btn = document.getElementById('adminSaveBtn');
   btn.innerText = "Saving to Database...";
   try {
-    const newTheme = document.getElementById('adminThemeSelect').value;
+    const newSettings = {
+       theme: document.getElementById('adminThemeDropdown').getAttribute('data-value'),
+       maintenance: document.getElementById('adminMaintDropdown').getAttribute('data-value'),
+       disableGlass: document.getElementById('adminGlassDropdown').getAttribute('data-value'),
+       hideTheme: document.getElementById('adminHideThemeDropdown').getAttribute('data-value'),
+       hideStats: document.getElementById('adminHideStatsDropdown').getAttribute('data-value'),
+       aboutText: document.getElementById('adminAboutInput').value
+    };
     
     // Save everything securely
     await setDoc(doc(db, "appData", "schoolInfo"), {
       students: window.adminTempStudents,
       teachers: window.adminTempTeachers,
       classNotices: window.adminTempNotices,
-      settings: { theme: newTheme }
+      settings: newSettings
     });
     
     // Update locally instantly so the Admin doesn't see the "Update" popup!
     window.smkData = window.adminTempStudents;
     window.teacherData = window.adminTempTeachers;
     window.classNotices = window.adminTempNotices;
-    window.globalSettings = { theme: newTheme };
+    window.globalSettings = newSettings;
     
     if(window.initFilterChips) window.initFilterChips();
     if(window.renderTabs) window.renderTabs();
     if(window.filterData) window.filterData();
-    if(window.applyGlobalTheme) window.applyGlobalTheme();
+    if(window.applyGlobalSettings) window.applyGlobalSettings();
     
     btn.innerText = "Saved Successfully!";
     setTimeout(() => { btn.innerText = "Save Database"; window.closeAdminPanel(); }, 1500);
@@ -705,7 +855,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newTheme = data.settings?.theme || 'dynamic';
+          const newSettings = data.settings || { theme: 'dynamic' };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -714,23 +864,48 @@ onAuthStateChanged(auth, async (user) => {
           if (window.isInitialLoad) {
             window.smkData = newStudents;
             window.teacherData = newTeachers;
-            window.globalSettings = data.settings || { theme: 'dynamic' };
+            window.globalSettings = newSettings;
             window.classNotices = newNotices;
             
-            if(window.applyGlobalTheme) window.applyGlobalTheme();
+            window.isInitialLoad = false;
+
+            // MAINTENANCE MODE CHECK ON LOAD
+            if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
+                document.getElementById('mainAppWrapper').classList.remove('visible');
+                document.getElementById('maintenanceScreen').classList.add('visible');
+                loginScreen.classList.remove('active');
+                return; // STOP HERE
+            }
+            
+            if(window.applyGlobalSettings) window.applyGlobalSettings();
             if(window.initFilterChips) window.initFilterChips();
             if(window.renderTabs) window.renderTabs();
             if(window.filterData) window.filterData();
             
-            window.isInitialLoad = false;
+            loginScreen.classList.remove('active');
+            document.getElementById('mainAppWrapper').classList.add('visible');
+            if (window.renderSearchHistory) window.renderSearchHistory();
           } 
           else {
             // Live Update Triggered!
             
-            // 1. If Admin changed the theme, update it instantly without a prompt
-            if (window.globalSettings.theme !== newTheme) {
-              window.globalSettings.theme = newTheme;
-              if(window.applyGlobalTheme) window.applyGlobalTheme();
+            // SECURITY: Check Maintenance mode instantly!
+            if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
+                // Instantly lock them out
+                window.closeModal(); window.closeStats(); window.closeAbout();
+                document.getElementById('mainAppWrapper').classList.remove('visible');
+                document.getElementById('maintenanceScreen').classList.add('visible');
+                return;
+            } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
+                // Instantly let them back in
+                document.getElementById('maintenanceScreen').classList.remove('visible');
+                document.getElementById('mainAppWrapper').classList.add('visible');
+            }
+
+            // 1. If Admin changed any settings, update them instantly without a prompt
+            if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
+              window.globalSettings = newSettings;
+              if(window.applyGlobalSettings) window.applyGlobalSettings();
             }
 
             // 2. If Data changed, show the prompt (unless the Admin caused it)
@@ -749,10 +924,6 @@ onAuthStateChanged(auth, async (user) => {
     } catch (e) {
       console.error("Data error: ", e);
     }
-
-    loginScreen.classList.remove('active');
-    mainApp.classList.add('visible');
-    if (window.renderSearchHistory) window.renderSearchHistory();
     
   } else {
     if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
