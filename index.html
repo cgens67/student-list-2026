@@ -1,3 +1,26 @@
+My deepest apologies! I completely over-engineered that layout and tried to flip
+the app upside down. Seeing it in that screenshot... you are 100% right. It
+looks absolutely terrible, bloated, and entirely broken. 😂
+
+I have completely scrapped that layout and built a gorgeous, modern "Bento Box"
+Grid UX for the Secondary Beta theme.
+
+Here is what the NEW Beta UX does:
+
+1.  The Header is fixed: It stays at the top where it belongs, no overlapping or
+    cut-off text!
+2.  Unified Search Pill: The search bar and filter buttons merge into one
+    beautiful, floating pill layout.
+3.  Bento Grid Cards: The students are now in a clean, responsive grid of cards.
+    The text is left-aligned, the avatars are "squircles" (rounded squares)
+    instead of circles, and the useless > arrows are hidden for a much cleaner
+    look.
+4.  Horizontal Teacher Card: The teacher card splits horizontally to save space
+    and match the grid aesthetic.
+
+Here is the fully fixed, complete index.html file. Replace your entire code with
+this, switch to the Beta theme, and prepare for a much better experience!
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,17 +65,27 @@ body.bg-aprilfools .btn-icon-only span { color: #FFF !important; }
 body.bg-aprilfools .ios-cell::after { display:none; }
 body.bg-aprilfools .action-row { margin-top:20px; }
 
-/* SECONDARY BETA UI/UX (LAYOUT RESTUCTURING ONLY) */
-body.bg-beta #ios-container { display: flex; flex-direction: column-reverse; padding-top: 80px; padding-bottom: 150px; }
-body.bg-beta .ios-header { top: auto; bottom: 0; height: 100px; flex-direction: row; align-items: center; justify-content: space-between; border-top: 1px solid var(--glass-border) !important; border-bottom: none; z-index:2000; padding-bottom:env(safe-area-inset-bottom);}
-body.bg-beta .ios-title { font-size: 18px; height: auto; text-align: left; }
-body.bg-beta .action-row { position: fixed; top: 0; left: 0; right: 0; padding: 15px 16px; background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); z-index: 1000; border-bottom:1px solid var(--glass-border); margin-bottom:0;}
-body.bg-beta .student-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; background: transparent; border: none; box-shadow: none; }
-body.bg-beta .ios-cell { flex-direction: column; background: var(--ios-card); align-items: center; text-align: center; padding: 20px 10px; border-radius: 16px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+/* SECONDARY BETA UI/UX (BENTO GRID DESIGN) */
+body.bg-beta #ios-container { padding-top: 160px; max-width: 1000px; }
+body.bg-beta .ios-header { height: 140px; }
+body.bg-beta .ios-title { font-size: 32px; }
+body.bg-beta .action-row { background: var(--ios-card); padding: 6px; border-radius: 20px; border: 1px solid var(--glass-border); box-shadow: var(--shadow-sm); }
+body.bg-beta .ios-search-field { background: transparent; border: none; box-shadow: none; height: 46px; }
+body.bg-beta .ios-search-field:focus { box-shadow: none; background: rgba(0,0,0,0.05); }
+body[data-theme="dark"].bg-beta .ios-search-field:focus { background: rgba(255,255,255,0.05); }
+body.bg-beta .btn-icon-only, body.bg-beta .btn-filter { background: transparent; border: none; box-shadow: none; height: 46px; border-radius: 14px; }
+body.bg-beta .btn-icon-only:hover, body.bg-beta .btn-filter:hover { background: rgba(0,0,0,0.05); }
+body.bg-beta .student-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; background: transparent; border: none; box-shadow: none; }
+body.bg-beta .ios-cell { flex-direction: column; align-items: flex-start; background: var(--ios-card); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); box-shadow: var(--shadow-sm); gap: 12px; }
 body.bg-beta .ios-cell::after { display: none; }
-body.bg-beta .status-group { position: absolute; top: 10px; right: 10px; }
-body.bg-beta .modal-card { border-radius: 0; height: 100vh; max-height: 100vh; transform: translateX(100%); top: 0; }
-body.bg-beta .modal-bg.open .modal-card { transform: translateX(0); }
+body.bg-beta .avatar { width: 48px; height: 48px; border-radius: 16px; font-size: 20px; }
+body.bg-beta .status-group { position: absolute; top: 20px; right: 20px; }
+body.bg-beta .chevron:last-child { display: none; } 
+body.bg-beta .cell-content { margin-top: auto; }
+body.bg-beta .name-txt { font-size: 15px; font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+body.bg-beta .sub-txt { font-size: 12px; display: flex; flex-direction: column; gap: 3px; opacity: 0.7; }
+body.bg-beta .teacher-card { border-radius: 24px; flex-direction: row; justify-content: space-around; text-align: center; }
+body.bg-beta .teacher-row { align-items: center; }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;transition:background-image 1s ease,background-color .4s ease,color .4s var(--ease-ios)}
@@ -408,7 +441,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'night', 'Locked to Night Theme', 'adminThemeHeader')">Locked to Night Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'christmas', 'Locked to Festive Christmas Theme', 'adminThemeHeader')">Locked to Festive Christmas Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'aprilfools', 'April Fools Theme (MD1)', 'adminThemeHeader')">April Fools Theme (MD1)</div>
-                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'beta', 'Secondary Beta UX (Layout Change)', 'adminThemeHeader')">Secondary Beta UX (Layout Change)</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'beta', 'Secondary Beta UX (Bento Grid)', 'adminThemeHeader')">Secondary Beta UX (Bento Grid)</div>
               </div>
             </div>
 
@@ -634,13 +667,15 @@ if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded"
 // ==========================================
 window.toggleCustomSelect = (dropdownId) => {
   document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
-    if(d.id !== dropdownId) { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); }
+    if(d.id !== dropdownId) {
+      d.classList.remove('show'); 
+      d.parentElement.classList.remove('active-select');
+    }
   });
   const drop = document.getElementById(dropdownId);
   drop.classList.toggle('show');
   drop.parentElement.classList.toggle('active-select', drop.classList.contains('show'));
   
-  // Quick fix for layering glitch: Ensure this specific dropdown wrapper is forced to the front
   document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
   if(drop.classList.contains('show')) drop.parentElement.style.zIndex = '100';
 };
@@ -670,7 +705,7 @@ window.openAdminPanel = () => {
   
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
-  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'April Fools Theme (MD1)','beta':'Secondary Beta UX (Layout Change)'};
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'April Fools Theme (MD1)','beta':'Secondary Beta UX (Bento Grid)'};
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
@@ -707,8 +742,7 @@ window.closeAdminPanel = () => {
   document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
 };
 
-window.switchAdminTab = (tab) => {
-  ['students', 'teachers', 'settings'].forEach(t => {
+window.switchAdminTab = (tab) => {['students', 'teachers', 'settings'].forEach(t => {
     document.getElementById('adminTab-' + t).style.display = (t === tab) ? 'block' : 'none';
     document.getElementById('tabBtn-' + t).classList.toggle('active', t === tab);
   });
@@ -897,6 +931,7 @@ window.saveAdminData = async () => {
       settings: newSettings
     });
     
+    // Local override so admin doesn't see update prompt
     window.smkData = window.adminTempStudents;
     window.teacherData = window.adminTempTeachers;
     window.classNotices = window.adminTempNotices;
