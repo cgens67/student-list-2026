@@ -29,6 +29,25 @@ body.no-glass {--glass-blur: blur(0px); --ios-card: rgba(255,255,255,1); --ios-m
 body.no-glass[data-theme="dark"] {--ios-card: rgba(30,30,30,1); --ios-modal: rgba(40,40,40,1); --ios-input: rgba(50,50,50,1);}
 body.no-glass .ios-header {background: var(--ios-bg) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 1px solid var(--ios-sep);}
 
+/* APRIL FOOLS (MATERIAL DESIGN 1) */
+body.bg-aprilfools {--ios-bg:#EEEEEE; --ios-card:#FFFFFF; --ios-modal:#FFFFFF; --ios-blue:#3F51B5; --ios-blue-text:#3F51B5; --chip-act-bg:#3F51B5; --chip-act-border:#3F51B5; --glass-blur:blur(0px); --glass-border:transparent; font-family:"Roboto", sans-serif !important;}
+body.bg-aprilfools[data-theme="dark"] {--ios-bg:#121212; --ios-card:#1E1E1E; --ios-modal:#1E1E1E; --ios-blue:#7986CB; --ios-blue-text:#7986CB; --chip-act-bg:#7986CB; --chip-act-border:#7986CB;}
+body.bg-aprilfools * {border-radius: 2px !important;}
+body.bg-aprilfools .ios-header {background: var(--ios-blue) !important; color: #FFF !important; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14);}
+body.bg-aprilfools .ios-title {color: #FFF !important;}
+body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfools .stats-dash-card, body.bg-aprilfools .modal-card, body.bg-aprilfools .auth-card {box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2) !important; border: none !important;}
+body.bg-aprilfools .theme-toggle, body.bg-aprilfools .btn-icon-only {background: var(--ios-card); box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+
+/* SECONDARY BETA UI/UX (NEO-BRUTALISM) */
+body.bg-beta {--ios-bg:#ffdeeb; --ios-card:#ffffff; --ios-modal:#ffffff; --ios-blue:#000000; --ios-blue-text:#000000; --chip-act-bg:#000000; --chip-act-border:#000000; --glass-blur:blur(0px); --glass-border:#000000; font-family:"Courier New", monospace !important;}
+body.bg-beta[data-theme="dark"] {--ios-bg:#1a000d; --ios-card:#000000; --ios-modal:#000000; --ios-blue:#00ff41; --ios-blue-text:#00ff41; --chip-act-bg:#00ff41; --chip-act-border:#00ff41; --ios-text:#00ff41; --ios-text-sec:#00aa2b; --glass-border:#00ff41;}
+body.bg-beta * {border-radius: 0px !important;}
+body.bg-beta .ios-header {background: var(--ios-bg) !important; border-bottom: 4px solid var(--ios-blue) !important;}
+body.bg-beta .ios-cell, body.bg-beta .teacher-card, body.bg-beta .modal-card, body.bg-beta .stats-dash-card, body.bg-beta .auth-card, body.bg-beta .custom-select-dropdown, body.bg-beta .custom-select-header, body.bg-beta .admin-input {border: 2px solid var(--ios-blue) !important; box-shadow: 4px 4px 0px var(--ios-blue) !important; margin-bottom: 10px;}
+body.bg-beta .chip {border: 2px solid var(--ios-blue); box-shadow: 2px 2px 0px var(--ios-blue);}
+body.bg-beta .btn-done, body.bg-beta .auth-btn, body.bg-beta .update-btn {border: 2px solid var(--ios-blue); box-shadow: 4px 4px 0px var(--ios-blue); color: var(--ios-card) !important; background: var(--ios-blue) !important; font-weight: 800; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s;}
+body.bg-beta .btn-done:active, body.bg-beta .auth-btn:active, body.bg-beta .update-btn:active {transform: translate(4px, 4px) !important; box-shadow: 0px 0px 0px var(--ios-blue) !important;}
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;transition:background-image 1s ease,background-color .4s ease,color .4s var(--ease-ios)}
 button,input,textarea,select{font-family:var(--font-stack)!important}input,textarea,select{user-select:text}
@@ -47,8 +66,9 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .action-row{display:flex;gap:10px;align-items:center;margin-bottom:12px;opacity:0;animation:fadeUp .6s var(--ease-ios) .1s forwards}.ios-search-field{width:100%;height:42px;padding:0 10px 0 38px;border-radius:12px;border:1px solid var(--chip-border);background:var(--ios-input);box-shadow:var(--glass-highlight);color:var(--ios-text);font-size:17px;transition:background-color .3s,box-shadow .3s}.ios-search-field:focus{background:var(--ios-card);box-shadow:0 0 0 2px var(--ios-blue)}.ios-search-field::placeholder{color:var(--ios-text-sec);transition:all .3s var(--ease-ios);opacity:1;transform:translateX(0);filter:blur(0)}.ios-search-field.anim-placeholder::placeholder{opacity:0;transform:translateX(-10px);filter:blur(4px)}.search-box{flex:1;position:relative}.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ios-text-sec);font-size:20px;pointer-events:none}
 .btn-icon-only{width:42px;height:42px;flex-shrink:0;background:var(--ios-input);border-radius:12px;border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-blue-text);cursor:pointer;transition:background-color .3s,transform .2s var(--ease-spring),box-shadow .2s,color .4s ease;position:relative}.btn-icon-only:active{opacity:.7;transform:scale(.85)}.btn-icon-only.active{background:var(--ios-card);color:#FF2D55;box-shadow:inset 0 0 0 2px #FF2D55}.btn-filter{color:var(--ios-blue-text);background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);font-size:16px;font-weight:600;cursor:pointer;padding:0 16px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background-color .3s,transform .2s var(--ease-spring),color .4s ease;white-space:nowrap;overflow:hidden}.btn-filter:active{opacity:.8;transform:scale(.92)}
 .filter-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios)}.filter-drawer.open{grid-template-rows:1fr;margin-bottom:20px}.filter-inner{overflow:hidden;min-height:0;padding:20px;margin:-20px}.filter-container{background:var(--ios-card);border-radius:16px;padding:20px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);opacity:0;transform:translateY(-20px);transition:opacity .3s ease,transform .4s var(--ease-ios)}.filter-drawer.open .filter-container{opacity:1;transform:translateY(0)}.filter-heading{font-size:11px;font-weight:700;color:var(--ios-text-sec);text-transform:uppercase;margin-bottom:10px;display:block;height:14px;line-height:14px;overflow:hidden;white-space:nowrap}
-.scroll-row{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:40px;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.chip{flex:0 0 auto;height:36px;padding:0 16px;background:var(--chip-bg);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);color:var(--chip-txt);border-radius:100px;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;margin-right:8px;transition:all .4s ease;overflow:hidden}.chip:last-child{margin-right:0}.chip:hover{filter:brightness(.95)}.chip:active{transform:scale(.95)}.chip.active{background:var(--chip-act-bg);color:var(--chip-act-txt);font-weight:600;border-color:var(--chip-act-border)}
-.chip-anim-wrapper{transition:max-width .5s var(--ease-spring),opacity .4s ease,transform .5s var(--ease-spring);max-width:150px;opacity:1;display:inline-flex;transform:scale(1) translateX(0);transform-origin:left center;overflow:visible}.chip-anim-wrapper.collapsed{max-width:0;opacity:0;transform:scale(.7) translateX(-20px);pointer-events:none}.sort-arrow{display:flex;align-items:center;justify-content:center;width:14px;margin-left:4px;opacity:1;transition:width .3s var(--ease-ios),margin .3s var(--ease-ios),opacity .2s ease,transform .4s var(--ease-spring);overflow:hidden}.sort-arrow.flip{transform:rotateX(180deg)}.sort-arrow.hidden{width:0;margin-left:0;opacity:0;transform:scale(.3)}.sort-arrow.flip.hidden{transform:scale(.3) rotateX(180deg)}
+/* Changed margin-right to gap for smooth button alignment */
+.scroll-row{display:flex;overflow-x:auto;gap:8px;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:40px;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.chip{flex:0 0 auto;height:36px;padding:0 16px;background:var(--chip-bg);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);color:var(--chip-txt);border-radius:100px;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;margin:0;transition:all .4s ease;overflow:hidden}.chip:hover{filter:brightness(.95)}.chip:active{transform:scale(.95)}.chip.active{background:var(--chip-act-bg);color:var(--chip-act-txt);font-weight:600;border-color:var(--chip-act-border)}
+.chip-anim-wrapper{transition:max-width .5s var(--ease-spring),opacity .4s ease,transform .5s var(--ease-spring);max-width:150px;opacity:1;display:inline-flex;transform:scale(1) translateX(0);transform-origin:left center;overflow:visible;margin:0;}.chip-anim-wrapper.collapsed{max-width:0;opacity:0;transform:scale(.7) translateX(-20px);pointer-events:none}.sort-arrow{display:flex;align-items:center;justify-content:center;width:14px;margin-left:4px;opacity:1;transition:width .3s var(--ease-ios),margin .3s var(--ease-ios),opacity .2s ease,transform .4s var(--ease-spring);overflow:hidden}.sort-arrow.flip{transform:rotateX(180deg)}.sort-arrow.hidden{width:0;margin-left:0;opacity:0;transform:scale(.3)}.sort-arrow.flip.hidden{transform:scale(.3) rotateX(180deg)}
 #reset-bar{display:none;justify-content:center;margin-bottom:20px;animation:fadeUp .3s forwards}.reset-btn{background:var(--chip-bg);color:var(--ios-blue-text);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:8px 18px;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .3s var(--ease-ios);white-space:nowrap;overflow:hidden}.reset-btn:active{transform:scale(.95);opacity:.8}
 .tabs-track{display:flex;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);padding:4px;border-radius:12px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none;opacity:0;animation:fadeUp .6s var(--ease-ios) .2s forwards;position:relative}.tab-item{flex:1 0 auto;text-align:center;padding:7px 12px;min-width:70px;font-size:13px;font-weight:600;color:var(--ios-text);border-radius:8px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:all .2s ease;opacity:.6}.tab-item.active{background:var(--ios-card);opacity:1;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid var(--glass-border)}[data-theme="dark"] .tab-item.active{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.1)}
 .teacher-card{background:var(--ios-card);border-radius:16px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);padding:20px;margin-bottom:16px;display:flex;flex-direction:column;gap:16px;opacity:0;animation:fadeUp .6s var(--ease-ios) .3s forwards;display:none;overflow:hidden;will-change:height;transition:background .4s ease}.teacher-card.show{display:flex}.teacher-row{display:flex;flex-direction:column;align-items:flex-start;gap:4px;transition:all .3s var(--ease-ios)}.t-label{font-size:10px;font-weight:700;color:var(--ios-text-sec);text-transform:uppercase;letter-spacing:.02em;transition:width .3s var(--ease-ios);white-space:nowrap}.t-name{font-size:15px;font-weight:700;color:var(--ios-text);line-height:1.3;text-align:left;transition:opacity .25s var(--ease-ios),transform .25s var(--ease-ios),color .4s ease}
@@ -59,11 +79,11 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .cell-content{flex:1;min-width:0;pointer-events:none}.name-txt{font-size:15px;font-weight:600;color:var(--ios-text);letter-spacing:-.01em;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal}.sub-txt{font-size:13px;color:var(--ios-text-sec);margin-top:2px}
 .fav-badge{font-size:16px;color:#FF2D55;display:none;margin-right:10px;animation:popIn .3s var(--ease-spring)}.fav-badge.show{display:block}@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
 .status-group{display:flex;align-items:center;gap:4px;pointer-events:none}.chevron{color:rgba(0,0,0,0.3);font-size:20px;transition:transform .2s}[data-theme="dark"] .chevron{color:rgba(255,255,255,0.3)}.empty-msg{text-align:center;padding:40px;color:var(--ios-text-sec);opacity:0;animation:fadeUp .5s forwards}
-.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);z-index:2000;pointer-events:none;transition:background .4s,backdrop-filter .4s;display:flex;align-items:flex-end;justify-content:center}.modal-bg.open{background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);pointer-events:auto}.modal-card{width:100%;max-width:600px;max-height:80vh;max-height:80dvh;border-radius:28px 28px 0 0;background:var(--ios-modal);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:1px solid var(--glass-border);box-shadow:var(--shadow-lg),var(--glass-highlight);display:flex;flex-direction:column;padding:0;transform:translateY(100%);visibility:hidden;transition:transform .4s var(--ease-ios),background .4s,visibility 0s .4s,height .4s var(--ease-ios);touch-action:none;position:relative;overflow:hidden}
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);z-index:2000;pointer-events:none;transition:background .4s,backdrop-filter .4s;display:flex;align-items:flex-end;justify-content:center}.modal-bg.open{background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);pointer-events:auto}.modal-card{width:100%;max-width:600px;max-height:80vh;border-radius:28px 28px 0 0;background:var(--ios-modal);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:1px solid var(--glass-border);box-shadow:var(--shadow-lg),var(--glass-highlight);display:flex;flex-direction:column;padding:0;transform:translateY(100%);visibility:hidden;transition:transform .4s var(--ease-ios),background .4s,visibility 0s .4s,height .4s var(--ease-ios);touch-action:none;position:relative;overflow:hidden}
 .auth-overlay{position:fixed;inset:0;background:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);z-index:9999;display:flex;justify-content:center;align-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:.4s var(--ease-ios)}.auth-overlay.active{opacity:1;visibility:visible;pointer-events:auto}.auth-card{background:var(--ios-card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--shadow-lg),var(--glass-highlight);border-radius:24px;padding:40px 24px;width:100%;max-width:360px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden}.auth-dots{position:absolute;top:16px;right:16px;color:var(--ios-text-sec);cursor:pointer;padding:4px;border-radius:50%;transition:background .2s;display:flex;align-items:center;justify-content:center}.auth-dots:active{background:rgba(0,0,0,0.1);transform:scale(.9)}.auth-menu{position:absolute;top:54px;right:16px;background:var(--ios-card);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--shadow-md);border-radius:12px;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-10px);transition:.2s var(--ease-spring);z-index:10}.auth-menu.show{opacity:1;visibility:visible;transform:translateY(0)}.auth-menu-item{padding:12px 20px;font-size:14px;font-weight:500;color:var(--ios-text);cursor:pointer;text-align:left;white-space:nowrap;border-bottom:1px solid var(--ios-sep)}.auth-menu-item:last-child{border-bottom:none}.auth-menu-item:active{background:rgba(0,0,0,0.05)}.auth-icon{font-size:50px;color:var(--ios-blue);margin-bottom:15px;background:var(--ios-blue-light);border-radius:50%;padding:15px}.auth-title{font-size:24px;font-weight:800;color:var(--ios-text);margin-bottom:6px;letter-spacing:-.02em}.auth-sub{font-size:14px;color:var(--ios-text-sec);margin-bottom:24px;line-height:1.4}.auth-input{width:100%;height:50px;border-radius:12px;border:1px solid var(--chip-border);background:var(--ios-input);padding:0 16px;font-size:16px;color:var(--ios-text);margin-bottom:12px;outline:0;transition:.3s}.auth-input:focus{border-color:var(--ios-blue);box-shadow:0 0 0 3px var(--ios-blue-light)}.auth-btn{width:100%;height:50px;border-radius:12px;background:var(--ios-blue);color:#fff;font-weight:700;font-size:16px;border:none;cursor:pointer;transition:.2s var(--ease-spring);margin-bottom:16px}.auth-btn:active{transform:scale(.96);opacity:.9}.auth-switch{color:var(--ios-blue);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s}.auth-switch:active{opacity:.6}.auth-error{color:#FF3B30;font-size:13px;font-weight:500;margin-bottom:12px;min-height:16px;opacity:0;transition:.3s;width:100%;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}.auth-error.show{opacity:1;transform:translateY(0)}.dialog-btn{width:100%;height:44px;border-radius:10px;background:var(--ios-blue);color:#fff;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:.2s;margin-top:20px}.dialog-btn:active{transform:scale(.96)}
 #statsListContainer{display:flex;flex-direction:column;width:100%}.stats-visuals-container{display:flex;flex-direction:column;align-items:center;width:100%;margin-bottom:24px;padding:0}.pie-chart{width:160px;height:160px;border-radius:50%;margin:10px auto 20px;background:0 0;box-shadow:inset 0 0 0 1.5px var(--ios-modal),0 4px 16px rgba(0,0,0,0.1);position:relative;flex-shrink:0;overflow:hidden;transform:translateZ(0);-webkit-mask-image:-webkit-radial-gradient(white,black);opacity:0;transform:scale(.5) rotate(-20deg);transition:transform .8s cubic-bezier(0.175,0.885,0.32,1.275),opacity .5s ease}.stats-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;opacity:0;animation:fadeUp .5s forwards;margin:auto;width:100%}.stats-empty-state-card{background:var(--ios-input);border-radius:20px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);padding:50px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;animation:fadeUp .5s forwards;margin-top:10px;width:100%;max-width:500px;margin:10px auto 0}.stats-empty-icon{font-size:64px;color:var(--ios-blue);margin-bottom:16px;opacity:.8;filter:drop-shadow(0 8px 16px var(--ios-blue-light))}.stats-empty-title{font-size:18px;font-weight:700;color:var(--ios-text);margin-bottom:8px}.stats-empty-sub{font-size:14px;color:var(--ios-text-sec);max-width:220px;line-height:1.4;margin:0 auto}
 @media (min-width:768px){#ios-container{max-width:900px;margin:0 auto}.modal-card{max-width:800px;margin:0 auto;max-height:90vh;border-radius:28px;border:1px solid var(--glass-border)}#statsCard .m-body{display:flex;flex-direction:column;overflow:hidden}.m-body.view-mode-list #statsListContainer:not(.is-empty){display:grid;grid-template-columns:320px 1fr;gap:20px;height:100%;overflow:hidden;align-items:start;padding:0 10px}.m-body.view-mode-list #statsListContainer.is-empty{display:flex;flex-direction:column;height:100%;align-items:center;padding:0 20px}.m-body.view-mode-list #statsListContainer.is-empty #statsListCol{width:100%;max-width:500px;margin:0 auto;height:100%}.stats-visuals-container{padding:20px 30px 40px;height:100%;overflow-y:auto;border-right:1px solid var(--ios-sep);display:flex;flex-direction:column;align-items:center;margin-bottom:0}.pie-chart{margin-top:10px;width:160px;height:160px}.pie-legend{justify-content:flex-start;width:100%}.legend-item{width:48%}#statsListCol{padding:10px 0 40px;height:100%;overflow-y:auto}.m-body.view-mode-map #statsMap{padding:40px 40px 60px;align-items:center;justify-content:center;gap:15px;overflow-y:auto}.bubble{width:100px!important;height:100px!important;transition:transform .2s}.bubble:hover{transform:scale(1.05)}.b-count{font-size:26px}.b-label{font-size:13px;max-width:90px}.m-body{-webkit-mask-image:none!important;mask-image:none!important}.stats-visuals-container,#statsListCol,#statsMap{-webkit-mask-image:linear-gradient(to bottom,transparent 0,black 20px,black calc(100% - 40px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,black 20px,black calc(100% - 40px),transparent 100%)}}
-.m-head{cursor:grab;padding:24px 24px 0;flex-shrink:0;text-align:center;position:relative;z-index:2}.m-head:active{cursor:grabbing}#statsCard,#aboutCard{max-height:80dvh;max-height:80vh}@media (min-width:768px){#statsCard{max-height:85vh}}.modal-card.is-dragging{transition:none!important}.modal-bg.open .modal-card{transform:translateY(0);visibility:visible;transition:transform .4s var(--ease-ios),background .4s,visibility 0s 0s,height .4s var(--ease-ios)}
+.m-head{cursor:grab;padding:24px 24px 0;flex-shrink:0;text-align:center;position:relative;z-index:2}.m-head:active{cursor:grabbing}#statsCard,#aboutCard{max-height:80vh}.modal-card.is-dragging{transition:none!important}.modal-bg.open .modal-card{transform:translateY(0);visibility:visible;transition:transform .4s var(--ease-ios),background .4s,visibility 0s 0s,height .4s var(--ease-ios)}
 .floating-container{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}.float-icon{position:absolute;font-size:60px;opacity:0;filter:blur(6px);user-select:none;animation-iteration-count:infinite!important}@keyframes floatUp{0%{transform:translateY(0) rotate(0deg) scale(.8);opacity:0}20%{opacity:.15}80%{opacity:.15}100%{transform:translateY(-900px) rotate(20deg) scale(1.2);opacity:0}}@keyframes floatDown{0%{transform:translateY(0) rotate(0deg) scale(.8);opacity:0}20%{opacity:.15}80%{opacity:.15}100%{transform:translateY(900px) rotate(-20deg) scale(1.2);opacity:0}}
 .btn-star{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text-sec);cursor:pointer;transition:all .2s var(--ease-spring);z-index:10}.btn-star:active{transform:scale(.85);opacity:.7}.btn-star.active{background:#FF2D55;color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(255,45,85,0.4);transform:scale(1.1)}
 .m-body{padding:12px 24px 32px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;touch-action:pan-y;position:relative;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%)}.m-foot{padding:20px 24px 30px;flex-shrink:0;padding-bottom:max(30px,env(safe-area-inset-bottom));position:relative;z-index:2;display:flex;gap:12px;align-items:center}.btn-nav{width:44px;height:44px;border-radius:50%;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text);cursor:pointer;flex-shrink:0;transition:background .2s,transform .2s var(--ease-spring),opacity .2s}.btn-nav:active{transform:scale(.85);opacity:.7}.handle{width:36px;height:5px;background:rgba(0,0,0,0.2);border-radius:10px;margin:0 auto 15px;pointer-events:none}[data-theme="dark"] .handle{background:rgba(255,255,255,0.2)}
@@ -105,7 +125,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 #maintenanceScreen { justify-content:center; align-items:center; text-align:center; padding:20px; }
 .maint-icon { font-size:80px; color:var(--ios-blue); margin-bottom:20px; opacity:0.9; }
 .maint-title { font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:10px; }
-.maint-sub { font-size:15px; color:var(--ios-text-sec); max-width:300px; line-height:1.5; }
+.maint-sub { font-size:15px; color:var(--ios-text-sec); max-width:300px; line-height:1.5; margin:0 auto; }
 </style>
 </head>
 <body>
@@ -147,7 +167,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <span class="material-icons-round maint-icon">build_circle</span>
     <div class="maint-title">Under Maintenance</div>
     <div class="maint-sub">The system is currently undergoing updates. Please check back later.</div>
-    <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
+    <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
 </div>
 
 <div id="mainAppWrapper">
@@ -156,7 +176,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
       <div class='meta-left'><span class='count-pill' id='studentCount'>0</span></div>
       <div class='header-controls'>
         <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
-        <button class='theme-toggle' onclick='window.appSignOut && window.appSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
+        <button class='theme-toggle' onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
         <button class='theme-toggle' onclick='openAbout()'><span class='material-icons-round' style='font-size:20px'>info</span></button>
         <button class='theme-toggle' id='btnDensityToggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
         <button class='theme-toggle' id='btnThemeToggle' onclick='toggleTheme()'><span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span></button>
@@ -280,7 +300,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
   <!-- ADMIN DASHBOARD MODAL -->
   <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel()'>
-    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="height: 85dvh; max-height: 800px; display: flex; flex-direction: column;">
+    <div class='modal-card' id='adminCard' onclick='event.stopPropagation()' style="height: 85vh; max-height: 800px; display: flex; flex-direction: column;">
       
       <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id="lblAdminTitle">Admin Dashboard</div><div class='stats-sub anim-text-change' id="lblAdminSub">Changes save to 'Update Queue' locally</div></div>
       
@@ -299,7 +319,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
             
             <div class="custom-select-container">
               <div class="custom-select-header" id="adminStudentSelectHeader" onclick="window.toggleCustomSelect('adminStudentDropdown')">
-                 <span>-- ➕ Add New Student --</span><span class="material-icons-round">expand_more</span>
+                 <span>-- Add New Student --</span><span class="material-icons-round">expand_more</span>
               </div>
               <div class="custom-select-dropdown" id="adminStudentDropdown">
                  <input type="text" id="adminStudentSearch" placeholder="Search by name..." onkeyup="window.filterAdminStudents()" class="admin-input" style="margin-bottom:8px;" autocomplete="off">
@@ -354,6 +374,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
             </div>
 
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
+               
                <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Class Notice / Warning Banner</label>
                <textarea id="adminClassNotice" placeholder="e.g. Information may be inaccurate due to..." class="admin-input" style="height:60px; padding:8px;"></textarea>
                <hr style="border:none; border-top:1px solid var(--ios-sep); margin:5px 0;">
@@ -381,6 +402,8 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'afternoon', 'Locked to Afternoon/Day Theme', 'adminThemeHeader')">Locked to Afternoon/Day Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'night', 'Locked to Night Theme', 'adminThemeHeader')">Locked to Night Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'christmas', 'Locked to Festive Christmas Theme', 'adminThemeHeader')">Locked to Festive Christmas Theme</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'aprilfools', 'April Fools Theme (MD1)', 'adminThemeHeader')">April Fools Theme (MD1)</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'beta', 'Secondary Beta UI/UX', 'adminThemeHeader')">Secondary Beta UI/UX</div>
               </div>
             </div>
 
@@ -480,7 +503,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 // ==========================================
 window.smkData =[];
 window.teacherData = {};
-window.globalSettings = { theme: 'dynamic', maintenance: false, hideTheme: false, hideStats: false, disableGlass: false, aboutText: "<strong>Student Allocation List 2026</strong>\nVersion 6.0 (Secured Edition)\n\nCheck allocations, view origin maps, and use Quick Actions.\n\nHosted on Vercel | Secured by Firebase" };
+window.globalSettings = { theme: 'dynamic', maintenance: 'false', hideTheme: 'false', hideStats: 'false', disableGlass: 'false', aboutText: "<strong>Student Allocation List 2026</strong>\nVersion 6.0 (Secured Edition)\n\nCheck allocations, view origin maps, and use Quick Actions.\n\nHosted on Vercel | Secured by Firebase" };
 window.classNotices = {};
 window.isInitialLoad = true;
 window.pendingDataUpdate = null;
@@ -497,7 +520,7 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas');
+  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-aprilfools', 'bg-beta');
   const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
   if (themeMode === 'dynamic') {
     const hour = new Date().getHours();
@@ -515,6 +538,7 @@ window.applyGlobalSettings = function() {
   document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
   document.getElementById('aboutContent').innerHTML = (window.globalSettings && window.globalSettings.aboutText) ? window.globalSettings.aboutText : '';
 }
+function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
@@ -575,6 +599,7 @@ window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classLi
 window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";toggleFilters();filterData();showToast("Filtered by "+student.sch,"filter_list")}hideContextMenu()}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
+window.confirmSignOut=function(){if(confirm("Are you sure you want to log out?")){if(window.appSignOut)window.appSignOut()}}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
@@ -608,7 +633,7 @@ window.openAdminPanel = () => {
   // Set UI for Settings Custom Dropdowns
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
-  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme'};
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'April Fools Theme (MD1)','beta':'Secondary Beta UI/UX'};
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
@@ -677,12 +702,12 @@ window.selectAdminStudent = (id, nameText, preventToggle = false) => {
 
 window.refreshAdminStudentDropdown = (selectId = "NEW") => {
   const list = document.getElementById('adminStudentList');
-  let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '-- ➕ Add New Student --')"><strong>-- ➕ Add New Student --</strong></div>`;
+  let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '-- Add New Student --')"><strong>-- Add New Student --</strong></div>`;
   const sorted =[...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
   sorted.forEach(s => { html += `<div class="custom-option student-opt" onclick="window.selectAdminStudent('${s.id}', '${s.name.replace(/'/g, "\\'")}')">${s.name} <span style="opacity:0.5;font-size:12px;">(${s.newClass})</span></div>`; });
   list.innerHTML = html;
 
-  let selectedName = '-- ➕ Add New Student --';
+  let selectedName = '-- Add New Student --';
   if(selectId !== "NEW") {
     const stu = window.adminTempStudents.find(s=>s.id===selectId);
     if(stu) selectedName = stu.name;
@@ -781,7 +806,7 @@ let isSignUpMode=!1;window.cloudUser=null;
 // ==========================================
 // 🚨 ADMIN EMAIL SETTING 🚨
 // ==========================================
-const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; // <--- CHANGE THIS TO YOUR EXACT EMAIL
+const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; 
 
 
 window.saveAdminData = async () => {
@@ -797,7 +822,6 @@ window.saveAdminData = async () => {
        aboutText: document.getElementById('adminAboutInput').value
     };
     
-    // Save everything securely
     await setDoc(doc(db, "appData", "schoolInfo"), {
       students: window.adminTempStudents,
       teachers: window.adminTempTeachers,
@@ -805,7 +829,7 @@ window.saveAdminData = async () => {
       settings: newSettings
     });
     
-    // Update locally instantly so the Admin doesn't see the "Update" popup!
+    // Local override so admin doesn't see update prompt
     window.smkData = window.adminTempStudents;
     window.teacherData = window.adminTempTeachers;
     window.classNotices = window.adminTempNotices;
@@ -855,7 +879,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic' };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutText: '' };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -869,12 +893,12 @@ onAuthStateChanged(auth, async (user) => {
             
             window.isInitialLoad = false;
 
-            // MAINTENANCE MODE CHECK ON LOAD
+            // MAINTENANCE CHECK
             if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
                 document.getElementById('mainAppWrapper').classList.remove('visible');
                 document.getElementById('maintenanceScreen').classList.add('visible');
                 loginScreen.classList.remove('active');
-                return; // STOP HERE
+                return;
             }
             
             if(window.applyGlobalSettings) window.applyGlobalSettings();
@@ -887,28 +911,22 @@ onAuthStateChanged(auth, async (user) => {
             if (window.renderSearchHistory) window.renderSearchHistory();
           } 
           else {
-            // Live Update Triggered!
-            
-            // SECURITY: Check Maintenance mode instantly!
+            // Live Update Triggered
             if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-                // Instantly lock them out
                 window.closeModal(); window.closeStats(); window.closeAbout();
                 document.getElementById('mainAppWrapper').classList.remove('visible');
                 document.getElementById('maintenanceScreen').classList.add('visible');
                 return;
             } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
-                // Instantly let them back in
                 document.getElementById('maintenanceScreen').classList.remove('visible');
                 document.getElementById('mainAppWrapper').classList.add('visible');
             }
 
-            // 1. If Admin changed any settings, update them instantly without a prompt
             if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
               window.globalSettings = newSettings;
               if(window.applyGlobalSettings) window.applyGlobalSettings();
             }
 
-            // 2. If Data changed, show the prompt (unless the Admin caused it)
             const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
                                 JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
                                 JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
