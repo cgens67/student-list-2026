@@ -1,30 +1,3 @@
-The reason those modals are pushing themselves off the absolute top of your
-screen is due to a mixture of a CSS Flexbox bug on mobile browsers and a
-JavaScript height calculation glitch happening during animations.
-
-When a container dynamically changes its contents (like loading the big pie
-chart or switching Admin tabs), the JavaScript was calculating the height in
-pixels and forcing it to grow. Mobile browsers (especially Safari and Chrome on
-Android) often misinterpret 100vh when the keyboard is closed vs. open, leading
-to the modal shooting past the viewport.
-
-What I've Fixed:
-
-1.  Erased JS Height Glitches: I completely removed the pixel-calculation code
-    (card.style.height = offsetHeight + 'px'). The modals now rely entirely on
-    pure, native CSS flexbox for sizing, which is 100x smoother and bug-free.
-2.  Fixed Flexbox Scrolling (min-height: 0): Added the magic min-height: 0
-    !important; rule to the modal body. This stops the contents of the modal
-    from forcing the outer card to stretch beyond the safe screen boundaries. It
-    will now properly scroll inside the modal instead!
-3.  Removed Hardcoded Admin Height: Removed the forced height: 85vh from the
-    Admin Card. It now shares the globally safe 88dvh (Dynamic Viewport Height)
-    rule, guaranteeing it always leaves a safe gap at the top of your screen.
-
-Here is your fully fixed index.html:
-
-(Just copy and replace everything. No setup required!)
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
