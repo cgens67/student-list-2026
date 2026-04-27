@@ -1,17 +1,3 @@
-Oops! You are completely right. When I locked down the CSS height to fix the
-bug, I accidentally ripped out the smooth bouncing transition. My apologies!
-
-I have brought back the buttery-smooth expanding/collapsing animation for the
-Stats modal!
-
-To fix the glitch where it shoots off the top of the screen, I rewrote the
-JavaScript animation engine to strictly calculate your phone's screen size
-(window.innerHeight). Now, it animates smoothly but hits a "glass ceiling" at
-exactly 85% of your screen height, forcing the list inside to become scrollable
-instead of pushing the whole panel off the top.
-
-Here is your perfect, final index.html file:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
