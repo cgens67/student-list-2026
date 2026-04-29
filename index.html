@@ -102,7 +102,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;max-width:300px;margin:16px auto 0}.pie-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}.legend-item{font-size:11px;display:flex;align-items:center;gap:4px;color:var(--ios-text-sec);font-weight:500;opacity:0;transform:translateY(10px);animation:fadeUp .4s var(--ease-spring) forwards}.legend-dot{width:8px;height:8px;border-radius:50%}
 .bubble-chart{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:20px 0;min-height:200px}.bubble{background:var(--ios-input);border-radius:50%;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ios-text);transition:transform .3s var(--ease-spring);cursor:pointer}.bubble:active{transform:scale(.9)}.b-count{font-weight:800;line-height:1}.b-label{font-size:10px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
 .comp-bar-container{width:100%;height:20px;display:flex;border-radius:8px;overflow:hidden;margin-bottom:10px;background:rgba(0,0,0,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}[data-theme="dark"] .comp-bar-container{background:rgba(255,255,255,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}.comp-segment{height:100%;transition:width 1s var(--ease-ios);position:relative}.comp-segment:first-child{border-radius:8px 0 0 8px}.comp-segment:last-child{border-radius:0 8px 8px 0}
-.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:5px; white-space:pre-wrap;}
+.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px; white-space:pre-wrap;}
 .history-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios),margin-bottom .4s var(--ease-ios);margin-bottom:0}.history-drawer.open{grid-template-rows:1fr;margin-bottom:12px}.history-inner{overflow:hidden;min-height:0}.history-track{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.history-pill{margin-right:8px;background:var(--chip-bg);color:var(--ios-text-sec);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;transition:transform .2s var(--ease-spring)}.history-pill:last-child{margin-right:0}.history-pill:active{transform:scale(.95);opacity:.8}.history-pill.clear-hist{color:#FF3B30;border-color:rgba(255,59,48,0.3);padding:6px 10px}
 .anim-text-change{transition:opacity .25s cubic-bezier(0.25,1,0.5,1),transform .25s cubic-bezier(0.25,1,0.5,1);opacity:1;transform:translate3d(0,0,0)}.blur-fade-out{opacity:0;transform:scale(.95) translateY(5px);filter:blur(8px);transition:all .3s cubic-bezier(0.25,1,0.5,1)}.blur-fade-in{opacity:1;transform:scale(1) translateY(0);filter:blur(0);transition:all .4s cubic-bezier(0.25,1,0.5,1)}.anim-text-change.fade-out{opacity:0;transform:translate3d(0,-10px,0)}.anim-text-change.fade-in{opacity:1;transform:translate3d(0,0,0)}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:rgba(0,0,0,0.6);color:#FFF;padding:12px 24px;border-radius:50px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 16px 32px rgba(0,0,0,0.3);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:3000;transition:all .5s var(--ease-spring);display:flex;align-items:center;gap:8px;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);white-space:nowrap;max-width:90vw}@supports (padding-bottom:env(safe-area-inset-bottom)){.toast{bottom:calc(30px + env(safe-area-inset-bottom))}}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}[data-theme="dark"] .toast{background:rgba(255,255,255,0.7);color:#000;border-color:rgba(0,0,0,0.1)}
@@ -134,12 +134,6 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .maint-icon { font-size:80px; color:var(--ios-blue); margin-bottom:20px; opacity:0.9; }
 .maint-title { font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:10px; }
 .maint-sub { font-size:15px; color:var(--ios-text-sec); max-width:300px; line-height:1.5; margin:0 auto; }
-
-/* CHANGELOG ITEM CARD */
-.changelog-item-card {
-    display:flex; gap:14px; background:var(--ios-card); padding:16px; border-radius:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
-    opacity:0; transform:translateY(15px); animation: fadeUp 0.5s var(--ease-spring) forwards;
-}
 </style>
 </head>
 <body>
@@ -197,14 +191,9 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     </div>
     
     <!-- View 2: Changelog Details -->
-    <div id="updateView2" style="display:none; flex-direction:column; align-items:center; max-width:400px; width:100%; text-align:left; transition: opacity 0.3s; margin-bottom:60px; max-height:75vh; overflow-y:auto; padding:0 10px;">
-        <div style="display:flex; align-items:center; gap:10px; width:100%; margin-bottom:20px;">
-            <div style="background:var(--ios-blue-light); padding:8px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                <span class="material-icons-round" style="font-size:22px; color:var(--ios-blue);">auto_awesome</span>
-            </div>
-            <h2 style="font-size:22px; font-weight:800; color:var(--ios-text); margin:0; letter-spacing:-0.02em;">What's Changed</h2>
-        </div>
-        <div id="updateChangelogText" style="width:100%; display:flex; flex-direction:column; gap:10px; padding-bottom:20px;">
+    <div id="updateView2" style="display:none; flex-direction:column; align-items:center; max-width:400px; width:100%; text-align:left; transition: opacity 0.3s; margin-bottom:60px; max-height:60vh; overflow-y:auto; padding:0 10px;">
+        <h2 style="font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:20px; width:100%;">What's Changed:</h2>
+        <div id="updateChangelogText" style="font-size:15px; color:var(--ios-text); line-height:1.6; white-space:pre-wrap; width:100%; background:var(--ios-input); padding:20px; border-radius:16px; border:1px solid var(--chip-border);">
         </div>
     </div>
 
@@ -621,12 +610,12 @@ window.applyGlobalSettings = function() {
   
   const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", footer: "Hosted on Vercel | Secured by Firebase" };
   document.getElementById('aboutContent').innerHTML = `
-      <div style="color:var(--ios-blue); margin-bottom:8px;"><span class="material-icons-round" style="font-size:36px;">info</span></div>
-      <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:2px;">${about.title}</div>
-      <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:12px;">${about.version}</div>
-      <div style="font-size:14px; line-height:1.4; color:var(--ios-text-sec); margin-bottom:16px; white-space:pre-wrap;">${about.desc}</div>
+      <div style="color:var(--ios-blue); margin-bottom:12px;"><span class="material-icons-round" style="font-size:42px;">info</span></div>
+      <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:4px;">${about.title}</div>
+      <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:16px;">${about.version}</div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ios-text-sec); margin-bottom:24px; white-space:pre-wrap;">${about.desc}</div>
       <div style='font-size:12px; color:var(--ios-text-sec); opacity:0.6; font-weight:500;'>Designed with Smooth iOS Performance in mind</div>
-      <div style='font-size:11px; color:var(--ios-text-sec); opacity:0.4; margin-top:2px;'>${about.footer}</div>
+      <div style='font-size:11px; color:var(--ios-text-sec); opacity:0.4; margin-top:4px;'>${about.footer}</div>
   `;
 }
 function checkTimeOfDay(){ window.applyGlobalSettings(); }
@@ -1074,7 +1063,7 @@ function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.
 function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
 
 toggleAuthModeBtn.addEventListener('click',()=>{isSignUpMode=!isSignUpMode;authMsgBox.classList.remove('show');authTitle.innerText=isSignUpMode?"Create Account":"Welcome Back";authSub.innerText=isSignUpMode?"Sign up to access records":"Log in to view student records";authIcon.innerText=isSignUpMode?"person_add":"lock_outline";primaryAuthBtn.innerText=isSignUpMode?"Sign Up":"Log In";primaryAuthBtn.style.background=isSignUpMode?"#34C759":"var(--ios-blue)";toggleAuthModeBtn.innerText=isSignUpMode?"Already have an account? Log In":"Don't have an account? Sign Up"});
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Sign Up"})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Log In"})}});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Sign Up"})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Log In"})}});
 
 window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await setDoc(doc(db,"users",window.cloudUser.uid),{favorites:window.favorites||[],searchHistory:window.searchHistory||[]},{merge:!0})}catch(e){}};
 
@@ -1129,38 +1118,7 @@ onAuthStateChanged(auth, async (user) => {
             const uSettings = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
             if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog') !== uSettings.changelog) {
                 document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText}`;
-                
-                let rawText = uSettings.changelog || '';
-                let items = rawText.includes('\n') ? rawText.split('\n') : rawText.split(/,(?=\s*(?:added|removed|updated))/i);
-                if(items.length === 1 && rawText.includes(',')) items = rawText.split(/,\s*/);
-                
-                let html = '';
-                items.forEach((item, i) => {
-                    if(!item.trim()) return;
-                    let t = item.trim();
-                    let icon = 'auto_awesome';
-                    let iconColor = 'var(--ios-blue)';
-                    let iconBg = 'var(--ios-blue-light)';
-                    
-                    if (t.toLowerCase().includes('add')) { icon = 'person_add'; iconColor = '#34C759'; iconBg = 'rgba(52,199,89,0.15)'; }
-                    else if (t.toLowerCase().includes('remov')) { icon = 'person_remove'; iconColor = '#FF3B30'; iconBg = 'rgba(255,59,48,0.15)'; }
-                    else if (t.toLowerCase().includes('updat') || t.toLowerCase().includes('chang')) { icon = 'edit'; iconColor = '#FF9500'; iconBg = 'rgba(255,149,0,0.15)'; }
-                    
-                    // Highlight classes
-                    t = t.replace(/\b(2[A-Z]+|2\s[A-Z]+)\b/gi, '<span style="color:var(--ios-blue); font-weight:800;">$1</span>');
-                    // Highlight all-caps names
-                    t = t.replace(/\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b/g, '<span style="font-weight:700; color:var(--ios-text);">$1</span>');
-
-                    html += `<div class="changelog-item-card" style="animation-delay: ${i*0.08}s;">
-                        <div style="width:36px; height:36px; border-radius:50%; background:${iconBg}; color:${iconColor}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <span class="material-icons-round" style="font-size:20px;">${icon}</span>
-                        </div>
-                        <div style="font-size:14px; color:var(--ios-text-sec); line-height:1.5; display:flex; align-items:center; flex:1;">
-                            ${t}
-                        </div>
-                    </div>`;
-                });
-                document.getElementById('updateChangelogText').innerHTML = html;
+                document.getElementById('updateChangelogText').innerText = uSettings.changelog;
                 window.showUpdateScreen();
             } else {
                 document.getElementById('mainAppWrapper').classList.add('visible');
