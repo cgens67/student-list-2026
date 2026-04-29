@@ -110,8 +110,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 
 /* ADMIN UI CUSTOM CSS */
 .admin-input { width:100%; height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); padding:0 10px; font-size:14px; color:var(--ios-text); outline:none; transition: border-color 0.2s;}
-.admin-input:focus { border-color: var(--ios-blue); }
-[data-theme="dark"] .admin-input { background: rgba(0,0,0,0.3); }
+.admin-input:focus { border-color: var(--ios-blue); }[data-theme="dark"] .admin-input { background: rgba(0,0,0,0.3); }
 .admin-tab { display: none; }
 
 /* IN-UI CUSTOM DROPDOWN */
@@ -177,6 +176,35 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <div class="maint-title">Under Maintenance</div>
     <div class="maint-sub">The system is currently undergoing updates. Please check back later.</div>
     <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
+</div>
+
+<!-- STARTUP UPDATE SCREEN OVERLAY -->
+<div id="updateIntroScreen" style="display:none; position:fixed; inset:0; background:var(--ios-bg); z-index:9000; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; transition:opacity 0.4s var(--ease-ios); overflow:hidden;">
+    <!-- View 1: Intro -->
+    <div id="updateView1" style="display:flex; flex-direction:column; align-items:center; max-width:400px; width:100%; transition: opacity 0.3s;">
+        <h1 style="font-size:32px; font-weight:800; color:var(--ios-text); line-height:1.1; margin-bottom:10px; letter-spacing:-0.02em;">Hey! There's a new update that just rolled out!</h1>
+        <div style="font-size:16px; font-weight:600; color:var(--ios-text-sec); margin-bottom:30px;" id="updateSubText">last update: 1h 30m ago</div>
+        
+        <div style="background:#1e1e1e; border-radius:24px; width:140px; height:120px; display:flex; align-items:center; justify-content:center; margin-bottom:50px; box-shadow:0 8px 30px rgba(0,0,0,0.15);">
+            <span class="material-icons-round" style="font-size:75px; color:#fff;">badge</span>
+        </div>
+    </div>
+    
+    <!-- View 2: Changelog Details -->
+    <div id="updateView2" style="display:none; flex-direction:column; align-items:center; max-width:400px; width:100%; text-align:left; transition: opacity 0.3s; margin-bottom:60px; max-height:60vh; overflow-y:auto; padding:0 10px;">
+        <h2 style="font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:20px; width:100%;">What's Changed:</h2>
+        <div id="updateChangelogText" style="font-size:15px; color:var(--ios-text); line-height:1.6; white-space:pre-wrap; width:100%; background:var(--ios-input); padding:20px; border-radius:16px; border:1px solid var(--chip-border);">
+        </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; width:90%; max-width:350px; z-index:9001;">
+        <div id="updateLabelPill" style="border:1px solid var(--chip-border); border-radius:20px; padding:6px 16px; font-size:13px; font-weight:600; color:var(--ios-text); margin-bottom:15px; background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);">Find out what's changed:</div>
+        <div style="border:1px solid var(--glass-border); border-radius:30px; padding:8px; display:flex; gap:8px; width:100%; background:var(--ios-input); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); box-shadow:var(--glass-shadow);">
+            <button id="updatePrevBtn" onclick="window.prevUpdateScreen()" style="flex:1; padding:14px; border-radius:24px; border:1px solid var(--chip-border); background:var(--ios-card); font-size:18px; font-weight:700; color:var(--ios-text-sec); cursor:pointer; transition:all 0.2s;">Previous</button>
+            <button id="updateNextBtn" onclick="window.nextUpdateScreen()" style="flex:1; padding:14px; border-radius:24px; border:1px solid var(--chip-border); background:var(--ios-card); font-size:18px; font-weight:700; color:var(--ios-text); cursor:pointer; transition:all 0.2s;">Next</button>
+        </div>
+    </div>
 </div>
 
 <div id="mainAppWrapper">
@@ -431,6 +459,22 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
 
+            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Startup Update Screen</label>
+            <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Shows an overlay upon login to broadcast changes.</p>
+            <div class="custom-select-container" style="margin-top:8px;">
+              <div class="custom-select-header" id="adminUpdateScreenHeader" onclick="window.toggleCustomSelect('adminUpdateScreenDropdown')">
+                 <span>No</span><span class="material-icons-round">expand_more</span>
+              </div>
+              <div class="custom-select-dropdown" id="adminUpdateScreenDropdown" data-value="false">
+                 <div class="custom-option" onclick="window.selectOption('adminUpdateScreenDropdown', 'false', 'No', 'adminUpdateScreenHeader')">No</div>
+                 <div class="custom-option" onclick="window.selectOption('adminUpdateScreenDropdown', 'true', 'Yes', 'adminUpdateScreenHeader')">Yes</div>
+              </div>
+            </div>
+            <input type="text" id="adminUpdateSubText" placeholder="Subtitle (e.g. 1h 30m ago)" class="admin-input" style="margin-top:8px;">
+            <textarea id="adminUpdateChangelogText" placeholder="Changelog text..." class="admin-input" style="height:100px; padding:8px; margin-top:8px;"></textarea>
+
+            <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
+
             <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">UI Customization</label>
             
             <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Disable Liquid Glass Design</p>
@@ -524,6 +568,11 @@ window.globalSettings = {
     version: "Version 6.0 (Secured Edition)",
     desc: "Check allocations, view origin maps, and use Quick Actions (Long Press).",
     footer: "Hosted on Vercel | Secured by Firebase"
+  },
+  updateScreen: {
+    enabled: 'false',
+    lastUpdateText: '1h 30m ago',
+    changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U'
   }
 };
 window.classNotices = {};
@@ -631,6 +680,80 @@ window.ctxAction=function(action){if(!activeContextId)return;const student=windo
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 window.confirmSignOut=function(){if(confirm("Are you sure you want to log out?")){if(window.appSignOut)window.appSignOut()}}
+
+// ==========================================
+// STARTUP UPDATE SCREEN LOGIC
+// ==========================================
+let currentUpdateStep = 1;
+
+window.showUpdateScreen = function() {
+    document.getElementById('updateIntroScreen').style.display = 'flex';
+    // Small delay to allow display:flex to apply before animating opacity
+    setTimeout(() => {
+        document.getElementById('updateIntroScreen').style.opacity = '1';
+    }, 10);
+    currentUpdateStep = 1;
+    window.updateUpdateUI();
+}
+
+window.nextUpdateScreen = function() {
+    if (currentUpdateStep === 1) {
+        currentUpdateStep = 2;
+        window.updateUpdateUI();
+    } else if (currentUpdateStep === 2) {
+        window.closeUpdateScreen();
+    }
+}
+
+window.prevUpdateScreen = function() {
+    if (currentUpdateStep === 2) {
+        currentUpdateStep = 1;
+        window.updateUpdateUI();
+    }
+}
+
+window.updateUpdateUI = function() {
+    const v1 = document.getElementById('updateView1');
+    const v2 = document.getElementById('updateView2');
+    const prevBtn = document.getElementById('updatePrevBtn');
+    const nextBtn = document.getElementById('updateNextBtn');
+    
+    if (currentUpdateStep === 1) {
+        v2.style.opacity = '0';
+        setTimeout(() => {
+            v2.style.display = 'none';
+            v1.style.display = 'flex';
+            setTimeout(() => { v1.style.opacity = '1'; }, 10);
+        }, 150);
+        
+        prevBtn.style.color = 'var(--ios-text-sec)';
+        prevBtn.style.opacity = '0.5';
+        nextBtn.innerText = 'Next';
+    } else {
+        v1.style.opacity = '0';
+        setTimeout(() => {
+            v1.style.display = 'none';
+            v2.style.display = 'flex';
+            setTimeout(() => { v2.style.opacity = '1'; }, 10);
+        }, 150);
+
+        prevBtn.style.color = 'var(--ios-text)';
+        prevBtn.style.opacity = '1';
+        nextBtn.innerText = 'Done';
+    }
+}
+
+window.closeUpdateScreen = function() {
+    document.getElementById('updateIntroScreen').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('updateIntroScreen').style.display = 'none';
+        document.getElementById('mainAppWrapper').classList.add('visible');
+    }, 400);
+    // Persist seen state so it doesn't show up again until changelog is edited
+    const uSettings = window.globalSettings.updateScreen || {};
+    localStorage.setItem('lastSeenChangelog', uSettings.changelog || '');
+}
+
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
@@ -700,6 +823,14 @@ window.openAdminPanel = () => {
   document.getElementById('adminAboutVersion').value = abt.version || "Version 6.0 (Secured Edition)";
   document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
   document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
+
+  // Startup Update Screen logic
+  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
+  const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
+  document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
+  document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+  document.getElementById('adminUpdateSubText').value = upd.lastUpdateText || '';
+  document.getElementById('adminUpdateChangelogText').value = upd.changelog || '';
 
   window.refreshAdminStudentDropdown("NEW");
   window.loadAdminTeacherForm();
@@ -892,6 +1023,11 @@ window.saveAdminData = async () => {
            version: document.getElementById('adminAboutVersion').value.trim(),
            desc: document.getElementById('adminAboutDesc').value.trim(),
            footer: document.getElementById('adminAboutFooter').value.trim()
+       },
+       updateScreen: {
+           enabled: document.getElementById('adminUpdateScreenDropdown').getAttribute('data-value'),
+           lastUpdateText: document.getElementById('adminUpdateSubText').value.trim(),
+           changelog: document.getElementById('adminUpdateChangelogText').value.trim()
        }
     };
     
@@ -951,7 +1087,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {} };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', changelog: '' } };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -977,7 +1113,17 @@ onAuthStateChanged(auth, async (user) => {
             if(window.filterData) window.filterData();
             
             loginScreen.classList.remove('active');
-            document.getElementById('mainAppWrapper').classList.add('visible');
+
+            // STARTUP UPDATE SCREEN LOGIC
+            const uSettings = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
+            if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog') !== uSettings.changelog) {
+                document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText}`;
+                document.getElementById('updateChangelogText').innerText = uSettings.changelog;
+                window.showUpdateScreen();
+            } else {
+                document.getElementById('mainAppWrapper').classList.add('visible');
+            }
+
             if (window.renderSearchHistory) window.renderSearchHistory();
           } 
           else {
@@ -1013,7 +1159,7 @@ onAuthStateChanged(auth, async (user) => {
     }
     
   } else {
-    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo();
+    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
     
     window.cloudUser = null;
     window.favorites = [];
