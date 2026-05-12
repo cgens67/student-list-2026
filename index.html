@@ -29,18 +29,47 @@ body.no-glass {--glass-blur: blur(0px); --ios-card: rgba(255,255,255,1); --ios-m
 body.no-glass[data-theme="dark"] {--ios-card: rgba(30,30,30,1); --ios-modal: rgba(40,40,40,1); --ios-input: rgba(50,50,50,1);}
 body.no-glass .ios-header {background: var(--ios-bg) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 1px solid var(--ios-sep);}
 
-/* APRIL FOOLS (MATERIAL DESIGN 1) */
-body.bg-aprilfools {--ios-bg:#EEEEEE; --ios-card:#FFFFFF; --ios-modal:#FFFFFF; --ios-blue:#E91E63; --ios-blue-text:#E91E63; --chip-act-bg:#3F51B5; --chip-act-border:#3F51B5; --glass-blur:blur(0px); --glass-border:transparent; font-family:"Roboto", sans-serif !important;}
-body.bg-aprilfools[data-theme="dark"] {--ios-bg:#121212; --ios-card:#1E1E1E; --ios-modal:#1E1E1E; --ios-blue:#FF4081; --ios-blue-text:#FF4081; --chip-act-bg:#7986CB; --chip-act-border:#7986CB;}
-body.bg-aprilfools * {border-radius: 2px !important;}
-body.bg-aprilfools .ios-header {background: #3F51B5 !important; color: #FFF !important; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14); height:80px; justify-content:center; align-items:flex-start;}
-body.bg-aprilfools .ios-title {color: #FFF !important; font-size:22px; font-weight:500;}
-body.bg-aprilfools .header-controls {position:absolute; top:20px; right:16px;}
-body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfools .stats-dash-card, body.bg-aprilfools .modal-card, body.bg-aprilfools .auth-card {box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2) !important; border: none !important; margin-bottom:8px; background:var(--ios-card);}
-body.bg-aprilfools .btn-icon-only {border-radius: 50% !important; background: var(--ios-blue) !important; color: #FFF !important; box-shadow: 0 3px 5px rgba(0,0,0,0.2); border: none;}
-body.bg-aprilfools .btn-icon-only span { color: #FFF !important; }
+/* WINDOWS 95 APRIL FOOLS THEME */
+body.bg-aprilfools {--ios-bg:#008080; --ios-card:#C0C0C0; --ios-modal:#C0C0C0; --ios-blue:#000080; --ios-blue-text:#000080; --chip-act-bg:#000080; --chip-act-border:#000080; --chip-act-txt:#FFFFFF; --glass-blur:blur(0px); --glass-border:transparent; font-family:"MS Sans Serif", "Arial", sans-serif !important;}
+body.bg-aprilfools[data-theme="dark"] {--ios-bg:#000000; --ios-card:#808080; --ios-modal:#808080; --ios-text:#FFFFFF;}
+body.bg-aprilfools * {border-radius: 0 !important; box-shadow:none !important; text-transform: none !important; transition: none !important;}
+body.bg-aprilfools .ios-header {background: #C0C0C0 !important; border-bottom: 2px solid #808080 !important; border-top: 2px solid #FFF !important;}
+body.bg-aprilfools .ios-title {color: #000 !important; font-weight: bold; letter-spacing: 0;}
+body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfools .stats-dash-card, body.bg-aprilfools .auth-card {
+    background: #C0C0C0;
+    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
+    border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
+    margin-bottom: 8px; color: #000;
+}
+body.bg-aprilfools .modal-card {
+    background: #C0C0C0; border-top: 2px solid #FFF; border-left: 2px solid #FFF; border-right: 2px solid #808080; border-bottom: 2px solid #808080;
+}
+body.bg-aprilfools .m-head { background: #000080; color: #FFF; text-align: left; padding: 6px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+body.bg-aprilfools .m-head .handle { display: none; }
+body.bg-aprilfools .m-head .stats-title, body.bg-aprilfools .m-head .stats-sub { color: #FFF; text-align: left; display:inline-block; }
+body.bg-aprilfools .btn-done, body.bg-aprilfools .auth-btn, body.bg-aprilfools .update-btn {
+    background: #C0C0C0 !important; color: #000 !important; font-weight: bold;
+    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
+    border-right: 2px solid #000 !important; border-bottom: 2px solid #000 !important;
+}
+body.bg-aprilfools .btn-done:active, body.bg-aprilfools .auth-btn:active {
+    border-top: 2px solid #000 !important; border-left: 2px solid #000 !important; 
+    border-right: 2px solid #FFF !important; border-bottom: 2px solid #FFF !important;
+}
+body.bg-aprilfools .ios-input, body.bg-aprilfools .auth-input, body.bg-aprilfools .admin-input {
+    background: #FFF !important; color: #000 !important;
+    border-top: 2px solid #808080 !important; border-left: 2px solid #808080 !important;
+    border-right: 2px solid #FFF !important; border-bottom: 2px solid #FFF !important;
+}
+body.bg-aprilfools .theme-toggle, body.bg-aprilfools .btn-icon-only, body.bg-aprilfools .btn-filter, body.bg-aprilfools .chip {
+    background: #C0C0C0 !important; color: #000 !important;
+    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
+    border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
+}
+body.bg-aprilfools .chip.active {
+    background: #000080 !important; color: #FFF !important;
+}
 body.bg-aprilfools .ios-cell::after { display:none; }
-body.bg-aprilfools .action-row { margin-top:20px; }
 
 /* SECONDARY BETA UI/UX (LAYOUT RESTUCTURING ONLY) */
 body.bg-beta #ios-container { display: flex; flex-direction: column-reverse; padding-top: 80px; padding-bottom: 150px; }
@@ -102,7 +131,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;max-width:300px;margin:16px auto 0}.pie-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}.legend-item{font-size:11px;display:flex;align-items:center;gap:4px;color:var(--ios-text-sec);font-weight:500;opacity:0;transform:translateY(10px);animation:fadeUp .4s var(--ease-spring) forwards}.legend-dot{width:8px;height:8px;border-radius:50%}
 .bubble-chart{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:20px 0;min-height:200px}.bubble{background:var(--ios-input);border-radius:50%;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ios-text);transition:transform .3s var(--ease-spring);cursor:pointer}.bubble:active{transform:scale(.9)}.b-count{font-weight:800;line-height:1}.b-label{font-size:10px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
 .comp-bar-container{width:100%;height:20px;display:flex;border-radius:8px;overflow:hidden;margin-bottom:10px;background:rgba(0,0,0,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}[data-theme="dark"] .comp-bar-container{background:rgba(255,255,255,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}.comp-segment{height:100%;transition:width 1s var(--ease-ios);position:relative}.comp-segment:first-child{border-radius:8px 0 0 8px}.comp-segment:last-child{border-radius:0 8px 8px 0}
-.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px; white-space:pre-wrap;}
+.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px;} /* Removed white-space:pre-wrap to fix layout spacing issue */
 .history-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios),margin-bottom .4s var(--ease-ios);margin-bottom:0}.history-drawer.open{grid-template-rows:1fr;margin-bottom:12px}.history-inner{overflow:hidden;min-height:0}.history-track{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.history-pill{margin-right:8px;background:var(--chip-bg);color:var(--ios-text-sec);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;transition:transform .2s var(--ease-spring)}.history-pill:last-child{margin-right:0}.history-pill:active{transform:scale(.95);opacity:.8}.history-pill.clear-hist{color:#FF3B30;border-color:rgba(255,59,48,0.3);padding:6px 10px}
 .anim-text-change{transition:opacity .25s cubic-bezier(0.25,1,0.5,1),transform .25s cubic-bezier(0.25,1,0.5,1);opacity:1;transform:translate3d(0,0,0)}.blur-fade-out{opacity:0;transform:scale(.95) translateY(5px);filter:blur(8px);transition:all .3s cubic-bezier(0.25,1,0.5,1)}.blur-fade-in{opacity:1;transform:scale(1) translateY(0);filter:blur(0);transition:all .4s cubic-bezier(0.25,1,0.5,1)}.anim-text-change.fade-out{opacity:0;transform:translate3d(0,-10px,0)}.anim-text-change.fade-in{opacity:1;transform:translate3d(0,0,0)}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:rgba(0,0,0,0.6);color:#FFF;padding:12px 24px;border-radius:50px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 16px 32px rgba(0,0,0,0.3);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:3000;transition:all .5s var(--ease-spring);display:flex;align-items:center;gap:8px;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);white-space:nowrap;max-width:90vw}@supports (padding-bottom:env(safe-area-inset-bottom)){.toast{bottom:calc(30px + env(safe-area-inset-bottom))}}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}[data-theme="dark"] .toast{background:rgba(255,255,255,0.7);color:#000;border-color:rgba(0,0,0,0.1)}
@@ -147,8 +176,9 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   <div class="auth-card" id="authCard">
     <div class="auth-dots" onclick="toggleAuthMenu(event)"><span class="material-icons-round">more_vert</span></div>
     <div class="auth-menu" id="authMenu">
-      <div class="auth-menu-item" onclick="showAuthDialog('Student List 2026', 'Version 6.0\nSecured by Google Firebase.\n\nYour favorites and search history are safely linked to your account.')">About App</div>
-      <div class="auth-menu-item" onclick="showAuthDialog('Need Help?', 'If you cannot access your account, please contact loochinsiang5735@gmail.com.')">Help & Support</div>
+      <div class="auth-menu-item" onclick="showAuthDialog('Student List 2026', 'Version 6.0\nSecured by Google Firebase.\n\nYour favorites and search history are safely linked to your account.')"><span id="menuAboutText">About App</span></div>
+      <div class="auth-menu-item" onclick="showAuthDialog('Need Help?', 'If you cannot access your account, please contact loochinsiang5735@gmail.com.')"><span id="menuHelpText">Help & Support</span></div>
+      <div class="auth-menu-item" onclick="openFeedback()"><span id="menuFeedbackText">Submit Feedback</span></div>
     </div>
     <div id="authFormState" style="width:100%;display:flex;flex-direction:column;align-items:center;">
       <span class="material-icons-round auth-icon" id="authIcon">lock_outline</span>
@@ -178,31 +208,21 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
 </div>
 
-<!-- STARTUP UPDATE SCREEN OVERLAY -->
-<div id="updateIntroScreen" style="display:none; position:fixed; inset:0; background:var(--ios-bg); z-index:9000; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; transition:opacity 0.4s var(--ease-ios); overflow:hidden;">
-    <!-- View 1: Intro -->
-    <div id="updateView1" style="display:flex; flex-direction:column; align-items:center; max-width:400px; width:100%; transition: opacity 0.3s;">
-        <h1 style="font-size:32px; font-weight:800; color:var(--ios-text); line-height:1.1; margin-bottom:10px; letter-spacing:-0.02em;">Hey! There's a new update that just rolled out!</h1>
-        <div style="font-size:16px; font-weight:600; color:var(--ios-text-sec); margin-bottom:30px;" id="updateSubText">last update: 1h 30m ago</div>
-        
-        <div style="background:#1e1e1e; border-radius:24px; width:140px; height:120px; display:flex; align-items:center; justify-content:center; margin-bottom:50px; box-shadow:0 8px 30px rgba(0,0,0,0.15);">
-            <span class="material-icons-round" style="font-size:75px; color:#fff;">badge</span>
+<!-- STARTUP UPDATE SCREEN OVERLAY - COMPLETELY REDESIGNED -->
+<div id="updateIntroScreen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9000; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; transition:opacity 0.4s var(--ease-ios); overflow:hidden;">
+    <div style="background:var(--ios-modal); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:28px; width:100%; max-width:400px; overflow:hidden; display:flex; flex-direction:column; max-height:80vh;">
+        <div style="padding:30px 20px 20px; display:flex; flex-direction:column; align-items:center; border-bottom:1px solid var(--ios-sep);">
+            <div style="background:var(--ios-blue); border-radius:22px; width:70px; height:70px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; box-shadow:0 8px 24px var(--ios-blue-light);">
+                <span class="material-icons-round" style="font-size:36px; color:#fff;">rocket_launch</span>
+            </div>
+            <h1 id="updateScreenTitle" style="font-size:24px; font-weight:800; color:var(--ios-text); margin:0 0 8px 0; letter-spacing:-0.02em;">What's New</h1>
+            <div id="updateSubText" style="font-size:13px; font-weight:600; color:var(--ios-text-sec);">last update: ...</div>
         </div>
-    </div>
-    
-    <!-- View 2: Changelog Details -->
-    <div id="updateView2" style="display:none; flex-direction:column; align-items:center; max-width:400px; width:100%; text-align:left; transition: opacity 0.3s; margin-bottom:60px; max-height:60vh; overflow-y:auto; padding:0 10px;">
-        <h2 style="font-size:24px; font-weight:800; color:var(--ios-text); margin-bottom:20px; width:100%;">What's Changed:</h2>
-        <div id="updateChangelogText" style="font-size:15px; color:var(--ios-text); line-height:1.6; white-space:pre-wrap; width:100%; background:var(--ios-input); padding:20px; border-radius:16px; border:1px solid var(--chip-border);">
+        <div style="padding:20px; overflow-y:auto; flex:1; text-align:left; background:var(--ios-card);">
+            <div id="updateChangelogText" style="font-size:15px; color:var(--ios-text); line-height:1.6;"></div>
         </div>
-    </div>
-
-    <!-- Bottom Controls -->
-    <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; width:90%; max-width:350px; z-index:9001;">
-        <div id="updateLabelPill" style="border:1px solid var(--chip-border); border-radius:20px; padding:6px 16px; font-size:13px; font-weight:600; color:var(--ios-text); margin-bottom:15px; background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);">Find out what's changed:</div>
-        <div style="border:1px solid var(--glass-border); border-radius:30px; padding:8px; display:flex; gap:8px; width:100%; background:var(--ios-input); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); box-shadow:var(--glass-shadow);">
-            <button id="updatePrevBtn" onclick="window.prevUpdateScreen()" style="flex:1; padding:14px; border-radius:24px; border:1px solid var(--chip-border); background:var(--ios-card); font-size:18px; font-weight:700; color:var(--ios-text-sec); cursor:pointer; transition:all 0.2s;">Previous</button>
-            <button id="updateNextBtn" onclick="window.nextUpdateScreen()" style="flex:1; padding:14px; border-radius:24px; border:1px solid var(--chip-border); background:var(--ios-card); font-size:18px; font-weight:700; color:var(--ios-text); cursor:pointer; transition:all 0.2s;">Next</button>
+        <div style="padding:16px 20px; background:var(--ios-card); border-top:1px solid var(--ios-sep);">
+            <button id="updateNextBtn" onclick="window.closeUpdateScreen()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; transition:transform 0.2s; box-shadow:0 4px 12px var(--ios-blue-light);">Continue</button>
         </div>
     </div>
 </div>
@@ -214,6 +234,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
       <div class='header-controls'>
         <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; background:#34C759; color:#fff;' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
+        <button class='theme-toggle' id='btnFeedbackToggle' onclick='openFeedback()' title="Feedback"><span class='material-icons-round' style='font-size:20px'>chat_bubble_outline</span></button>
         <button class='theme-toggle' id='btnAboutToggle' onclick='openAbout()'><span class='material-icons-round' style='font-size:20px'>info</span></button>
         <button class='theme-toggle' id='btnDensityToggle' onclick='toggleDensity()'><span class='material-icons-round' id='iconDensity' style='font-size:20px'>view_headline</span></button>
         <button class='theme-toggle' id='btnThemeToggle' onclick='toggleTheme()'><span class='material-icons-round' id='iconTheme' style='font-size:20px'>dark_mode</span></button>
@@ -335,6 +356,20 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     </div>
   </div>
 
+  <!-- NEW FEEDBACK SECTION -->
+  <div class='modal-bg' id='feedbackOverlay' onclick='closeFeedback(event)'>
+    <div class='modal-card' id='feedbackCard' onclick='event.stopPropagation()'>
+      <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='lblFeedbackTitle'>Feedback</div><div class='stats-sub anim-text-change' id='lblFeedbackSub'>Tell us what you think!</div></div>
+      <div class='m-body' style="padding-top:10px;">
+        <textarea id="feedbackText" class="admin-input" style="height:140px; padding:12px; margin-top:10px; resize:none;" placeholder="Type your feedback here..."></textarea>
+      </div>
+      <div class='m-foot'>
+          <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='closeFeedback()'>Cancel</button>
+          <button id="submitFeedbackBtn" class='btn-done' style="flex:1.5;" onclick='submitFeedback()'>Submit Feedback</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ADMIN DASHBOARD MODAL -->
   <div class='modal-bg' id='adminOverlay' onclick='window.closeAdminPanel()'>
     <div class='modal-card' id='adminCard' onclick='event.stopPropagation()'>
@@ -439,7 +474,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'afternoon', 'Locked to Afternoon/Day Theme', 'adminThemeHeader')">Locked to Afternoon/Day Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'night', 'Locked to Night Theme', 'adminThemeHeader')">Locked to Night Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'christmas', 'Locked to Festive Christmas Theme', 'adminThemeHeader')">Locked to Festive Christmas Theme</div>
-                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'aprilfools', 'April Fools Theme (MD1)', 'adminThemeHeader')">April Fools Theme (MD1)</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'aprilfools', 'Windows 95 April Fools Theme', 'adminThemeHeader')">Windows 95 April Fools Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'beta', 'Secondary Beta UX (Layout Change)', 'adminThemeHeader')">Secondary Beta UX (Layout Change)</div>
               </div>
             </div>
@@ -584,10 +619,14 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
-const uiText={en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings"},bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan"},cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置"}};
+const uiText={
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitle: "What's New", updateBtn: "Continue", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitle: "Apa yang Baru", updateBtn: "Teruskan", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitle: "新功能", updateBtn: "继续", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！"}
+};
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initDesktopScroll()}
 
 window.applyGlobalSettings = function() {
   const body = document.body;
@@ -609,11 +648,12 @@ window.applyGlobalSettings = function() {
   document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
   
   const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", footer: "Hosted on Vercel | Secured by Firebase" };
+  
   document.getElementById('aboutContent').innerHTML = `
       <div style="color:var(--ios-blue); margin-bottom:12px;"><span class="material-icons-round" style="font-size:42px;">info</span></div>
       <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:4px;">${about.title}</div>
       <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:16px;">${about.version}</div>
-      <div style="font-size:14px; line-height:1.5; color:var(--ios-text-sec); margin-bottom:24px; white-space:pre-wrap;">${about.desc}</div>
+      <div style="font-size:14px; line-height:1.4; color:var(--ios-text-sec); margin-bottom:20px;">${(about.desc || '').replace(/\n+/g, '<br><br>')}</div>
       <div style='font-size:12px; color:var(--ios-text-sec); opacity:0.6; font-weight:500;'>Designed with Smooth iOS Performance in mind</div>
       <div style='font-size:11px; color:var(--ios-text-sec); opacity:0.4; margin-top:4px;'>${about.footer}</div>
   `;
@@ -622,8 +662,8 @@ function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();}
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 function toggleTheme(){triggerHaptic();enableDark(!isDark)}
 function enableDark(bool){isDark=bool;document.body.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('iconTheme').innerText=isDark?'light_mode':'dark_mode';localStorage.setItem('theme',isDark?'dark':'light');updateAppThemeColor(currentClass);const modal=document.querySelector('.modal-card');if(modal&&document.getElementById('modalOverlay').classList.contains('open')){const nameEl=document.getElementById('mName');if(nameEl){const student=window.smkData.find(s=>s.name===nameEl.innerText);if(student)applyModalColors(student)}}}
@@ -642,7 +682,33 @@ window.setFilter=function(key,val,el){triggerHaptic();filterState[key]=val;el.pa
 window.clearFilters=function(){triggerHaptic();filterState.year2025="";filterState.origin="";document.getElementById("searchInput").value="";document.querySelectorAll('.scroll-row').forEach(cont=>{cont.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(cont.querySelector('.chip'))cont.querySelector('.chip').classList.add('active')});sortAsc=!0;currentSortType='name';updateSortUI();isFavMode=!1;document.getElementById('btnFavToggle').classList.remove('active');document.getElementById('btnFavToggle').querySelector('span').innerText='favorite';renderSearchHistory();filterData();toggleFilters();showToast(uiText[curLang].toastClear,"refresh")}
 window.showToast=function(msg,iconName="check_circle"){const container=document.getElementById("toastContainer");const existing=container.querySelector('.toast');if(existing)existing.remove();const toast=document.createElement("div");toast.className="toast";toast.innerHTML=`<span class="material-icons-round" style="font-size:20px; color:var(--ios-blue)">${iconName}</span><span>${msg}</span>`;container.appendChild(toast);requestAnimationFrame(()=>toast.classList.add("show"));setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),500)},2500)}
 function renderTabs(){const tabContainer=document.getElementById("classTabs");tabContainer.innerHTML=classes.map((c)=>`<div id="tab-${c}" class="tab-item ${c===currentClass?'active':''}" onclick="switchClass('${c}')">2 ${c}</div>`).join('')}
-window.switchLanguage=function(lang){if(lang===curLang)return;triggerHaptic();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');const fadeTargets=document.querySelectorAll('.anim-text-change');const searchInput=document.getElementById("searchInput");const titleEl=document.getElementById("labelTitle");if(titleEl)titleEl.classList.add("blur-fade-out");if(searchInput)searchInput.classList.add("anim-placeholder");const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings'];const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});const tCard=document.getElementById('classInfoCard');const startHeight=tCard?tCard.offsetHeight:0;setTimeout(()=>{if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}curLang=lang;const txt=uiText[lang];if(titleEl)titleEl.innerHTML=txt.title;document.getElementById("btnClose").innerText=txt.btnClose;setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);if(searchInput)searchInput.placeholder=txt.ph;setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);updateFilterLabels(txt.all);document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}if(searchInput)searchInput.classList.remove("anim-placeholder");fadeTargets.forEach(el=>{el.classList.remove('fade-out');if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)}});if(tCard&&tCard.classList.contains('show')){tCard.style.height='auto';const newHeight=tCard.offsetHeight;tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400)}},250)}
+
+window.switchLanguage=function(lang){if(lang===curLang)return;triggerHaptic();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');const fadeTargets=document.querySelectorAll('.anim-text-change');const searchInput=document.getElementById("searchInput");const titleEl=document.getElementById("labelTitle");if(titleEl)titleEl.classList.add("blur-fade-out");if(searchInput)searchInput.classList.add("anim-placeholder");const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub'];const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});const tCard=document.getElementById('classInfoCard');const startHeight=tCard?tCard.offsetHeight:0;setTimeout(()=>{if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}curLang=lang;const txt=uiText[lang];if(titleEl)titleEl.innerHTML=txt.title;document.getElementById("btnClose").innerText=txt.btnClose;setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);if(searchInput)searchInput.placeholder=txt.ph;setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);updateFilterLabels(txt.all);document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);
+// Update Auth & Menus & Feedback translations
+if(document.getElementById('menuAboutText')) document.getElementById('menuAboutText').innerText = txt.menuAbout;
+if(document.getElementById('menuHelpText')) document.getElementById('menuHelpText').innerText = txt.menuHelp;
+if(document.getElementById('menuFeedbackText')) document.getElementById('menuFeedbackText').innerText = txt.menuFeedback;
+if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
+if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
+if(isSignUpMode) {
+  if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleS;
+  if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubS;
+  if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authSignUpBtn;
+  if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleS;
+} else {
+  if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleL;
+  if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubL;
+  if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authLoginBtn;
+  if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleL;
+}
+if(document.getElementById('updateScreenTitle')) document.getElementById('updateScreenTitle').innerText = txt.updateTitle;
+if(document.getElementById('updateNextBtn')) document.getElementById('updateNextBtn').innerText = txt.updateBtn;
+if(document.getElementById('lblFeedbackTitle')) setTextAndAnimateWidth(document.getElementById('lblFeedbackTitle'), txt.fbTitle);
+if(document.getElementById('lblFeedbackSub')) setTextAndAnimateWidth(document.getElementById('lblFeedbackSub'), txt.fbSub);
+if(document.getElementById('feedbackText')) document.getElementById('feedbackText').placeholder = txt.fbPh;
+if(document.getElementById('submitFeedbackBtn')) document.getElementById('submitFeedbackBtn').innerText = txt.fbBtn;
+if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}if(searchInput)searchInput.classList.remove("anim-placeholder");fadeTargets.forEach(el=>{el.classList.remove('fade-out');if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)}});if(tCard&&tCard.classList.contains('show')){tCard.style.height='auto';const newHeight=tCard.offsetHeight;tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400)}},250)}
+
 window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
@@ -682,66 +748,56 @@ window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').c
 window.confirmSignOut=function(){if(confirm("Are you sure you want to log out?")){if(window.appSignOut)window.appSignOut()}}
 
 // ==========================================
+// FEEDBACK SYSTEM LOGIC
+// ==========================================
+window.openFeedback = function() {
+    triggerHaptic();
+    document.getElementById('authMenu').classList.remove('show');
+    document.getElementById("feedbackOverlay").classList.add("open");
+};
+
+window.closeFeedback = function(e) {
+    document.getElementById("feedbackOverlay").classList.remove("open");
+};
+
+window.submitFeedback = async function() {
+    const text = document.getElementById('feedbackText').value.trim();
+    if(!text) return;
+    const btn = document.getElementById('submitFeedbackBtn');
+    btn.innerText = "Submitting...";
+    btn.disabled = true;
+    try {
+        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
+        const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
+        
+        if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
+            await window.firestoreSetDoc(window.firestoreDoc(window.db, "feedback", docId), {
+                text: text,
+                user: userEmail,
+                timestamp: Date.now()
+            });
+            document.getElementById('feedbackText').value = '';
+            window.closeFeedback();
+            showToast(uiText[curLang].toastFb, "check_circle");
+        } else {
+            alert("Database connection not ready. Please try again.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Error submitting feedback. Please try again later.");
+    }
+    btn.innerText = uiText[curLang].fbBtn;
+    btn.disabled = false;
+};
+
+// ==========================================
 // STARTUP UPDATE SCREEN LOGIC
 // ==========================================
-let currentUpdateStep = 1;
-
 window.showUpdateScreen = function() {
     document.getElementById('updateIntroScreen').style.display = 'flex';
     // Small delay to allow display:flex to apply before animating opacity
-    setTimeout(() => {
-        document.getElementById('updateIntroScreen').style.opacity = '1';
-    }, 10);
-    currentUpdateStep = 1;
-    window.updateUpdateUI();
-}
-
-window.nextUpdateScreen = function() {
-    if (currentUpdateStep === 1) {
-        currentUpdateStep = 2;
-        window.updateUpdateUI();
-    } else if (currentUpdateStep === 2) {
-        window.closeUpdateScreen();
-    }
-}
-
-window.prevUpdateScreen = function() {
-    if (currentUpdateStep === 2) {
-        currentUpdateStep = 1;
-        window.updateUpdateUI();
-    }
-}
-
-window.updateUpdateUI = function() {
-    const v1 = document.getElementById('updateView1');
-    const v2 = document.getElementById('updateView2');
-    const prevBtn = document.getElementById('updatePrevBtn');
-    const nextBtn = document.getElementById('updateNextBtn');
-    
-    if (currentUpdateStep === 1) {
-        v2.style.opacity = '0';
-        setTimeout(() => {
-            v2.style.display = 'none';
-            v1.style.display = 'flex';
-            setTimeout(() => { v1.style.opacity = '1'; }, 10);
-        }, 150);
-        
-        prevBtn.style.color = 'var(--ios-text-sec)';
-        prevBtn.style.opacity = '0.5';
-        nextBtn.innerText = 'Next';
-    } else {
-        v1.style.opacity = '0';
-        setTimeout(() => {
-            v1.style.display = 'none';
-            v2.style.display = 'flex';
-            setTimeout(() => { v2.style.opacity = '1'; }, 10);
-        }, 150);
-
-        prevBtn.style.color = 'var(--ios-text)';
-        prevBtn.style.opacity = '1';
-        nextBtn.innerText = 'Done';
-    }
-}
+    setTimeout(() => { document.getElementById('updateIntroScreen').style.opacity = '1'; }, 10);
+};
 
 window.closeUpdateScreen = function() {
     document.getElementById('updateIntroScreen').style.opacity = '0';
@@ -752,7 +808,7 @@ window.closeUpdateScreen = function() {
     // Persist seen state so it doesn't show up again until changelog is edited
     const uSettings = window.globalSettings.updateScreen || {};
     localStorage.setItem('lastSeenChangelog', uSettings.changelog || '');
-}
+};
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
@@ -799,7 +855,7 @@ window.openAdminPanel = () => {
   
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
-  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'April Fools Theme (MD1)','beta':'Secondary Beta UX (Layout Change)'};
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'Windows 95 April Fools Theme','beta':'Secondary Beta UX (Layout Change)'};
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
@@ -998,7 +1054,14 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI",authDomain:"studentlist2026.firebaseapp.com",projectId:"studentlist2026",storageBucket:"studentlist2026.firebasestorage.app",messagingSenderId:"867205730183",appId:"1:867205730183:web:534666800bc7b2513fcd22"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+// EXPOSE TO WINDOW FOR THE FEEDBACK API 
+window.db = db;
+window.firestoreSetDoc = setDoc;
+window.firestoreDoc = doc;
 
 const emailInput=document.getElementById('authEmail'),passwordInput=document.getElementById('authPassword'),primaryAuthBtn=document.getElementById('authSubmitBtn'),toggleAuthModeBtn=document.getElementById('authToggleBtn'),loginScreen=document.getElementById('authScreen'),mainApp=document.getElementById('mainAppWrapper'),authMsgBox=document.getElementById('authError'),authErrorText=document.getElementById('authErrorText'),authTitle=document.getElementById('authTitle'),authSub=document.getElementById('authSub'),authIcon=document.getElementById('authIcon'),loginMenu=document.getElementById('authMenu');
 let isSignUpMode=!1;window.cloudUser=null;
@@ -1062,8 +1125,8 @@ window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show
 function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
 function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
 
-toggleAuthModeBtn.addEventListener('click',()=>{isSignUpMode=!isSignUpMode;authMsgBox.classList.remove('show');authTitle.innerText=isSignUpMode?"Create Account":"Welcome Back";authSub.innerText=isSignUpMode?"Sign up to access records":"Log in to view student records";authIcon.innerText=isSignUpMode?"person_add":"lock_outline";primaryAuthBtn.innerText=isSignUpMode?"Sign Up":"Log In";primaryAuthBtn.style.background=isSignUpMode?"#34C759":"var(--ios-blue)";toggleAuthModeBtn.innerText=isSignUpMode?"Already have an account? Log In":"Don't have an account? Sign Up"});
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Sign Up"})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText="Log In"})}});
+toggleAuthModeBtn.addEventListener('click',()=>{isSignUpMode=!isSignUpMode;authMsgBox.classList.remove('show');authTitle.innerText=isSignUpMode?uiText[curLang].authTitleS:uiText[curLang].authTitleL;authSub.innerText=isSignUpMode?uiText[curLang].authSubS:uiText[curLang].authSubL;authIcon.innerText=isSignUpMode?"person_add":"lock_outline";primaryAuthBtn.innerText=isSignUpMode?uiText[curLang].authSignUpBtn:uiText[curLang].authLoginBtn;primaryAuthBtn.style.background=isSignUpMode?"#34C759":"var(--ios-blue)";toggleAuthModeBtn.innerText=isSignUpMode?uiText[curLang].authToggleS:uiText[curLang].authToggleL});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await setDoc(doc(db,"users",window.cloudUser.uid),{favorites:window.favorites||[],searchHistory:window.searchHistory||[]},{merge:!0})}catch(e){}};
 
@@ -1118,7 +1181,8 @@ onAuthStateChanged(auth, async (user) => {
             const uSettings = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
             if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog') !== uSettings.changelog) {
                 document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText}`;
-                document.getElementById('updateChangelogText').innerText = uSettings.changelog;
+                // Uses replace to ensure standard breaks instead of white-space:pre-wrap causing rendering bugs
+                document.getElementById('updateChangelogText').innerHTML = (uSettings.changelog || '').replace(/\n/g, '<br>');
                 window.showUpdateScreen();
             } else {
                 document.getElementById('mainAppWrapper').classList.add('visible');
