@@ -131,7 +131,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;max-width:300px;margin:16px auto 0}.pie-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}.legend-item{font-size:11px;display:flex;align-items:center;gap:4px;color:var(--ios-text-sec);font-weight:500;opacity:0;transform:translateY(10px);animation:fadeUp .4s var(--ease-spring) forwards}.legend-dot{width:8px;height:8px;border-radius:50%}
 .bubble-chart{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:20px 0;min-height:200px}.bubble{background:var(--ios-input);border-radius:50%;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ios-text);transition:transform .3s var(--ease-spring);cursor:pointer}.bubble:active{transform:scale(.9)}.b-count{font-weight:800;line-height:1}.b-label{font-size:10px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
 .comp-bar-container{width:100%;height:20px;display:flex;border-radius:8px;overflow:hidden;margin-bottom:10px;background:rgba(0,0,0,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}[data-theme="dark"] .comp-bar-container{background:rgba(255,255,255,0.05);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}.comp-segment{height:100%;transition:width 1s var(--ease-ios);position:relative}.comp-segment:first-child{border-radius:8px 0 0 8px}.comp-segment:last-child{border-radius:0 8px 8px 0}
-.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px;} /* Removed white-space:pre-wrap to fix layout spacing issue */
+.about-txt{font-size:14px;color:var(--ios-text-sec);line-height:1.5;margin-bottom:15px;}
 .history-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios),margin-bottom .4s var(--ease-ios);margin-bottom:0}.history-drawer.open{grid-template-rows:1fr;margin-bottom:12px}.history-inner{overflow:hidden;min-height:0}.history-track{display:flex;overflow-x:auto;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}.history-pill{margin-right:8px;background:var(--chip-bg);color:var(--ios-text-sec);border:1px solid var(--chip-border);box-shadow:var(--chip-shadow);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;transition:transform .2s var(--ease-spring)}.history-pill:last-child{margin-right:0}.history-pill:active{transform:scale(.95);opacity:.8}.history-pill.clear-hist{color:#FF3B30;border-color:rgba(255,59,48,0.3);padding:6px 10px}
 .anim-text-change{transition:opacity .25s cubic-bezier(0.25,1,0.5,1),transform .25s cubic-bezier(0.25,1,0.5,1);opacity:1;transform:translate3d(0,0,0)}.blur-fade-out{opacity:0;transform:scale(.95) translateY(5px);filter:blur(8px);transition:all .3s cubic-bezier(0.25,1,0.5,1)}.blur-fade-in{opacity:1;transform:scale(1) translateY(0);filter:blur(0);transition:all .4s cubic-bezier(0.25,1,0.5,1)}.anim-text-change.fade-out{opacity:0;transform:translate3d(0,-10px,0)}.anim-text-change.fade-in{opacity:1;transform:translate3d(0,0,0)}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:rgba(0,0,0,0.6);color:#FFF;padding:12px 24px;border-radius:50px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 16px 32px rgba(0,0,0,0.3);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:3000;transition:all .5s var(--ease-spring);display:flex;align-items:center;gap:8px;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);white-space:nowrap;max-width:90vw}@supports (padding-bottom:env(safe-area-inset-bottom)){.toast{bottom:calc(30px + env(safe-area-inset-bottom))}}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}[data-theme="dark"] .toast{background:rgba(255,255,255,0.7);color:#000;border-color:rgba(0,0,0,0.1)}
@@ -168,6 +168,9 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 <body>
 
 <script>
+// GLOBAL variables
+window.isSignUpMode = false;
+
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='I'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='C'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='J'.charCodeAt(0))return!1;if(e.ctrlKey&&e.keyCode=='U'.charCodeAt(0))return!1}
 </script>
@@ -208,21 +211,26 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
     <button class='theme-toggle' style="margin-top:30px; width:44px; height:44px;" onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:24px; color:#FF3B30'>logout</span></button>
 </div>
 
-<!-- STARTUP UPDATE SCREEN OVERLAY - COMPLETELY REDESIGNED -->
+<!-- STARTUP UPDATE SCREEN OVERLAY -->
 <div id="updateIntroScreen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9000; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; transition:opacity 0.4s var(--ease-ios); overflow:hidden;">
     <div style="background:var(--ios-modal); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:28px; width:100%; max-width:400px; overflow:hidden; display:flex; flex-direction:column; max-height:80vh;">
         <div style="padding:30px 20px 20px; display:flex; flex-direction:column; align-items:center; border-bottom:1px solid var(--ios-sep);">
-            <div style="background:var(--ios-blue); border-radius:22px; width:70px; height:70px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; box-shadow:0 8px 24px var(--ios-blue-light);">
-                <span class="material-icons-round" style="font-size:36px; color:#fff;">rocket_launch</span>
+            <div id="updateIconBg" style="background:var(--ios-blue); border-radius:22px; width:70px; height:70px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; box-shadow:0 8px 24px var(--ios-blue-light); transition:all 0.3s;">
+                <span id="updateIcon" class="material-icons-round" style="font-size:36px; color:#fff;">new_releases</span>
             </div>
-            <h1 id="updateScreenTitle" style="font-size:24px; font-weight:800; color:var(--ios-text); margin:0 0 8px 0; letter-spacing:-0.02em;">What's New</h1>
+            <h1 id="updateScreenTitle" class="anim-text-change" style="font-size:24px; font-weight:800; color:var(--ios-text); margin:0 0 8px 0; letter-spacing:-0.02em;">Added Features</h1>
             <div id="updateSubText" style="font-size:13px; font-weight:600; color:var(--ios-text-sec);">last update: ...</div>
         </div>
         <div style="padding:20px; overflow-y:auto; flex:1; text-align:left; background:var(--ios-card);">
-            <div id="updateChangelogText" style="font-size:15px; color:var(--ios-text); line-height:1.6;"></div>
+            <div id="updateStep1" style="display:block; animation: fadeUp 0.3s forwards;">
+                <div id="updateAddedText" style="font-size:15px; color:var(--ios-text); line-height:1.6;"></div>
+            </div>
+            <div id="updateStep2" style="display:none; animation: fadeUp 0.3s forwards;">
+                <div id="updateRemovedText" style="font-size:15px; color:var(--ios-text); line-height:1.6;"></div>
+            </div>
         </div>
         <div style="padding:16px 20px; background:var(--ios-card); border-top:1px solid var(--ios-sep);">
-            <button id="updateNextBtn" onclick="window.closeUpdateScreen()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; transition:transform 0.2s; box-shadow:0 4px 12px var(--ios-blue-light);">Continue</button>
+            <button id="updateNextBtn" class="anim-text-change" onclick="window.nextUpdateStep()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; transition:transform 0.2s; box-shadow:0 4px 12px var(--ios-blue-light);">Next</button>
         </div>
     </div>
 </div>
@@ -357,15 +365,15 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
 
   <!-- NEW FEEDBACK SECTION -->
-  <div class='modal-bg' id='feedbackOverlay' onclick='closeFeedback(event)'>
+  <div class='modal-bg' id='feedbackOverlay' onclick='window.closeFeedback()'>
     <div class='modal-card' id='feedbackCard' onclick='event.stopPropagation()'>
       <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='lblFeedbackTitle'>Feedback</div><div class='stats-sub anim-text-change' id='lblFeedbackSub'>Tell us what you think!</div></div>
       <div class='m-body' style="padding-top:10px;">
         <textarea id="feedbackText" class="admin-input" style="height:140px; padding:12px; margin-top:10px; resize:none;" placeholder="Type your feedback here..."></textarea>
       </div>
-      <div class='m-foot'>
-          <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='closeFeedback()'>Cancel</button>
-          <button id="submitFeedbackBtn" class='btn-done' style="flex:1.5;" onclick='submitFeedback()'>Submit Feedback</button>
+      <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
+          <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeFeedback()'>Cancel</button>
+          <button id="submitFeedbackBtn" class='btn-done' style="flex:1.5;" onclick='window.submitFeedback()'>Submit Feedback</button>
       </div>
     </div>
   </div>
@@ -506,7 +514,8 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
               </div>
             </div>
             <input type="text" id="adminUpdateSubText" placeholder="Subtitle (e.g. 1h 30m ago)" class="admin-input" style="margin-top:8px;">
-            <textarea id="adminUpdateChangelogText" placeholder="Changelog text..." class="admin-input" style="height:100px; padding:8px; margin-top:8px;"></textarea>
+            <textarea id="adminUpdateAdded" placeholder="Added Features (one per line)..." class="admin-input" style="height:60px; padding:8px; margin-top:8px;"></textarea>
+            <textarea id="adminUpdateRemoved" placeholder="Removed Features / Fixes (one per line)..." class="admin-input" style="height:60px; padding:8px; margin-top:8px;"></textarea>
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
 
@@ -607,12 +616,15 @@ window.globalSettings = {
   updateScreen: {
     enabled: 'false',
     lastUpdateText: '1h 30m ago',
-    changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U'
+    changelogAdded: '',
+    changelogRemoved: ''
   }
 };
 window.classNotices = {};
 window.isInitialLoad = true;
 window.pendingDataUpdate = null;
+window.updateDataSteps = { added: '', removed: '' };
+window.currentUpdateStep = 1;
 
 const classes =["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
 const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
@@ -620,9 +632,9 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitle: "What's New", updateBtn: "Continue", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitle: "Apa yang Baru", updateBtn: "Teruskan", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitle: "新功能", updateBtn: "继续", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！"}
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
@@ -661,7 +673,50 @@ window.applyGlobalSettings = function() {
 function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
-function initModalDrag(modal,overlayId){if(!modal)return;modal.addEventListener('touchstart',(e)=>{const isHeader=e.target.closest('.m-head');const content=modal.querySelector('.m-body');const isTop=content?content.scrollTop<=0:!0;if(isHeader||isTop){modalStart=e.touches[0].clientY;isDraggingModal=!0}else isDraggingModal=!1},{passive:!0});modal.addEventListener('touchmove',(e)=>{if(!isDraggingModal)return;const diff=e.touches[0].clientY-modalStart;if(diff<0)return;if(diff>10){if(e.cancelable)e.preventDefault();modal.classList.add('is-dragging');modal.style.transform=`translateY(${diff}px)`}},{passive:!1});modal.addEventListener('touchend',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;modal.classList.remove('is-dragging');if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});const header=modal.querySelector('.m-head');if(header){header.addEventListener('mousedown',(e)=>{modalStart=e.clientY;isDraggingModal=!0;modal.classList.add('is-dragging');e.preventDefault()})}}
+
+// Fixed Modal Dragging logic to prevent dragging form inputs away on touch
+function initModalDrag(modal,overlayId){
+    if(!modal)return;
+    modal.addEventListener('touchstart',(e)=>{
+        const isHeader = e.target.closest('.m-head');
+        const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard';
+        const content = modal.querySelector('.m-body');
+        const isTop = content ? content.scrollTop <= 0 : !0;
+        const isInput = e.target.closest('input, textarea, select, button, .custom-select-header, .custom-option');
+        
+        if(isHeader || (!isFormModal && isTop && !isInput)){
+            modalStart=e.touches[0].clientY;
+            isDraggingModal=!0;
+        }else{
+            isDraggingModal=!1;
+        }
+    },{passive:!0});
+    modal.addEventListener('touchmove',(e)=>{
+        if(!isDraggingModal)return;
+        const diff=e.touches[0].clientY-modalStart;
+        if(diff<0)return;
+        if(diff>10){
+            if(e.cancelable)e.preventDefault();
+            modal.classList.add('is-dragging');
+            modal.style.transform=`translateY(${diff}px)`
+        }
+    },{passive:!1});
+    modal.addEventListener('touchend',(e)=>{
+        if(!isDraggingModal)return;
+        isDraggingModal=!1;
+        modal.classList.remove('is-dragging');
+        if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);
+        else modal.style.transform='';
+    });
+    const header=modal.querySelector('.m-head');
+    if(header){
+        header.addEventListener('mousedown',(e)=>{
+            modalStart=e.clientY;
+            isDraggingModal=!0;
+            modal.classList.add('is-dragging');
+        });
+    }
+}
 window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
 function closeAnyModal(overlayId){if(overlayId==='modalOverlay')closeModal();else if(overlayId==='statsOverlay')closeStats();else if(overlayId==='aboutOverlay')closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();}
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
@@ -683,31 +738,117 @@ window.clearFilters=function(){triggerHaptic();filterState.year2025="";filterSta
 window.showToast=function(msg,iconName="check_circle"){const container=document.getElementById("toastContainer");const existing=container.querySelector('.toast');if(existing)existing.remove();const toast=document.createElement("div");toast.className="toast";toast.innerHTML=`<span class="material-icons-round" style="font-size:20px; color:var(--ios-blue)">${iconName}</span><span>${msg}</span>`;container.appendChild(toast);requestAnimationFrame(()=>toast.classList.add("show"));setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),500)},2500)}
 function renderTabs(){const tabContainer=document.getElementById("classTabs");tabContainer.innerHTML=classes.map((c)=>`<div id="tab-${c}" class="tab-item ${c===currentClass?'active':''}" onclick="switchClass('${c}')">2 ${c}</div>`).join('')}
 
-window.switchLanguage=function(lang){if(lang===curLang)return;triggerHaptic();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');const fadeTargets=document.querySelectorAll('.anim-text-change');const searchInput=document.getElementById("searchInput");const titleEl=document.getElementById("labelTitle");if(titleEl)titleEl.classList.add("blur-fade-out");if(searchInput)searchInput.classList.add("anim-placeholder");const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub'];const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});const tCard=document.getElementById('classInfoCard');const startHeight=tCard?tCard.offsetHeight:0;setTimeout(()=>{if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}curLang=lang;const txt=uiText[lang];if(titleEl)titleEl.innerHTML=txt.title;document.getElementById("btnClose").innerText=txt.btnClose;setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);if(searchInput)searchInput.placeholder=txt.ph;setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);updateFilterLabels(txt.all);document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);
-// Update Auth & Menus & Feedback translations
-if(document.getElementById('menuAboutText')) document.getElementById('menuAboutText').innerText = txt.menuAbout;
-if(document.getElementById('menuHelpText')) document.getElementById('menuHelpText').innerText = txt.menuHelp;
-if(document.getElementById('menuFeedbackText')) document.getElementById('menuFeedbackText').innerText = txt.menuFeedback;
-if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
-if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
-if(isSignUpMode) {
-  if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleS;
-  if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubS;
-  if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authSignUpBtn;
-  if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleS;
-} else {
-  if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleL;
-  if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubL;
-  if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authLoginBtn;
-  if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleL;
+window.switchLanguage=function(lang){
+    if(lang===curLang)return;
+    triggerHaptic();
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+    
+    const fadeTargets=document.querySelectorAll('.anim-text-change');
+    const searchInput=document.getElementById("searchInput");
+    const titleEl=document.getElementById("labelTitle");
+    
+    if(titleEl)titleEl.classList.add("blur-fade-out");
+    if(searchInput)searchInput.classList.add("anim-placeholder");
+    
+    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub'];
+    const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
+    
+    fadeTargets.forEach(el=>{if(!morphIDs.includes(el.id)||teacherIds.includes(el.id))el.classList.add('fade-out')});
+    
+    const tCard=document.getElementById('classInfoCard');
+    const startHeight=tCard?tCard.offsetHeight:0;
+    
+    setTimeout(()=>{
+        try {
+            if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}
+            curLang=lang;
+            const txt=uiText[lang];
+            
+            if(titleEl)titleEl.innerHTML=txt.title;
+            if(document.getElementById("btnClose")) document.getElementById("btnClose").innerText=txt.btnClose;
+            setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);
+            setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);
+            if(searchInput)searchInput.placeholder=txt.ph;
+            setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);
+            setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);
+            setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);
+            setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);
+            setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);
+            setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);
+            setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);
+            setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);
+            setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);
+            setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);
+            setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);
+            setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);
+            setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);
+            setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);
+            setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
+            
+            const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");
+            if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);
+            if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);
+            updateFilterLabels(txt.all);
+            
+            document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);
+            document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);
+            document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);
+            
+            if(document.getElementById('menuAboutText')) document.getElementById('menuAboutText').innerText = txt.menuAbout;
+            if(document.getElementById('menuHelpText')) document.getElementById('menuHelpText').innerText = txt.menuHelp;
+            if(document.getElementById('menuFeedbackText')) document.getElementById('menuFeedbackText').innerText = txt.menuFeedback;
+            if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
+            if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
+            
+            if(window.isSignUpMode) {
+              if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleS;
+              if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubS;
+              if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authSignUpBtn;
+              if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleS;
+            } else {
+              if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleL;
+              if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubL;
+              if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authLoginBtn;
+              if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleL;
+            }
+            
+            if(document.getElementById('lblFeedbackTitle')) setTextAndAnimateWidth(document.getElementById('lblFeedbackTitle'), txt.fbTitle);
+            if(document.getElementById('lblFeedbackSub')) setTextAndAnimateWidth(document.getElementById('lblFeedbackSub'), txt.fbSub);
+            if(document.getElementById('feedbackText')) document.getElementById('feedbackText').placeholder = txt.fbPh;
+            if(document.getElementById('submitFeedbackBtn')) document.getElementById('submitFeedbackBtn').innerText = txt.fbBtn;
+            
+            // Re-render update screen UI if open
+            if (window.renderUpdateStep) window.renderUpdateStep();
+            
+            if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
+            if(searchInput)searchInput.classList.remove("anim-placeholder");
+            
+            if(tCard&&tCard.classList.contains('show')){
+                tCard.style.height='auto';
+                const newHeight=tCard.offsetHeight;
+                tCard.style.height=startHeight+'px';
+                tCard.offsetHeight;
+                tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                tCard.style.height=newHeight+'px';
+                setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
+            }
+        } catch(err) {
+            console.error("Language translation error:", err);
+        } finally {
+            fadeTargets.forEach(el=>{
+                el.classList.remove('fade-out');
+                if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){
+                    el.classList.add('fade-in');
+                    setTimeout(()=>el.classList.remove('fade-in'),300)
+                }
+            });
+        }
+    },250);
 }
-if(document.getElementById('updateScreenTitle')) document.getElementById('updateScreenTitle').innerText = txt.updateTitle;
-if(document.getElementById('updateNextBtn')) document.getElementById('updateNextBtn').innerText = txt.updateBtn;
-if(document.getElementById('lblFeedbackTitle')) setTextAndAnimateWidth(document.getElementById('lblFeedbackTitle'), txt.fbTitle);
-if(document.getElementById('lblFeedbackSub')) setTextAndAnimateWidth(document.getElementById('lblFeedbackSub'), txt.fbSub);
-if(document.getElementById('feedbackText')) document.getElementById('feedbackText').placeholder = txt.fbPh;
-if(document.getElementById('submitFeedbackBtn')) document.getElementById('submitFeedbackBtn').innerText = txt.fbBtn;
-if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}if(searchInput)searchInput.classList.remove("anim-placeholder");fadeTargets.forEach(el=>{el.classList.remove('fade-out');if(!morphIDs.includes(el.id)||teacherIds.includes(el.id)){el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)}});if(tCard&&tCard.classList.contains('show')){tCard.style.height='auto';const newHeight=tCard.offsetHeight;tCard.style.height=startHeight+'px';tCard.offsetHeight;tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';tCard.style.height=newHeight+'px';setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400)}},250)}
 
 window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
@@ -791,12 +932,65 @@ window.submitFeedback = async function() {
 };
 
 // ==========================================
-// STARTUP UPDATE SCREEN LOGIC
+// STARTUP UPDATE SCREEN LOGIC (TWO-STEP)
 // ==========================================
 window.showUpdateScreen = function() {
+    const uSettings = window.globalSettings.updateScreen || {};
+    let added = uSettings.changelogAdded || uSettings.changelog || '';
+    let removed = uSettings.changelogRemoved || '';
+    window.updateDataSteps.added = added;
+    window.updateDataSteps.removed = removed;
+    
+    document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText || ''}`;
+    
+    window.currentUpdateStep = 1;
+    if (!added.trim() && removed.trim()) window.currentUpdateStep = 2;
+    if (!added.trim() && !removed.trim()) { window.closeUpdateScreen(); return; }
+    
+    window.renderUpdateStep();
     document.getElementById('updateIntroScreen').style.display = 'flex';
-    // Small delay to allow display:flex to apply before animating opacity
     setTimeout(() => { document.getElementById('updateIntroScreen').style.opacity = '1'; }, 10);
+};
+
+window.renderUpdateStep = function() {
+    const txt = uiText[curLang];
+    const step1 = document.getElementById('updateStep1');
+    const step2 = document.getElementById('updateStep2');
+    const title = document.getElementById('updateScreenTitle');
+    const iconBg = document.getElementById('updateIconBg');
+    const icon = document.getElementById('updateIcon');
+    const btn = document.getElementById('updateNextBtn');
+    const addedText = document.getElementById('updateAddedText');
+    const removedText = document.getElementById('updateRemovedText');
+    
+    if (window.currentUpdateStep === 1) {
+        step1.style.display = 'block'; step2.style.display = 'none';
+        title.innerText = txt.updateTitleAdded || "Added Features";
+        icon.innerText = "new_releases";
+        iconBg.style.background = "var(--ios-blue)";
+        iconBg.style.boxShadow = "0 8px 24px var(--ios-blue-light)";
+        
+        addedText.innerHTML = window.updateDataSteps.added.split('\n').filter(l=>l.trim()).map(l => `• ${l.trim()}`).join('<br><br>');
+        btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
+    } else {
+        step1.style.display = 'none'; step2.style.display = 'block';
+        title.innerText = txt.updateTitleRemoved || "Other Changes";
+        icon.innerText = "build_circle";
+        iconBg.style.background = "#FF9500";
+        iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
+        
+        removedText.innerHTML = window.updateDataSteps.removed.split('\n').filter(l=>l.trim()).map(l => `• ${l.trim()}`).join('<br><br>');
+        btn.innerText = txt.updateDone || "Done";
+    }
+};
+
+window.nextUpdateStep = function() {
+    if (window.currentUpdateStep === 1 && window.updateDataSteps.removed.trim()) {
+        window.currentUpdateStep = 2;
+        window.renderUpdateStep();
+    } else {
+        window.closeUpdateScreen();
+    }
 };
 
 window.closeUpdateScreen = function() {
@@ -805,9 +999,9 @@ window.closeUpdateScreen = function() {
         document.getElementById('updateIntroScreen').style.display = 'none';
         document.getElementById('mainAppWrapper').classList.add('visible');
     }, 400);
-    // Persist seen state so it doesn't show up again until changelog is edited
     const uSettings = window.globalSettings.updateScreen || {};
-    localStorage.setItem('lastSeenChangelog', uSettings.changelog || '');
+    const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+    localStorage.setItem('lastSeenChangelog2', combinedLog);
 };
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
@@ -880,13 +1074,13 @@ window.openAdminPanel = () => {
   document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
   document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
 
-  // Startup Update Screen logic
-  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
+  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '', changelogAdded: '', changelogRemoved: '' };
   const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
   document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
   document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
   document.getElementById('adminUpdateSubText').value = upd.lastUpdateText || '';
-  document.getElementById('adminUpdateChangelogText').value = upd.changelog || '';
+  document.getElementById('adminUpdateAdded').value = upd.changelogAdded || upd.changelog || '';
+  document.getElementById('adminUpdateRemoved').value = upd.changelogRemoved || '';
 
   window.refreshAdminStudentDropdown("NEW");
   window.loadAdminTeacherForm();
@@ -1064,7 +1258,7 @@ window.firestoreSetDoc = setDoc;
 window.firestoreDoc = doc;
 
 const emailInput=document.getElementById('authEmail'),passwordInput=document.getElementById('authPassword'),primaryAuthBtn=document.getElementById('authSubmitBtn'),toggleAuthModeBtn=document.getElementById('authToggleBtn'),loginScreen=document.getElementById('authScreen'),mainApp=document.getElementById('mainAppWrapper'),authMsgBox=document.getElementById('authError'),authErrorText=document.getElementById('authErrorText'),authTitle=document.getElementById('authTitle'),authSub=document.getElementById('authSub'),authIcon=document.getElementById('authIcon'),loginMenu=document.getElementById('authMenu');
-let isSignUpMode=!1;window.cloudUser=null;
+window.cloudUser=null;
 
 // ==========================================
 // 🚨 ADMIN EMAIL SETTING 🚨
@@ -1090,7 +1284,8 @@ window.saveAdminData = async () => {
        updateScreen: {
            enabled: document.getElementById('adminUpdateScreenDropdown').getAttribute('data-value'),
            lastUpdateText: document.getElementById('adminUpdateSubText').value.trim(),
-           changelog: document.getElementById('adminUpdateChangelogText').value.trim()
+           changelogAdded: document.getElementById('adminUpdateAdded').value.trim(),
+           changelogRemoved: document.getElementById('adminUpdateRemoved').value.trim()
        }
     };
     
@@ -1125,8 +1320,17 @@ window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show
 function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
 function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
 
-toggleAuthModeBtn.addEventListener('click',()=>{isSignUpMode=!isSignUpMode;authMsgBox.classList.remove('show');authTitle.innerText=isSignUpMode?uiText[curLang].authTitleS:uiText[curLang].authTitleL;authSub.innerText=isSignUpMode?uiText[curLang].authSubS:uiText[curLang].authSubL;authIcon.innerText=isSignUpMode?"person_add":"lock_outline";primaryAuthBtn.innerText=isSignUpMode?uiText[curLang].authSignUpBtn:uiText[curLang].authLoginBtn;primaryAuthBtn.style.background=isSignUpMode?"#34C759":"var(--ios-blue)";toggleAuthModeBtn.innerText=isSignUpMode?uiText[curLang].authToggleS:uiText[curLang].authToggleL});
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
+toggleAuthModeBtn.addEventListener('click',()=>{
+    window.isSignUpMode = !window.isSignUpMode;
+    authMsgBox.classList.remove('show');
+    authTitle.innerText = window.isSignUpMode ? uiText[curLang].authTitleS : uiText[curLang].authTitleL;
+    authSub.innerText = window.isSignUpMode ? uiText[curLang].authSubS : uiText[curLang].authSubL;
+    authIcon.innerText = window.isSignUpMode ? "person_add" : "lock_outline";
+    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
+    primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
+    toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
+});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await setDoc(doc(db,"users",window.cloudUser.uid),{favorites:window.favorites||[],searchHistory:window.searchHistory||[]},{merge:!0})}catch(e){}};
 
@@ -1150,7 +1354,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', changelog: '' } };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', changelogAdded: '', changelogRemoved: '' } };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -1178,11 +1382,9 @@ onAuthStateChanged(auth, async (user) => {
             loginScreen.classList.remove('active');
 
             // STARTUP UPDATE SCREEN LOGIC
-            const uSettings = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '1h 30m ago', changelog: 'added GAN ZHI JIN TO 2H, added MERVYN KHEW YONG GUAN, TAN CHEE RONG, TAN MANN HEI, TEE ZHAO HONG, YONG YUN KANG and PUAH MING JIE to 2P, removed CHUNG POH SHENG from 2U' };
-            if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog') !== uSettings.changelog) {
-                document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText}`;
-                // Uses replace to ensure standard breaks instead of white-space:pre-wrap causing rendering bugs
-                document.getElementById('updateChangelogText').innerHTML = (uSettings.changelog || '').replace(/\n/g, '<br>');
+            const uSettings = window.globalSettings.updateScreen || {};
+            const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+            if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
                 window.showUpdateScreen();
             } else {
                 document.getElementById('mainAppWrapper').classList.add('visible');
