@@ -204,6 +204,18 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
 </div>
 
+<!-- IN-UI LOGOUT CONFIRMATION OVERLAY -->
+<div id="logoutConfirmOverlay" class="auth-overlay" style="z-index:10000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);">
+  <div class="auth-card" style="padding:30px 24px; max-width:320px;">
+    <div class="auth-title" id="logoutTitle" style="font-size:20px;">Log Out?</div>
+    <div class="auth-sub" id="logoutMsg" style="margin-bottom:24px; white-space:pre-wrap;">Are you sure you want to log out of your account?</div>
+    <div style="display:flex; gap:10px; width:100%;">
+        <button id="logoutCancelBtn" class="dialog-btn" style="background:var(--ios-input); color:var(--ios-text); margin-top:0; flex:1;" onclick="closeLogoutConfirm()">Cancel</button>
+        <button id="logoutConfirmBtn" class="dialog-btn" style="background:#FF3B30; color:#fff; margin-top:0; flex:1;" onclick="proceedSignOut()">Log Out</button>
+    </div>
+  </div>
+</div>
+
 <div id="maintenanceScreen">
     <span class="material-icons-round maint-icon">build_circle</span>
     <div class="maint-title">Under Maintenance</div>
@@ -365,7 +377,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
 
   <!-- NEW FEEDBACK SECTION -->
-  <div class='modal-bg' id='feedbackOverlay' onclick='window.closeFeedback()'>
+  <div class='modal-bg' id='feedbackOverlay' style="z-index: 10001;" onclick='window.closeFeedback()'>
     <div class='modal-card' id='feedbackCard' onclick='event.stopPropagation()'>
       <div class='m-head'><div class='handle'></div><div class='stats-title anim-text-change' id='lblFeedbackTitle'>Feedback</div><div class='stats-sub anim-text-change' id='lblFeedbackSub'>Tell us what you think!</div></div>
       <div class='m-body' style="padding-top:10px;">
@@ -514,6 +526,10 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
               </div>
             </div>
             <input type="text" id="adminUpdateSubText" placeholder="Subtitle (e.g. 1h 30m ago)" class="admin-input" style="margin-top:8px;">
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <input type="text" id="adminUpdateAddedIcon" placeholder="Step 1 Icon (e.g. new_releases)" class="admin-input" style="flex:1;">
+                <input type="text" id="adminUpdateRemovedIcon" placeholder="Step 2 Icon (e.g. build_circle)" class="admin-input" style="flex:1;">
+            </div>
             <textarea id="adminUpdateAdded" placeholder="Added Features (one per line)..." class="admin-input" style="height:60px; padding:8px; margin-top:8px;"></textarea>
             <textarea id="adminUpdateRemoved" placeholder="Removed Features / Fixes (one per line)..." class="admin-input" style="height:60px; padding:8px; margin-top:8px;"></textarea>
 
@@ -616,6 +632,8 @@ window.globalSettings = {
   updateScreen: {
     enabled: 'false',
     lastUpdateText: '1h 30m ago',
+    iconAdded: 'new_releases',
+    iconRemoved: 'build_circle',
     changelogAdded: '',
     changelogRemoved: ''
   }
@@ -632,9 +650,9 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出"}
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
@@ -674,23 +692,33 @@ function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 
-// Fixed Modal Dragging logic to prevent dragging form inputs away on touch
+// Strict Modal Drag Logic to fix input interaction bugs
 function initModalDrag(modal,overlayId){
     if(!modal)return;
+    const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard' || modal.id === 'aboutCard';
+    
     modal.addEventListener('touchstart',(e)=>{
         const isHeader = e.target.closest('.m-head');
-        const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard';
         const content = modal.querySelector('.m-body');
-        const isTop = content ? content.scrollTop <= 0 : !0;
-        const isInput = e.target.closest('input, textarea, select, button, .custom-select-header, .custom-option');
+        const isTop = content ? content.scrollTop <= 0 : true;
         
-        if(isHeader || (!isFormModal && isTop && !isInput)){
-            modalStart=e.touches[0].clientY;
-            isDraggingModal=!0;
-        }else{
-            isDraggingModal=!1;
+        if (isFormModal) {
+            if (isHeader) {
+                modalStart = e.touches[0].clientY;
+                isDraggingModal = true;
+            } else {
+                isDraggingModal = false;
+            }
+        } else {
+            if(isHeader || isTop){
+                modalStart = e.touches[0].clientY;
+                isDraggingModal = true;
+            }else{
+                isDraggingModal = false;
+            }
         }
-    },{passive:!0});
+    },{passive:true});
+    
     modal.addEventListener('touchmove',(e)=>{
         if(!isDraggingModal)return;
         const diff=e.touches[0].clientY-modalStart;
@@ -698,21 +726,23 @@ function initModalDrag(modal,overlayId){
         if(diff>10){
             if(e.cancelable)e.preventDefault();
             modal.classList.add('is-dragging');
-            modal.style.transform=`translateY(${diff}px)`
+            modal.style.transform=`translateY(${diff}px)`;
         }
-    },{passive:!1});
+    },{passive:false});
+    
     modal.addEventListener('touchend',(e)=>{
         if(!isDraggingModal)return;
-        isDraggingModal=!1;
+        isDraggingModal=false;
         modal.classList.remove('is-dragging');
-        if(e.changedTouches[0].clientY-modalStart>100)closeAnyModal(overlayId);
+        if(e.changedTouches[0].clientY-modalStart>100) closeAnyModal(overlayId);
         else modal.style.transform='';
     });
+    
     const header=modal.querySelector('.m-head');
     if(header){
         header.addEventListener('mousedown',(e)=>{
             modalStart=e.clientY;
-            isDraggingModal=!0;
+            isDraggingModal=true;
             modal.classList.add('is-dragging');
         });
     }
@@ -821,6 +851,11 @@ window.switchLanguage=function(lang){
             if(document.getElementById('feedbackText')) document.getElementById('feedbackText').placeholder = txt.fbPh;
             if(document.getElementById('submitFeedbackBtn')) document.getElementById('submitFeedbackBtn').innerText = txt.fbBtn;
             
+            if(document.getElementById('logoutTitle')) document.getElementById('logoutTitle').innerText = txt.logoutTitle;
+            if(document.getElementById('logoutMsg')) document.getElementById('logoutMsg').innerText = txt.logoutMsg;
+            if(document.getElementById('logoutCancelBtn')) document.getElementById('logoutCancelBtn').innerText = txt.logoutCancel;
+            if(document.getElementById('logoutConfirmBtn')) document.getElementById('logoutConfirmBtn').innerText = txt.logoutConfirm;
+            
             // Re-render update screen UI if open
             if (window.renderUpdateStep) window.renderUpdateStep();
             
@@ -886,7 +921,18 @@ window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classLi
 window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";toggleFilters();filterData();showToast("Filtered by "+student.sch,"filter_list")}hideContextMenu()}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
-window.confirmSignOut=function(){if(confirm("Are you sure you want to log out?")){if(window.appSignOut)window.appSignOut()}}
+
+window.confirmSignOut=function(){
+    triggerHaptic();
+    document.getElementById('logoutConfirmOverlay').classList.add('active');
+};
+window.closeLogoutConfirm=function(){
+    document.getElementById('logoutConfirmOverlay').classList.remove('active');
+};
+window.proceedSignOut=function(){
+    window.closeLogoutConfirm();
+    if(window.appSignOut)window.appSignOut();
+};
 
 // ==========================================
 // FEEDBACK SYSTEM LOGIC
@@ -932,7 +978,7 @@ window.submitFeedback = async function() {
 };
 
 // ==========================================
-// STARTUP UPDATE SCREEN LOGIC (TWO-STEP)
+// STARTUP UPDATE SCREEN LOGIC (TWO-STEP & BULLETS)
 // ==========================================
 window.showUpdateScreen = function() {
     const uSettings = window.globalSettings.updateScreen || {};
@@ -952,8 +998,23 @@ window.showUpdateScreen = function() {
     setTimeout(() => { document.getElementById('updateIntroScreen').style.opacity = '1'; }, 10);
 };
 
+const formatUpdateText = (text) => {
+    return text.split('\n')
+        .filter(l => l.trim())
+        .map(l => {
+            let cleanLine = l.trim();
+            if(cleanLine.startsWith('- ')) cleanLine = cleanLine.substring(2);
+            if(cleanLine.startsWith('• ')) cleanLine = cleanLine.substring(2);
+            return `<div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+                        <span style="color:var(--ios-blue); font-weight:800; font-size:16px; line-height:1.4;">-</span>
+                        <span style="flex:1; line-height:1.4;">${cleanLine}</span>
+                    </div>`;
+        }).join('');
+};
+
 window.renderUpdateStep = function() {
     const txt = uiText[curLang];
+    const uSettings = window.globalSettings.updateScreen || {};
     const step1 = document.getElementById('updateStep1');
     const step2 = document.getElementById('updateStep2');
     const title = document.getElementById('updateScreenTitle');
@@ -966,20 +1027,20 @@ window.renderUpdateStep = function() {
     if (window.currentUpdateStep === 1) {
         step1.style.display = 'block'; step2.style.display = 'none';
         title.innerText = txt.updateTitleAdded || "Added Features";
-        icon.innerText = "new_releases";
+        icon.innerText = uSettings.iconAdded || "new_releases";
         iconBg.style.background = "var(--ios-blue)";
         iconBg.style.boxShadow = "0 8px 24px var(--ios-blue-light)";
         
-        addedText.innerHTML = window.updateDataSteps.added.split('\n').filter(l=>l.trim()).map(l => `• ${l.trim()}`).join('<br><br>');
+        addedText.innerHTML = formatUpdateText(window.updateDataSteps.added);
         btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
     } else {
         step1.style.display = 'none'; step2.style.display = 'block';
         title.innerText = txt.updateTitleRemoved || "Other Changes";
-        icon.innerText = "build_circle";
+        icon.innerText = uSettings.iconRemoved || "build_circle";
         iconBg.style.background = "#FF9500";
         iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
         
-        removedText.innerHTML = window.updateDataSteps.removed.split('\n').filter(l=>l.trim()).map(l => `• ${l.trim()}`).join('<br><br>');
+        removedText.innerHTML = formatUpdateText(window.updateDataSteps.removed);
         btn.innerText = txt.updateDone || "Done";
     }
 };
@@ -1074,11 +1135,13 @@ window.openAdminPanel = () => {
   document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
   document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
 
-  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '', changelogAdded: '', changelogRemoved: '' };
+  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '', iconAdded: '', iconRemoved: '', changelogAdded: '', changelogRemoved: '' };
   const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
   document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
   document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
   document.getElementById('adminUpdateSubText').value = upd.lastUpdateText || '';
+  document.getElementById('adminUpdateAddedIcon').value = upd.iconAdded || '';
+  document.getElementById('adminUpdateRemovedIcon').value = upd.iconRemoved || '';
   document.getElementById('adminUpdateAdded').value = upd.changelogAdded || upd.changelog || '';
   document.getElementById('adminUpdateRemoved').value = upd.changelogRemoved || '';
 
@@ -1284,6 +1347,8 @@ window.saveAdminData = async () => {
        updateScreen: {
            enabled: document.getElementById('adminUpdateScreenDropdown').getAttribute('data-value'),
            lastUpdateText: document.getElementById('adminUpdateSubText').value.trim(),
+           iconAdded: document.getElementById('adminUpdateAddedIcon').value.trim() || 'new_releases',
+           iconRemoved: document.getElementById('adminUpdateRemovedIcon').value.trim() || 'build_circle',
            changelogAdded: document.getElementById('adminUpdateAdded').value.trim(),
            changelogRemoved: document.getElementById('adminUpdateRemoved').value.trim()
        }
@@ -1354,7 +1419,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', changelogAdded: '', changelogRemoved: '' } };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: '', iconRemoved: '', changelogAdded: '', changelogRemoved: '' } };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -1449,3 +1514,4 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
