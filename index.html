@@ -24,10 +24,38 @@ body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#1
 body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
 body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
 body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:#3b0909}
-/* DISABLE LIQUID GLASS MODE */
-body.no-glass {--glass-blur: blur(0px); --ios-card: rgba(255,255,255,1); --ios-modal: rgba(255,255,255,1); --ios-input: rgba(240,240,240,1);}
-body.no-glass[data-theme="dark"] {--ios-card: rgba(30,30,30,1); --ios-modal: rgba(40,40,40,1); --ios-input: rgba(50,50,50,1);}
-body.no-glass .ios-header {background: var(--ios-bg) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 1px solid var(--ios-sep);}
+
+/* DISABLE LIQUID GLASS MODE (SOLID COLORS) */
+body.no-glass {
+    --glass-blur: blur(0px); 
+    --ios-card: #FFFFFF; 
+    --ios-modal: #FFFFFF; 
+    --ios-input: #F2F2F7; 
+    --glass-border: rgba(0,0,0,0.1); 
+    background-image: none !important; 
+    background-color: var(--ios-bg) !important;
+}
+body.no-glass[data-theme="dark"] {
+    --ios-card: #1C1C1E; 
+    --ios-modal: #1C1C1E; 
+    --ios-input: #2C2C2E; 
+    --glass-border: rgba(255,255,255,0.1);
+}
+body.no-glass * { 
+    backdrop-filter: none !important; 
+    -webkit-backdrop-filter: none !important; 
+}
+body.no-glass .ios-header, body.no-glass .action-row {
+    background: var(--ios-bg) !important; 
+    border-bottom: 1px solid var(--ios-sep) !important;
+}
+body.no-glass .auth-overlay:not(#authDialogOverlay):not(#logoutConfirmOverlay) { 
+    background-image: none !important; 
+    background-color: var(--ios-bg) !important; 
+}
+body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
+    background: rgba(0,0,0,0.6) !important; 
+}
 
 /* WINDOWS 95 APRIL FOOLS THEME */
 body.bg-aprilfools {--ios-bg:#008080; --ios-card:#C0C0C0; --ios-modal:#C0C0C0; --ios-blue:#000080; --ios-blue-text:#000080; --chip-act-bg:#000080; --chip-act-border:#000080; --chip-act-txt:#FFFFFF; --glass-blur:blur(0px); --glass-border:transparent; font-family:"MS Sans Serif", "Arial", sans-serif !important;}
@@ -217,7 +245,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
     border-radius: 28px 28px 0 0;
     padding: 24px; padding-bottom: max(24px, env(safe-area-inset-bottom));
     z-index: 3000; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none;
-    transition: all 0.4s var(--ease-ios);
+    transition: transform 0.3s var(--ease-ios), opacity 0.3s var(--ease-ios);
 }
 #mainMenuBackdrop.active .main-menu-sheet {
     transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto;
@@ -235,7 +263,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .mm-btn.danger { color: #FF3B30; }
 .mm-btn.danger .mm-icon { color: #FF3B30; }
 .mm-header { font-size: 18px; font-weight: 800; color: var(--ios-text); margin-bottom: 16px; text-align: center; }
-.mm-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--ios-sep); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ios-text-sec); border: none; transition: transform 0.2s, background 0.2s; z-index: 10; padding: 0; outline: none; }
+.mm-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--ios-sep); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ios-text-sec); border: none; transition: transform 0.2s, background 0.2s; z-index: 100; padding: 0; outline: none; }
 .mm-close span { pointer-events: none; }
 .mm-close:active { transform: scale(0.9); background: rgba(0,0,0,0.1); }
 
@@ -260,6 +288,19 @@ window.isSignUpMode = false;
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='I'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='C'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='J'.charCodeAt(0))return!1;if(e.ctrlKey&&e.keyCode=='U'.charCodeAt(0))return!1}
+
+// Helper to auto-calculate "Time Ago"
+window.getRelativeTime = function(timestamp) {
+    if (!timestamp) return "";
+    const diff = Math.floor((Date.now() - timestamp) / 60000);
+    if (diff < 1) return "just now";
+    if (diff < 60) return diff + "m ago";
+    const hours = Math.floor(diff / 60);
+    if (hours < 24) return hours + "h " + (diff % 60) + "m ago";
+    const days = Math.floor(hours / 24);
+    if (days === 1) return "1 day ago";
+    return days + " days ago";
+};
 </script>
 
 <div id="authScreen" class="auth-overlay active">
@@ -413,7 +454,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                 <span id="updateIcon" class="material-icons-round" style="font-size:36px; color:#fff;">new_releases</span>
             </div>
             <h1 id="updateScreenTitle" class="anim-text-change" style="font-size:24px; font-weight:800; color:var(--ios-text); margin:0 0 8px 0; letter-spacing:-0.02em;">Added Features</h1>
-            <div id="updateSubText" style="font-size:13px; font-weight:600; color:var(--ios-text-sec);">last update: ...</div>
+            <div id="updateSubText" style="font-size:13px; font-weight:600; color:var(--ios-text-sec);">last update: just now</div>
         </div>
         <div style="padding:20px; overflow-y:auto; flex:1; text-align:left; background:var(--ios-card);">
             <div id="updateStep1" style="display:block; animation: fadeUp 0.3s forwards;">
@@ -681,7 +722,6 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <div class="custom-option" onclick="window.selectOption('adminUpdateScreenDropdown', 'true', 'Yes', 'adminUpdateScreenHeader')">Yes</div>
               </div>
             </div>
-            <input type="text" id="adminUpdateSubText" placeholder="Subtitle (e.g. 1h 30m ago)" class="admin-input" style="margin-top:8px;">
             
             <div style="display:flex; gap:8px; margin-top:8px;">
                 <div class="custom-select-container" style="flex:1;">
@@ -856,7 +896,7 @@ window.globalSettings = {
   },
   updateScreen: {
     enabled: 'false',
-    lastUpdateText: '1h 30m ago',
+    timestamp: Date.now(),
     iconAdded: 'new_releases',
     iconRemoved: 'build_circle',
     changelogAdded: '',
@@ -1276,7 +1316,13 @@ window.showUpdateScreen = function() {
     window.updateDataSteps.added = added;
     window.updateDataSteps.removed = removed;
     
-    document.getElementById('updateSubText').innerText = `last update: ${uSettings.lastUpdateText || ''}`;
+    let subText = "just now";
+    if (uSettings.timestamp) {
+        subText = window.getRelativeTime(uSettings.timestamp);
+    } else if (uSettings.lastUpdateText) {
+        subText = uSettings.lastUpdateText;
+    }
+    document.getElementById('updateSubText').innerText = `last update: ${subText}`;
     
     window.currentUpdateStep = 1;
     if (!added.trim() && removed.trim()) window.currentUpdateStep = 2;
@@ -1433,11 +1479,10 @@ window.openAdminPanel = () => {
   document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
   document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
 
-  const upd = window.globalSettings.updateScreen || { enabled: 'false', lastUpdateText: '', iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' };
+  const upd = window.globalSettings.updateScreen || { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' };
   const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
   document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
   document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
-  document.getElementById('adminUpdateSubText').value = upd.lastUpdateText || '';
   
   const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check' };
   const i1 = upd.iconAdded || 'new_releases';
@@ -1651,7 +1696,7 @@ window.saveAdminData = async () => {
        },
        updateScreen: {
            enabled: document.getElementById('adminUpdateScreenDropdown').getAttribute('data-value'),
-           lastUpdateText: document.getElementById('adminUpdateSubText').value.trim(),
+           timestamp: Date.now(),
            iconAdded: document.getElementById('adminIcon1Dropdown').getAttribute('data-value'),
            iconRemoved: document.getElementById('adminIcon2Dropdown').getAttribute('data-value'),
            changelogAdded: document.getElementById('adminUpdateAdded').value.trim(),
@@ -1723,7 +1768,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -1799,7 +1844,7 @@ onAuthStateChanged(auth, async (user) => {
     // Clear state completely on logout to fix "Success!" sticking bug
     window.isInitialLoad = true;
     window.cloudUser = null;
-    window.favorites =[];
+    window.favorites = [];
     window.searchHistory =[];
     window.smkData =[];
     window.teacherData = {};
