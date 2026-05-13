@@ -208,10 +208,17 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:last-child { border-bottom:none; }
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
-/* MAIN MENU BOTTOM SHEET */
-#mainMenuOverlay { z-index:3000; }
-#mainMenuOverlay .cm-menu { width: 90%; max-width: 350px; bottom: 30px; transform: translateX(-50%) scale(0.95); opacity:0; pointer-events:none; transition: all 0.4s var(--ease-spring); }
-#mainMenuOverlay.active .cm-menu { transform: translateX(-50%) scale(1); opacity:1; pointer-events:auto; }
+/* MAIN MENU BOTTOM SHEET (APP STYLE) */
+.app-menu-backdrop { position:fixed; top:0; left:0; right:0; bottom:0; z-index:3500; background:rgba(0,0,0,0.3); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity 0.3s ease; display:flex; justify-content:center; align-items:flex-end; padding:20px; }
+.app-menu-backdrop.active { opacity:1; pointer-events:auto; }
+.app-menu-card { background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg), var(--glass-highlight); border-radius:24px; padding:24px; width:100%; max-width:400px; transform:translateY(120%); transition:transform 0.4s var(--ease-spring); }
+.app-menu-backdrop.active .app-menu-card { transform:translateY(0); }
+.app-menu-header { font-size:22px; font-weight:800; text-align:center; margin-bottom:20px; color:var(--ios-text); letter-spacing:-0.01em; }
+.app-menu-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.app-menu-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:var(--ios-input); border:1px solid var(--chip-border); border-radius:16px; padding:18px 10px; cursor:pointer; color:var(--ios-text); font-weight:600; font-size:13px; box-shadow:var(--glass-highlight); transition:all 0.2s var(--ease-spring); text-align:center; }
+.app-menu-btn:active { transform:scale(0.92); opacity:0.8; }
+.app-menu-btn[style*="grid-column"] { flex-direction: row; padding: 14px; gap: 12px; }
+.app-menu-icon { font-size:26px; color:var(--ios-blue); }
 
 /* UPDATE PROMPT BANNER */
 .update-prompt { position:fixed; bottom: -100px; left:50%; transform:translateX(-50%); background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:16px; padding:12px 16px; z-index:4000; width:90%; max-width:400px; transition:bottom 0.5s var(--ease-spring); display:flex; align-items:center; gap:12px; }
@@ -415,7 +422,6 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;cn&apos;)'>CN</button>
         </div>
-        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' id='btnMenuToggle' onclick='window.openMainMenu()' title="Menu"><span class='material-icons-round' style='font-size:20px'>menu</span></button>
       </div>
     </div>
@@ -586,12 +592,12 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <span>2 Biru</span><span class="material-icons-round">expand_more</span>
               </div>
               <div class="custom-select-dropdown" id="adminTClassDropdown" data-value="Biru">
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Biru</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Hijau</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Kuning</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Merah</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Perang</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Ungu</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Biru</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Hijau</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Kuning</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Merah</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Perang</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Ungu</div>
               </div>
             </div>
 
@@ -759,33 +765,35 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   </div>
   
   <!-- APP MAIN MENU (BOTTOM SHEET) -->
-  <div class='cm-backdrop' id='mainMenuBackdrop' onclick='window.closeMainMenu()'>
-    <div class='cm-menu' id='mainMenu' onclick='event.stopPropagation()'>
-      <div class='cm-header anim-text-change' id='menuHeaderMain'>Menu</div>
-      <button class='cm-item' onclick='window.toggleTheme(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
-        <span class='material-icons-round cm-icon' id='iconThemeMain'>dark_mode</span>
-      </button>
-      <button class='cm-item' onclick='window.toggleDensity(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
-        <span class='material-icons-round cm-icon' id='iconDensityMain'>view_headline</span>
-      </button>
-      <button class='cm-item' onclick='window.openFaq(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
-        <span class='material-icons-round cm-icon'>help_outline</span>
-      </button>
-      <button class='cm-item' onclick='window.openFeedback(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
-        <span class='material-icons-round cm-icon'>chat_bubble_outline</span>
-      </button>
-      <button class='cm-item' onclick='window.openAbout(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuAboutText2'>About App</span>
-        <span class='material-icons-round cm-icon'>info</span>
-      </button>
-      <button class='cm-item' onclick='window.confirmSignOut(); window.closeMainMenu();'>
-        <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
-        <span class='material-icons-round cm-icon' style="color:#FF3B30">logout</span>
-      </button>
+  <div class='app-menu-backdrop' id='mainMenuBackdrop' onclick='window.closeMainMenu()'>
+    <div class='app-menu-card' id='mainMenu' onclick='event.stopPropagation()'>
+      <div class='app-menu-header anim-text-change' id='menuHeaderMain'>Menu</div>
+      <div class='app-menu-grid'>
+          <button class='app-menu-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon' id='iconThemeMain'>dark_mode</span>
+            <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
+          </button>
+          <button class='app-menu-btn' onclick='window.toggleDensity(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon' id='iconDensityMain'>view_headline</span>
+            <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
+          </button>
+          <button class='app-menu-btn' onclick='window.openFaq(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon'>help_outline</span>
+            <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
+          </button>
+          <button class='app-menu-btn' onclick='window.openFeedback(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon'>chat_bubble_outline</span>
+            <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
+          </button>
+          <button class='app-menu-btn' style='grid-column: 1 / -1;' onclick='window.openAbout(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon' style='font-size:20px;'>info</span>
+            <span class="anim-text-change" id='menuAboutText2'>About App</span>
+          </button>
+          <button class='app-menu-btn' style='grid-column: 1 / -1; border-color:rgba(255,59,48,0.3);' onclick='window.confirmSignOut(); window.closeMainMenu();'>
+            <span class='material-icons-round app-menu-icon' style='font-size:20px; color:#FF3B30;'>logout</span>
+            <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
+          </button>
+      </div>
     </div>
   </div>
 
@@ -1352,7 +1360,7 @@ window.selectOption = (dropdownId, value, text, headerId, callbackName = null) =
   drop.parentElement.classList.remove('active-select');
   drop.parentElement.style.zIndex = '1';
   drop.setAttribute('data-value', value);
-  if(callbackName && window[callbackName]) window[callbackName](value);
+  if(callbackName && typeof window[callbackName] === 'function') window[callbackName](value);
 };
 
 window.selectIconOption = (dropdownId, iconValue, iconLabel, headerId) => {
@@ -1674,6 +1682,11 @@ primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim()
 
 window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await setDoc(doc(db,"users",window.cloudUser.uid),{favorites:window.favorites||[],searchHistory:window.searchHistory||[]},{merge:!0})}catch(e){}};
 
+window.appSignOut = () => {
+    window.isInitialLoad = true; // reset logic so login screen initializes properly
+    signOut(auth).then(() => { if(window.showToast) window.showToast("Logged Out", "logout"); });
+};
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     window.cloudUser = user;
@@ -1694,7 +1707,7 @@ onAuthStateChanged(auth, async (user) => {
       window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: '', iconRemoved: '', changelogAdded: '', changelogRemoved: '' } };
           const newStudents = data.students ||[];
           const newTeachers = data.teachers || {};
           const newNotices = data.classNotices || {};
@@ -1769,25 +1782,19 @@ onAuthStateChanged(auth, async (user) => {
     
     window.cloudUser = null;
     window.favorites = [];
-    window.searchHistory = [];
+    window.searchHistory =[];
     window.smkData =[];
-    window.teacherData = {};
     
     mainApp.classList.remove('visible');
     loginScreen.classList.add('active');
+    
+    // Reset Auth forms
     emailInput.value = ''; 
     passwordInput.value = '';
-    
-    // Clear UI
-    if (window.filterData) window.filterData();
+    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
   }
 });
-
-
-    window.appSignOut = () => signOut(auth).then(() => { if(window.showToast) window.showToast("Logged Out", "logout"); });
-  </script>
+</script>
 
 </body>
 </html>
-
-
