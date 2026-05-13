@@ -217,14 +217,14 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
     box-shadow: var(--shadow-lg), var(--glass-highlight); border-top: 1px solid var(--glass-border);
     display: flex; flex-direction: column; overflow: hidden;
 }
-#mainMenuBackdrop.open .main-menu-sheet { transform: translateY(0); }
+#mainMenuBackdrop.active .main-menu-sheet { transform: translateY(0); }
 .mm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 20px 20px; overflow-y: auto; }
 .mm-btn {
     background: var(--ios-input); border: 1px solid var(--chip-border);
     border-radius: 20px; padding: 16px 8px; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 10px; cursor: pointer;
     transition: transform 0.2s var(--ease-spring), background 0.2s;
-    color: var(--ios-text); font-weight: 600; font-size: 12px; box-shadow: var(--glass-highlight);
+    color: var(--ios-text); font-weight: 600; font-size: 12px; box-shadow: var(--glass-highlight); text-align: center;
 }
 .mm-btn:active { transform: scale(0.92); background: rgba(0,0,0,0.05); }
 [data-theme="dark"] .mm-btn:active { background: rgba(255,255,255,0.05); }
@@ -280,7 +280,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   <div class="auth-card" style="padding:30px 24px;">
     <div class="auth-title" id="dialogTitle" style="font-size:20px;">Title</div>
     <div class="auth-sub" id="dialogMsg" style="margin-bottom:0;white-space:pre-wrap;">Message</div>
-    <button class="dialog-btn" onclick="closeAuthDialog()">Close</button>
+    <button class="dialog-btn" onclick="window.closeAuthDialog()">Close</button>
   </div>
 </div>
 
@@ -434,7 +434,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;cn&apos;)'>CN</button>
         </div>
-        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
+        <button class='theme-toggle' onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
         <button class='theme-toggle' id='btnMenuToggle' onclick='window.openMainMenu()' title="Menu"><span class='material-icons-round' style='font-size:20px'>menu</span></button>
       </div>
     </div>
@@ -605,12 +605,12 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <span>2 Biru</span><span class="material-icons-round">expand_more</span>
               </div>
               <div class="custom-select-dropdown" id="adminTClassDropdown" data-value="Biru">
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Biru</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Hijau</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Kuning</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Merah</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Perang</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Ungu</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Biru</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Hijau</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Kuning</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Merah</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Perang</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Ungu</div>
               </div>
             </div>
 
@@ -1013,12 +1013,12 @@ function renderTabs(){const tabContainer=document.getElementById("classTabs");ta
 
 window.openMainMenu=function(){
     triggerHaptic();
-    document.getElementById("mainMenuBackdrop").classList.add("open");
+    document.getElementById("mainMenuBackdrop").classList.add("active");
 }
 window.closeMainMenu=function(){
     const modal = document.getElementById("mainMenu");
     if(modal) modal.style.transform = '';
-    document.getElementById("mainMenuBackdrop").classList.remove("open");
+    document.getElementById("mainMenuBackdrop").classList.remove("active");
 }
 
 window.switchLanguage=function(lang){
@@ -1034,7 +1034,7 @@ window.switchLanguage=function(lang){
     if(titleEl)titleEl.classList.add("blur-fade-out");
     if(searchInput)searchInput.classList.add("anim-placeholder");
     
-    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain'];
+    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqQ2', 'faqQ3', 'faqQ4', 'faqQ5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain'];
     const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
     
     fadeTargets.forEach(el=> el.classList.add('fade-out'));
@@ -1794,7 +1794,7 @@ onAuthStateChanged(auth, async (user) => {
     
     window.cloudUser = null;
     window.favorites = [];
-    window.searchHistory = [];
+    window.searchHistory =[];
     window.smkData =[];
     window.teacherData = {};
     window.classNotices = {};
