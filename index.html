@@ -41,8 +41,8 @@ body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfoo
     border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
     margin-bottom: 8px; color: #000;
 }
-body.bg-aprilfools .modal-card, body.bg-aprilfools #mainMenu {
-    background: #C0C0C0 !important; border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
+body.bg-aprilfools .modal-card {
+    background: #C0C0C0; border-top: 2px solid #FFF; border-left: 2px solid #FFF; border-right: 2px solid #808080; border-bottom: 2px solid #808080;
 }
 body.bg-aprilfools .m-head { background: #000080; color: #FFF; text-align: left; padding: 6px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
 body.bg-aprilfools .m-head .handle { display: none; }
@@ -209,15 +209,9 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
 /* MAIN MENU BOTTOM SHEET */
-#mainMenu { width: 100%; max-width: 450px; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); border-radius: 28px 28px 0 0; padding: 0 0 max(20px, env(safe-area-inset-bottom)) 0; background: var(--ios-modal); border: none; border-top: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), var(--glass-highlight); opacity: 1; pointer-events: none; transition: transform 0.4s var(--ease-ios); }
-#mainMenuBackdrop.active #mainMenu { transform: translateX(-50%) translateY(0); pointer-events: auto; }
-.main-menu-group { background: var(--ios-card); border-radius: 16px; border: 1px solid var(--glass-border); margin: 0 16px 16px; overflow: hidden; box-shadow: var(--shadow-sm), var(--glass-highlight); }
-.main-menu-item { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 500; color: var(--ios-text); background: transparent; border: none; width: 100%; border-bottom: 1px solid var(--ios-sep); cursor: pointer; transition: background 0.2s; }
-.main-menu-item:last-child { border-bottom: none; }
-.main-menu-item:active { background: rgba(0,0,0,0.05); }
-[data-theme="dark"] .main-menu-item:active { background: rgba(255,255,255,0.05); }
-.main-menu-icon { font-size: 22px; color: var(--ios-blue); }
-.main-menu-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--ios-text); margin: 0 0 16px 0; }
+#mainMenuOverlay { z-index:3000; }
+#mainMenuOverlay .cm-menu { width: 90%; max-width: 350px; bottom: 30px; transform: translateX(-50%) scale(0.95); opacity:0; pointer-events:none; transition: all 0.4s var(--ease-spring); }
+#mainMenuOverlay.active .cm-menu { transform: translateX(-50%) scale(1); opacity:1; pointer-events:auto; }
 
 /* UPDATE PROMPT BANNER */
 .update-prompt { position:fixed; bottom: -100px; left:50%; transform:translateX(-50%); background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:16px; padding:12px 16px; z-index:4000; width:90%; max-width:400px; transition:bottom 0.5s var(--ease-spring); display:flex; align-items:center; gap:12px; }
@@ -421,6 +415,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;cn&apos;)'>CN</button>
         </div>
+        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' id='btnMenuToggle' onclick='window.openMainMenu()' title="Menu"><span class='material-icons-round' style='font-size:20px'>menu</span></button>
       </div>
     </div>
@@ -766,41 +761,31 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   <!-- APP MAIN MENU (BOTTOM SHEET) -->
   <div class='cm-backdrop' id='mainMenuBackdrop' onclick='window.closeMainMenu()'>
     <div class='cm-menu' id='mainMenu' onclick='event.stopPropagation()'>
-      <div style="width:40px;height:5px;background:rgba(128,128,128,0.3);border-radius:10px;margin:12px auto 20px;"></div>
-      <div class="main-menu-title anim-text-change" id="menuHeaderMain">Menu</div>
-      
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.toggleTheme(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
-          <span class='material-icons-round main-menu-icon' id='iconThemeMain'>dark_mode</span>
-        </button>
-        <button class="main-menu-item" onclick='window.toggleDensity(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
-          <span class='material-icons-round main-menu-icon' id='iconDensityMain'>view_headline</span>
-        </button>
-      </div>
-
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.openFaq(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
-          <span class='material-icons-round main-menu-icon'>help_outline</span>
-        </button>
-        <button class="main-menu-item" onclick='window.openFeedback(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
-          <span class='material-icons-round main-menu-icon'>chat_bubble_outline</span>
-        </button>
-        <button class="main-menu-item" onclick='window.openAbout(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuAboutText2'>About App</span>
-          <span class='material-icons-round main-menu-icon'>info</span>
-        </button>
-      </div>
-
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.confirmSignOut(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
-          <span class='material-icons-round main-menu-icon' style="color:#FF3B30">logout</span>
-        </button>
-      </div>
+      <div class='cm-header anim-text-change' id='menuHeaderMain'>Menu</div>
+      <button class='cm-item' onclick='window.toggleTheme(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
+        <span class='material-icons-round cm-icon' id='iconThemeMain'>dark_mode</span>
+      </button>
+      <button class='cm-item' onclick='window.toggleDensity(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
+        <span class='material-icons-round cm-icon' id='iconDensityMain'>view_headline</span>
+      </button>
+      <button class='cm-item' onclick='window.openFaq(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
+        <span class='material-icons-round cm-icon'>help_outline</span>
+      </button>
+      <button class='cm-item' onclick='window.openFeedback(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
+        <span class='material-icons-round cm-icon'>chat_bubble_outline</span>
+      </button>
+      <button class='cm-item' onclick='window.openAbout(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuAboutText2'>About App</span>
+        <span class='material-icons-round cm-icon'>info</span>
+      </button>
+      <button class='cm-item' onclick='window.confirmSignOut(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
+        <span class='material-icons-round cm-icon' style="color:#FF3B30">logout</span>
+      </button>
     </div>
   </div>
 
@@ -1787,19 +1772,22 @@ onAuthStateChanged(auth, async (user) => {
     window.searchHistory = [];
     window.smkData =[];
     window.teacherData = {};
-    window.isInitialLoad = true;
     
     mainApp.classList.remove('visible');
     loginScreen.classList.add('active');
     emailInput.value = ''; 
     passwordInput.value = '';
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
     
     // Clear UI
     if (window.filterData) window.filterData();
   }
 });
-</script>
+
+
+    window.appSignOut = () => signOut(auth).then(() => { if(window.showToast) window.showToast("Logged Out", "logout"); });
+  </script>
 
 </body>
 </html>
+
+
