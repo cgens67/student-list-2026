@@ -41,8 +41,8 @@ body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfoo
     border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
     margin-bottom: 8px; color: #000;
 }
-body.bg-aprilfools .modal-card, body.bg-aprilfools #mainMenu {
-    background: #C0C0C0 !important; border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
+body.bg-aprilfools .modal-card {
+    background: #C0C0C0; border-top: 2px solid #FFF; border-left: 2px solid #FFF; border-right: 2px solid #808080; border-bottom: 2px solid #808080;
 }
 body.bg-aprilfools .m-head { background: #000080; color: #FFF; text-align: left; padding: 6px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
 body.bg-aprilfools .m-head .handle { display: none; }
@@ -209,15 +209,28 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
 /* MAIN MENU BOTTOM SHEET */
-#mainMenu { width: 100%; max-width: 450px; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); border-radius: 28px 28px 0 0; padding: 0 0 max(20px, env(safe-area-inset-bottom)) 0; background: var(--ios-modal); border: none; border-top: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), var(--glass-highlight); opacity: 1; pointer-events: none; transition: transform 0.4s var(--ease-ios); }
-#mainMenuBackdrop.active #mainMenu { transform: translateX(-50%) translateY(0); pointer-events: auto; }
-.main-menu-group { background: var(--ios-card); border-radius: 16px; border: 1px solid var(--glass-border); margin: 0 16px 16px; overflow: hidden; box-shadow: var(--shadow-sm), var(--glass-highlight); }
-.main-menu-item { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 500; color: var(--ios-text); background: transparent; border: none; width: 100%; border-bottom: 1px solid var(--ios-sep); cursor: pointer; transition: background 0.2s; }
-.main-menu-item:last-child { border-bottom: none; }
-.main-menu-item:active { background: rgba(0,0,0,0.05); }
-[data-theme="dark"] .main-menu-item:active { background: rgba(255,255,255,0.05); }
-.main-menu-icon { font-size: 22px; color: var(--ios-blue); }
-.main-menu-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--ios-text); margin: 0 0 16px 0; }
+.main-menu-sheet {
+    position: absolute; bottom: 0; left: 0; right: 0; height: auto; max-height: 90vh;
+    background: var(--ios-modal); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: 32px 32px 0 0; padding-bottom: max(20px, env(safe-area-inset-bottom));
+    transform: translateY(100%); transition: transform 0.4s var(--ease-spring);
+    box-shadow: var(--shadow-lg), var(--glass-highlight); border-top: 1px solid var(--glass-border);
+    display: flex; flex-direction: column; overflow: hidden;
+}
+#mainMenuBackdrop.open .main-menu-sheet { transform: translateY(0); }
+.mm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 20px 20px; overflow-y: auto; }
+.mm-btn {
+    background: var(--ios-input); border: 1px solid var(--chip-border);
+    border-radius: 20px; padding: 16px 8px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px; cursor: pointer;
+    transition: transform 0.2s var(--ease-spring), background 0.2s;
+    color: var(--ios-text); font-weight: 600; font-size: 12px; box-shadow: var(--glass-highlight);
+}
+.mm-btn:active { transform: scale(0.92); background: rgba(0,0,0,0.05); }
+[data-theme="dark"] .mm-btn:active { background: rgba(255,255,255,0.05); }
+.mm-icon { font-size: 28px; color: var(--ios-blue); }
+.mm-btn.danger { color: #FF3B30; border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05); }
+.mm-btn.danger .mm-icon { color: #FF3B30; }
 
 /* UPDATE PROMPT BANNER */
 .update-prompt { position:fixed; bottom: -100px; left:50%; transform:translateX(-50%); background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:16px; padding:12px 16px; z-index:4000; width:90%; max-width:400px; transition:bottom 0.5s var(--ease-spring); display:flex; align-items:center; gap:12px; }
@@ -239,7 +252,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 window.isSignUpMode = false;
 
 document.addEventListener('contextmenu', e => e.preventDefault());
-document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='I'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='C'.charCodeAt(0))return!1;if(e.ctrlKey&&e.keyCode=='U'.charCodeAt(0))return!1}
+document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='I'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='C'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='J'.charCodeAt(0))return!1;if(e.ctrlKey&&e.keyCode=='U'.charCodeAt(0))return!1}
 </script>
 
 <div id="authScreen" class="auth-overlay active">
@@ -421,6 +434,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;cn&apos;)'>CN</button>
         </div>
+        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' id='btnMenuToggle' onclick='window.openMainMenu()' title="Menu"><span class='material-icons-round' style='font-size:20px'>menu</span></button>
       </div>
     </div>
@@ -765,40 +779,32 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   
   <!-- APP MAIN MENU (BOTTOM SHEET) -->
   <div class='cm-backdrop' id='mainMenuBackdrop' onclick='window.closeMainMenu()'>
-    <div class='cm-menu' id='mainMenu' onclick='event.stopPropagation()'>
-      <div style="width:40px;height:5px;background:rgba(128,128,128,0.3);border-radius:10px;margin:12px auto 20px;"></div>
-      <div class="main-menu-title anim-text-change" id="menuHeaderMain">Menu</div>
-      
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.toggleTheme(); window.closeMainMenu();'>
+    <div class='main-menu-sheet' id='mainMenu' onclick='event.stopPropagation()'>
+      <div class='m-head' style="padding:0 0 16px 0; border-bottom: 1px solid var(--ios-sep); margin-bottom: 16px;"><div class='handle'></div><div class='stats-title anim-text-change' id='menuHeaderMain' style="text-align:center;">Menu</div></div>
+      <div class="mm-grid">
+        <button class='mm-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon' id='iconThemeMain'>dark_mode</span>
           <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
-          <span class='material-icons-round main-menu-icon' id='iconThemeMain'>dark_mode</span>
         </button>
-        <button class="main-menu-item" onclick='window.toggleDensity(); window.closeMainMenu();'>
+        <button class='mm-btn' onclick='window.toggleDensity(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon' id='iconDensityMain'>view_headline</span>
           <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
-          <span class='material-icons-round main-menu-icon' id='iconDensityMain'>view_headline</span>
         </button>
-      </div>
-
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.openFaq(); window.closeMainMenu();'>
+        <button class='mm-btn' onclick='window.openFaq(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon'>help_outline</span>
           <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
-          <span class='material-icons-round main-menu-icon'>help_outline</span>
         </button>
-        <button class="main-menu-item" onclick='window.openFeedback(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
-          <span class='material-icons-round main-menu-icon'>chat_bubble_outline</span>
+        <button class='mm-btn' onclick='window.openFeedback(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon'>chat_bubble_outline</span>
+          <span class="anim-text-change" id='menuFeedbackText2'>Feedback</span>
         </button>
-        <button class="main-menu-item" onclick='window.openAbout(); window.closeMainMenu();'>
+        <button class='mm-btn' onclick='window.openAbout(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon'>info</span>
           <span class="anim-text-change" id='menuAboutText2'>About App</span>
-          <span class='material-icons-round main-menu-icon'>info</span>
         </button>
-      </div>
-
-      <div class="main-menu-group">
-        <button class="main-menu-item" onclick='window.confirmSignOut(); window.closeMainMenu();'>
-          <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
-          <span class='material-icons-round main-menu-icon' style="color:#FF3B30">logout</span>
+        <button class='mm-btn danger' onclick='window.confirmSignOut(); window.closeMainMenu();'>
+          <span class='material-icons-round mm-icon' style="color:#FF3B30">logout</span>
+          <span class="anim-text-change" id='menuLogoutTextMain'>Log Out</span>
         </button>
       </div>
     </div>
@@ -867,7 +873,7 @@ const uiText={
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('mainMenu'),'mainMenuBackdrop');initDesktopScroll()}
 
 window.applyGlobalSettings = function() {
   const body = document.body;
@@ -887,6 +893,8 @@ window.applyGlobalSettings = function() {
   
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
       document.getElementById('btnMenuToggle').style.display = 'none';
+  } else {
+      document.getElementById('btnMenuToggle').style.display = 'flex';
   }
   document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
   
@@ -954,8 +962,8 @@ function initModalDrag(modal,overlayId){
         });
     }
 }
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging, .main-menu-sheet.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging, .main-menu-sheet.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='mainMenu')overlayId='mainMenuBackdrop';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='mainMenuBackdrop')window.closeMainMenu();}
 
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 window.toggleTheme=function(){triggerHaptic();enableDark(!isDark)}
@@ -1005,10 +1013,12 @@ function renderTabs(){const tabContainer=document.getElementById("classTabs");ta
 
 window.openMainMenu=function(){
     triggerHaptic();
-    document.getElementById("mainMenuBackdrop").classList.add("active");
+    document.getElementById("mainMenuBackdrop").classList.add("open");
 }
 window.closeMainMenu=function(){
-    document.getElementById("mainMenuBackdrop").classList.remove("active");
+    const modal = document.getElementById("mainMenu");
+    if(modal) modal.style.transform = '';
+    document.getElementById("mainMenuBackdrop").classList.remove("open");
 }
 
 window.switchLanguage=function(lang){
@@ -1024,7 +1034,7 @@ window.switchLanguage=function(lang){
     if(titleEl)titleEl.classList.add("blur-fade-out");
     if(searchInput)searchInput.classList.add("anim-placeholder");
     
-    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqQ2', 'faqQ3', 'faqQ4', 'faqQ5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain'];
+    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain'];
     const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
     
     fadeTargets.forEach(el=> el.classList.add('fade-out'));
@@ -1367,11 +1377,7 @@ window.selectOption = (dropdownId, value, text, headerId, callbackName = null) =
   drop.parentElement.classList.remove('active-select');
   drop.parentElement.style.zIndex = '1';
   drop.setAttribute('data-value', value);
-  
-  // Custom Logic to handle specific dropdown callbacks globally
-  if(callbackName === 'window.loadAdminTeacherForm') {
-      window.loadAdminTeacherForm();
-  }
+  if(callbackName && window[callbackName]) window[callbackName](value);
 };
 
 window.selectIconOption = (dropdownId, iconValue, iconLabel, headerId) => {
@@ -1698,119 +1704,109 @@ onAuthStateChanged(auth, async (user) => {
     window.cloudUser = user;
 
     if (user.email === ADMIN_EMAIL) {
-      document.querySelector('.admin-fab').style.display = 'flex';
+      document.getElementById('adminControlBtn').style.display = 'flex';
     } else {
-      document.querySelector('.admin-fab').style.display = 'none';
+      document.getElementById('adminControlBtn').style.display = 'none';
     }
 
-    // 1. Non-blocking Fetch User Preferences
-    getDoc(doc(db, "users", user.uid)).then(docSnap => {
+    try {
+      const docSnap = await getDoc(doc(db, "users", user.uid));
       if (docSnap.exists()) {
         window.favorites = docSnap.data().favorites ||[];
         window.searchHistory = docSnap.data().searchHistory ||[];
       }
-    }).catch(e => console.error("User data fetch error: ", e));
 
-    // 2. Main School Data Sync
-    window.unsubscribeSchoolInfo = onSnapshot(
-      doc(db, "appData", "schoolInfo"),
-      (docSnap) => {
-        const data = docSnap.exists() ? docSnap.data() : {};
-        const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
-        const newStudents = data.students ||[];
-        const newTeachers = data.teachers || {};
-        const newNotices = data.classNotices || {};
+      window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', lastUpdateText: '', iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
+          const newStudents = data.students ||[];
+          const newTeachers = data.teachers || {};
+          const newNotices = data.classNotices || {};
 
-        if (window.isInitialLoad) {
-          window.smkData = newStudents;
-          window.teacherData = newTeachers;
-          window.globalSettings = newSettings;
-          window.classNotices = newNotices;
-          
-          window.isInitialLoad = false;
-
-          if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              document.getElementById('mainAppWrapper').classList.remove('visible');
-              document.getElementById('maintenanceScreen').classList.add('visible');
-              loginScreen.classList.remove('active');
-              return;
-          }
-          
-          if(window.applyGlobalSettings) window.applyGlobalSettings();
-          if(window.initFilterChips) window.initFilterChips();
-          if(window.renderTabs) window.renderTabs();
-          if(window.filterData) window.filterData();
-          
-          loginScreen.classList.remove('active');
-
-          // STARTUP UPDATE SCREEN LOGIC
-          const uSettings = window.globalSettings.updateScreen || {};
-          const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-          if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-              window.showUpdateScreen();
-          } else {
-              document.getElementById('mainAppWrapper').classList.add('visible');
-          }
-
-          if (window.renderSearchHistory) window.renderSearchHistory();
-        } 
-        else {
-          if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              window.closeAnyModal('modalOverlay'); window.closeAnyModal('statsOverlay'); window.closeAnyModal('aboutOverlay'); window.closeAnyModal('adminOverlay'); window.closeAnyModal('feedbackOverlay'); window.closeAnyModal('faqOverlay');
-              window.closeMainMenu();
-              document.getElementById('mainAppWrapper').classList.remove('visible');
-              document.getElementById('maintenanceScreen').classList.add('visible');
-              return;
-          } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
-              document.getElementById('maintenanceScreen').classList.remove('visible');
-              document.getElementById('mainAppWrapper').classList.add('visible');
-          }
-
-          if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
+          if (window.isInitialLoad) {
+            window.smkData = newStudents;
+            window.teacherData = newTeachers;
             window.globalSettings = newSettings;
+            window.classNotices = newNotices;
+            
+            window.isInitialLoad = false;
+
+            if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
+                document.getElementById('mainAppWrapper').classList.remove('visible');
+                document.getElementById('maintenanceScreen').classList.add('visible');
+                loginScreen.classList.remove('active');
+                return;
+            }
+            
             if(window.applyGlobalSettings) window.applyGlobalSettings();
-          }
+            if(window.initFilterChips) window.initFilterChips();
+            if(window.renderTabs) window.renderTabs();
+            if(window.filterData) window.filterData();
+            
+            loginScreen.classList.remove('active');
 
-          const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
-                              JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
-                              JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
+            // STARTUP UPDATE SCREEN LOGIC
+            const uSettings = window.globalSettings.updateScreen || {};
+            const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+            if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
+                window.showUpdateScreen();
+            } else {
+                document.getElementById('mainAppWrapper').classList.add('visible');
+            }
 
-          if (dataChanged) {
-            window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
-            document.getElementById('updatePromptBanner').classList.add('show');
+            if (window.renderSearchHistory) window.renderSearchHistory();
+          } 
+          else {
+            if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
+                window.closeModal(); window.closeStats(); window.closeAbout(); window.closeFaq(); window.closeMainMenu(); window.closeAdminPanel(); window.closeFeedback();
+                document.getElementById('mainAppWrapper').classList.remove('visible');
+                document.getElementById('maintenanceScreen').classList.add('visible');
+                return;
+            } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
+                document.getElementById('maintenanceScreen').classList.remove('visible');
+                document.getElementById('mainAppWrapper').classList.add('visible');
+            }
+
+            if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
+              window.globalSettings = newSettings;
+              if(window.applyGlobalSettings) window.applyGlobalSettings();
+            }
+
+            const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
+                                JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
+                                JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
+
+            if (dataChanged) {
+              window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
+              document.getElementById('updatePromptBanner').classList.add('show');
+            }
           }
         }
-      },
-      (error) => {
-          console.error("Firestore read error:", error);
-          if (window.isInitialLoad) {
-              window.isInitialLoad = false;
-              loginScreen.classList.remove('active');
-              document.getElementById('mainAppWrapper').classList.add('visible');
-              window.showToast("Running offline/No DB access", "error_outline");
-          }
-      }
-    );
+      });
+
+    } catch (e) {
+      console.error("Data error: ", e);
+    }
     
   } else {
-    // Logout Reset state
-    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo();
+    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
     
     window.cloudUser = null;
     window.favorites = [];
-    window.searchHistory =[];
+    window.searchHistory = [];
     window.smkData =[];
     window.teacherData = {};
+    window.classNotices = {};
     window.isInitialLoad = true;
     
-    mainApp.classList.remove('visible');
-    document.getElementById('updateIntroScreen').style.display = 'none';
+    document.getElementById('mainAppWrapper').classList.remove('visible');
+    document.getElementById('maintenanceScreen').classList.remove('visible');
     loginScreen.classList.add('active');
+    
     emailInput.value = ''; 
     passwordInput.value = '';
     primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
-    
-    if (window.filterData) window.filterData();
   }
 });
 </script>
