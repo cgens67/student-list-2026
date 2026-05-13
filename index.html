@@ -209,28 +209,9 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
 /* MAIN MENU BOTTOM SHEET */
-.main-menu-sheet {
-    position: absolute; bottom: 0; left: 0; right: 0; height: auto; max-height: 90vh;
-    background: var(--ios-modal); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-    border-radius: 32px 32px 0 0; padding-bottom: max(20px, env(safe-area-inset-bottom));
-    transform: translateY(100%); transition: transform 0.4s var(--ease-spring);
-    box-shadow: var(--shadow-lg), var(--glass-highlight); border-top: 1px solid var(--glass-border);
-    display: flex; flex-direction: column; overflow: hidden;
-}
-#mainMenuBackdrop.active .main-menu-sheet { transform: translateY(0); }
-.mm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 20px 20px; overflow-y: auto; }
-.mm-btn {
-    background: var(--ios-input); border: 1px solid var(--chip-border);
-    border-radius: 20px; padding: 16px 8px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 10px; cursor: pointer;
-    transition: transform 0.2s var(--ease-spring), background 0.2s;
-    color: var(--ios-text); font-weight: 600; font-size: 12px; box-shadow: var(--glass-highlight); text-align: center;
-}
-.mm-btn:active { transform: scale(0.92); background: rgba(0,0,0,0.05); }
-[data-theme="dark"] .mm-btn:active { background: rgba(255,255,255,0.05); }
-.mm-icon { font-size: 28px; color: var(--ios-blue); }
-.mm-btn.danger { color: #FF3B30; border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05); }
-.mm-btn.danger .mm-icon { color: #FF3B30; }
+#mainMenuOverlay { z-index:3000; }
+#mainMenuOverlay .cm-menu { width: 90%; max-width: 350px; bottom: 30px; transform: translateX(-50%) scale(0.95); opacity:0; pointer-events:none; transition: all 0.4s var(--ease-spring); }
+#mainMenuOverlay.active .cm-menu { transform: translateX(-50%) scale(1); opacity:1; pointer-events:auto; }
 
 /* UPDATE PROMPT BANNER */
 .update-prompt { position:fixed; bottom: -100px; left:50%; transform:translateX(-50%); background:var(--ios-card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:16px; padding:12px 16px; z-index:4000; width:90%; max-width:400px; transition:bottom 0.5s var(--ease-spring); display:flex; align-items:center; gap:12px; }
@@ -280,7 +261,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   <div class="auth-card" style="padding:30px 24px;">
     <div class="auth-title" id="dialogTitle" style="font-size:20px;">Title</div>
     <div class="auth-sub" id="dialogMsg" style="margin-bottom:0;white-space:pre-wrap;">Message</div>
-    <button class="dialog-btn" onclick="window.closeAuthDialog()">Close</button>
+    <button class="dialog-btn" onclick="closeAuthDialog()">Close</button>
   </div>
 </div>
 
@@ -434,7 +415,7 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;cn&apos;)'>CN</button>
         </div>
-        <button class='theme-toggle' onclick='window.confirmSignOut()' title="Log Out"><span class='material-icons-round' style='font-size:20px; color:#FF3B30'>logout</span></button>
+        <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
         <button class='theme-toggle' id='btnMenuToggle' onclick='window.openMainMenu()' title="Menu"><span class='material-icons-round' style='font-size:20px'>menu</span></button>
       </div>
     </div>
@@ -605,12 +586,12 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
                  <span>2 Biru</span><span class="material-icons-round">expand_more</span>
               </div>
               <div class="custom-select-dropdown" id="adminTClassDropdown" data-value="Biru">
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Biru</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Hijau</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Kuning</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Merah</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Perang</div>
-                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'loadAdminTeacherForm')">2 Ungu</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Biru', '2 Biru', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Biru</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Hijau', '2 Hijau', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Hijau</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Kuning', '2 Kuning', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Kuning</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Merah', '2 Merah', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Merah</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Perang', '2 Perang', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Perang</div>
+                 <div class="custom-option" onclick="window.selectOption('adminTClassDropdown', 'Ungu', '2 Ungu', 'adminTClassHeader', 'window.loadAdminTeacherForm')">2 Ungu</div>
               </div>
             </div>
 
@@ -779,34 +760,32 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
   
   <!-- APP MAIN MENU (BOTTOM SHEET) -->
   <div class='cm-backdrop' id='mainMenuBackdrop' onclick='window.closeMainMenu()'>
-    <div class='main-menu-sheet' id='mainMenu' onclick='event.stopPropagation()'>
-      <div class='m-head' style="padding:0 0 16px 0; border-bottom: 1px solid var(--ios-sep); margin-bottom: 16px;"><div class='handle'></div><div class='stats-title anim-text-change' id='menuHeaderMain' style="text-align:center;">Menu</div></div>
-      <div class="mm-grid">
-        <button class='mm-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon' id='iconThemeMain'>dark_mode</span>
-          <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
-        </button>
-        <button class='mm-btn' onclick='window.toggleDensity(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon' id='iconDensityMain'>view_headline</span>
-          <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
-        </button>
-        <button class='mm-btn' onclick='window.openFaq(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon'>help_outline</span>
-          <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
-        </button>
-        <button class='mm-btn' onclick='window.openFeedback(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon'>chat_bubble_outline</span>
-          <span class="anim-text-change" id='menuFeedbackText2'>Feedback</span>
-        </button>
-        <button class='mm-btn' onclick='window.openAbout(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon'>info</span>
-          <span class="anim-text-change" id='menuAboutText2'>About App</span>
-        </button>
-        <button class='mm-btn danger' onclick='window.confirmSignOut(); window.closeMainMenu();'>
-          <span class='material-icons-round mm-icon' style="color:#FF3B30">logout</span>
-          <span class="anim-text-change" id='menuLogoutTextMain'>Log Out</span>
-        </button>
-      </div>
+    <div class='cm-menu' id='mainMenu' onclick='event.stopPropagation()'>
+      <div class='cm-header anim-text-change' id='menuHeaderMain'>Menu</div>
+      <button class='cm-item' onclick='window.toggleTheme(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
+        <span class='material-icons-round cm-icon' id='iconThemeMain'>dark_mode</span>
+      </button>
+      <button class='cm-item' onclick='window.toggleDensity(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuDensityTextMain'>Compact View</span>
+        <span class='material-icons-round cm-icon' id='iconDensityMain'>view_headline</span>
+      </button>
+      <button class='cm-item' onclick='window.openFaq(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuFaqText2'>FAQ / Help</span>
+        <span class='material-icons-round cm-icon'>help_outline</span>
+      </button>
+      <button class='cm-item' onclick='window.openFeedback(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuFeedbackText2'>Submit Feedback</span>
+        <span class='material-icons-round cm-icon'>chat_bubble_outline</span>
+      </button>
+      <button class='cm-item' onclick='window.openAbout(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuAboutText2'>About App</span>
+        <span class='material-icons-round cm-icon'>info</span>
+      </button>
+      <button class='cm-item' onclick='window.confirmSignOut(); window.closeMainMenu();'>
+        <span class="anim-text-change" id='menuLogoutTextMain' style="color:#FF3B30">Log Out</span>
+        <span class='material-icons-round cm-icon' style="color:#FF3B30">logout</span>
+      </button>
     </div>
   </div>
 
@@ -873,7 +852,7 @@ const uiText={
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('mainMenu'),'mainMenuBackdrop');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initDesktopScroll()}
 
 window.applyGlobalSettings = function() {
   const body = document.body;
@@ -893,8 +872,6 @@ window.applyGlobalSettings = function() {
   
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
       document.getElementById('btnMenuToggle').style.display = 'none';
-  } else {
-      document.getElementById('btnMenuToggle').style.display = 'flex';
   }
   document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
   
@@ -962,8 +939,8 @@ function initModalDrag(modal,overlayId){
         });
     }
 }
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging, .main-menu-sheet.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging, .main-menu-sheet.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='mainMenu')overlayId='mainMenuBackdrop';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='mainMenuBackdrop')window.closeMainMenu();}
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();}
 
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0);else enableDark(!1)}
 window.toggleTheme=function(){triggerHaptic();enableDark(!isDark)}
@@ -1016,8 +993,6 @@ window.openMainMenu=function(){
     document.getElementById("mainMenuBackdrop").classList.add("active");
 }
 window.closeMainMenu=function(){
-    const modal = document.getElementById("mainMenu");
-    if(modal) modal.style.transform = '';
     document.getElementById("mainMenuBackdrop").classList.remove("active");
 }
 
@@ -1794,22 +1769,25 @@ onAuthStateChanged(auth, async (user) => {
     
     window.cloudUser = null;
     window.favorites = [];
-    window.searchHistory =[];
+    window.searchHistory = [];
     window.smkData =[];
     window.teacherData = {};
-    window.classNotices = {};
-    window.isInitialLoad = true;
     
-    document.getElementById('mainAppWrapper').classList.remove('visible');
-    document.getElementById('maintenanceScreen').classList.remove('visible');
+    mainApp.classList.remove('visible');
     loginScreen.classList.add('active');
-    
     emailInput.value = ''; 
     passwordInput.value = '';
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
+    
+    // Clear UI
+    if (window.filterData) window.filterData();
   }
 });
-</script>
+
+
+    window.appSignOut = () => signOut(auth).then(() => { if(window.showToast) window.showToast("Logged Out", "logout"); });
+  </script>
 
 </body>
 </html>
+
+
