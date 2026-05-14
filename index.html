@@ -27,41 +27,91 @@ body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:
 
 /* DISABLE LIQUID GLASS MODE (SOLID COLORS) */
 body.no-glass {
-    --glass-blur: blur(0px); 
+    --glass-blur: none; 
     --ios-card: #FFFFFF; 
     --ios-modal: #FFFFFF; 
     --ios-input: #E6E5EA; 
-    --glass-border: rgba(0,0,0,0.1); 
+    --glass-border: transparent; 
+    --glass-highlight: none;
+    --glass-shadow: 0 2px 8px rgba(0,0,0,0.05);
     background-image: none !important; 
-    background-color: var(--ios-bg) !important;
+    background-color: var(--grad-1) !important;
 }
 body.no-glass[data-theme="dark"] {
     --ios-card: #1C1C1E; 
     --ios-modal: #1C1C1E; 
     --ios-input: #2C2C2E; 
-    --glass-border: rgba(255,255,255,0.1);
 }
 body.no-glass * { 
     backdrop-filter: none !important; 
     -webkit-backdrop-filter: none !important; 
 }
-body.no-glass .ios-header {
-    background: var(--ios-bg) !important; 
+
+/* Make Header noticeably different but close to bg */
+body.no-glass .ios-header, body.no-glass .action-row {
+    background-color: var(--grad-1) !important; 
+    background-image: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)) !important;
     border-bottom: none !important;
+    box-shadow: none !important;
 }
-body.no-glass .action-row {
-    border-bottom: none !important;
-    background: transparent !important;
+body.no-glass[data-theme="dark"] .ios-header, body.no-glass[data-theme="dark"] .action-row {
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)) !important;
 }
+
 body.no-glass .auth-overlay:not(#authDialogOverlay):not(#logoutConfirmOverlay) { 
     background-image: none !important; 
-    background-color: var(--ios-bg) !important; 
+    background-color: var(--grad-1) !important; 
 }
 body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
     background: rgba(0,0,0,0.6) !important; 
 }
-body.no-glass .modal-card {
-    background: var(--ios-modal) !important;
+
+/* Remove 3D edges, apply solid background color to inputs/buttons */
+body.no-glass .ios-search-field, 
+body.no-glass .btn-icon-only, 
+body.no-glass .btn-filter,
+body.no-glass .tabs-track,
+body.no-glass .btn-star {
+    background-color: #E6E5EA !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+body.no-glass[data-theme="dark"] .ios-search-field, 
+body.no-glass[data-theme="dark"] .btn-icon-only, 
+body.no-glass[data-theme="dark"] .btn-filter,
+body.no-glass[data-theme="dark"] .tabs-track,
+body.no-glass[data-theme="dark"] .btn-star {
+    background-color: #2C2C2E !important;
+}
+
+/* Strip shadows off specific containers */
+body.no-glass .filter-container,
+body.no-glass .teacher-card,
+body.no-glass .student-grid,
+body.no-glass .stats-dash-card,
+body.no-glass .auth-card {
+    box-shadow: none !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+}
+body.no-glass[data-theme="dark"] .filter-container,
+body.no-glass[data-theme="dark"] .teacher-card,
+body.no-glass[data-theme="dark"] .student-grid,
+body.no-glass[data-theme="dark"] .stats-dash-card,
+body.no-glass[data-theme="dark"] .auth-card {
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+body.no-glass .chip, body.no-glass .history-pill {
+    box-shadow: none !important;
+    border: none !important;
+    background-color: #FFFFFF !important;
+}
+body.no-glass[data-theme="dark"] .chip, body.no-glass[data-theme="dark"] .history-pill {
+    background-color: #1C1C1E !important;
+}
+body.no-glass .chip.active {
+    background-color: var(--chip-act-bg) !important;
+    color: var(--chip-act-txt) !important;
 }
 
 /* WINDOWS 95 APRIL FOOLS THEME */
@@ -270,7 +320,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .mm-btn.danger { color: #FF3B30; }
 .mm-btn.danger .mm-icon { color: #FF3B30; }
 .mm-header { font-size: 18px; font-weight: 800; color: var(--ios-text); margin-bottom: 16px; text-align: center; }
-.mm-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--ios-sep); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ios-text-sec); border: none; transition: transform 0.2s, background 0.2s; z-index: 100; padding: 0; outline: none; }
+.mm-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--ios-sep); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ios-text-sec); border: none; transition: transform 0.2s, background 0.2s; z-index: 100; padding: 0; outline: none; }
 .mm-close span { pointer-events: none; }
 .mm-close:active { transform: scale(0.9); background: rgba(0,0,0,0.1); }
 
@@ -306,7 +356,10 @@ window.getRelativeTime = function(timestamp) {
     const diffMinutes = Math.floor(diffSeconds / 60);
     if (diffMinutes < 60) return diffMinutes + "m ago";
     const diffHours = Math.floor(diffMinutes / 60);
-    if (diffHours < 24) return diffHours + "h " + (diffMinutes % 60) + "m ago";
+    if (diffHours < 24) {
+        const remMins = diffMinutes % 60;
+        return remMins > 0 ? diffHours + "h " + remMins + "m ago" : diffHours + "h ago";
+    }
     const diffDays = Math.floor(diffHours / 24);
     const remainingHours = diffHours % 24;
     if (diffDays === 1 && remainingHours === 0) return "1d ago";
@@ -1224,7 +1277,45 @@ function updateModalContent(student,index){modalCurrentIndex=index;currentStuden
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
 function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}}}
 window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
-function applyModalColors(student){const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};const darkBgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};const bgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');const classColor=textColors[cssClass]||'#007AFF';if(isDark){modalCard.style.background=darkBgColors[cssClass]||'rgba(40,40,40,0.85)';mNew.style.color=classColor}else{modalCard.style.background=bgColors[cssClass]||'rgba(255,255,255,0.85)';mNew.style.color=classColor}btnDone.style.backgroundColor=classColor;btnDone.style.color='#FFFFFF'}
+
+function applyModalColors(student){
+    const rawClass=student.newClass.split(" ")[1]||"Biru";
+    const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
+    const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
+    const isSolid = document.body.classList.contains('no-glass');
+    const alpha = isSolid ? '1' : '0.85';
+    
+    const darkBgColors={
+        'Biru':`linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`,
+        'Hijau':`linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`,
+        'Kuning':`linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`,
+        'Merah':`linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`,
+        'Perang':`linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`,
+        'Ungu':`linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,${alpha}) 80%)`
+    };
+    const bgColors={
+        'Biru':`linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`,
+        'Hijau':`linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`,
+        'Kuning':`linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`,
+        'Merah':`linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`,
+        'Perang':`linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`,
+        'Ungu':`linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,${alpha}) 80%)`
+    };
+    const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');
+    const classColor=textColors[cssClass]||'#007AFF';
+    
+    if(isSolid) {
+        modalCard.style.setProperty('background', 'var(--ios-modal)', 'important');
+        modalCard.style.backgroundImage = isDark ? darkBgColors[cssClass] : bgColors[cssClass];
+    } else {
+        modalCard.style.background = isDark ? (darkBgColors[cssClass]||`rgba(40,40,40,${alpha})`) : (bgColors[cssClass]||`rgba(255,255,255,${alpha})`);
+    }
+    mNew.style.color=classColor;
+    
+    btnDone.style.backgroundColor=classColor;
+    btnDone.style.color='#FFFFFF';
+}
+
 window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
 window.openAbout=function(){
     triggerHaptic();
@@ -1252,7 +1343,98 @@ function updateStatsUI(mode,view){const card=document.getElementById('statsCard'
 window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
 function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 function updateCounter(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
-function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");if(wrapSortBday)wrapSortBday.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!tCard.classList.contains('show'))tCard.classList.add('show')}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(wrapSortBday)wrapSortBday.classList.add("collapsed");if(currentSortType!=='name')window.handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).substring(0,6):"999999";const bBday=b.id?String(b.id).substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
+
+function filterData(){
+    const query=document.getElementById("searchInput").value.toLowerCase();
+    const cleanQuery = query.replace(/-/g, '');
+    const f25=filterState.year2025;
+    const fOrigin=filterState.origin;
+    const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);
+    const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");
+    
+    if(isGlobalMode){
+        clearBtn.style.display='flex';
+        tabs.style.display='none';
+        tCard.classList.remove('show');
+        tCard.style.height='';
+        if(wrapSortClass)wrapSortClass.classList.remove("collapsed");
+        if(wrapSortBday)wrapSortBday.classList.remove("collapsed");
+        document.getElementById('classNoticeBanner').style.display='none';
+    }else{
+        clearBtn.style.display='none';
+        tabs.style.display='flex';
+        const data=window.teacherData[currentClass];
+        if(data){
+            document.getElementById('lblGuru').innerText=data.g;
+            document.getElementById('lblPenolong').innerText=data.p;
+            if(!tCard.classList.contains('show'))tCard.classList.add('show');
+        }
+        if(wrapSortClass)wrapSortClass.classList.add("collapsed");
+        if(wrapSortBday)wrapSortBday.classList.add("collapsed");
+        if(currentSortType!=='name')window.handleSort('name');
+        const notice=window.classNotices && window.classNotices[currentClass];
+        if(notice){
+            document.getElementById('classNoticeText').innerText=notice;
+            document.getElementById('classNoticeBanner').style.display='flex';
+        }else{
+            document.getElementById('classNoticeBanner').style.display='none';
+        }
+    }
+    
+    let filtered;
+    if(isGlobalMode)filtered=window.smkData.slice();
+    else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));
+    
+    if(query) {
+        filtered=filtered.filter(s => 
+            s.name.toLowerCase().includes(query) || 
+            s.cn.toLowerCase().includes(query) || 
+            s.id.replace(/-/g, '').includes(cleanQuery)
+        );
+    }
+    
+    if(f25)filtered=filtered.filter(s=>s.oldClass===f25);
+    if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);
+    if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));
+    
+    currentFilteredData=filtered;
+    updateCounter(filtered.length);
+    
+    filtered.sort((a,b)=>{
+        if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);
+        else if(currentSortType==='class'){
+            const classA=a.newClass.split(" ")[1].charAt(0);
+            const classB=b.newClass.split(" ")[1].charAt(0);
+            const rankA=rankOrder[classA]||99;
+            const rankB=rankOrder[classB]||99;
+            return sortAsc?rankA-rankB:rankB-rankA;
+        }else{
+            const aBday=a.id?String(a.id).substring(0,6):"999999";
+            const bBday=b.id?String(b.id).substring(0,6):"999999";
+            return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday);
+        }
+    });
+    
+    const grid=document.getElementById("studentGrid");
+    if(grid){
+        grid.innerHTML="";
+        if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;
+        else{
+            const displayList=filtered.slice(0,100);
+            const html=displayList.map((student,index)=>{
+                const delay=Math.min(index*0.02,0.4);
+                const rank=getRankStatus(student.oldClass,student.newClass);
+                const rawClass=student.newClass.split(" ")[1]||"Biru";
+                const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
+                const isFav=favorites.includes(student.id);
+                const favClass=isFav?'show':'';
+                return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
+            }).join('');
+            grid.innerHTML=html;
+        }
+    }
+}
+
 window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{window.showContextMenu(id)},500)}
 window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
 window.handleTouchMove=function(){clearTimeout(longPressTimer)}
