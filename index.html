@@ -1,10 +1,3 @@
-Here is the full raw code with the fixes applied.
-
-I have restored the blue focus ring animation for the search bar in Solid Colors
-mode, and wrapped the student's name inside a stunning semi-transparent rounded
-rectangle when in the normal "Glass Mode" to ensure the white text perfectly
-contrasts and looks clean against the blurred background!
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,14 +95,13 @@ body.no-glass[data-theme="dark"] .tabs-track {
     background: #1C1C1E !important; 
 }
 
-/* Restored Search Bar Animation for Solid Colors */
-body.no-glass .ios-search-field:focus {
-    background: #FFFFFF !important;
-    box-shadow: 0 0 0 2px var(--ios-blue) !important;
+/* Ensure focus states still animate properly on Solid Colors */
+body.no-glass .ios-search-field {
+    transition: box-shadow 0.3s, background-color 0.3s !important;
 }
-body.no-glass[data-theme="dark"] .ios-search-field:focus {
-    background: #2C2C2E !important;
+body.no-glass .ios-search-field:focus {
     box-shadow: 0 0 0 2px var(--ios-blue) !important;
+    background: var(--ios-card) !important;
 }
 
 /* Filter container and chips in solid mode */
@@ -133,41 +125,42 @@ body.no-glass .chip.active {
     color: var(--chip-act-txt) !important;
 }
 
-/* Normal Theme Student Modal Name Wrapper */
-.m-name-wrapper {
+/* Normal Theme Student Modal Text Color & Background Pill */
+.m-name-wrap {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 24px;
-    border-radius: 20px;
     margin: 0 auto;
-    min-width: 180px;
+    border-radius: 16px;
+    padding: 6px 20px 8px;
+    transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
 }
-body:not(.no-glass) .m-name-wrapper {
-    background: rgba(0, 0, 0, 0.18);
+body:not(.no-glass) .m-name-wrap {
+    background: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.05);
 }
-body:not(.no-glass) #mName,
-body:not(.no-glass) #mCn {
-    color: #FFFFFF !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
 #mName {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 800;
-    letter-spacing: -0.01em;
-    margin-bottom: 3px;
+    color: var(--ios-text);
     line-height: 1.2;
+    text-align: center;
 }
 #mCn {
     font-size: 14px;
     font-weight: 500;
-    opacity: 0.85;
+    color: var(--ios-text-sec);
+    margin-top: 2px;
+    text-align: center;
+}
+body:not(.no-glass) #mName,
+body:not(.no-glass) #mCn {
+    color: #FFFFFF !important;
+    text-shadow: none !important;
 }
 
 /* Modals - Solid */
@@ -276,7 +269,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .theme-toggle{width:32px;height:32px;background:var(--ios-input);border-radius:50%;border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text);cursor:pointer;flex-shrink:0;transition:transform .2s var(--ease-spring),opacity .2s,background-color .2s}.theme-toggle:active{transform:scale(.85);opacity:.7}
 .lang-switch{height:32px;box-sizing:border-box;background:var(--ios-input);border-radius:50px;padding:2px;display:flex;align-items:center;border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);flex-shrink:0;}.lang-btn{height:100%;display:flex;align-items:center;justify-content:center;background:0 0;border:1px solid transparent;padding:0 10px;border-radius:40px;font-size:11px;font-weight:600;color:var(--ios-text);cursor:pointer;opacity:.5;transition:.2s;flex-shrink:0;}.lang-btn.active{background:var(--ios-card);opacity:1;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:1px solid var(--glass-border)}
 .ios-title{font-size:28px;font-weight:800;letter-spacing:.01em;margin:0;color:var(--ios-text);height:62px;display:flex;align-items:flex-end;line-height:1.1;overflow:hidden;transform-origin:left bottom}
-.action-row{display:flex;gap:10px;align-items:center;margin-bottom:12px;opacity:0;animation:fadeUp .6s var(--ease-ios) .1s forwards}.ios-search-field{width:100%;height:42px;padding:0 10px 0 38px;border-radius:12px;border:1px solid var(--chip-border);background:var(--ios-input);box-shadow:var(--glass-highlight);color:var(--ios-text);font-size:17px;transition:background-color .3s,box-shadow .3s}.ios-search-field::placeholder{color:var(--ios-text-sec);transition:all .3s var(--ease-ios);opacity:1;transform:translateX(0);filter:blur(0)}.ios-search-field.anim-placeholder::placeholder{opacity:0;transform:translateX(-10px);filter:blur(4px)}.search-box{flex:1;position:relative}.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ios-text-sec);font-size:20px;pointer-events:none}
+.action-row{display:flex;gap:10px;align-items:center;margin-bottom:12px;opacity:0;animation:fadeUp .6s var(--ease-ios) .1s forwards}.ios-search-field{width:100%;height:42px;padding:0 10px 0 38px;border-radius:12px;border:1px solid var(--chip-border);background:var(--ios-input);box-shadow:var(--glass-highlight);color:var(--ios-text);font-size:17px;transition:background-color .3s,box-shadow .3s}.ios-search-field:focus{background:var(--ios-card);box-shadow:0 0 0 2px var(--ios-blue)}.ios-search-field::placeholder{color:var(--ios-text-sec);transition:all .3s var(--ease-ios);opacity:1;transform:translateX(0);filter:blur(0)}.ios-search-field.anim-placeholder::placeholder{opacity:0;transform:translateX(-10px);filter:blur(4px)}.search-box{flex:1;position:relative}.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ios-text-sec);font-size:20px;pointer-events:none}
 .btn-icon-only{width:42px;height:42px;flex-shrink:0;background:var(--ios-input);border-radius:12px;border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-blue-text);cursor:pointer;transition:background-color .3s,transform .2s var(--ease-spring),box-shadow .2s,color .4s ease;position:relative}.btn-icon-only:active{opacity:.7;transform:scale(.85)}.btn-icon-only.active{background:var(--ios-card);color:#FF2D55;box-shadow:inset 0 0 0 2px #FF2D55}.btn-filter{color:var(--ios-blue-text);background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);font-size:16px;font-weight:600;cursor:pointer;padding:0 16px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background-color .3s,transform .2s var(--ease-spring),color .4s ease;white-space:nowrap;overflow:hidden}.btn-filter:active{opacity:.8;transform:scale(.92)}
 .filter-drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease-ios)}.filter-drawer.open{grid-template-rows:1fr;margin-bottom:20px}.filter-inner{overflow:hidden;min-height:0;padding:20px;margin:-20px}.filter-container{background:var(--ios-card);border-radius:16px;padding:20px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);opacity:0;transform:translateY(-20px);transition:opacity .3s ease,transform .4s var(--ease-ios)}.filter-drawer.open .filter-container{opacity:1;transform:translateY(0)}.filter-heading{font-size:11px;font-weight:700;color:var(--ios-text-sec);text-transform:uppercase;margin-bottom:10px;display:block;height:14px;line-height:14px;overflow:hidden;white-space:nowrap}
 .scroll-row{display:flex;overflow-x:auto;gap:8px;padding:4px 16px;margin:0 -16px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:40px;-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%)}
@@ -657,8 +650,8 @@ window.getRelativeTime = function(timestamp) {
       <div class='floating-container' id='cardFloatBg'></div>
       <div class='m-head'>
         <div class='handle'></div><button class='btn-star' id='btnStar' onclick='window.toggleCurrentFav()'><span class='material-icons-round' style='font-size:20px'>star</span></button>
-        <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 auto 16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
-        <div class='m-name-wrapper'>
+        <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
+        <div class='m-name-wrap'>
           <div id='mName'>Name</div>
           <div id='mCn'>Chinese Name</div>
         </div>
@@ -1691,7 +1684,7 @@ window.openAdminPanel = () => {
 };
 
 window.closeAdminPanel = () => { 
-  document.getElementByIddocument.getElementById('adminOverlay').classList.remove('open'); 
+  document.getElementById('adminOverlay').classList.remove('open'); 
   document.querySelectorAll('.custom-select-dropdown').forEach(d => { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); });
   document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
 };
@@ -2050,5 +2043,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 </script>
+
 </body>
 </html>
