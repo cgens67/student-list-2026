@@ -30,7 +30,7 @@ body.no-glass {
     --glass-blur: blur(0px); 
     --ios-card: #FFFFFF; 
     --ios-modal: #FFFFFF; 
-    --ios-input: #F2F2F7; 
+    --ios-input: #E6E5EA; 
     --glass-border: rgba(0,0,0,0.1); 
     background-image: none !important; 
     background-color: var(--ios-bg) !important;
@@ -45,9 +45,13 @@ body.no-glass * {
     backdrop-filter: none !important; 
     -webkit-backdrop-filter: none !important; 
 }
-body.no-glass .ios-header, body.no-glass .action-row {
+body.no-glass .ios-header {
     background: var(--ios-bg) !important; 
-    border-bottom: 1px solid var(--ios-sep) !important;
+    border-bottom: none !important;
+}
+body.no-glass .action-row {
+    border-bottom: none !important;
+    background: transparent !important;
 }
 body.no-glass .auth-overlay:not(#authDialogOverlay):not(#logoutConfirmOverlay) { 
     background-image: none !important; 
@@ -55,6 +59,9 @@ body.no-glass .auth-overlay:not(#authDialogOverlay):not(#logoutConfirmOverlay) {
 }
 body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
     background: rgba(0,0,0,0.6) !important; 
+}
+body.no-glass .modal-card {
+    background: var(--ios-modal) !important;
 }
 
 /* WINDOWS 95 APRIL FOOLS THEME */
@@ -292,14 +299,19 @@ document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shif
 // Helper to auto-calculate "Time Ago"
 window.getRelativeTime = function(timestamp) {
     if (!timestamp) return "";
-    const diff = Math.floor((Date.now() - timestamp) / 60000);
-    if (diff < 1) return "just now";
-    if (diff < 60) return diff + "m ago";
-    const hours = Math.floor(diff / 60);
-    if (hours < 24) return hours + "h " + (diff % 60) + "m ago";
-    const days = Math.floor(hours / 24);
-    if (days === 1) return "1 day ago";
-    return days + " days ago";
+    const diffSeconds = Math.floor((Date.now() - timestamp) / 1000);
+    if (diffSeconds < 60) {
+        return Math.max(0, diffSeconds) + "s ago"; 
+    }
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) return diffMinutes + "m ago";
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) return diffHours + "h " + (diffMinutes % 60) + "m ago";
+    const diffDays = Math.floor(diffHours / 24);
+    const remainingHours = diffHours % 24;
+    if (diffDays === 1 && remainingHours === 0) return "1d ago";
+    if (remainingHours === 0) return diffDays + "d ago";
+    return diffDays + "d " + remainingHours + "h ago";
 };
 </script>
 
