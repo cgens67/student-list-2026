@@ -69,6 +69,7 @@ body.no-glass .tabs-track {
     background: #E8E8ED !important; /* Night/Default */
     box-shadow: none !important;
     border-color: transparent !important;
+    transition: all 0.3s ease !important;
 }
 body.no-glass.bg-morning:not([data-theme="dark"]) .ios-search-field,
 body.no-glass.bg-morning:not([data-theme="dark"]) .btn-icon-only,
@@ -92,16 +93,17 @@ body.no-glass[data-theme="dark"] .ios-search-field,
 body.no-glass[data-theme="dark"] .btn-icon-only,
 body.no-glass[data-theme="dark"] .btn-filter,
 body.no-glass[data-theme="dark"] .tabs-track {
-    background: #1C1C1E !important; 
+    background: #2C2C2E !important; 
 }
 
-/* Ensure focus states still animate properly on Solid Colors */
-body.no-glass .ios-search-field {
-    transition: box-shadow 0.3s, background-color 0.3s !important;
-}
-body.no-glass .ios-search-field:focus {
+/* Fix Focus State for Search Bar in Solid Mode */
+body.no-glass:not([data-theme="dark"]) .ios-search-field:focus {
+    background: #FFFFFF !important;
     box-shadow: 0 0 0 2px var(--ios-blue) !important;
-    background: var(--ios-card) !important;
+}
+body.no-glass[data-theme="dark"] .ios-search-field:focus {
+    background: #1C1C1E !important; 
+    box-shadow: 0 0 0 2px var(--ios-blue) !important;
 }
 
 /* Filter container and chips in solid mode */
@@ -126,41 +128,41 @@ body.no-glass .chip.active {
 }
 
 /* Normal Theme Student Modal Text Color & Background Pill */
-.m-name-wrap {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    border-radius: 16px;
-    padding: 6px 20px 8px;
-    transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
-}
-body:not(.no-glass) .m-name-wrap {
+.m-text-bg {
+    display: inline-block;
     background: rgba(0, 0, 0, 0.25);
+    padding: 6px 20px 8px;
+    border-radius: 16px;
+    margin: 0 auto 4px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
+}
+body.no-glass .m-text-bg {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
 }
 #mName {
     font-size: 20px;
     font-weight: 800;
     color: var(--ios-text);
     line-height: 1.2;
-    text-align: center;
 }
 #mCn {
     font-size: 14px;
     font-weight: 500;
     color: var(--ios-text-sec);
     margin-top: 2px;
-    text-align: center;
 }
-body:not(.no-glass) #mName,
-body:not(.no-glass) #mCn {
+body:not(.no-glass) .m-text-bg #mName,
+body:not(.no-glass) .m-text-bg #mCn {
     color: #FFFFFF !important;
-    text-shadow: none !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
 /* Modals - Solid */
@@ -171,48 +173,49 @@ body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #
     background: rgba(0,0,0,0.6) !important; 
 }
 
-/* NEW FILTER DESIGN (BETA) */
-body.bg-newfilter .filter-container {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 10px 0 !important;
+/* COMPLETE UX OVERHAUL: NEW FILTER DESIGN (BETA) */
+body.bg-newfilter .filter-drawer {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 3500; display: flex; flex-direction: column; justify-content: flex-end;
+    pointer-events: none; background: rgba(0,0,0,0); transition: background 0.4s;
+    grid-template-rows: none !important; height: auto !important; margin-bottom: 0 !important;
 }
-body.bg-newfilter .filter-heading {
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    color: var(--ios-text);
-    margin-bottom: 12px !important;
-    text-transform: none !important;
-    letter-spacing: -0.01em;
-    padding-left: 20px;
+body.bg-newfilter .filter-drawer.open {
+    pointer-events: auto; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+body.bg-newfilter .filter-inner {
+    background: var(--ios-modal); border-radius: 28px 28px 0 0; padding: 24px;
+    transform: translateY(100%); transition: transform 0.4s var(--ease-ios);
+    max-height: 85vh; overflow-y: auto; margin: 0; border-top: 1px solid var(--glass-border);
+}
+body.bg-newfilter .filter-drawer.open .filter-inner {
+    transform: translateY(0);
+}
+body.bg-newfilter .filter-container {
+    background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
+    transform: none !important; opacity: 1 !important;
+}
+body.bg-newfilter #newFilterHeader { display: flex !important; }
+body.bg-newfilter #reset-bar { display: none !important; }
+body.bg-newfilter .scroll-row {
+    display: grid !important; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+    gap: 10px !important; padding: 0 !important; margin: 0 0 24px 0 !important;
+    mask-image: none !important; -webkit-mask-image: none !important; overflow: visible !important;
 }
 body.bg-newfilter .chip {
-    height: 40px !important;
-    border-radius: 14px !important;
-    border: 2px solid var(--ios-sep) !important;
-    background: var(--ios-card) !important;
-    color: var(--ios-text) !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    width: 100% !important; margin: 0 !important; height: 44px !important; border-radius: 14px !important;
+    font-size: 14px !important; box-shadow: var(--shadow-sm) !important;
 }
-body.bg-newfilter .chip.active {
-    background: var(--ios-text) !important;
-    color: var(--ios-bg) !important;
-    border-color: var(--ios-text) !important;
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+body.bg-newfilter .chip-anim-wrapper {
+    max-width: none !important; display: contents;
 }
-body.bg-newfilter[data-theme="dark"] .chip.active {
-    background: var(--ios-blue) !important;
-    color: #FFF !important;
-    border-color: var(--ios-blue) !important;
+body.bg-newfilter .chip-anim-wrapper.collapsed {
+    display: none !important;
 }
-body.bg-newfilter .scroll-row {
-    gap: 12px !important;
-    padding-bottom: 8px !important;
-    margin-bottom: 16px !important;
+body.bg-newfilter .filter-heading {
+    font-size: 15px !important; font-weight: 700 !important; text-transform: none !important;
+    padding-bottom: 8px; border-bottom: 1px solid var(--ios-sep); color: var(--ios-text) !important;
+    margin-bottom: 16px !important; letter-spacing: -0.01em; height: auto !important; line-height: 1.2 !important; white-space: normal !important;
 }
 
 /* SECONDARY BETA UI/UX (MODERN DOCK & GRID REDESIGN) */
@@ -611,9 +614,18 @@ window.getRelativeTime = function(timestamp) {
 
     <div class='history-drawer' id='historyDrawer'><div class='history-inner'><div class='history-track' id='searchHistoryPills'></div></div></div>
 
-    <div class='filter-drawer' id='filterDrawer'>
+    <div class='filter-drawer' id='filterDrawer' onclick="if(document.body.classList.contains('bg-newfilter') && event.target === this) window.toggleFilters()">
       <div class='filter-inner'>
         <div class='filter-container'>
+          
+          <div id='newFilterHeader' style='display:none; justify-content:space-between; align-items:center; margin-bottom:20px;'>
+            <h2 class="anim-text-change" id="lblNewFilterTitle" style="margin:0; font-size:22px; font-weight:800; color:var(--ios-text); letter-spacing:-0.01em;">Filter</h2>
+            <div style="display:flex; gap:12px; align-items:center;">
+               <button onclick="window.clearFilters()" class="anim-text-change" id="lblNewFilterReset" style="background:transparent; border:none; color:#FF3B30; font-weight:600; font-size:15px; cursor:pointer; padding:0;">Reset</button>
+               <button onclick="window.toggleFilters()" style="background:var(--ios-input); border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:var(--ios-text); cursor:pointer; padding:0;"><span class="material-icons-round" style="font-size:18px;">close</span></button>
+            </div>
+          </div>
+          
           <div style='margin-bottom:20px;'><span class='filter-heading anim-text-change' id='labelSort'>Sort List By</span>
             <div class='scroll-row'>
               <button class='chip active' id='btnSortName' onclick='window.handleSort("name")'><span id='txtSortName'>Name</span><span class='sort-arrow' id='arrowSortName'>&#8595;</span></button>
@@ -651,7 +663,7 @@ window.getRelativeTime = function(timestamp) {
       <div class='m-head'>
         <div class='handle'></div><button class='btn-star' id='btnStar' onclick='window.toggleCurrentFav()'><span class='material-icons-round' style='font-size:20px'>star</span></button>
         <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
-        <div class='m-name-wrap'>
+        <div class="m-text-bg">
           <div id='mName'>Name</div>
           <div id='mCn'>Chinese Name</div>
         </div>
@@ -1193,7 +1205,7 @@ window.switchLanguage=function(lang){
     if(titleEl)titleEl.classList.add("blur-fade-out");
     if(searchInput)searchInput.classList.add("anim-placeholder");
     
-    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain'];
+    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain', 'lblNewFilterTitle', 'lblNewFilterReset'];
     const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
     
     fadeTargets.forEach(el=> el.classList.add('fade-out'));
@@ -1233,6 +1245,8 @@ window.switchLanguage=function(lang){
             setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);
             setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);
             setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
+            if(document.getElementById("lblNewFilterTitle")) setTextAndAnimateWidth(document.getElementById("lblNewFilterTitle"), txt.filter);
+            if(document.getElementById("lblNewFilterReset")) setTextAndAnimateWidth(document.getElementById("lblNewFilterReset"), txt.clear);
             
             const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");
             if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);
