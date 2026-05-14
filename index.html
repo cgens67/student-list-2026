@@ -27,7 +27,7 @@ body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:
 
 /* DISABLE LIQUID GLASS MODE (SOLID COLORS) */
 body.no-glass {
-    --glass-blur: blur(0px); 
+    --glass-blur: none; 
     --ios-card: #FFFFFF; 
     --ios-modal: #FFFFFF; 
     --glass-border: rgba(0,0,0,0.1); 
@@ -43,19 +43,21 @@ body.no-glass * {
 }
 /* Header & Action Row in Solid Colors */
 body.no-glass .ios-header {
-    background: var(--ios-card) !important; 
-    border-bottom: none !important;
+    background: rgba(255, 255, 255, 0.85) !important; 
+    border-bottom: 1px solid var(--ios-sep) !important;
+}
+body.no-glass[data-theme="dark"] .ios-header {
+    background: rgba(30, 30, 30, 0.85) !important;
 }
 body.no-glass .action-row { 
-    background: var(--ios-card) !important;
-    border-bottom: 1px solid var(--ios-sep) !important; 
+    background: transparent !important;
+    border-bottom: none !important; 
 }
 /* Flat UI buttons requested #E6E5EA */
 body.no-glass .ios-search-field,
 body.no-glass .btn-icon-only,
 body.no-glass .btn-filter,
-body.no-glass .tabs-track,
-body.no-glass .filter-container {
+body.no-glass .tabs-track {
     background: #E6E5EA !important;
     box-shadow: none !important;
     border-color: transparent !important;
@@ -63,11 +65,29 @@ body.no-glass .filter-container {
 body.no-glass[data-theme="dark"] .ios-search-field,
 body.no-glass[data-theme="dark"] .btn-icon-only,
 body.no-glass[data-theme="dark"] .btn-filter,
-body.no-glass[data-theme="dark"] .tabs-track,
-body.no-glass[data-theme="dark"] .filter-container {
+body.no-glass[data-theme="dark"] .tabs-track {
     background: #2C2C2E !important; 
 }
-body.no-glass .chip { box-shadow: none !important; }
+/* Filter container and chips in solid mode */
+body.no-glass .filter-container {
+    background: var(--ios-card) !important;
+    box-shadow: none !important;
+    border: 1px solid var(--glass-border) !important;
+}
+body.no-glass .chip { 
+    background: #E6E5EA !important; 
+    color: var(--ios-text) !important; 
+    box-shadow: none !important;
+    border: none !important;
+}
+body.no-glass[data-theme="dark"] .chip {
+    background: #2C2C2E !important;
+    color: #FFF !important;
+}
+body.no-glass .chip.active {
+    background: var(--chip-act-bg) !important;
+    color: var(--chip-act-txt) !important;
+}
 /* Modals - Solid except student modal */
 body.no-glass .modal-card:not(#modalCard) {
     background: var(--ios-modal) !important;
@@ -76,55 +96,48 @@ body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #
     background: rgba(0,0,0,0.6) !important; 
 }
 
-/* WINDOWS 95 APRIL FOOLS THEME */
-body.bg-aprilfools {--ios-bg:#008080; --ios-card:#C0C0C0; --ios-modal:#C0C0C0; --ios-blue:#000080; --ios-blue-text:#000080; --chip-act-bg:#000080; --chip-act-border:#000080; --chip-act-txt:#FFFFFF; --glass-blur:blur(0px); --glass-border:transparent; font-family:"MS Sans Serif", "Arial", sans-serif !important;}
-body.bg-aprilfools[data-theme="dark"] {--ios-bg:#000000; --ios-card:#808080; --ios-modal:#808080; --ios-text:#FFFFFF;}
-body.bg-aprilfools * {border-radius: 0 !important; box-shadow:none !important; text-transform: none !important; transition: none !important;}
-body.bg-aprilfools .ios-header {background: #C0C0C0 !important; border-bottom: 2px solid #808080 !important; border-top: 2px solid #FFF !important;}
-body.bg-aprilfools .ios-title {color: #000 !important; font-weight: bold; letter-spacing: 0;}
-body.bg-aprilfools .ios-cell, body.bg-aprilfools .teacher-card, body.bg-aprilfools .stats-dash-card, body.bg-aprilfools .auth-card {
-    background: #C0C0C0;
-    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
-    border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
-    margin-bottom: 8px; color: #000;
+/* NEW FILTER DESIGN (BETA) */
+body.bg-newfilter .filter-container {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 10px 0 !important;
 }
-body.bg-aprilfools .modal-card {
-    background: #C0C0C0; border-top: 2px solid #FFF; border-left: 2px solid #FFF; border-right: 2px solid #808080; border-bottom: 2px solid #808080;
+body.bg-newfilter .filter-heading {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: var(--ios-text);
+    margin-bottom: 12px !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em;
+    padding-left: 20px;
 }
-body.bg-aprilfools .m-head { background: #000080; color: #FFF; text-align: left; padding: 6px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
-body.bg-aprilfools .m-head .handle { display: none; }
-body.bg-aprilfools .m-head .stats-title, body.bg-aprilfools .m-head .stats-sub { color: #FFF; text-align: left; display:inline-block; }
-body.bg-aprilfools .btn-done, body.bg-aprilfools .auth-btn, body.bg-aprilfools .update-btn {
-    background: #C0C0C0 !important; color: #000 !important; font-weight: bold;
-    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
-    border-right: 2px solid #000 !important; border-bottom: 2px solid #000 !important;
+body.bg-newfilter .chip {
+    height: 40px !important;
+    border-radius: 14px !important;
+    border: 2px solid var(--ios-sep) !important;
+    background: var(--ios-card) !important;
+    color: var(--ios-text) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
-body.bg-aprilfools .btn-done:active, body.bg-aprilfools .auth-btn:active {
-    border-top: 2px solid #000 !important; border-left: 2px solid #000 !important; 
-    border-right: 2px solid #FFF !important; border-bottom: 2px solid #FFF !important;
+body.bg-newfilter .chip.active {
+    background: var(--ios-text) !important;
+    color: var(--ios-bg) !important;
+    border-color: var(--ios-text) !important;
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
 }
-body.bg-aprilfools .ios-input, body.bg-aprilfools .auth-input, body.bg-aprilfools .admin-input {
-    background: #FFF !important; color: #000 !important;
-    border-top: 2px solid #808080 !important; border-left: 2px solid #808080 !important;
-    border-right: 2px solid #FFF !important; border-bottom: 2px solid #FFF !important;
+body.bg-newfilter[data-theme="dark"] .chip.active {
+    background: var(--ios-blue) !important;
+    color: #FFF !important;
+    border-color: var(--ios-blue) !important;
 }
-body.bg-aprilfools .theme-toggle, body.bg-aprilfools .btn-icon-only, body.bg-aprilfools .btn-filter, body.bg-aprilfools .chip {
-    background: #C0C0C0 !important; color: #000 !important;
-    border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
-    border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
-}
-body.bg-aprilfools .chip.active {
-    background: #000080 !important; color: #FFF !important;
-}
-body.bg-aprilfools .ios-cell::after { display:none; }
-body.bg-aprilfools .admin-fab {
-    border-radius: 0 !important; border-top: 2px solid #FFF !important; border-left: 2px solid #FFF !important; 
-    border-right: 2px solid #808080 !important; border-bottom: 2px solid #808080 !important;
-    background: #C0C0C0 !important; color: #000 !important; box-shadow: none !important;
-}
-body.bg-aprilfools .admin-fab:active {
-    border-top: 2px solid #000 !important; border-left: 2px solid #000 !important; 
-    border-right: 2px solid #FFF !important; border-bottom: 2px solid #FFF !important;
+body.bg-newfilter .scroll-row {
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
 }
 
 /* SECONDARY BETA UI/UX (MODERN DOCK & GRID REDESIGN) */
@@ -703,8 +716,8 @@ window.getRelativeTime = function(timestamp) {
 
           <!-- TAB 3: SETTINGS -->
           <div id="adminTab-settings" class="admin-tab" style="display:none;">
-             <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
-             <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Updates live background for everyone instantly.</p>
+             <label id="lblAdminThemeTitle" style="font-size:14px; font-weight:bold; color:var(--ios-text);">Global Website Theme</label>
+             <p id="lblAdminThemeDesc" style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Updates live background for everyone instantly.</p>
              <div class="custom-select-container">
               <div class="custom-select-header" id="adminThemeHeader" onclick="window.toggleCustomSelect('adminThemeDropdown')">
                  <span>Dynamic (Changes by Time of Day)</span><span class="material-icons-round">expand_more</span>
@@ -715,14 +728,14 @@ window.getRelativeTime = function(timestamp) {
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'afternoon', 'Locked to Afternoon/Day Theme', 'adminThemeHeader')">Locked to Afternoon/Day Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'night', 'Locked to Night Theme', 'adminThemeHeader')">Locked to Night Theme</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'christmas', 'Locked to Festive Christmas Theme', 'adminThemeHeader')">Locked to Festive Christmas Theme</div>
-                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'aprilfools', 'Windows 95 April Fools Theme', 'adminThemeHeader')">Windows 95 April Fools Theme</div>
+                 <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'newfilter', 'New Filter Design (Beta)', 'adminThemeHeader')">New Filter Design (Beta)</div>
                  <div class="custom-option" onclick="window.selectOption('adminThemeDropdown', 'beta', 'Secondary Beta UX (Layout Change)', 'adminThemeHeader')">Secondary Beta UX (Layout Change)</div>
               </div>
             </div>
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
             
-            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">System Under Maintenance</label>
+            <label id="lblAdminMaintTitle" style="font-size:14px; font-weight:bold; color:var(--ios-text);">System Under Maintenance</label>
             <div class="custom-select-container" style="margin-top:8px;">
               <div class="custom-select-header" id="adminMaintHeader" onclick="window.toggleCustomSelect('adminMaintDropdown')">
                  <span>No</span><span class="material-icons-round">expand_more</span>
@@ -735,8 +748,8 @@ window.getRelativeTime = function(timestamp) {
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
 
-            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Startup Update Screen</label>
-            <p style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Shows an overlay upon login to broadcast changes.</p>
+            <label id="lblAdminUpdateTitle" style="font-size:14px; font-weight:bold; color:var(--ios-text);">Startup Update Screen</label>
+            <p id="lblAdminUpdateDesc" style="font-size:12px; color:var(--ios-text-sec); margin-top:4px; margin-bottom:8px;">Shows an overlay upon login to broadcast changes.</p>
             <div class="custom-select-container" style="margin-top:8px;">
               <div class="custom-select-header" id="adminUpdateScreenHeader" onclick="window.toggleCustomSelect('adminUpdateScreenDropdown')">
                  <span>No</span><span class="material-icons-round">expand_more</span>
@@ -790,9 +803,9 @@ window.getRelativeTime = function(timestamp) {
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
 
-            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">UI Customization</label>
+            <label id="lblAdminUICust" style="font-size:14px; font-weight:bold; color:var(--ios-text);">UI Customization</label>
             
-            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Disable Liquid Glass Design</p>
+            <p id="lblAdminNoGlass" style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Disable Liquid Glass Design</p>
             <div class="custom-select-container">
               <div class="custom-select-header" id="adminGlassHeader" onclick="window.toggleCustomSelect('adminGlassDropdown')">
                  <span>No (Keep Glassmorphism)</span><span class="material-icons-round">expand_more</span>
@@ -803,7 +816,7 @@ window.getRelativeTime = function(timestamp) {
               </div>
             </div>
 
-            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Change Theme' Button</p>
+            <p id="lblAdminHideTheme" style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Change Theme' Button</p>
             <div class="custom-select-container">
               <div class="custom-select-header" id="adminHideThemeHeader" onclick="window.toggleCustomSelect('adminHideThemeDropdown')">
                  <span>No</span><span class="material-icons-round">expand_more</span>
@@ -814,7 +827,7 @@ window.getRelativeTime = function(timestamp) {
               </div>
             </div>
 
-            <p style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Statistics' Button</p>
+            <p id="lblAdminHideStats" style="font-size:13px; color:var(--ios-text); margin:10px 0 4px;">Hide 'Statistics' Button</p>
             <div class="custom-select-container">
               <div class="custom-select-header" id="adminHideStatsHeader" onclick="window.toggleCustomSelect('adminHideStatsDropdown')">
                  <span>No</span><span class="material-icons-round">expand_more</span>
@@ -826,7 +839,7 @@ window.getRelativeTime = function(timestamp) {
             </div>
 
             <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
-            <label style="font-size:14px; font-weight:bold; color:var(--ios-text);">Edit 'About' Text</label>
+            <label id="lblAdminEditAbout" style="font-size:14px; font-weight:bold; color:var(--ios-text);">Edit 'About' Text</label>
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:8px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
               <input type="text" id="adminAboutTitle" placeholder="Main Title" class="admin-input">
               <input type="text" id="adminAboutVersion" placeholder="Version Info" class="admin-input">
@@ -939,9 +952,9 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本"}
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
@@ -949,7 +962,7 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-aprilfools', 'bg-beta');
+  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
   const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
   if (themeMode === 'dynamic') {
     const hour = new Date().getHours();
@@ -1203,6 +1216,17 @@ window.switchLanguage=function(lang){
             if(document.getElementById('logoutMsg')) document.getElementById('logoutMsg').innerText = txt.logoutMsg;
             if(document.getElementById('logoutCancelBtn')) document.getElementById('logoutCancelBtn').innerText = txt.logoutCancel;
             if(document.getElementById('logoutConfirmBtn')) document.getElementById('logoutConfirmBtn').innerText = txt.logoutConfirm;
+
+            if(document.getElementById('lblAdminThemeTitle')) document.getElementById('lblAdminThemeTitle').innerText = txt.adminThemeTitle;
+            if(document.getElementById('lblAdminThemeDesc')) document.getElementById('lblAdminThemeDesc').innerText = txt.adminThemeDesc;
+            if(document.getElementById('lblAdminMaintTitle')) document.getElementById('lblAdminMaintTitle').innerText = txt.adminMaintTitle;
+            if(document.getElementById('lblAdminUpdateTitle')) document.getElementById('lblAdminUpdateTitle').innerText = txt.adminUpdateTitle;
+            if(document.getElementById('lblAdminUpdateDesc')) document.getElementById('lblAdminUpdateDesc').innerText = txt.adminUpdateDesc;
+            if(document.getElementById('lblAdminUICust')) document.getElementById('lblAdminUICust').innerText = txt.adminUICust;
+            if(document.getElementById('lblAdminNoGlass')) document.getElementById('lblAdminNoGlass').innerText = txt.adminNoGlass;
+            if(document.getElementById('lblAdminHideTheme')) document.getElementById('lblAdminHideTheme').innerText = txt.adminHideTheme;
+            if(document.getElementById('lblAdminHideStats')) document.getElementById('lblAdminHideStats').innerText = txt.adminHideStats;
+            if(document.getElementById('lblAdminEditAbout')) document.getElementById('lblAdminEditAbout').innerText = txt.adminEditAbout;
             
             if (window.renderUpdateStep) window.renderUpdateStep();
             
@@ -1478,7 +1502,7 @@ window.openAdminPanel = () => {
   
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
-  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'Windows 95 April Fools Theme','beta':'Secondary Beta UX (Layout Change)'};
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','newfilter':'New Filter Design (Beta)','beta':'Secondary Beta UX (Layout Change)'};
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
@@ -1693,6 +1717,7 @@ const db=getFirestore(app);
 window.db = db;
 window.firestoreSetDoc = setDoc;
 window.firestoreDoc = doc;
+window.appSignOut = () => signOut(auth);
 
 const emailInput=document.getElementById('authEmail'),passwordInput=document.getElementById('authPassword'),primaryAuthBtn=document.getElementById('authSubmitBtn'),toggleAuthModeBtn=document.getElementById('authToggleBtn'),loginScreen=document.getElementById('authScreen'),mainApp=document.getElementById('mainAppWrapper'),authMsgBox=document.getElementById('authError'),authErrorText=document.getElementById('authErrorText'),authTitle=document.getElementById('authTitle'),authSub=document.getElementById('authSub'),authIcon=document.getElementById('authIcon'),loginMenu=document.getElementById('authMenu');
 window.cloudUser=null;
