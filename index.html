@@ -25,6 +25,16 @@ body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:
 body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
 body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:#3b0909}
 
+/* ACTION BAR DYNAMIC BUTTON COLORS */
+body.bg-morning .ios-search-field, body.bg-morning .btn-icon-only, body.bg-morning .btn-filter { background: #FEF2EA !important; }
+body.bg-afternoon .ios-search-field, body.bg-afternoon .btn-icon-only, body.bg-afternoon .btn-filter { background: #E6E5EA !important; }
+
+/* NORMAL THEME WHITE STUDENT NAMES */
+body:not(.no-glass) #mName, body:not(.no-glass) #mCn {
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
 /* DISABLE LIQUID GLASS MODE (SOLID COLORS) */
 body.no-glass {
     --glass-blur: none; 
@@ -32,6 +42,7 @@ body.no-glass {
     --ios-modal: #FFFFFF; 
     --glass-border: rgba(0,0,0,0.1); 
 }
+body.no-glass.bg-afternoon { background: linear-gradient(135deg, #F1FAFF 0%, #E8E8FF 100%) !important; }
 body.no-glass[data-theme="dark"] {
     --ios-card: #1C1C1E; 
     --ios-modal: #1C1C1E; 
@@ -41,24 +52,17 @@ body.no-glass * {
     backdrop-filter: none !important; 
     -webkit-backdrop-filter: none !important; 
 }
-/* Header & Action Row in Solid Colors */
-body.no-glass .ios-header {
-    background: rgba(255, 255, 255, 0.85) !important; 
-    border-bottom: 1px solid var(--ios-sep) !important;
+/* Header & Action Row Blend in Solid Colors */
+body.no-glass .ios-header, body.no-glass .action-row {
+    background: transparent !important; 
+    border-bottom: none !important;
+    box-shadow: none !important;
 }
-body.no-glass[data-theme="dark"] .ios-header {
-    background: rgba(30, 30, 30, 0.85) !important;
-}
-body.no-glass .action-row { 
-    background: transparent !important;
-    border-bottom: none !important; 
-}
-/* Flat UI buttons requested #E6E5EA */
+/* Flat UI for Solid Colors */
 body.no-glass .ios-search-field,
 body.no-glass .btn-icon-only,
 body.no-glass .btn-filter,
 body.no-glass .tabs-track {
-    background: #E6E5EA !important;
     box-shadow: none !important;
     border-color: transparent !important;
 }
@@ -66,24 +70,22 @@ body.no-glass[data-theme="dark"] .ios-search-field,
 body.no-glass[data-theme="dark"] .btn-icon-only,
 body.no-glass[data-theme="dark"] .btn-filter,
 body.no-glass[data-theme="dark"] .tabs-track {
-    background: #2C2C2E !important; 
+    background: #1C1C1E !important; 
 }
-/* Filter container and chips in solid mode */
 body.no-glass .filter-container {
-    background: var(--ios-card) !important;
+    background: #FFFFFF !important;
     box-shadow: none !important;
     border: 1px solid var(--glass-border) !important;
 }
+body.no-glass[data-theme="dark"] .filter-container { background: #1C1C1E !important; }
+
 body.no-glass .chip { 
     background: #E6E5EA !important; 
     color: var(--ios-text) !important; 
     box-shadow: none !important;
     border: none !important;
 }
-body.no-glass[data-theme="dark"] .chip {
-    background: #2C2C2E !important;
-    color: #FFF !important;
-}
+body.no-glass[data-theme="dark"] .chip { background: #2C2C2E !important; color: #FFF !important; }
 body.no-glass .chip.active {
     background: var(--chip-act-bg) !important;
     color: var(--chip-act-txt) !important;
@@ -1253,14 +1255,53 @@ window.switchLanguage=function(lang){
 }
 
 window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
-function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
+function getRankStatus(oldC,newC){if(!oldC||oldC.replace(/-/g, '').trim()==="")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
 window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
 function updateModalContent(student,index){modalCurrentIndex=index;currentStudentId=student.id;document.getElementById("mName").innerText=student.name;document.getElementById("mCn").innerText=student.cn;const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const avEl=document.getElementById("mAvatar");avEl.innerText=student.name.charAt(0);avEl.className=`avatar av-${cssClass}`;document.getElementById("mNew").innerText=student.newClass;document.getElementById("mOld").innerText=student.oldClass;document.getElementById("mSch").innerText=student.sch;const rank=getRankStatus(student.oldClass,student.newClass);document.getElementById("mRankIcon").innerHTML=`<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;applyModalColors(student);const btnStar=document.getElementById('btnStar');if(favorites.includes(student.id)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}const schLabel=document.getElementById("mLabelSch");schLabel.innerText=(student.sch==="PB")?uiText[curLang].mLabelSchPB:uiText[curLang].mLabelSch;const navBtns=document.querySelectorAll('.btn-nav');if(navBtns.length===2){navBtns[0].disabled=(index===0);navBtns[0].style.opacity=(index===0)?'0.3':'1';navBtns[1].disabled=(index===currentFilteredData.length-1);navBtns[1].style.opacity=(index===currentFilteredData.length-1)?'0.3':'1'}const floatContainer=document.getElementById('cardFloatBg');floatContainer.innerHTML='';let iconName='',color='',animName='',posStyle='';if(rank.icon==='thumb_up'){iconName='thumb_up';color='#34C759';animName='floatUp';posStyle='bottom:-80px; top:auto;'}else if(rank.icon==='thumb_down'){iconName='thumb_down';color='#FF3B30';animName='floatDown';posStyle='top:-60px; bottom:auto;'}if(iconName){let html='';for(let i=0;i<12;i++){const left=Math.floor(Math.random()*100);const delay=Math.random()*2;const duration=4+Math.random()*3;const size=50+Math.random()*80;const blur=4+Math.random()*6;html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`}floatContainer.innerHTML=html}}
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
 function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}}}
 window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
-function applyModalColors(student){const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};const darkBgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};const bgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');const classColor=textColors[cssClass]||'#007AFF';if(isDark){modalCard.style.background=darkBgColors[cssClass]||'rgba(40,40,40,0.85)';mNew.style.color=classColor}else{modalCard.style.background=bgColors[cssClass]||'rgba(255,255,255,0.85)';mNew.style.color=classColor}btnDone.style.backgroundColor=classColor;btnDone.style.color='#FFFFFF'}
+function applyModalColors(student){
+    const rawClass=student.newClass.split(" ")[1]||"Biru";
+    const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
+    const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
+    
+    const isSolid = document.body.classList.contains('no-glass');
+    const alphaLight = isSolid ? '1' : '0.85';
+    const alphaDark = isSolid ? '1' : '0.85';
+
+    const darkBgColors={
+        'Biru':`linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`,
+        'Hijau':`linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`,
+        'Kuning':`linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`,
+        'Merah':`linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`,
+        'Perang':`linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`,
+        'Ungu':`linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,${alphaDark}) 80%)`
+    };
+    const bgColors={
+        'Biru':`linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`,
+        'Hijau':`linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`,
+        'Kuning':`linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`,
+        'Merah':`linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`,
+        'Perang':`linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`,
+        'Ungu':`linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,${alphaLight}) 80%)`
+    };
+
+    const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');
+    const classColor=textColors[cssClass]||'#007AFF';
+    
+    if(isDark){
+        modalCard.style.background=darkBgColors[cssClass]||`rgba(40,40,40,${alphaDark})`;
+        mNew.style.color=classColor;
+    }else{
+        modalCard.style.background=bgColors[cssClass]||`rgba(255,255,255,${alphaLight})`;
+        mNew.style.color=classColor;
+    }
+    
+    btnDone.style.backgroundColor=classColor;
+    btnDone.style.color='#FFFFFF';
+}
 window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
 window.openAbout=function(){
     triggerHaptic();
