@@ -27,7 +27,7 @@ body.bg-christmas[data-theme="dark"]{--grad-1:#082608;--grad-2:#1c261c;--grad-3:
 
 /* DISABLE LIQUID GLASS MODE (SOLID COLORS) */
 body.no-glass {
-    --glass-blur: none; 
+    --glass-blur: blur(0px); 
     --ios-card: #FFFFFF; 
     --ios-modal: #FFFFFF; 
     --glass-border: rgba(0,0,0,0.1); 
@@ -41,17 +41,15 @@ body.no-glass * {
     backdrop-filter: none !important; 
     -webkit-backdrop-filter: none !important; 
 }
-
-/* Header in Solid Colors - tinted to match background closely but distinctly opaque */
+/* Header & Action Row in Solid Colors */
 body.no-glass .ios-header {
-    background-color: var(--grad-1) !important;
-    background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)) !important;
-    border-bottom: 1px solid var(--ios-sep) !important;
+    background: var(--ios-card) !important; 
+    border-bottom: none !important;
 }
-body.no-glass[data-theme="dark"] .ios-header {
-    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)) !important;
+body.no-glass .action-row { 
+    background: var(--ios-card) !important;
+    border-bottom: 1px solid var(--ios-sep) !important; 
 }
-
 /* Flat UI buttons requested #E6E5EA */
 body.no-glass .ios-search-field,
 body.no-glass .btn-icon-only,
@@ -69,12 +67,8 @@ body.no-glass[data-theme="dark"] .tabs-track,
 body.no-glass[data-theme="dark"] .filter-container {
     background: #2C2C2E !important; 
 }
-
-/* Remove styling artifacts to merge edges smoothly */
 body.no-glass .chip { box-shadow: none !important; }
-body.no-glass .tab-item.active { box-shadow: none !important; border-color: transparent !important; }
-
-/* Modals - Solid except student modal handled in JS */
+/* Modals - Solid except student modal */
 body.no-glass .modal-card:not(#modalCard) {
     background: var(--ios-modal) !important;
 }
@@ -319,16 +313,12 @@ window.getRelativeTime = function(timestamp) {
     if (!timestamp) return "";
     const diffSeconds = Math.floor((Date.now() - timestamp) / 1000);
     if (diffSeconds < 60) {
-        return Math.max(1, diffSeconds) + "s ago"; 
+        return Math.max(0, diffSeconds) + "s ago"; 
     }
     const diffMinutes = Math.floor(diffSeconds / 60);
     if (diffMinutes < 60) return diffMinutes + "m ago";
     const diffHours = Math.floor(diffMinutes / 60);
-    if (diffHours < 24) {
-        const remainingMinutes = diffMinutes % 60;
-        if (remainingMinutes === 0) return diffHours + "h ago";
-        return diffHours + "h " + remainingMinutes + "m ago";
-    }
+    if (diffHours < 24) return diffHours + "h " + (diffMinutes % 60) + "m ago";
     const diffDays = Math.floor(diffHours / 24);
     const remainingHours = diffHours % 24;
     if (diffDays === 1 && remainingHours === 0) return "1d ago";
@@ -1242,40 +1232,11 @@ window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();do
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
 window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
-
-function applyModalColors(student){
-    const rawClass=student.newClass.split(" ")[1]||"Biru";
-    const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
-    const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
-    
-    // Normal Transparent Gradients
-    const darkBgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};
-    const bgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
-    
-    // No-Glass 100% Solid Opaque Gradients
-    const darkBgSolid = {'Biru':'linear-gradient(to bottom, #0A2E5C 0%, #1C1C1E 80%)', 'Hijau':'linear-gradient(to bottom, #123B1E 0%, #1C1C1E 80%)', 'Kuning':'linear-gradient(to bottom, #4A2E0A 0%, #1C1C1E 80%)', 'Merah':'linear-gradient(to bottom, #4A1612 0%, #1C1C1E 80%)', 'Perang':'linear-gradient(to bottom, #3D3224 0%, #1C1C1E 80%)', 'Ungu':'linear-gradient(to bottom, #3A1B4D 0%, #1C1C1E 80%)'};
-    const bgSolid = {'Biru':'linear-gradient(to bottom, #D9EAFE 0%, #FFFFFF 80%)', 'Hijau':'linear-gradient(to bottom, #E2F6E7 0%, #FFFFFF 80%)', 'Kuning':'linear-gradient(to bottom, #FFF1D9 0%, #FFFFFF 80%)', 'Merah':'linear-gradient(to bottom, #FFDFDD 0%, #FFFFFF 80%)', 'Perang':'linear-gradient(to bottom, #F1EBE3 0%, #FFFFFF 80%)', 'Ungu':'linear-gradient(to bottom, #F4E2FA 0%, #FFFFFF 80%)'};
-
-    const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');
-    const classColor=textColors[cssClass]||'#007AFF';
-    const isSolid = document.body.classList.contains('no-glass');
-
-    if(isDark){
-        modalCard.style.background = isSolid ? (darkBgSolid[cssClass]||'#1C1C1E') : (darkBgColors[cssClass]||'rgba(40,40,40,0.85)');
-        mNew.style.color=classColor;
-    }else{
-        modalCard.style.background = isSolid ? (bgSolid[cssClass]||'#FFFFFF') : (bgColors[cssClass]||'rgba(255,255,255,0.85)');
-        mNew.style.color=classColor;
-    }
-    btnDone.style.backgroundColor=classColor;
-    btnDone.style.color='#FFFFFF';
-}
-
 function updateModalContent(student,index){modalCurrentIndex=index;currentStudentId=student.id;document.getElementById("mName").innerText=student.name;document.getElementById("mCn").innerText=student.cn;const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const avEl=document.getElementById("mAvatar");avEl.innerText=student.name.charAt(0);avEl.className=`avatar av-${cssClass}`;document.getElementById("mNew").innerText=student.newClass;document.getElementById("mOld").innerText=student.oldClass;document.getElementById("mSch").innerText=student.sch;const rank=getRankStatus(student.oldClass,student.newClass);document.getElementById("mRankIcon").innerHTML=`<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;applyModalColors(student);const btnStar=document.getElementById('btnStar');if(favorites.includes(student.id)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}const schLabel=document.getElementById("mLabelSch");schLabel.innerText=(student.sch==="PB")?uiText[curLang].mLabelSchPB:uiText[curLang].mLabelSch;const navBtns=document.querySelectorAll('.btn-nav');if(navBtns.length===2){navBtns[0].disabled=(index===0);navBtns[0].style.opacity=(index===0)?'0.3':'1';navBtns[1].disabled=(index===currentFilteredData.length-1);navBtns[1].style.opacity=(index===currentFilteredData.length-1)?'0.3':'1'}const floatContainer=document.getElementById('cardFloatBg');floatContainer.innerHTML='';let iconName='',color='',animName='',posStyle='';if(rank.icon==='thumb_up'){iconName='thumb_up';color='#34C759';animName='floatUp';posStyle='bottom:-80px; top:auto;'}else if(rank.icon==='thumb_down'){iconName='thumb_down';color='#FF3B30';animName='floatDown';posStyle='top:-60px; bottom:auto;'}if(iconName){let html='';for(let i=0;i<12;i++){const left=Math.floor(Math.random()*100);const delay=Math.random()*2;const duration=4+Math.random()*3;const size=50+Math.random()*80;const blur=4+Math.random()*6;html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`}floatContainer.innerHTML=html}}
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
 function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}}}
 window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
-
+function applyModalColors(student){const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const textColors={'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};const darkBgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};const bgColors={'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};const modalCard=document.getElementById('modalCard'),mNew=document.getElementById('mNew'),btnDone=document.getElementById('btnClose');const classColor=textColors[cssClass]||'#007AFF';if(isDark){modalCard.style.background=darkBgColors[cssClass]||'rgba(40,40,40,0.85)';mNew.style.color=classColor}else{modalCard.style.background=bgColors[cssClass]||'rgba(255,255,255,0.85)';mNew.style.color=classColor}btnDone.style.backgroundColor=classColor;btnDone.style.color='#FFFFFF'}
 window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
 window.openAbout=function(){
     triggerHaptic();
@@ -1303,6 +1264,419 @@ function updateStatsUI(mode,view){const card=document.getElementById('statsCard'
 window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
 function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 function updateCounter(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
+function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");if(wrapSortBday)wrapSortBday.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!tCard.classList.contains('show'))tCard.classList.add('show')}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(wrapSortBday)wrapSortBday.classList.add("collapsed");if(currentSortType!=='name')window.handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).replace(/[^0-9]/g, '').substring(0,6):"999999";const bBday=b.id?String(b.id).replace(/[^0-9]/g, '').substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
+window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{window.showContextMenu(id)},500)}
+window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
+window.handleTouchMove=function(){clearTimeout(longPressTimer)}
+window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;window.showContextMenu(id)}
+window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
+window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
+window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
+window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
+window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
+
+window.confirmSignOut=function(){
+    triggerHaptic();
+    document.getElementById('logoutConfirmOverlay').classList.add('active');
+};
+window.closeLogoutConfirm=function(){
+    document.getElementById('logoutConfirmOverlay').classList.remove('active');
+};
+window.proceedSignOut=function(){
+    window.closeLogoutConfirm();
+    if(window.appSignOut)window.appSignOut();
+};
+
+// ==========================================
+// FEEDBACK SYSTEM LOGIC
+// ==========================================
+window.openFeedback = function() {
+    triggerHaptic();
+    document.getElementById('authMenu').classList.remove('show');
+    setTimeout(() => document.getElementById("feedbackOverlay").classList.add("open"), 10);
+};
+
+window.closeFeedback = function(e) {
+    document.getElementById("feedbackOverlay").classList.remove("open");
+};
+
+window.submitFeedback = async function() {
+    const text = document.getElementById('feedbackText').value.trim();
+    if(!text) return;
+    const btn = document.getElementById('submitFeedbackBtn');
+    btn.innerText = "Submitting...";
+    btn.disabled = true;
+    try {
+        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
+        const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
+        
+        if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
+            await window.firestoreSetDoc(window.firestoreDoc(window.db, "feedback", docId), {
+                text: text,
+                user: userEmail,
+                timestamp: Date.now()
+            });
+            document.getElementById('feedbackText').value = '';
+            window.closeFeedback();
+            window.showToast(uiText[curLang].toastFb, "check_circle");
+        } else {
+            alert("Database connection not ready. Please try again.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Error submitting feedback. Please try again later.");
+    }
+    btn.innerText = uiText[curLang].fbBtn;
+    btn.disabled = false;
+};
+
+// ==========================================
+// STARTUP UPDATE SCREEN LOGIC (TWO-STEP & BULLETS)
+// ==========================================
+window.showUpdateScreen = function() {
+    const uSettings = window.globalSettings.updateScreen || {};
+    let added = uSettings.changelogAdded || uSettings.changelog || '';
+    let removed = uSettings.changelogRemoved || '';
+    window.updateDataSteps.added = added;
+    window.updateDataSteps.removed = removed;
+    
+    let subText = "just now";
+    if (uSettings.timestamp) {
+        subText = window.getRelativeTime(uSettings.timestamp);
+    } else if (uSettings.lastUpdateText) {
+        subText = uSettings.lastUpdateText;
+    }
+    document.getElementById('updateSubText').innerText = `last update: ${subText}`;
+    
+    window.currentUpdateStep = 1;
+    if (!added.trim() && removed.trim()) window.currentUpdateStep = 2;
+    if (!added.trim() && !removed.trim()) { window.closeUpdateScreen(); return; }
+    
+    window.renderUpdateStep();
+    document.getElementById('updateIntroScreen').style.display = 'flex';
+    setTimeout(() => { document.getElementById('updateIntroScreen').style.opacity = '1'; }, 10);
+};
+
+const formatUpdateText = (text) => {
+    return text.split('\n')
+        .filter(l => l.trim())
+        .map(l => {
+            let cleanLine = l.trim();
+            if(cleanLine.startsWith('- ')) cleanLine = cleanLine.substring(2).trim();
+            if(cleanLine.startsWith('• ')) cleanLine = cleanLine.substring(2).trim();
+            return `<div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+                        <span style="color:var(--ios-blue); font-weight:800; font-size:16px; line-height:1.4;">-</span>
+                        <span style="flex:1; line-height:1.4;">${cleanLine}</span>
+                    </div>`;
+        }).join('');
+};
+
+window.renderUpdateStep = function() {
+    const txt = uiText[curLang];
+    const uSettings = window.globalSettings.updateScreen || {};
+    const step1 = document.getElementById('updateStep1');
+    const step2 = document.getElementById('updateStep2');
+    const title = document.getElementById('updateScreenTitle');
+    const iconBg = document.getElementById('updateIconBg');
+    const icon = document.getElementById('updateIcon');
+    const btn = document.getElementById('updateNextBtn');
+    const addedText = document.getElementById('updateAddedText');
+    const removedText = document.getElementById('updateRemovedText');
+    
+    if (window.currentUpdateStep === 1) {
+        step1.style.display = 'block'; step2.style.display = 'none';
+        title.innerText = txt.updateTitleAdded || "Added Features";
+        icon.innerText = uSettings.iconAdded || "new_releases";
+        iconBg.style.background = "var(--ios-blue)";
+        iconBg.style.boxShadow = "0 8px 24px var(--ios-blue-light)";
+        
+        addedText.innerHTML = formatUpdateText(window.updateDataSteps.added);
+        btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
+    } else {
+        step1.style.display = 'none'; step2.style.display = 'block';
+        title.innerText = txt.updateTitleRemoved || "Other Changes";
+        icon.innerText = uSettings.iconRemoved || "build_circle";
+        iconBg.style.background = "#FF9500";
+        iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
+        
+        removedText.innerHTML = formatUpdateText(window.updateDataSteps.removed);
+        btn.innerText = txt.updateDone || "Done";
+    }
+};
+
+window.nextUpdateStep = function() {
+    if (window.currentUpdateStep === 1 && window.updateDataSteps.removed.trim()) {
+        window.currentUpdateStep = 2;
+        window.renderUpdateStep();
+    } else {
+        window.closeUpdateScreen();
+    }
+};
+
+window.closeUpdateScreen = function() {
+    document.getElementById('updateIntroScreen').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('updateIntroScreen').style.display = 'none';
+        document.getElementById('mainAppWrapper').classList.add('visible');
+    }, 400);
+    const uSettings = window.globalSettings.updateScreen || {};
+    const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+    localStorage.setItem('lastSeenChangelog2', combinedLog);
+};
+
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
+
+// ==========================================
+// GENERIC CUSTOM DROPDOWN LOGIC
+// ==========================================
+window.toggleCustomSelect = (dropdownId) => {
+  document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
+    if(d.id !== dropdownId) {
+      d.classList.remove('show'); 
+      d.parentElement.classList.remove('active-select');
+    }
+  });
+  const drop = document.getElementById(dropdownId);
+  drop.classList.toggle('show');
+  drop.parentElement.classList.toggle('active-select', drop.classList.contains('show'));
+  
+  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
+  if(drop.classList.contains('show')) drop.parentElement.style.zIndex = '100';
+};
+
+window.selectOption = (dropdownId, value, text, headerId, callbackName = null) => {
+  document.getElementById(headerId).innerHTML = `<span>${text}</span><span class="material-icons-round">expand_more</span>`;
+  const drop = document.getElementById(dropdownId);
+  drop.classList.remove('show');
+  drop.parentElement.classList.remove('active-select');
+  drop.parentElement.style.zIndex = '1';
+  drop.setAttribute('data-value', value);
+  if(callbackName && window[callbackName]) window[callbackName](value);
+};
+
+window.selectIconOption = (dropdownId, iconValue, iconLabel, headerId) => {
+  document.getElementById(headerId).innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${iconValue}</span> ${iconLabel}</span><span class="material-icons-round">expand_more</span>`;
+  const drop = document.getElementById(dropdownId);
+  drop.classList.remove('show');
+  drop.parentElement.classList.remove('active-select');
+  drop.parentElement.style.zIndex = '1';
+  drop.setAttribute('data-value', iconValue);
+};
+
+// ==========================================
+// ADMIN DASHBOARD LOGIC
+// ==========================================
+window.adminTempStudents =[];
+window.adminTempTeachers = {};
+window.adminTempNotices = {};
+window.adminSelectedStudentId = "NEW";
+
+window.openAdminPanel = () => {
+  window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
+  window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
+  window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
+  
+  const t = window.globalSettings.theme || 'dynamic';
+  document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
+  const themeOpts = {'dynamic':'Dynamic (Changes by Time of Day)','morning':'Locked to Morning Theme','afternoon':'Locked to Afternoon/Day Theme','night':'Locked to Night Theme','christmas':'Locked to Festive Christmas Theme','aprilfools':'Windows 95 April Fools Theme','beta':'Secondary Beta UX (Layout Change)'};
+  document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
+  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);
+  document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?'Yes (Locks out all users)':'No'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const glass = (window.globalSettings.disableGlass === 'true') ? 'true' : 'false';
+  document.getElementById('adminGlassDropdown').setAttribute('data-value', glass);
+  document.getElementById('adminGlassHeader').innerHTML = `<span>${glass==='true'?'Yes (Solid Colors)':'No (Keep Glassmorphism)'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const hideTh = (window.globalSettings.hideTheme === 'true') ? 'true' : 'false';
+  document.getElementById('adminHideThemeDropdown').setAttribute('data-value', hideTh);
+  document.getElementById('adminHideThemeHeader').innerHTML = `<span>${hideTh==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+
+  const hideSt = (window.globalSettings.hideStats === 'true') ? 'true' : 'false';
+  document.getElementById('adminHideStatsDropdown').setAttribute('data-value', hideSt);
+  document.getElementById('adminHideStatsHeader').innerHTML = `<span>${hideSt==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+
+  const abt = window.globalSettings.aboutData || {};
+  document.getElementById('adminAboutTitle').value = abt.title || "Student Allocation List 2026";
+  document.getElementById('adminAboutVersion').value = abt.version || "Version 6.0 (Secured Edition)";
+  document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
+  document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
+
+  const upd = window.globalSettings.updateScreen || { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' };
+  const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
+  document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
+  document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?'Yes':'No'}</span><span class="material-icons-round">expand_more</span>`;
+  
+  const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check' };
+  const i1 = upd.iconAdded || 'new_releases';
+  const i2 = upd.iconRemoved || 'build_circle';
+  document.getElementById('adminIcon1Dropdown').setAttribute('data-value', i1);
+  document.getElementById('adminIcon1Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i1}</span> ${iconNames[i1]||i1}</span><span class="material-icons-round">expand_more</span>`;
+  document.getElementById('adminIcon2Dropdown').setAttribute('data-value', i2);
+  document.getElementById('adminIcon2Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i2}</span> ${iconNames[i2]||i2}</span><span class="material-icons-round">expand_more</span>`;
+  
+  document.getElementById('adminUpdateAdded').value = upd.changelogAdded || upd.changelog || '';
+  document.getElementById('adminUpdateRemoved').value = upd.changelogRemoved || '';
+
+  window.refreshAdminStudentDropdown("NEW");
+  window.loadAdminTeacherForm();
+  window.switchAdminTab('students');
+  document.getElementById('adminOverlay').classList.add('open');
+};
+
+window.closeAdminPanel = () => { 
+  document.getElementById('adminOverlay').classList.remove('open'); 
+  document.querySelectorAll('.custom-select-dropdown').forEach(d => { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); });
+  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
+};
+
+window.switchAdminTab = (tab) => {['students', 'teachers', 'settings'].forEach(t => {
+    document.getElementById('adminTab-' + t).style.display = (t === tab) ? 'block' : 'none';
+    document.getElementById('tabBtn-' + t).classList.toggle('active', t === tab);
+  });
+};
+
+window.toggleStudentDropdown = () => {
+  document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
+    if(d.id !== 'adminStudentDropdown') { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); }
+  });
+  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
+  const drop = document.getElementById('adminStudentDropdown');
+  drop.classList.toggle('show');
+  drop.parentElement.classList.toggle('active-select', drop.classList.contains('show'));
+  if(drop.classList.contains('show')) drop.parentElement.style.zIndex = '100';
+  document.getElementById('adminStudentSearch').value = '';
+  window.filterAdminStudents();
+  document.getElementById('adminStudentSearch').focus();
+};
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.custom-select-dropdown').forEach(drop => {
+    const header = drop.previousElementSibling;
+    if(drop.classList.contains('show') && !drop.contains(e.target) && !header.contains(e.target)){ 
+      drop.classList.remove('show'); 
+      drop.parentElement.classList.remove('active-select');
+      drop.parentElement.style.zIndex = '1';
+    }
+  });
+});
+
+window.filterAdminStudents = () => {
+  const query = document.getElementById('adminStudentSearch').value.toLowerCase();
+  document.querySelectorAll('.custom-option.student-opt').forEach(el => {
+    if(el.innerText.toLowerCase().includes(query)) el.style.display = 'block';
+    else el.style.display = 'none';
+  });
+};
+
+window.selectAdminStudent = (id, nameText, preventToggle = false) => {
+  window.adminSelectedStudentId = id;
+  document.getElementById('adminStudentSelectHeader').innerHTML = `<span>${nameText}</span><span class="material-icons-round">expand_more</span>`;
+  if(!preventToggle) {
+    const drop = document.getElementById('adminStudentDropdown');
+    drop.classList.remove('show');
+    drop.parentElement.classList.remove('active-select');
+    drop.parentElement.style.zIndex = '1';
+  }
+  window.loadAdminStudentForm();
+};
+
+window.refreshAdminStudentDropdown = (selectId = "NEW") => {
+  const list = document.getElementById('adminStudentList');
+  let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '<span class=\\'material-icons-round\\' style=\\'font-size:16px; vertical-align:text-bottom;\\'>person_add</span> Add New Student')"><strong><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> Add New Student</strong></div>`;
+  const sorted =[...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
+  sorted.forEach(s => { html += `<div class="custom-option student-opt" onclick="window.selectAdminStudent('${s.id}', '${s.name.replace(/'/g, "\\'")}')">${s.name} <span style="opacity:0.5;font-size:12px;">(${s.newClass})</span></div>`; });
+  list.innerHTML = html;
+
+  let selectedName = '<span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> Add New Student';
+  if(selectId !== "NEW") {
+    const stu = window.adminTempStudents.find(s=>s.id===selectId);
+    if(stu) selectedName = stu.name;
+  }
+  window.selectAdminStudent(selectId, selectedName, true);
+};
+
+window.loadAdminStudentForm = () => {
+  const id = window.adminSelectedStudentId;
+  if (id === "NEW") {
+    document.getElementById('adminStId').value = ''; 
+    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
+    document.getElementById('adminStOld').value = ''; 
+    window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
+    document.getElementById('adminStSch').value = '';
+  } else {
+    const student = window.adminTempStudents.find(s => s.id === id);
+    if(student) {
+      document.getElementById('adminStId').value = student.id; 
+      document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
+      document.getElementById('adminStOld').value = student.oldClass || "-"; 
+      window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
+      document.getElementById('adminStSch').value = student.sch || "-";
+    }
+  }
+};
+
+window.adminApplyStudent = () => {
+  const oldId = window.adminSelectedStudentId;
+  const newId = document.getElementById('adminStId').value.trim();
+  const name = document.getElementById('adminStName').value.trim().toUpperCase();
+  if(!newId || !name) { if(window.showToast) window.showToast("ID and Name are required", "error_outline"); return; }
+  
+  if (oldId !== newId && window.adminTempStudents.some(s => s.id === newId)) {
+    if(window.showToast) window.showToast("This ID already exists!", "error_outline"); return;
+  }
+
+  const existingIndex = window.adminTempStudents.findIndex(s => s.id === oldId);
+  const newObj = { id: newId, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminClassDropdown').getAttribute('data-value'), sch: document.getElementById('adminStSch').value.trim() || "-" };
+
+  if (existingIndex >= 0) { window.adminTempStudents[existingIndex] = newObj; if(window.showToast) window.showToast("Student Updated in Queue", "list_alt"); } 
+  else { window.adminTempStudents.push(newObj); if(window.showToast) window.showToast("New Student Added to Queue", "person_add"); }
+  
+  window.adminSelectedStudentId = newId;
+  window.refreshAdminStudentDropdown(newId);
+};
+
+window.adminDeleteStudent = () => {
+  const id = window.adminSelectedStudentId;
+  if (id === "NEW") return;
+  if(confirm("Delete this student?\n\nNot final until you click 'Save Database'.")) {
+    window.adminTempStudents = window.adminTempStudents.filter(s => s.id !== id);
+    window.refreshAdminStudentDropdown("NEW");
+    if(window.showToast) window.showToast("Student Removed from Queue", "delete");
+  }
+};
+
+window.loadAdminTeacherForm = () => {
+  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
+  const tData = window.adminTempTeachers[cls] || {g: "", p: ""};
+  const noticeData = window.adminTempNotices[cls] || "";
+  document.getElementById('adminTg').value = tData.g;
+  document.getElementById('adminTp').value = tData.p;
+  document.getElementById('adminClassNotice').value = noticeData;
+};
+
+window.adminApplyTeacher = () => {
+  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
+  window.adminTempTeachers[cls] = { g: document.getElementById('adminTg').value.trim(), p: document.getElementById('adminTp').value.trim() };
+  window.adminTempNotices[cls] = document.getElementById('adminClassNotice').value.trim();
+  if(window.showToast) window.showToast("Class Updated in Queue", "school");
+};
+
+window.applyPendingUpdate = () => {
+  if(window.pendingDataUpdate) {
+    window.smkData = window.pendingDataUpdate.students;
+    window.teacherData = window.pendingDataUpdate.teachers;
+    window.classNotices = window.pendingDataUpdate.notices;
+    window.pendingDataUpdate = null;
+
+    if(window.initFilterChips) window.initFilterChips();
+    if(window.filterData) window.filterData();
+
+    document.getElementById('updatePromptBanner').classList.remove('show');
+    if(window.showToast) window.showToast("Data Updated Live", "check_circle");
+  }
+};
 </script>
 
 <script type="module">
@@ -1491,6 +1865,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
     
+    // Clear state completely on logout to fix "Success!" sticking bug
     window.isInitialLoad = true;
     window.cloudUser = null;
     window.favorites = [];
