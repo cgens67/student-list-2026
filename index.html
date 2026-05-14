@@ -93,10 +93,20 @@ body.no-glass[data-theme="dark"] .ios-search-field,
 body.no-glass[data-theme="dark"] .btn-icon-only,
 body.no-glass[data-theme="dark"] .btn-filter,
 body.no-glass[data-theme="dark"] .tabs-track {
-    background: #2C2C2E !important; 
+    background: #1C1C1E !important; 
+}
+
+/* Red border fix for Favorite button in no-glass */
+body.no-glass .btn-icon-only.active {
+    box-shadow: inset 0 0 0 2px #FF2D55 !important;
+    color: #FF2D55 !important;
+    background: var(--ios-card) !important;
 }
 
 /* Fix Focus State for Search Bar in Solid Mode */
+body.no-glass .ios-search-field {
+    transition: box-shadow 0.3s, background-color 0.3s !important;
+}
 body.no-glass:not([data-theme="dark"]) .ios-search-field:focus {
     background: #FFFFFF !important;
     box-shadow: 0 0 0 2px var(--ios-blue) !important;
@@ -129,15 +139,21 @@ body.no-glass .chip.active {
 
 /* Normal Theme Student Modal Text Color & Background Pill */
 .m-text-bg {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: rgba(0, 0, 0, 0.25);
     padding: 6px 20px 8px;
     border-radius: 16px;
-    margin: 0 auto 4px;
+    margin: 0 auto;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    overflow: hidden;
 }
 body.no-glass .m-text-bg {
     background: transparent;
@@ -146,31 +162,21 @@ body.no-glass .m-text-bg {
     box-shadow: none;
     border: none;
     padding: 0;
-}
-#mName {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--ios-text);
-    line-height: 1.2;
-}
-#mCn {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ios-text-sec);
-    margin-top: 2px;
-}
-body:not(.no-glass) .m-text-bg #mName,
-body:not(.no-glass) .m-text-bg #mCn {
-    color: #FFFFFF !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    color: var(--ios-text) !important;
+    text-shadow: none;
 }
 
 /* Modals - Solid */
 body.no-glass .modal-card:not(#modalCard) {
     background: var(--ios-modal) !important;
 }
-body.no-glass .modal-bg.open, body.no-glass .cm-backdrop.active, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
+body.no-glass .modal-bg.open, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
     background: rgba(0,0,0,0.6) !important; 
+}
+
+/* Quick Actions background fix for Solid Colors */
+body.no-glass .cm-backdrop.active {
+    background: rgba(0,0,0,0.3) !important;
 }
 
 /* COMPLETE UX OVERHAUL: NEW FILTER DESIGN (BETA) */
@@ -663,7 +669,7 @@ window.getRelativeTime = function(timestamp) {
       <div class='m-head'>
         <div class='handle'></div><button class='btn-star' id='btnStar' onclick='window.toggleCurrentFav()'><span class='material-icons-round' style='font-size:20px'>star</span></button>
         <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
-        <div class="m-text-bg">
+        <div class="m-text-bg" id="mTextBgWrap">
           <div id='mName'>Name</div>
           <div id='mCn'>Chinese Name</div>
         </div>
@@ -990,6 +996,7 @@ window.getRelativeTime = function(timestamp) {
       <div class='cm-header' id='ctxHeader'>Student Actions</div>
       <button class='cm-item' onclick='window.ctxAction("copy")'><span id='ctxBtnCopy'>Copy Name</span><span class='material-icons-round cm-icon'>content_copy</span></button>
       <button class='cm-item' onclick='window.ctxAction("copy_cn")'><span id='ctxBtnCopyCn'>Copy Chinese Name</span><span class='material-icons-round cm-icon'>g_translate</span></button>
+      <button class='cm-item' onclick='window.ctxAction("copy_id")'><span id='ctxBtnCopyId'>Copy Student ID</span><span class='material-icons-round cm-icon'>badge</span></button>
       <button class='cm-item' onclick='window.ctxAction("fav")'><span id='ctxFavText'>Favorite</span><span class='material-icons-round cm-icon' id='ctxFavIcon'>star_border</span></button>
     </div>
   </div>
@@ -1042,9 +1049,9 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)"}
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
@@ -1247,6 +1254,7 @@ window.switchLanguage=function(lang){
             setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
             if(document.getElementById("lblNewFilterTitle")) setTextAndAnimateWidth(document.getElementById("lblNewFilterTitle"), txt.filter);
             if(document.getElementById("lblNewFilterReset")) setTextAndAnimateWidth(document.getElementById("lblNewFilterReset"), txt.clear);
+            if(document.getElementById('ctxBtnCopyId')) document.getElementById('ctxBtnCopyId').innerText = txt.ctxCopyIdBtn;
             
             const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");
             if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);
@@ -1378,7 +1386,80 @@ window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();do
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
 window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
-function updateModalContent(student,index){modalCurrentIndex=index;currentStudentId=student.id;document.getElementById("mName").innerText=student.name;document.getElementById("mCn").innerText=student.cn;const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const avEl=document.getElementById("mAvatar");avEl.innerText=student.name.charAt(0);avEl.className=`avatar av-${cssClass}`;document.getElementById("mNew").innerText=student.newClass;document.getElementById("mOld").innerText=student.oldClass;document.getElementById("mSch").innerText=student.sch;const rank=getRankStatus(student.oldClass,student.newClass);document.getElementById("mRankIcon").innerHTML=`<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;applyModalColors(student);const btnStar=document.getElementById('btnStar');if(favorites.includes(student.id)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}const schLabel=document.getElementById("mLabelSch");schLabel.innerText=(student.sch==="PB")?uiText[curLang].mLabelSchPB:uiText[curLang].mLabelSch;const navBtns=document.querySelectorAll('.btn-nav');if(navBtns.length===2){navBtns[0].disabled=(index===0);navBtns[0].style.opacity=(index===0)?'0.3':'1';navBtns[1].disabled=(index===currentFilteredData.length-1);navBtns[1].style.opacity=(index===currentFilteredData.length-1)?'0.3':'1'}const floatContainer=document.getElementById('cardFloatBg');floatContainer.innerHTML='';let iconName='',color='',animName='',posStyle='';if(rank.icon==='thumb_up'){iconName='thumb_up';color='#34C759';animName='floatUp';posStyle='bottom:-80px; top:auto;'}else if(rank.icon==='thumb_down'){iconName='thumb_down';color='#FF3B30';animName='floatDown';posStyle='top:-60px; bottom:auto;'}if(iconName){let html='';for(let i=0;i<12;i++){const left=Math.floor(Math.random()*100);const delay=Math.random()*2;const duration=4+Math.random()*3;const size=50+Math.random()*80;const blur=4+Math.random()*6;html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`}floatContainer.innerHTML=html}}
+
+function updateModalContent(student,index){
+    modalCurrentIndex=index;
+    currentStudentId=student.id;
+    
+    const wrap = document.getElementById('mTextBgWrap');
+    const startWidth = wrap ? wrap.offsetWidth : 0;
+    
+    document.getElementById("mName").innerText=student.name;
+    document.getElementById("mCn").innerText=student.cn;
+    
+    if (wrap && typeof wrap.animate === 'function') {
+        const targetWidth = wrap.offsetWidth;
+        if (startWidth !== targetWidth && startWidth > 0) {
+            wrap.animate([
+                { width: startWidth + 'px' },
+                { width: targetWidth + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
+    }
+    
+    const rawClass=student.newClass.split(" ")[1]||"Biru";
+    const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
+    const avEl=document.getElementById("mAvatar");
+    avEl.innerText=student.name.charAt(0);
+    avEl.className=`avatar av-${cssClass}`;
+    
+    document.getElementById("mNew").innerText=student.newClass;
+    document.getElementById("mOld").innerText=student.oldClass;
+    document.getElementById("mSch").innerText=student.sch;
+    
+    const rank=getRankStatus(student.oldClass,student.newClass);
+    document.getElementById("mRankIcon").innerHTML=`<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;
+    
+    applyModalColors(student);
+    const btnStar=document.getElementById('btnStar');
+    
+    if(favorites.includes(student.id)){
+        btnStar.classList.add('active');
+        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'
+    }else{
+        btnStar.classList.remove('active');
+        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'
+    }
+    
+    const schLabel=document.getElementById("mLabelSch");
+    schLabel.innerText=(student.sch==="PB")?uiText[curLang].mLabelSchPB:uiText[curLang].mLabelSch;
+    
+    const navBtns=document.querySelectorAll('.btn-nav');
+    if(navBtns.length===2){
+        navBtns[0].disabled=(index===0);
+        navBtns[0].style.opacity=(index===0)?'0.3':'1';
+        navBtns[1].disabled=(index===currentFilteredData.length-1);
+        navBtns[1].style.opacity=(index===currentFilteredData.length-1)?'0.3':'1'
+    }
+    
+    const floatContainer=document.getElementById('cardFloatBg');
+    floatContainer.innerHTML='';
+    let iconName='',color='',animName='',posStyle='';
+    if(rank.icon==='thumb_up'){iconName='thumb_up';color='#34C759';animName='floatUp';posStyle='bottom:-80px; top:auto;'}
+    else if(rank.icon==='thumb_down'){iconName='thumb_down';color='#FF3B30';animName='floatDown';posStyle='top:-60px; bottom:auto;'}
+    if(iconName){
+        let html='';
+        for(let i=0;i<12;i++){
+            const left=Math.floor(Math.random()*100);
+            const delay=Math.random()*2;
+            const duration=4+Math.random()*3;
+            const size=50+Math.random()*80;
+            const blur=4+Math.random()*6;
+            html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
+        }
+        floatContainer.innerHTML=html
+    }
+}
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
 function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}}}
 window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
@@ -1441,9 +1522,9 @@ window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTime
 window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
 window.handleTouchMove=function(){clearTimeout(longPressTimer)}
 window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;window.showContextMenu(id)}
-window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
+window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxBtnCopyId').innerText=uiText[curLang].ctxCopyIdBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
 window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
-window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
+window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 
@@ -1680,8 +1761,7 @@ window.openAdminPanel = () => {
   document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
   document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
   
-  const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check' };
-  const i1 = upd.iconAdded || 'new_releases';
+  const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check' };const i1 = upd.iconAdded || 'new_releases';
   const i2 = upd.iconRemoved || 'build_circle';
   document.getElementById('adminIcon1Dropdown').setAttribute('data-value', i1);
   document.getElementById('adminIcon1Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i1}</span> ${iconNames[i1]||i1}</span><span class="material-icons-round">expand_more</span>`;
