@@ -137,7 +137,7 @@ body.no-glass .chip.active {
     color: var(--chip-act-txt) !important;
 }
 
-/* Normal Theme Student Modal Text Color & Background Pill */
+/* Student Modal Text Color & Background Pill FIX */
 .m-text-bg {
     display: inline-flex;
     flex-direction: column;
@@ -152,26 +152,45 @@ body.no-glass .chip.active {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    white-space: nowrap; /* Ensures smooth width transition without wrapping */
-    max-width: 90%;
+    max-width: 90%; /* Prevent modal overflow */
     box-sizing: border-box;
 }
 body.no-glass .m-text-bg {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05); /* Solid pill background */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 6px 20px 8px; /* Restore padding to fix clipping */
+}
+body.no-glass[data-theme="dark"] .m-text-bg {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 body:not(.no-glass) .m-text-bg #mName,
 body:not(.no-glass) .m-text-bg #mCn {
     color: #FFFFFF !important;
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
+
 .m-text-bg #mName, .m-text-bg #mCn {
+    width: 100%;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: center;
+    white-space: normal; /* Fix truncation */
+    word-wrap: break-word; /* Fix truncation */
+    overflow: visible; /* Fix truncation */
+}
+.m-text-bg #mName {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+.m-text-bg #mCn {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 2px;
+    opacity: 0.9;
 }
 
 /* Modals - Solid */
@@ -1471,27 +1490,22 @@ function updateModalContent(student,index){
     currentStudentId=student.id;
     
     const wrap = document.getElementById('mTextBgWrap');
+    const card = document.getElementById('modalCard');
     
     const startWidth = wrap ? wrap.offsetWidth : 0;
+    const startHeight = wrap ? wrap.offsetHeight : 0;
+    const cardStartHeight = card ? card.offsetHeight : 0;
     
-    if (wrap && startWidth > 0 && !document.body.classList.contains('no-glass')) {
+    if (wrap && startWidth > 0) {
         wrap.style.width = startWidth + 'px';
+        wrap.style.height = startHeight + 'px';
+    }
+    if (card && cardStartHeight > 0) {
+        card.style.height = cardStartHeight + 'px';
     }
     
     document.getElementById("mName").innerText=student.name;
     document.getElementById("mCn").innerText=student.cn;
-    
-    if (wrap && typeof wrap.animate === 'function' && startWidth > 0 && !document.body.classList.contains('no-glass')) {
-        wrap.style.width = 'auto';
-        const targetWidth = wrap.offsetWidth;
-        
-        if (startWidth !== targetWidth) {
-            wrap.animate([
-                { width: startWidth + 'px' },
-                { width: targetWidth + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-        }
-    }
     
     const rawClass=student.newClass.split(" ")[1]||"Biru";
     const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
@@ -1544,6 +1558,31 @@ function updateModalContent(student,index){
             html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
         }
         floatContainer.innerHTML=html
+    }
+
+    // Apply animations after updating content
+    if (wrap && typeof wrap.animate === 'function' && startWidth > 0) {
+        wrap.style.width = 'auto';
+        wrap.style.height = 'auto';
+        if (card) card.style.height = 'auto';
+        
+        const targetWidth = wrap.offsetWidth;
+        const targetHeight = wrap.offsetHeight;
+        const cardTargetHeight = card ? card.offsetHeight : 0;
+        
+        if (startWidth !== targetWidth || startHeight !== targetHeight) {
+            wrap.animate([
+                { width: startWidth + 'px', height: startHeight + 'px' },
+                { width: targetWidth + 'px', height: targetHeight + 'px' }
+            ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
+        
+        if (card && cardStartHeight > 0 && cardStartHeight !== cardTargetHeight) {
+            card.animate([
+                { height: cardStartHeight + 'px' },
+                { height: cardTargetHeight + 'px' }
+            ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
