@@ -102,6 +102,9 @@ body.no-glass .btn-icon-only.active {
     color: #FF2D55 !important;
     background: var(--ios-card) !important;
 }
+body.no-glass[data-theme="dark"] .btn-icon-only.active {
+    background: #1C1C1E !important;
+}
 
 /* Fix Focus State for Search Bar in Solid Mode */
 body.no-glass .ios-search-field {
@@ -146,51 +149,36 @@ body.no-glass .chip.active {
     background: rgba(0, 0, 0, 0.25);
     padding: 6px 20px 8px;
     border-radius: 16px;
-    margin: 0 auto 4px;
+    margin: 0;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
-    color: #FFFFFF !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
+    overflow: hidden; /* For smooth width animation */
+    will-change: width, height;
 }
 body.no-glass .m-text-bg {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.35); /* Solid transparent back */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
     border: none;
-    padding: 0;
-    color: var(--ios-text) !important;
-    text-shadow: none;
-    overflow: visible;
 }
 #mName {
     font-size: 20px;
     font-weight: 800;
-    color: var(--ios-text);
+    color: #FFFFFF !important; /* Forces white text */
     line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    white-space: pre-wrap;
 }
 #mCn {
     font-size: 14px;
     font-weight: 500;
-    color: var(--ios-text-sec);
+    color: rgba(255,255,255,0.9) !important;
     margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-body:not(.no-glass) .m-text-bg #mName,
-body:not(.no-glass) .m-text-bg #mCn {
-    color: #FFFFFF !important;
+    text-align: center;
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
@@ -201,8 +189,10 @@ body.no-glass .modal-card:not(#modalCard) {
 body.no-glass .modal-bg.open, body.no-glass #updateIntroScreen, body.no-glass #authDialogOverlay, body.no-glass #logoutConfirmOverlay { 
     background: rgba(0,0,0,0.6) !important; 
 }
+
+/* Quick Actions background fix for Solid Colors */
 body.no-glass .cm-backdrop.active {
-    background: rgba(0,0,0,0.3) !important;
+    background: rgba(0,0,0,0.2) !important;
 }
 
 /* COMPLETE UX OVERHAUL: NEW FILTER DESIGN (BETA) */
@@ -333,10 +323,10 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .auth-overlay{position:fixed;inset:0;background:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);z-index:9999;display:flex;justify-content:center;align-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:.4s var(--ease-ios)}.auth-overlay.active{opacity:1;visibility:visible;pointer-events:auto}.auth-card{background:var(--ios-card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--shadow-lg),var(--glass-highlight);border-radius:24px;padding:40px 24px;width:100%;max-width:360px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden}.auth-dots{position:absolute;top:16px;right:16px;color:var(--ios-text-sec);cursor:pointer;padding:4px;border-radius:50%;transition:background .2s;display:flex;align-items:center;justify-content:center}.auth-dots:active{background:rgba(0,0,0,0.1);transform:scale(.9)}.auth-menu{position:absolute;top:54px;right:16px;background:var(--ios-card);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--shadow-md);border-radius:12px;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-10px);transition:.2s var(--ease-spring);z-index:10}.auth-menu.show{opacity:1;visibility:visible;transform:translateY(0)}.auth-menu-item{padding:12px 20px;font-size:14px;font-weight:500;color:var(--ios-text);cursor:pointer;text-align:left;white-space:nowrap;border-bottom:1px solid var(--ios-sep)}.auth-menu-item:last-child{border-bottom:none}.auth-menu-item:active{background:rgba(0,0,0,0.05)}.auth-icon{font-size:50px;color:var(--ios-blue);margin-bottom:15px;background:var(--ios-blue-light);border-radius:50%;padding:15px}.auth-title{font-size:24px;font-weight:800;color:var(--ios-text);margin-bottom:6px;letter-spacing:-.02em}.auth-sub{font-size:14px;color:var(--ios-text-sec);margin-bottom:24px;line-height:1.4}.auth-input{width:100%;height:50px;border-radius:12px;border:1px solid var(--chip-border);background:var(--ios-input);padding:0 16px;font-size:16px;color:var(--ios-text);margin-bottom:12px;outline:0;transition:.3s}.auth-input:focus{border-color:var(--ios-blue);box-shadow:0 0 0 3px var(--ios-blue-light)}.auth-btn{width:100%;height:50px;border-radius:12px;background:var(--ios-blue);color:#fff;font-weight:700;font-size:16px;border:none;cursor:pointer;transition:.2s var(--ease-spring);margin-bottom:16px}.auth-btn:active{transform:scale(.96);opacity:.9}.auth-switch{color:var(--ios-blue);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s}.auth-switch:active{opacity:.6}.auth-error{color:#FF3B30;font-size:13px;font-weight:500;margin-bottom:12px;min-height:16px;opacity:0;transition:.3s;width:100%;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}.auth-error.show{opacity:1;transform:translateY(0)}.dialog-btn{width:100%;height:44px;border-radius:10px;background:var(--ios-blue);color:#fff;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:.2s;margin-top:20px}.dialog-btn:active{transform:scale(.96)}
 #statsListContainer{display:flex;flex-direction:column;width:100%}.stats-visuals-container{display:flex;flex-direction:column;align-items:center;width:100%;margin-bottom:24px;padding:0}.pie-chart{width:160px;height:160px;border-radius:50%;margin:10px auto 20px;background:0 0;box-shadow:inset 0 0 0 1.5px var(--ios-modal),0 4px 16px rgba(0,0,0,0.1);position:relative;flex-shrink:0;overflow:hidden;transform:translateZ(0);-webkit-mask-image:-webkit-radial-gradient(white,black);opacity:0;transform:scale(.5) rotate(-20deg);transition:transform .8s cubic-bezier(0.175,0.885,0.32,1.275),opacity .5s ease}.stats-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;opacity:0;animation:fadeUp .5s forwards;margin:auto;width:100%}.stats-empty-state-card{background:var(--ios-input);border-radius:20px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);padding:50px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;animation:fadeUp .5s forwards;margin-top:10px;width:100%;max-width:500px;margin:10px auto 0}.stats-empty-icon{font-size:64px;color:var(--ios-blue);margin-bottom:16px;opacity:.8;filter:drop-shadow(0 8px 16px var(--ios-blue-light))}.stats-empty-title{font-size:18px;font-weight:700;color:var(--ios-text);margin-bottom:8px}.stats-empty-sub{font-size:14px;color:var(--ios-text-sec);max-width:220px;line-height:1.4;margin:0 auto}
 @media (min-width:768px){#ios-container{max-width:900px;margin:0 auto}.modal-card{max-width:800px;margin:0 auto;max-height:85vh;border-radius:28px;border:1px solid var(--glass-border)}#statsCard .m-body{display:flex;flex-direction:column;overflow:hidden}.m-body.view-mode-list #statsListContainer:not(.is-empty){display:grid;grid-template-columns:320px 1fr;gap:20px;height:100%;overflow:hidden;align-items:start;padding:0 10px}.m-body.view-mode-list #statsListContainer.is-empty{display:flex;flex-direction:column;height:100%;align-items:center;padding:0 20px}.m-body.view-mode-list #statsListContainer.is-empty #statsListCol{width:100%;max-width:500px;margin:0 auto;height:100%}.stats-visuals-container{padding:20px 30px 40px;height:100%;overflow-y:auto;border-right:1px solid var(--ios-sep);display:flex;flex-direction:column;align-items:center;margin-bottom:0}.pie-chart{margin-top:10px;width:160px;height:160px}.pie-legend{justify-content:flex-start;width:100%}.legend-item{width:48%}#statsListCol{padding:10px 0 40px;height:100%;overflow-y:auto}.m-body.view-mode-map #statsMap{padding:40px 40px 60px;align-items:center;justify-content:center;gap:15px;overflow-y:auto}.bubble{width:100px!important;height:100px!important;transition:transform .2s}.bubble:hover{transform:scale(1.05)}.b-count{font-size:26px}.b-label{font-size:13px;max-width:90px}.m-body{-webkit-mask-image:none!important;mask-image:none!important}.stats-visuals-container,#statsListCol,#statsMap{-webkit-mask-image:linear-gradient(to bottom,transparent 0,black 20px,black calc(100% - 40px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,black 20px,black calc(100% - 40px),transparent 100%)}}
-.m-head{cursor:grab;padding:24px 24px 0;flex-shrink:0;text-align:center;position:relative;z-index:2}.m-head:active{cursor:grabbing}.modal-card.is-dragging{transition:none!important}
+.m-head{display:flex;flex-direction:column;align-items:center;cursor:grab;padding:24px 24px 0;flex-shrink:0;text-align:center;position:relative;z-index:2}.m-head:active{cursor:grabbing}.modal-card.is-dragging{transition:none!important}
 .floating-container{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}.float-icon{position:absolute;font-size:60px;opacity:0;filter:blur(6px);user-select:none;animation-iteration-count:infinite!important}@keyframes floatUp{0%{transform:translateY(0) rotate(0deg) scale(.8);opacity:0}20%{opacity:.15}80%{opacity:.15}100%{transform:translateY(-900px) rotate(20deg) scale(1.2);opacity:0}}@keyframes floatDown{0%{transform:translateY(0) rotate(0deg) scale(.8);opacity:0}20%{opacity:.15}80%{opacity:.15}100%{transform:translateY(900px) rotate(-20deg) scale(1.2);opacity:0}}
 .btn-star{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text-sec);cursor:pointer;transition:all .2s var(--ease-spring);z-index:10}.btn-star:active{transform:scale(.85);opacity:.7}.btn-star.active{background:#FF2D55;color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(255,45,85,0.4);transform:scale(1.1)}
-.m-body{padding:12px 24px 32px;overflow-y:auto;flex:1 1 auto;min-height:0 !important;touch-action:pan-y;position:relative;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%)}.m-foot{padding:20px 24px 30px;flex-shrink:0;padding-bottom:max(30px,env(safe-area-inset-bottom));position:relative;z-index:2;display:flex;gap:12px;align-items:center}.btn-nav{width:44px;height:44px;border-radius:50%;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text);cursor:pointer;flex-shrink:0;transition:background .2s,transform .2s var(--ease-spring),opacity .2s}.btn-nav:active{transform:scale(.85);opacity:.7}.handle{width:36px;height:5px;background:rgba(0,0,0,0.2);border-radius:10px;margin:0 auto 15px;pointer-events:none}[data-theme="dark"] .handle{background:rgba(255,255,255,0.2)}
+.m-body{padding:12px 24px 32px;overflow-y:auto;flex:1 1 auto;min-height:0 !important;touch-action:pan-y;position:relative;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,black 24px,black calc(100% - 24px),transparent 100%)}.m-foot{padding:20px 24px 30px;flex-shrink:0;padding-bottom:max(30px,env(safe-area-inset-bottom));position:relative;z-index:2;display:flex;gap:12px;align-items:center}.btn-nav{width:44px;height:44px;border-radius:50%;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);display:flex;align-items:center;justify-content:center;color:var(--ios-text);cursor:pointer;flex-shrink:0;transition:background .2s,transform .2s var(--ease-spring),opacity .2s}.btn-nav:active{transform:scale(.85);opacity:.7}.handle{width:36px;height:5px;background:rgba(0,0,0,0.2);border-radius:10px;margin:0 0 15px 0;pointer-events:none}[data-theme="dark"] .handle{background:rgba(255,255,255,0.2)}
 .info-group{background:var(--ios-card);border-radius:16px;overflow:hidden;margin-bottom:0;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight)}.info-item{padding:14px 16px;display:flex;justify-content:space-between;border-bottom:1px solid var(--ios-sep);align-items:center}.info-item:last-child{border-bottom:none}.btn-done{width:100%;background:var(--ios-blue);color:#FFF;box-shadow:0 4px 16px rgba(0,0,0,0.1),inset 0 1px 1px rgba(255,255,255,0.3);padding:15px;border-radius:16px;font-weight:700;font-size:17px;border:none;cursor:pointer;transition:transform .1s,background-color .4s ease}.btn-done:active{transform:scale(.95);opacity:.8}
 .stats-title{font-size:20px;font-weight:700;margin-bottom:2px;color:var(--ios-text)}.stats-sub{font-size:13px;color:var(--ios-text-sec);margin-bottom:12px}.seg-control{display:flex;background:var(--ios-input);border:1px solid var(--chip-border);box-shadow:var(--glass-highlight);padding:4px;border-radius:12px;margin-bottom:10px;gap:4px}.seg-btn{flex:1;border:none;background:0 0;padding:6px;border-radius:8px;font-weight:500;font-size:13px;color:var(--ios-text-sec);cursor:pointer;transition:color .2s ease,font-weight .2s ease,transform .2s var(--ease-spring)}.seg-btn:active{transform:scale(.95)}.seg-btn.active{background:var(--ios-card);border:1px solid var(--glass-border);box-shadow:0 2px 8px rgba(0,0,0,0.08);color:var(--ios-text);font-weight:700}[data-theme="dark"] .seg-btn.active{background:rgba(255,255,255,0.15);color:var(--ios-blue)}
 .sort-toggle{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--chip-border);background:var(--ios-input);border-radius:10px;box-shadow:var(--glass-highlight);color:var(--ios-text);cursor:pointer;flex-shrink:0;margin-left:6px;transition:transform .2s var(--ease-spring)}.sort-toggle:active{transform:scale(.85);opacity:.7}.stats-dash-card{background:var(--ios-input);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);border-radius:16px;padding:20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;overflow:hidden}.stats-dash-left{display:flex;flex-direction:column;gap:4px;position:relative;z-index:2}.stats-dash-label{font-size:12px;font-weight:600;color:var(--ios-text-sec);text-transform:uppercase}.stats-dash-count{font-size:32px;font-weight:800;color:var(--ios-text);line-height:1}.stats-dash-icon{font-size:64px;color:var(--ios-text);opacity:.08;position:absolute;right:10px;bottom:-10px;pointer-events:none}
@@ -677,7 +667,7 @@ window.getRelativeTime = function(timestamp) {
     
     <!-- CLASS NOTICE BANNER -->
     <div id="classNoticeBanner" style="display:none; background:rgba(255,149,0,0.15); border:1px solid rgba(255,149,0,0.3); border-radius:12px; padding:12px; margin-bottom:16px; align-items:flex-start; gap:8px;">
-        <span class="material-icons-round" style="color:#FF9500; font-size:20px;">info</span>
+        <span id="classNoticeIcon" class="material-icons-round" style="color:#FF9500; font-size:20px;">info</span>
         <div id="classNoticeText" style="font-size:13px; color:var(--ios-text); line-height:1.4; flex:1;"></div>
     </div>
 
@@ -694,7 +684,7 @@ window.getRelativeTime = function(timestamp) {
       <div class='floating-container' id='cardFloatBg'></div>
       <div class='m-head'>
         <div class='handle'></div><button class='btn-star' id='btnStar' onclick='window.toggleCurrentFav()'><span class='material-icons-round' style='font-size:20px'>star</span></button>
-        <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
+        <div class='avatar' id='mAvatar' style='width:80px;height:80px;font-size:32px;margin:0 0 12px 0;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);'>A</div>
         <div class="m-text-bg" id="mTextBgWrap">
           <div id='mName'>Name</div>
           <div id='mCn'>Chinese Name</div>
@@ -798,8 +788,8 @@ window.getRelativeTime = function(timestamp) {
               <input type="text" id="adminStSch" placeholder="Primary School" class="admin-input">
               
               <div style="display:flex; gap:8px; margin-top:5px;">
-                <button id="btnAdminStUpdate" onclick="window.adminApplyStudent()" style="flex:2; background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Update Queue</button>
-                <button id="btnAdminStDelete" onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
+                <button id="adminBtnUpdateQueue" onclick="window.adminApplyStudent()" style="flex:2; background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Update Queue</button>
+                <button id="adminBtnDelete" onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
               </div>
             </div>
           </div>
@@ -823,36 +813,45 @@ window.getRelativeTime = function(timestamp) {
 
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; display:flex; flex-direction:column; gap:8px; border:1px solid var(--chip-border);">
                
-               <label id="lblAdminNotice" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Class Notice / Warning Banner</label>
-               <textarea id="adminClassNotice" placeholder="Notice Text (e.g. Information may be inaccurate...)" class="admin-input" style="height:60px; padding:8px;"></textarea>
+               <label id="lblAdminNoticeLabel" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Class Notice / Warning Banner</label>
+               <textarea id="adminClassNotice" placeholder="e.g. Information may be inaccurate due to..." class="admin-input" style="height:60px; padding:8px;"></textarea>
                
-               <div style="display:flex; gap:8px; margin-top:5px; align-items:center;">
-                   <div class="custom-select-container" style="flex:2;">
-                       <div class="custom-select-header" id="adminNoticeIconHeader" onclick="window.toggleCustomSelect('adminNoticeIconDropdown')">
-                           <span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">info</span> Info</span><span class="material-icons-round">expand_more</span>
-                       </div>
-                       <div class="custom-select-dropdown" id="adminNoticeIconDropdown" data-value="info">
-                           <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'info', 'Info', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">info</span> Info</div>
-                           <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'warning', 'Warning', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">warning</span> Warning</div>
-                           <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'error', 'Error', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">error</span> Error</div>
-                           <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'campaign', 'Alert', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">campaign</span> Alert</div>
-                           <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'new_releases', 'Sparkles', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">new_releases</span> Sparkles</div>
-                       </div>
+               <div style="display:flex; gap:8px;">
+                   <div class="custom-select-container" style="flex:1;">
+                        <div class="custom-select-header" id="adminNoticeIconHeader" onclick="window.toggleCustomSelect('adminNoticeIconDropdown')">
+                            <span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">info</span> Info</span><span class="material-icons-round">expand_more</span>
+                        </div>
+                        <div class="custom-select-dropdown" id="adminNoticeIconDropdown" data-value="info">
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'info', 'Info', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">info</span> Info</div>
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'warning', 'Warning', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">warning</span> Warning</div>
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'error', 'Error', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">error</span> Error</div>
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'campaign', 'Alert', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">campaign</span> Alert</div>
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'star', 'Star', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">star</span> Star</div>
+                            <div class="custom-option" onclick="window.selectIconOption('adminNoticeIconDropdown', 'lightbulb', 'Lightbulb', 'adminNoticeIconHeader')"><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">lightbulb</span> Lightbulb</div>
+                        </div>
                    </div>
-                   <div style="flex:1; display:flex; align-items:center; gap:8px;">
-                       <label id="lblAdminNoticeColor" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Color:</label>
-                       <input type="color" id="adminNoticeColor" value="#FF9500" style="height:40px; border-radius:8px; border:1px solid var(--chip-border); background:var(--ios-card); width:100%; cursor:pointer;">
+                   <div class="custom-select-container" style="flex:1;">
+                        <div class="custom-select-header" id="adminNoticeColorHeader" onclick="window.toggleCustomSelect('adminNoticeColorDropdown')">
+                            <span style="color:#FF9500; font-weight:bold;">Orange</span><span class="material-icons-round">expand_more</span>
+                        </div>
+                        <div class="custom-select-dropdown" id="adminNoticeColorDropdown" data-value="#FF9500">
+                            <div class="custom-option" style="color:#FF9500; font-weight:bold;" onclick="window.selectOption('adminNoticeColorDropdown', '#FF9500', '<span style=\\'color:#FF9500; font-weight:bold;\\'>Orange</span>', 'adminNoticeColorHeader')">Orange</div>
+                            <div class="custom-option" style="color:#FF3B30; font-weight:bold;" onclick="window.selectOption('adminNoticeColorDropdown', '#FF3B30', '<span style=\\'color:#FF3B30; font-weight:bold;\\'>Red</span>', 'adminNoticeColorHeader')">Red</div>
+                            <div class="custom-option" style="color:#007AFF; font-weight:bold;" onclick="window.selectOption('adminNoticeColorDropdown', '#007AFF', '<span style=\\'color:#007AFF; font-weight:bold;\\'>Blue</span>', 'adminNoticeColorHeader')">Blue</div>
+                            <div class="custom-option" style="color:#34C759; font-weight:bold;" onclick="window.selectOption('adminNoticeColorDropdown', '#34C759', '<span style=\\'color:#34C759; font-weight:bold;\\'>Green</span>', 'adminNoticeColorHeader')">Green</div>
+                            <div class="custom-option" style="color:#AF52DE; font-weight:bold;" onclick="window.selectOption('adminNoticeColorDropdown', '#AF52DE', '<span style=\\'color:#AF52DE; font-weight:bold;\\'>Purple</span>', 'adminNoticeColorHeader')">Purple</div>
+                        </div>
                    </div>
                </div>
                
                <hr style="border:none; border-top:1px solid var(--ios-sep); margin:5px 0;">
 
-               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
+               <label id="lblAdminGuruLabel" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Guru Kelas</label>
                <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
-               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
+               <label id="lblAdminPenolongLabel" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
                <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
                
-               <button id="btnAdminClUpdate" onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
+               <button id="adminBtnApplyTeacher" onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
             </div>
           </div>
 
@@ -986,8 +985,9 @@ window.getRelativeTime = function(timestamp) {
               <input type="text" id="adminAboutTitle" placeholder="Main Title" class="admin-input">
               <input type="text" id="adminAboutVersion" placeholder="Version Info" class="admin-input">
               <textarea id="adminAboutDesc" placeholder="Description" class="admin-input" style="height:60px; padding:8px;"></textarea>
-              <input type="text" id="adminAboutDesign" placeholder="Design Text" class="admin-input">
-              <input type="text" id="adminAboutFooter" placeholder="Footer Text" class="admin-input">
+              <label id="lblAdminAboutNote" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-top:4px;">'Designed with iOS in mind' Text</label>
+              <input type="text" id="adminAboutNote" placeholder="Footer Note" class="admin-input">
+              <input type="text" id="adminAboutFooter" placeholder="Footer Text" class="admin-input" style="margin-top:4px;">
             </div>
 
           </div>
@@ -1010,7 +1010,7 @@ window.getRelativeTime = function(timestamp) {
       <button class="mm-close" onclick="window.closeMainMenu()"><span class="material-icons-round" style="font-size:18px">close</span></button>
       <div class='mm-header anim-text-change' id='menuHeaderMain'>Menu</div>
       <div class="mm-grid">
-          <button class='mm-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
+          <button class='mm-btn' id='menuBtnTheme' onclick='window.toggleTheme(); window.closeMainMenu();'>
             <span class='material-icons-round mm-icon' id='iconThemeMain'>dark_mode</span>
             <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
           </button>
@@ -1073,7 +1073,7 @@ window.globalSettings = {
     title: "Student Allocation List 2026",
     version: "Version 6.0 (Secured Edition)",
     desc: "Check allocations, view origin maps, and use Quick Actions (Long Press).",
-    design: "Designed with Smooth iOS Performance in mind",
+    note: "Designed with Smooth iOS Performance in mind",
     footer: "Hosted on Vercel | Secured by Firebase"
   },
   updateScreen: {
@@ -1097,9 +1097,9 @@ const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 let currentClass="Biru",curLang="en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,favorites=[],searchHistory=[],isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", admAddStudent: "Add New Student", admSearchPh: "Search by name...", admStIdPh: "Student ID (e.g. 120116040351)", admStNamePh: "Full Name", admStCnPh: "Chinese Name (or -)", admStOldPh: "Old Class (e.g. 1B)", admStSchPh: "Primary School", admBtnUpdate: "Update Queue", admBtnDelete: "Delete", admNoticeLbl: "Class Notice / Warning Banner", admNoticePh: "Notice Text (e.g. Information may be inaccurate...)", admNoticeColorLbl: "Color:", admBtnUpdateClass: "Update Queue"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)", admAddStudent: "Tambah Murid Baru", admSearchPh: "Cari mengikut nama...", admStIdPh: "ID Murid (cth. 120116040351)", admStNamePh: "Nama Penuh", admStCnPh: "Nama Cina (atau -)", admStOldPh: "Kelas Lama (cth. 1B)", admStSchPh: "Sekolah Rendah", admBtnUpdate: "Kemaskini Barisan", admBtnDelete: "Padam", admNoticeLbl: "Notis Kelas / Sepanduk Amaran", admNoticePh: "Teks Notis (cth. Maklumat mungkin tidak tepat...)", admNoticeColorLbl: "Warna:", admBtnUpdateClass: "Kemaskini Barisan"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", admAddStudent: "添加新学生", admSearchPh: "按姓名搜索...", admStIdPh: "学生 ID (例如 120116040351)", admStNamePh: "全名", admStCnPh: "中文名 (或 -)", admStOldPh: "原班级 (例如 1B)", admStSchPh: "毕业小学", admBtnUpdate: "更新队列", admBtnDelete: "删除", admNoticeLbl: "班级通知 / 警告横幅", admNoticePh: "通知文本 (例如 信息可能不准确...)", admNoticeColorLbl: "颜色:", admBtnUpdateClass: "更新队列"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchName: "Search by name...", adminStIdPh: "Student ID (e.g. 120116040351)", adminStNamePh: "Full Name", adminStCnPh: "Chinese Name (or -)", adminStOldPh: "Old Class (e.g. 1B)", adminStSchPh: "Primary School", adminBtnUpdateQueue: "Update Queue", adminBtnDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePh: "e.g. Information may be inaccurate due to...", adminNoticeIconLabel: "Notice Icon", adminNoticeColorLabel: "Notice Color", adminGuruLabel: "Guru Kelas", adminPenolongLabel: "Penolong", lblAdminAboutNote: "'Designed with iOS in mind' Text"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)", adminAddStudent: "Tambah Murid Baharu", adminSearchName: "Cari dengan nama...", adminStIdPh: "ID Murid (cth. 120116040351)", adminStNamePh: "Nama Penuh", adminStCnPh: "Nama Cina (atau -)", adminStOldPh: "Kelas Lama (cth. 1B)", adminStSchPh: "Sekolah Rendah", adminBtnUpdateQueue: "Kemaskini Barisan", adminBtnDelete: "Padam", adminNoticeLabel: "Notis Kelas / Sepanduk Amaran", adminNoticePh: "cth. Maklumat mungkin tidak tepat kerana...", adminNoticeIconLabel: "Ikon Notis", adminNoticeColorLabel: "Warna Notis", adminGuruLabel: "Guru Kelas", adminPenolongLabel: "Penolong", lblAdminAboutNote: "Teks 'Direka khas untuk iOS'"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchName: "按名字搜索...", adminStIdPh: "学生 ID (例: 120116040351)", adminStNamePh: "全名", adminStCnPh: "中文名 (或 -)", adminStOldPh: "原班级 (例: 1B)", adminStSchPh: "毕业小学", adminBtnUpdateQueue: "更新队列", adminBtnDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePh: "例: 由于...信息可能不准确", adminNoticeIconLabel: "通知图标", adminNoticeColorLabel: "通知颜色", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", lblAdminAboutNote: "“专为 iOS 设计” 文本"}
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
@@ -1122,19 +1122,23 @@ window.applyGlobalSettings = function() {
   else body.classList.remove('no-glass');
   
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
-      document.getElementById('btnMenuToggle').style.display = 'none';
+      const thmBtn = document.getElementById('menuBtnTheme');
+      if(thmBtn) thmBtn.style.display = 'none';
+  } else {
+      const thmBtn = document.getElementById('menuBtnTheme');
+      if(thmBtn) thmBtn.style.display = 'flex';
   }
+  document.getElementById('btnMenuToggle').style.display = 'flex';
   document.getElementById('btnStatsToggle').style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
   
-  const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", design: "Designed with Smooth iOS Performance in mind", footer: "Hosted on Vercel | Secured by Firebase" };
-  const designText = about.design || "Designed with Smooth iOS Performance in mind";
+  const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", note: "Designed with Smooth iOS Performance in mind", footer: "Hosted on Vercel | Secured by Firebase" };
   
   document.getElementById('aboutContent').innerHTML = `
       <div style="color:var(--ios-blue); margin-bottom:12px;"><span class="material-icons-round" style="font-size:42px;">info</span></div>
       <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:4px;">${about.title}</div>
       <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:16px;">${about.version}</div>
       <div style="font-size:14px; line-height:1.4; color:var(--ios-text-sec); margin-bottom:20px;">${(about.desc || '').replace(/\n+/g, '<br><br>')}</div>
-      <div style='font-size:12px; color:var(--ios-text-sec); opacity:0.6; font-weight:500;'>${designText}</div>
+      <div style='font-size:12px; color:var(--ios-text-sec); opacity:0.6; font-weight:500;'>${about.note || 'Designed with Smooth iOS Performance in mind'}</div>
       <div style='font-size:11px; color:var(--ios-text-sec); opacity:0.4; margin-top:4px;'>${about.footer}</div>
   `;
 }
@@ -1262,6 +1266,7 @@ window.switchLanguage=function(lang){
     if(searchInput)searchInput.classList.add("anim-placeholder");
     
     const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain', 'lblNewFilterTitle', 'lblNewFilterReset'];
+    const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
     
     fadeTargets.forEach(el=> el.classList.add('fade-out'));
     
@@ -1376,20 +1381,7 @@ window.switchLanguage=function(lang){
             if(document.getElementById('lblAdminHideStats')) document.getElementById('lblAdminHideStats').innerText = txt.adminHideStats;
             if(document.getElementById('lblAdminEditAbout')) document.getElementById('lblAdminEditAbout').innerText = txt.adminEditAbout;
             
-            // Admin Translates
-            const stSearch = document.getElementById('adminStudentSearch'); if(stSearch) stSearch.placeholder = txt.admSearchPh;
-            const stId = document.getElementById('adminStId'); if(stId) stId.placeholder = txt.admStIdPh;
-            const stName = document.getElementById('adminStName'); if(stName) stName.placeholder = txt.admStNamePh;
-            const stCn = document.getElementById('adminStCn'); if(stCn) stCn.placeholder = txt.admStCnPh;
-            const stOld = document.getElementById('adminStOld'); if(stOld) stOld.placeholder = txt.admStOldPh;
-            const stSch = document.getElementById('adminStSch'); if(stSch) stSch.placeholder = txt.admStSchPh;
-            const btnStUpd = document.getElementById('btnAdminStUpdate'); if(btnStUpd) btnStUpd.innerText = txt.admBtnUpdate;
-            const btnStDel = document.getElementById('btnAdminStDelete'); if(btnStDel) btnStDel.innerText = txt.admBtnDelete;
-            const lblNot = document.getElementById('lblAdminNotice'); if(lblNot) lblNot.innerText = txt.admNoticeLbl;
-            const clNot = document.getElementById('adminClassNotice'); if(clNot) clNot.placeholder = txt.admNoticePh;
-            const lblCol = document.getElementById('lblAdminNoticeColor'); if(lblCol) lblCol.innerText = txt.admNoticeColorLbl;
-            const btnClUpd = document.getElementById('btnAdminClUpdate'); if(btnClUpd) btnClUpd.innerText = txt.admBtnUpdateClass;
-
+            // Admin Options Dropdowns
             if(document.getElementById('optThDyn')) {
                 document.getElementById('optThDyn').innerText = txt.optThemeDyn;
                 document.getElementById('optThMorn').innerText = txt.optThemeMorn;
@@ -1415,7 +1407,25 @@ window.switchLanguage=function(lang){
                 document.getElementById('optHideStYes').innerText = txt.optUpdateYes;
             }
 
+            if(document.getElementById("lblAdminNoticeLabel")) document.getElementById("lblAdminNoticeLabel").innerText = txt.adminNoticeLabel;
+            if(document.getElementById("lblAdminGuruLabel")) document.getElementById("lblAdminGuruLabel").innerText = txt.adminGuruLabel;
+            if(document.getElementById("lblAdminPenolongLabel")) document.getElementById("lblAdminPenolongLabel").innerText = txt.adminPenolongLabel;
+            if(document.getElementById("lblAdminAboutNote")) document.getElementById("lblAdminAboutNote").innerText = txt.lblAdminAboutNote;
+            if(document.getElementById("adminStudentSearch")) document.getElementById("adminStudentSearch").placeholder = txt.adminSearchName;
+            if(document.getElementById("adminStId")) document.getElementById("adminStId").placeholder = txt.adminStIdPh;
+            if(document.getElementById("adminStName")) document.getElementById("adminStName").placeholder = txt.adminStNamePh;
+            if(document.getElementById("adminStCn")) document.getElementById("adminStCn").placeholder = txt.adminStCnPh;
+            if(document.getElementById("adminStOld")) document.getElementById("adminStOld").placeholder = txt.adminStOldPh;
+            if(document.getElementById("adminStSch")) document.getElementById("adminStSch").placeholder = txt.adminStSchPh;
+            if(document.getElementById("adminBtnUpdateQueue")) document.getElementById("adminBtnUpdateQueue").innerText = txt.adminBtnUpdateQueue;
+            if(document.getElementById("adminBtnDelete")) document.getElementById("adminBtnDelete").innerText = txt.adminBtnDelete;
+            if(document.getElementById("adminClassNotice")) document.getElementById("adminClassNotice").placeholder = txt.adminNoticePh;
+            if(document.getElementById("adminBtnApplyTeacher")) document.getElementById("adminBtnApplyTeacher").innerText = txt.adminBtnUpdateQueue;
+            if(document.getElementById("adminTg")) document.getElementById("adminTg").placeholder = txt.adminGuruLabel;
+            if(document.getElementById("adminTp")) document.getElementById("adminTp").placeholder = txt.adminPenolongLabel;
+
             if (window.renderUpdateStep) window.renderUpdateStep();
+            
             if(document.getElementById('adminOverlay').classList.contains('open')){
                 window.refreshAdminStudentDropdown(window.adminSelectedStudentId);
             }
@@ -1442,12 +1452,6 @@ window.switchLanguage=function(lang){
     },250);
 }
 
-function hexToRgba(hex, alpha) {
-    if(!hex || !hex.startsWith('#')) return `rgba(255, 149, 0, ${alpha})`;
-    let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
@@ -1458,17 +1462,19 @@ function updateModalContent(student,index){
     currentStudentId=student.id;
     
     const wrap = document.getElementById('mTextBgWrap');
-    const startWidth = wrap ? wrap.offsetWidth : 0;
+    let startWidth = wrap ? wrap.offsetWidth : 0;
+    let startHeight = wrap ? wrap.offsetHeight : 0;
     
     document.getElementById("mName").innerText=student.name;
     document.getElementById("mCn").innerText=student.cn;
     
     if (wrap && typeof wrap.animate === 'function') {
         const targetWidth = wrap.offsetWidth;
+        const targetHeight = wrap.offsetHeight;
         if (startWidth !== targetWidth && startWidth > 0) {
             wrap.animate([
-                { width: startWidth + 'px' },
-                { width: targetWidth + 'px' }
+                { width: startWidth + 'px', height: startHeight + 'px' },
+                { width: targetWidth + 'px', height: targetHeight + 'px' }
             ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
         }
     }
@@ -1583,629 +1589,9 @@ function updateStatsUI(mode,view){const card=document.getElementById('statsCard'
 window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
 function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 function updateCounter(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
-function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");if(wrapSortBday)wrapSortBday.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!tCard.classList.contains('show'))tCard.classList.add('show')}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(wrapSortBday)wrapSortBday.classList.add("collapsed");if(currentSortType!=='name')window.handleSort('name');const notice=window.classNotices && window.classNotices[currentClass];if(notice){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).replace(/[^0-9]/g, '').substring(0,6):"999999";const bBday=b.id?String(b.id).replace(/[^0-9]/g, '').substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
-window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{window.showContextMenu(id)},500)}
-window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
-window.handleTouchMove=function(){clearTimeout(longPressTimer)}
-window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;window.showContextMenu(id)}
-window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxBtnCopyId').innerText=uiText[curLang].ctxCopyIdBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
-window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
-window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
-window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
-window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
-
-window.confirmSignOut=function(){
-    triggerHaptic();
-    document.getElementById('logoutConfirmOverlay').classList.add('active');
-};
-window.closeLogoutConfirm=function(){
-    document.getElementById('logoutConfirmOverlay').classList.remove('active');
-};
-window.proceedSignOut=function(){
-    window.closeLogoutConfirm();
-    if(window.appSignOut)window.appSignOut();
-};
-
-// ==========================================
-// FEEDBACK SYSTEM LOGIC
-// ==========================================
-window.openFeedback = function() {
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(() => document.getElementById("feedbackOverlay").classList.add("open"), 10);
-};
-
-window.closeFeedback = function(e) {
-    document.getElementById("feedbackOverlay").classList.remove("open");
-};
-
-window.submitFeedback = async function() {
-    const text = document.getElementById('feedbackText').value.trim();
-    if(!text) return;
-    const btn = document.getElementById('submitFeedbackBtn');
-    btn.innerText = "Submitting...";
-    btn.disabled = true;
-    try {
-        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
-        const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
-        
-        if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
-            await window.firestoreSetDoc(window.firestoreDoc(window.db, "feedback", docId), {
-                text: text,
-                user: userEmail,
-                timestamp: Date.now()
-            });
-            document.getElementById('feedbackText').value = '';
-            window.closeFeedback();
-            window.showToast(uiText[curLang].toastFb, "check_circle");
-        } else {
-            alert("Database connection not ready. Please try again.");
-        }
-    } catch (error) {
-        console.error(error);
-        alert("Error submitting feedback. Please try again later.");
-    }
-    btn.innerText = uiText[curLang].fbBtn;
-    btn.disabled = false;
-};
-
-// ==========================================
-// STARTUP UPDATE SCREEN LOGIC (TWO-STEP & BULLETS)
-// ==========================================
-window.showUpdateScreen = function() {
-    const uSettings = window.globalSettings.updateScreen || {};
-    let added = uSettings.changelogAdded || uSettings.changelog || '';
-    let removed = uSettings.changelogRemoved || '';
-    window.updateDataSteps.added = added;
-    window.updateDataSteps.removed = removed;
-    
-    let subText = "just now";
-    if (uSettings.timestamp) {
-        subText = window.getRelativeTime(uSettings.timestamp);
-    } else if (uSettings.lastUpdateText) {
-        subText = uSettings.lastUpdateText;
-    }
-    document.getElementById('updateSubText').innerText = `last update: ${subText}`;
-    
-    window.currentUpdateStep = 1;
-    if (!added.trim() && removed.trim()) window.currentUpdateStep = 2;
-    if (!added.trim() && !removed.trim()) { window.closeUpdateScreen(); return; }
-    
-    window.renderUpdateStep();
-    document.getElementById('updateIntroScreen').style.display = 'flex';
-    setTimeout(() => { document.getElementById('updateIntroScreen').style.opacity = '1'; }, 10);
-};
-
-const formatUpdateText = (text) => {
-    return text.split('\n')
-        .filter(l => l.trim())
-        .map(l => {
-            let cleanLine = l.trim();
-            if(cleanLine.startsWith('- ')) cleanLine = cleanLine.substring(2).trim();
-            if(cleanLine.startsWith('• ')) cleanLine = cleanLine.substring(2).trim();
-            return `<div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
-                        <span style="color:var(--ios-blue); font-weight:800; font-size:16px; line-height:1.4;">-</span>
-                        <span style="flex:1; line-height:1.4;">${cleanLine}</span>
-                    </div>`;
-        }).join('');
-};
-
-window.renderUpdateStep = function() {
-    const txt = uiText[curLang];
-    const uSettings = window.globalSettings.updateScreen || {};
-    const step1 = document.getElementById('updateStep1');
-    const step2 = document.getElementById('updateStep2');
-    const title = document.getElementById('updateScreenTitle');
-    const iconBg = document.getElementById('updateIconBg');
-    const icon = document.getElementById('updateIcon');
-    const btn = document.getElementById('updateNextBtn');
-    const addedText = document.getElementById('updateAddedText');
-    const removedText = document.getElementById('updateRemovedText');
-    
-    if (window.currentUpdateStep === 1) {
-        step1.style.display = 'block'; step2.style.display = 'none';
-        title.innerText = txt.updateTitleAdded || "Added Features";
-        icon.innerText = uSettings.iconAdded || "new_releases";
-        iconBg.style.background = "var(--ios-blue)";
-        iconBg.style.boxShadow = "0 8px 24px var(--ios-blue-light)";
-        
-        addedText.innerHTML = formatUpdateText(window.updateDataSteps.added);
-        btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
-    } else {
-        step1.style.display = 'none'; step2.style.display = 'block';
-        title.innerText = txt.updateTitleRemoved || "Other Changes";
-        icon.innerText = uSettings.iconRemoved || "build_circle";
-        iconBg.style.background = "#FF9500";
-        iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
-        
-        removedText.innerHTML = formatUpdateText(window.updateDataSteps.removed);
-        btn.innerText = txt.updateDone || "Done";
-    }
-};
-
-window.nextUpdateStep = function() {
-    if (window.currentUpdateStep === 1 && window.updateDataSteps.removed.trim()) {
-        window.currentUpdateStep = 2;
-        window.renderUpdateStep();
-    } else {
-        window.closeUpdateScreen();
-    }
-};
-
-window.closeUpdateScreen = function() {
-    document.getElementById('updateIntroScreen').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('updateIntroScreen').style.display = 'none';
-        document.getElementById('mainAppWrapper').classList.add('visible');
-    }, 400);
-    const uSettings = window.globalSettings.updateScreen || {};
-    const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-    localStorage.setItem('lastSeenChangelog2', combinedLog);
-};
-
-if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
-
-// ==========================================
-// GENERIC CUSTOM DROPDOWN LOGIC
-// ==========================================
-window.toggleCustomSelect = (dropdownId) => {
-  document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
-    if(d.id !== dropdownId) {
-      d.classList.remove('show'); 
-      d.parentElement.classList.remove('active-select');
-    }
-  });
-  const drop = document.getElementById(dropdownId);
-  drop.classList.toggle('show');
-  drop.parentElement.classList.toggle('active-select', drop.classList.contains('show'));
-  
-  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
-  if(drop.classList.contains('show')) drop.parentElement.style.zIndex = '100';
-};
-
-window.selectOption = (dropdownId, value, text, headerId, callbackName = null) => {
-  document.getElementById(headerId).innerHTML = `<span>${text}</span><span class="material-icons-round">expand_more</span>`;
-  const drop = document.getElementById(dropdownId);
-  drop.classList.remove('show');
-  drop.parentElement.classList.remove('active-select');
-  drop.parentElement.style.zIndex = '1';
-  drop.setAttribute('data-value', value);
-  if(callbackName && window[callbackName]) window[callbackName](value);
-};
-
-window.selectIconOption = (dropdownId, iconValue, iconLabel, headerId) => {
-  document.getElementById(headerId).innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${iconValue}</span> ${iconLabel}</span><span class="material-icons-round">expand_more</span>`;
-  const drop = document.getElementById(dropdownId);
-  drop.classList.remove('show');
-  drop.parentElement.classList.remove('active-select');
-  drop.parentElement.style.zIndex = '1';
-  drop.setAttribute('data-value', iconValue);
-};
-
-// ==========================================
-// ADMIN DASHBOARD LOGIC
-// ==========================================
-window.adminTempStudents =[];
-window.adminTempTeachers = {};
-window.adminTempNotices = {};
-window.adminSelectedStudentId = "NEW";
-
-window.openAdminPanel = () => {
-  window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
-  window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
-  window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
-  
-  const t = window.globalSettings.theme || 'dynamic';
-  document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
-  const themeOpts = {'dynamic':uiText[curLang].optThemeDyn,'morning':uiText[curLang].optThemeMorn,'afternoon':uiText[curLang].optThemeAft,'night':uiText[curLang].optThemeNight,'christmas':uiText[curLang].optThemeXmas,'newfilter':uiText[curLang].optThemeBeta1,'beta':uiText[curLang].optThemeBeta2};
-  document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
-  
-  const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
-  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);
-  document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?uiText[curLang].optMaintYes:uiText[curLang].optMaintNo}</span><span class="material-icons-round">expand_more</span>`;
-  
-  const glass = (window.globalSettings.disableGlass === 'true') ? 'true' : 'false';
-  document.getElementById('adminGlassDropdown').setAttribute('data-value', glass);
-  document.getElementById('adminGlassHeader').innerHTML = `<span>${glass==='true'?uiText[curLang].optGlassYes:uiText[curLang].optGlassNo}</span><span class="material-icons-round">expand_more</span>`;
-  
-  const hideTh = (window.globalSettings.hideTheme === 'true') ? 'true' : 'false';
-  document.getElementById('adminHideThemeDropdown').setAttribute('data-value', hideTh);
-  document.getElementById('adminHideThemeHeader').innerHTML = `<span>${hideTh==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const hideSt = (window.globalSettings.hideStats === 'true') ? 'true' : 'false';
-  document.getElementById('adminHideStatsDropdown').setAttribute('data-value', hideSt);
-  document.getElementById('adminHideStatsHeader').innerHTML = `<span>${hideSt==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const abt = window.globalSettings.aboutData || {};
-  document.getElementById('adminAboutTitle').value = abt.title || "Student Allocation List 2026";
-  document.getElementById('adminAboutVersion').value = abt.version || "Version 6.0 (Secured Edition)";
-  document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
-  document.getElementById('adminAboutDesign').value = abt.design || "Designed with Smooth iOS Performance in mind";
-  document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
-
-  const upd = window.globalSettings.updateScreen || { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' };
-  const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
-  document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
-  document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-  
-  const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check' };
-  const i1 = upd.iconAdded || 'new_releases';
-  const i2 = upd.iconRemoved || 'build_circle';
-  document.getElementById('adminIcon1Dropdown').setAttribute('data-value', i1);
-  document.getElementById('adminIcon1Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i1}</span> ${iconNames[i1]||i1}</span><span class="material-icons-round">expand_more</span>`;
-  document.getElementById('adminIcon2Dropdown').setAttribute('data-value', i2);
-  document.getElementById('adminIcon2Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i2}</span> ${iconNames[i2]||i2}</span><span class="material-icons-round">expand_more</span>`;
-  
-  document.getElementById('adminUpdateAdded').value = upd.changelogAdded || upd.changelog || '';
-  document.getElementById('adminUpdateRemoved').value = upd.changelogRemoved || '';
-
-  window.refreshAdminStudentDropdown("NEW");
-  window.loadAdminTeacherForm();
-  window.switchAdminTab('students');
-  document.getElementById('adminOverlay').classList.add('open');
-};
-
-window.closeAdminPanel = () => { 
-  document.getElementById('adminOverlay').classList.remove('open'); 
-  document.querySelectorAll('.custom-select-dropdown').forEach(d => { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); });
-  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
-};
-
-window.switchAdminTab = (tab) => {['students', 'teachers', 'settings'].forEach(t => {
-    document.getElementById('adminTab-' + t).style.display = (t === tab) ? 'block' : 'none';
-    document.getElementById('tabBtn-' + t).classList.toggle('active', t === tab);
-  });
-};
-
-window.toggleStudentDropdown = () => {
-  document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
-    if(d.id !== 'adminStudentDropdown') { d.classList.remove('show'); d.parentElement.classList.remove('active-select'); }
-  });
-  document.querySelectorAll('.custom-select-container').forEach(c => c.style.zIndex = '1');
-  const drop = document.getElementById('adminStudentDropdown');
-  drop.classList.toggle('show');
-  drop.parentElement.classList.toggle('active-select', drop.classList.contains('show'));
-  if(drop.classList.contains('show')) drop.parentElement.style.zIndex = '100';
-  document.getElementById('adminStudentSearch').value = '';
-  window.filterAdminStudents();
-  document.getElementById('adminStudentSearch').focus();
-};
-
-document.addEventListener('click', (e) => {
-  document.querySelectorAll('.custom-select-dropdown').forEach(drop => {
-    const header = drop.previousElementSibling;
-    if(drop.classList.contains('show') && !drop.contains(e.target) && !header.contains(e.target)){ 
-      drop.classList.remove('show'); 
-      drop.parentElement.classList.remove('active-select');
-      drop.parentElement.style.zIndex = '1';
-    }
-  });
-});
-
-window.filterAdminStudents = () => {
-  const query = document.getElementById('adminStudentSearch').value.toLowerCase();
-  document.querySelectorAll('.custom-option.student-opt').forEach(el => {
-    if(el.innerText.toLowerCase().includes(query)) el.style.display = 'block';
-    else el.style.display = 'none';
-  });
-};
-
-window.selectAdminStudent = (id, nameText, preventToggle = false) => {
-  window.adminSelectedStudentId = id;
-  document.getElementById('adminStudentSelectHeader').innerHTML = `<span>${nameText}</span><span class="material-icons-round">expand_more</span>`;
-  if(!preventToggle) {
-    const drop = document.getElementById('adminStudentDropdown');
-    drop.classList.remove('show');
-    drop.parentElement.classList.remove('active-select');
-    drop.parentElement.style.zIndex = '1';
-  }
-  window.loadAdminStudentForm();
-};
-
-window.refreshAdminStudentDropdown = (selectId = "NEW") => {
-  const list = document.getElementById('adminStudentList');
-  let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '<span class=\\'material-icons-round\\' style=\\'font-size:16px; vertical-align:text-bottom;\\'>person_add</span> Add New Student')"><strong><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> Add New Student</strong></div>`;
-  const sorted =[...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
-  sorted.forEach(s => { html += `<div class="custom-option student-opt" onclick="window.selectAdminStudent('${s.id}', '${s.name.replace(/'/g, "\\'")}')">${s.name} <span style="opacity:0.5;font-size:12px;">(${s.newClass})</span></div>`; });
-  list.innerHTML = html;
-
-  let selectedName = '<span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> Add New Student';
-  if(selectId !== "NEW") {
-    const stu = window.adminTempStudents.find(s=>s.id===selectId);
-    if(stu) selectedName = stu.name;
-  }
-  window.selectAdminStudent(selectId, selectedName, true);
-};
-
-window.loadAdminStudentForm = () => {
-  const id = window.adminSelectedStudentId;
-  if (id === "NEW") {
-    document.getElementById('adminStId').value = ''; 
-    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
-    document.getElementById('adminStOld').value = ''; 
-    window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
-    document.getElementById('adminStSch').value = '';
-  } else {
-    const student = window.adminTempStudents.find(s => s.id === id);
-    if(student) {
-      document.getElementById('adminStId').value = student.id; 
-      document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
-      document.getElementById('adminStOld').value = student.oldClass || "-"; 
-      window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
-      document.getElementById('adminStSch').value = student.sch || "-";
-    }
-  }
-};
-
-window.adminApplyStudent = () => {
-  const oldId = window.adminSelectedStudentId;
-  const newId = document.getElementById('adminStId').value.trim();
-  const name = document.getElementById('adminStName').value.trim().toUpperCase();
-  if(!newId || !name) { if(window.showToast) window.showToast("ID and Name are required", "error_outline"); return; }
-  
-  if (oldId !== newId && window.adminTempStudents.some(s => s.id === newId)) {
-    if(window.showToast) window.showToast("This ID already exists!", "error_outline"); return;
-  }
-
-  const existingIndex = window.adminTempStudents.findIndex(s => s.id === oldId);
-  const newObj = { id: newId, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminClassDropdown').getAttribute('data-value'), sch: document.getElementById('adminStSch').value.trim() || "-" };
-
-  if (existingIndex >= 0) { window.adminTempStudents[existingIndex] = newObj; if(window.showToast) window.showToast("Student Updated in Queue", "list_alt"); } 
-  else { window.adminTempStudents.push(newObj); if(window.showToast) window.showToast("New Student Added to Queue", "person_add"); }
-  
-  window.adminSelectedStudentId = newId;
-  window.refreshAdminStudentDropdown(newId);
-};
-
-window.adminDeleteStudent = () => {
-  const id = window.adminSelectedStudentId;
-  if (id === "NEW") return;
-  if(confirm("Delete this student?\n\nNot final until you click 'Save Database'.")) {
-    window.adminTempStudents = window.adminTempStudents.filter(s => s.id !== id);
-    window.refreshAdminStudentDropdown("NEW");
-    if(window.showToast) window.showToast("Student Removed from Queue", "delete");
-  }
-};
-
-window.loadAdminTeacherForm = () => {
-  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
-  const tData = window.adminTempTeachers[cls] || {g: "", p: ""};
-  const noticeData = window.adminTempNotices[cls] || "";
-  document.getElementById('adminTg').value = tData.g;
-  document.getElementById('adminTp').value = tData.p;
-  document.getElementById('adminClassNotice').value = noticeData;
-};
-
-window.adminApplyTeacher = () => {
-  const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
-  window.adminTempTeachers[cls] = { g: document.getElementById('adminTg').value.trim(), p: document.getElementById('adminTp').value.trim() };
-  window.adminTempNotices[cls] = document.getElementById('adminClassNotice').value.trim();
-  if(window.showToast) window.showToast("Class Updated in Queue", "school");
-};
-
-window.applyPendingUpdate = () => {
-  if(window.pendingDataUpdate) {
-    window.smkData = window.pendingDataUpdate.students;
-    window.teacherData = window.pendingDataUpdate.teachers;
-    window.classNotices = window.pendingDataUpdate.notices;
-    window.pendingDataUpdate = null;
-
-    if(window.initFilterChips) window.initFilterChips();
-    if(window.filterData) window.filterData();
-
-    document.getElementById('updatePromptBanner').classList.remove('show');
-    if(window.showToast) window.showToast("Data Updated Live", "check_circle");
-  }
-};
+function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");if(wrapSortBday)wrapSortBday.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){document.getElementById('lblGuru').innerText=data.g||'-';document.getElementById('lblPenolong').innerText=data.p||'-';if(!tCard.classList.contains('show'))tCard.classList.add('show')}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(wrapSortBday)wrapSortBday.classList.add("collapsed");if(currentSortType!=='name')window.handleSort('name');
+const notice=window.classNotices && window.classNotices[currentClass];if(notice && notice.text){document.getElementById('classNoticeText').innerText=notice.text;document.getElementById('classNoticeIcon').innerText=notice.icon||'info';document.getElementById('classNoticeIcon').style.color=notice.color||'#FF9500';document.getElementById('classNoticeBanner').style.background=notice.color?notice.color+'20':'rgba(255,149,0,0.15)';document.getElementById('classNoticeBanner').style.borderColor=notice.color?notice.color+'50':'rgba(255,149,0,0.3)';document.getElementById('classNoticeBanner').style.display='flex';}else if(typeof notice === 'string' && notice.trim()!==""){document.getElementById('classNoticeText').innerText=notice;document.getElementById('classNoticeIcon').innerText='info';document.getElementById('classNoticeIcon').style.color='#FF9500';document.getElementById('classNoticeBanner').style.background='rgba(255,149,0,0.15)';document.getElementById('classNoticeBanner').style.borderColor='rgba(255,149,0,0.3)';document.getElementById('classNoticeBanner').style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}
+let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).replace(/[^0-9]/g, '').substring(0,6):"999999";const bBday=b.id?String(b.id).replace(/[^0-9]/g, '').substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
 </script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-const firebaseConfig={apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI",authDomain:"studentlist2026.firebaseapp.com",projectId:"studentlist2026",storageBucket:"studentlist2026.firebasestorage.app",messagingSenderId:"867205730183",appId:"1:867205730183:web:534666800bc7b2513fcd22"};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-
-// EXPOSE TO WINDOW FOR THE FEEDBACK API 
-window.db = db;
-window.firestoreSetDoc = setDoc;
-window.firestoreDoc = doc;
-window.appSignOut = () => signOut(auth);
-
-const emailInput=document.getElementById('authEmail'),passwordInput=document.getElementById('authPassword'),primaryAuthBtn=document.getElementById('authSubmitBtn'),toggleAuthModeBtn=document.getElementById('authToggleBtn'),loginScreen=document.getElementById('authScreen'),mainApp=document.getElementById('mainAppWrapper'),authMsgBox=document.getElementById('authError'),authErrorText=document.getElementById('authErrorText'),authTitle=document.getElementById('authTitle'),authSub=document.getElementById('authSub'),authIcon=document.getElementById('authIcon'),loginMenu=document.getElementById('authMenu');
-window.cloudUser=null;
-
-// ==========================================
-// 🚨 ADMIN EMAIL SETTING 🚨
-// ==========================================
-const ADMIN_EMAIL = "loochinsiang5735@gmail.com"; 
-
-window.saveAdminData = async () => {
-  const btn = document.getElementById('adminSaveBtn');
-  btn.innerText = "Saving to Database...";
-  try {
-    const newSettings = {
-       theme: document.getElementById('adminThemeDropdown').getAttribute('data-value'),
-       maintenance: document.getElementById('adminMaintDropdown').getAttribute('data-value'),
-       disableGlass: document.getElementById('adminGlassDropdown').getAttribute('data-value'),
-       hideTheme: document.getElementById('adminHideThemeDropdown').getAttribute('data-value'),
-       hideStats: document.getElementById('adminHideStatsDropdown').getAttribute('data-value'),
-       aboutData: {
-           title: document.getElementById('adminAboutTitle').value.trim(),
-           version: document.getElementById('adminAboutVersion').value.trim(),
-           desc: document.getElementById('adminAboutDesc').value.trim(),
-           design: document.getElementById('adminAboutDesign').value.trim(),
-           footer: document.getElementById('adminAboutFooter').value.trim()
-       },
-       updateScreen: {
-           enabled: document.getElementById('adminUpdateScreenDropdown').getAttribute('data-value'),
-           timestamp: Date.now(),
-           iconAdded: document.getElementById('adminIcon1Dropdown').getAttribute('data-value'),
-           iconRemoved: document.getElementById('adminIcon2Dropdown').getAttribute('data-value'),
-           changelogAdded: document.getElementById('adminUpdateAdded').value.trim(),
-           changelogRemoved: document.getElementById('adminUpdateRemoved').value.trim()
-       }
-    };
-    
-    await setDoc(doc(db, "appData", "schoolInfo"), {
-      students: window.adminTempStudents,
-      teachers: window.adminTempTeachers,
-      classNotices: window.adminTempNotices,
-      settings: newSettings
-    });
-    
-    // Local override so admin doesn't see update prompt
-    window.smkData = window.adminTempStudents;
-    window.teacherData = window.adminTempTeachers;
-    window.classNotices = window.adminTempNotices;
-    window.globalSettings = newSettings;
-    
-    if(window.initFilterChips) window.initFilterChips();
-    if(window.renderTabs) window.renderTabs();
-    if(window.filterData) window.filterData();
-    if(window.applyGlobalSettings) window.applyGlobalSettings();
-    
-    btn.innerText = "Saved Successfully!";
-    setTimeout(() => { btn.innerText = "Save Database"; window.closeAdminPanel(); }, 1500);
-  } catch(e) {
-    alert("Database Save Error!\n\n" + e.message);
-    btn.innerText = "Save Database";
-  }
-};
-
-window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show')};document.addEventListener('click',()=>loginMenu.classList.remove('show'));
-function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
-function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
-
-toggleAuthModeBtn.addEventListener('click',()=>{
-    window.isSignUpMode = !window.isSignUpMode;
-    authMsgBox.classList.remove('show');
-    authTitle.innerText = window.isSignUpMode ? uiText[curLang].authTitleS : uiText[curLang].authTitleL;
-    authSub.innerText = window.isSignUpMode ? uiText[curLang].authSubS : uiText[curLang].authSubL;
-    authIcon.innerText = window.isSignUpMode ? "person_add" : "lock_outline";
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
-    primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
-    toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
-});
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
-
-window.cloudSyncUserData=async function(){if(!window.cloudUser)return;try{await setDoc(doc(db,"users",window.cloudUser.uid),{favorites:window.favorites||[],searchHistory:window.searchHistory||[]},{merge:!0})}catch(e){}};
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    window.cloudUser = user;
-
-    if (user.email === ADMIN_EMAIL) {
-      document.getElementById('adminControlBtn').style.display = 'flex';
-    } else {
-      document.getElementById('adminControlBtn').style.display = 'none';
-    }
-
-    try {
-      const docSnap = await getDoc(doc(db, "users", user.uid));
-      if (docSnap.exists()) {
-        window.favorites = docSnap.data().favorites ||[];
-        window.searchHistory = docSnap.data().searchHistory ||[];
-      }
-
-      window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'false', hideTheme: 'false', hideStats: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
-          const newStudents = data.students ||[];
-          const newTeachers = data.teachers || {};
-          const newNotices = data.classNotices || {};
-
-          if (window.isInitialLoad) {
-            window.smkData = newStudents;
-            window.teacherData = newTeachers;
-            window.globalSettings = newSettings;
-            window.classNotices = newNotices;
-            
-            window.isInitialLoad = false;
-
-            if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-                document.getElementById('mainAppWrapper').classList.remove('visible');
-                document.getElementById('maintenanceScreen').classList.add('visible');
-                loginScreen.classList.remove('active');
-                return;
-            }
-            
-            if(window.applyGlobalSettings) window.applyGlobalSettings();
-            if(window.initFilterChips) window.initFilterChips();
-            if(window.renderTabs) window.renderTabs();
-            if(window.filterData) window.filterData();
-            
-            loginScreen.classList.remove('active');
-
-            // STARTUP UPDATE SCREEN LOGIC
-            const uSettings = window.globalSettings.updateScreen || {};
-            const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-            if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-                window.showUpdateScreen();
-            } else {
-                document.getElementById('mainAppWrapper').classList.add('visible');
-            }
-
-            if (window.renderSearchHistory) window.renderSearchHistory();
-          } 
-          else {
-            if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-                window.closeModal(); window.closeStats(); window.closeAbout(); window.closeFaq(); window.closeMainMenu(); window.closeAdminPanel(); window.closeFeedback();
-                document.getElementById('mainAppWrapper').classList.remove('visible');
-                document.getElementById('maintenanceScreen').classList.add('visible');
-                return;
-            } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
-                document.getElementById('maintenanceScreen').classList.remove('visible');
-                document.getElementById('mainAppWrapper').classList.add('visible');
-            }
-
-            if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
-              window.globalSettings = newSettings;
-              if(window.applyGlobalSettings) window.applyGlobalSettings();
-            }
-
-            const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
-                                JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
-                                JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
-
-            if (dataChanged) {
-              window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
-              document.getElementById('updatePromptBanner').classList.add('show');
-            }
-          }
-        }
-      });
-
-    } catch (e) {
-      console.error("Data error: ", e);
-    }
-    
-  } else {
-    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
-    
-    // Clear state completely on logout to fix "Success!" sticking bug
-    window.isInitialLoad = true;
-    window.cloudUser = null;
-    window.favorites = [];
-    window.searchHistory =[];
-    window.smkData =[];
-    window.teacherData = {};
-    window.classNotices = {};
-    
-    mainApp.classList.remove('visible');
-    loginScreen.classList.add('active');
-    emailInput.value = ''; 
-    passwordInput.value = '';
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
-    
-    if (window.filterData) window.filterData();
-  }
-});
-</script>
-
 </body>
 </html>
