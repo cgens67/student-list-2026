@@ -1,22 +1,3 @@
-Here is the complete, corrected code.
-
-What I changed to fix this perfectly:
-
-1.  Restored Original Text Design: Removed all the font-size and line-height
-    hacks I added previously, keeping the font styling exactly as it was
-    originally.
-2.  Fixed the Clipping/Visual Bug: Removed padding: 0; from body.no-glass
-    .m-text-bg. It now acts as a subtly shaded pill instead of a completely
-    transparent background, which prevents the text from overlapping the pill's
-    edge.
-3.  Smooth Width & Height Transitions for Long Names: Changed white-space:
-    nowrap; to white-space: normal; combined with max-width: 90%;. This allows
-    long names to wrap onto multiple lines naturally.
-4.  Restored the Animation JS: Implemented a clean, 2-dimensional Web Animations
-    API script inside updateModalContent so that both the width and the height
-    of the background pill and the entire modal extend smoothly dynamically
-    between long and short names.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
