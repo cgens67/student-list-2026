@@ -137,7 +137,7 @@ body.no-glass .chip.active {
     color: var(--chip-act-txt) !important;
 }
 
-/* Normal Theme Student Modal Text Color & Background Pill */
+/* Student Modal Text Color & Background Pill FIX */
 .m-text-bg {
     display: inline-flex;
     flex-direction: column;
@@ -152,20 +152,49 @@ body.no-glass .chip.active {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    white-space: nowrap; /* Ensures smooth width transition without wrapping */
+    max-width: 90%; /* Prevent modal overflow */
+    box-sizing: border-box;
 }
 body.no-glass .m-text-bg {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05); /* Solid pill background */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
-    border: none;
-    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 6px 20px 8px; /* Restore padding to fix clipping */
+}
+body.no-glass[data-theme="dark"] .m-text-bg {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 body:not(.no-glass) .m-text-bg #mName,
 body:not(.no-glass) .m-text-bg #mCn {
     color: #FFFFFF !important;
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.m-text-bg #mName {
+    font-size: 18px;
+    font-weight: 800;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 1.3;
+}
+.m-text-bg #mCn {
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    margin-top: 2px;
+    opacity: 0.9;
 }
 
 /* Modals - Solid */
@@ -1403,8 +1432,7 @@ window.switchLanguage=function(lang){
 
             // Admin Options Dropdowns
             if(document.getElementById('optThDyn')) {
-                document.getElementById('optThDyn').innerText = txt.optThemeDyn;
-                document.getElementById('optThMorn').innerText = txt.optThemeMorn;
+                document.getElementById('optThDyn').innerText = txt.optThemeDyn;document.getElementById('optThMorn').innerText = txt.optThemeMorn;
                 document.getElementById('optThAft').innerText = txt.optThemeAft;
                 document.getElementById('optThNight').innerText = txt.optThemeNight;
                 document.getElementById('optThXmas').innerText = txt.optThemeXmas;
