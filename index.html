@@ -139,17 +139,20 @@ body.no-glass .chip.active {
 
 /* Normal Theme Student Modal Text Color & Background Pill */
 .m-text-bg {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: rgba(0, 0, 0, 0.25);
     padding: 6px 20px 8px;
     border-radius: 16px;
-    margin: 0 auto;
+    margin: 0 auto 12px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    max-width: 100%;
+    white-space: nowrap; /* Ensures smooth width transition without wrapping */
 }
 body.no-glass .m-text-bg {
     background: transparent;
@@ -159,24 +162,9 @@ body.no-glass .m-text-bg {
     border: none;
     padding: 0;
 }
-#mName {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--ios-text);
-    line-height: 1.2;
-}
-#mCn {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ios-text-sec);
-    margin-top: 2px;
-}
-body:not(.no-glass) .m-text-bg #mName {
-    color: #FFFFFF !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
+body:not(.no-glass) .m-text-bg #mName,
 body:not(.no-glass) .m-text-bg #mCn {
-    color: rgba(255,255,255,0.8) !important;
+    color: #FFFFFF !important;
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
@@ -190,7 +178,10 @@ body.no-glass .modal-bg.open, body.no-glass #updateIntroScreen, body.no-glass #a
 
 /* Quick Actions background fix for Solid Colors */
 body.no-glass .cm-backdrop.active {
-    background: rgba(0,0,0,0.15) !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+body.no-glass[data-theme="dark"] .cm-backdrop.active {
+    background: rgba(255,255,255,0.05) !important;
 }
 body.no-glass[data-theme="dark"] .cm-menu {
     background: rgba(40,40,40,0.95) !important;
@@ -1412,11 +1403,9 @@ function updateModalContent(student,index){
     const wrap = document.getElementById('mTextBgWrap');
     
     const startWidth = wrap ? wrap.offsetWidth : 0;
-    const startHeight = wrap ? wrap.offsetHeight : 0;
     
     if (wrap && startWidth > 0 && !document.body.classList.contains('no-glass')) {
         wrap.style.width = startWidth + 'px';
-        wrap.style.height = startHeight + 'px';
     }
     
     document.getElementById("mName").innerText=student.name;
@@ -1424,15 +1413,13 @@ function updateModalContent(student,index){
     
     if (wrap && typeof wrap.animate === 'function' && startWidth > 0 && !document.body.classList.contains('no-glass')) {
         wrap.style.width = 'auto';
-        wrap.style.height = 'auto';
         const targetWidth = wrap.offsetWidth;
-        const targetHeight = wrap.offsetHeight;
         
-        if (startWidth !== targetWidth || startHeight !== targetHeight) {
+        if (startWidth !== targetWidth) {
             wrap.animate([
-                { width: startWidth + 'px', height: startHeight + 'px' },
-                { width: targetWidth + 'px', height: targetHeight + 'px' }
-            ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+                { width: startWidth + 'px' },
+                { width: targetWidth + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
         }
     }
     
@@ -1764,8 +1751,7 @@ window.openAdminPanel = () => {
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
-  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);
-  document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?uiText[curLang].optMaintYes:uiText[curLang].optMaintNo}</span><span class="material-icons-round">expand_more</span>`;
+  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?uiText[curLang].optMaintYes:uiText[curLang].optMaintNo}</span><span class="material-icons-round">expand_more</span>`;
   
   const glass = (window.globalSettings.disableGlass === 'true') ? 'true' : 'false';
   document.getElementById('adminGlassDropdown').setAttribute('data-value', glass);
