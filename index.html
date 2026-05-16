@@ -158,11 +158,11 @@ body.no-glass .chip.active {
     word-wrap: break-word;
 }
 body.no-glass .m-text-bg {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.05); /* Solid subtle background */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 body.no-glass[data-theme="dark"] .m-text-bg {
     background: rgba(255, 255, 255, 0.1);
@@ -1470,23 +1470,6 @@ function updateModalContent(student,index){
     modalCurrentIndex=index;
     currentStudentId=student.id;
     
-    const wrap = document.getElementById('mTextBgWrap');
-    const card = document.getElementById('modalCard');
-    
-    // 1. FIRST: Measure Old Dimensions
-    const oldWrapRect = wrap ? wrap.getBoundingClientRect() : null;
-    const oldCardRect = card ? card.getBoundingClientRect() : null;
-
-    // Clear inline styles that might interfere with natural rendering
-    if (wrap) {
-        wrap.style.width = '';
-        wrap.style.height = '';
-    }
-    if (card) {
-        card.style.height = '';
-    }
-    
-    // 2. DOM Updates (Causes internal reflow to new natural dimensions)
     document.getElementById("mName").innerText=student.name;
     document.getElementById("mCn").innerText=student.cn;
     
@@ -1541,29 +1524,6 @@ function updateModalContent(student,index){
             html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
         }
         floatContainer.innerHTML=html
-    }
-
-    // 3. LAST + PLAY: Measure New Dimensions and interpolate smoothly using FLIP logic
-    if (wrap && oldWrapRect && typeof wrap.animate === 'function') {
-        const newWrapRect = wrap.getBoundingClientRect();
-        
-        if (oldWrapRect.width !== newWrapRect.width || oldWrapRect.height !== newWrapRect.height) {
-            wrap.animate([
-                { width: oldWrapRect.width + 'px', height: oldWrapRect.height + 'px' },
-                { width: newWrapRect.width + 'px', height: newWrapRect.height + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-        }
-    }
-    
-    if (card && oldCardRect && typeof card.animate === 'function') {
-        const newCardRect = card.getBoundingClientRect();
-        
-        if (oldCardRect.height !== newCardRect.height) {
-            card.animate([
-                { height: oldCardRect.height + 'px' },
-                { height: newCardRect.height + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
@@ -1666,7 +1626,7 @@ window.submitFeedback = async function() {
     btn.innerText = "Submitting...";
     btn.disabled = true;
     try {
-        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now.now();
+        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
         const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
         
         if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
@@ -1961,15 +1921,7 @@ window.loadAdminStudentForm = () => {
   const id = window.adminSelectedStudentId;
   if (id === "NEW") {
     document.getElementById('adminStId').value = ''; 
-    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
-    document.getElementById('adminStOld').value = ''; 
-    window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
-    document.getElementById('adminStSch').value = '';
-  } else {
-    const student = window.adminTempStudents.find(s => s.id === id);
-    if(student) {
-      document.getElementById('adminStId').value = student.id; 
-      document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
+    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value= student.cn || "-";
       document.getElementById('adminStOld').value = student.oldClass || "-"; 
       window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
       document.getElementById('adminStSch').value = student.sch || "-";
