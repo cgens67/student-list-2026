@@ -1266,7 +1266,7 @@ function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-tr
 // Strict Modal Drag Logic to fix input interaction bugs
 function initModalDrag(modal,overlayId){
     if(!modal)return;
-    const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard';
+    const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard' || modal.id === 'aboutCard' || modal.id === 'faqCard' || modal.id === 'profileCard';
     
     // Disable dragging entirely for these modals to fix the visual glitch
     if(isFormModal) return;
@@ -1676,16 +1676,10 @@ function updateModalContent(student, index) {
         startCardHeight = card ? card.offsetHeight : 0;
     }
 
-    // Remove any fixed styles and cancel hanging animations to allow natural reflow securely
-    if (wrap) { 
-        if(wrap._anim) { wrap._anim.cancel(); wrap._anim = null; }
-        wrap.style.width = ''; wrap.style.height = ''; 
-    }
+    // Remove any fixed styles to allow natural reflow
+    if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
     if (inner) { inner.style.width = ''; inner.style.height = ''; }
-    if (card) { 
-        if(card._anim) { card._anim.cancel(); card._anim = null; }
-        card.style.height = ''; 
-    }
+    if (card) { card.style.height = ''; }
     
     // Update DOM content
     const nameEl = document.getElementById("mName");
@@ -1750,25 +1744,25 @@ function updateModalContent(student, index) {
         }
     }
 
-    // Wait for DOM to calculate new natural sizes, then FLIP animate safely
+    // Wait for DOM to calculate new natural sizes, then FLIP animate
     if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
         const targetWrapWidth = wrap.offsetWidth;
         const targetWrapHeight = wrap.offsetHeight;
         const targetCardHeight = card ? card.offsetHeight : 0;
         
-        if (targetWrapWidth > 0 && targetWrapHeight > 0 && (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight)) {
+        if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
             // Freeze inner text layout to prevent glitching mid-animation
             if (inner) {
                 inner.style.width = targetWrapWidth + 'px';
                 inner.style.height = targetWrapHeight + 'px';
             }
             
-            wrap._anim = wrap.animate([
+            const wrapAnim = wrap.animate([
                 { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
                 { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
             ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
             
-            wrap._anim.onfinish = () => {
+            wrapAnim.onfinish = () => {
                 if (inner) {
                     inner.style.width = '';
                     inner.style.height = '';
@@ -1776,8 +1770,8 @@ function updateModalContent(student, index) {
             };
         }
         
-        if (card && startCardHeight > 0 && targetCardHeight > 0 && startCardHeight !== targetCardHeight) {
-            card._anim = card.animate([
+        if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
+            card.animate([
                 { height: startCardHeight + 'px' },
                 { height: targetCardHeight + 'px' }
             ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
@@ -1792,7 +1786,8 @@ function applyModalColors(student){
     const rawClass = student.newClass.split(" ")[1]||"Biru";
     const cssClass = rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
     const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
-    const darkBgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom,const bgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
+    const darkBgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};
+    const bgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
     
     const solidBgColors = {'Biru':'linear-gradient(to bottom, #E6F2FF 0%, #FFFFFF 80%)','Hijau':'linear-gradient(to bottom, #EBF9ED 0%, #FFFFFF 80%)','Kuning':'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 80%)','Merah':'linear-gradient(to bottom, #FFECEB 0%, #FFFFFF 80%)','Perang':'linear-gradient(to bottom, #F6F3EF 0%, #FFFFFF 80%)','Ungu':'linear-gradient(to bottom, #F7EEFC 0%, #FFFFFF 80%)'};
     const solidDarkBgColors = {'Biru':'linear-gradient(to bottom, #001A33 0%, #1C1C1E 80%)','Hijau':'linear-gradient(to bottom, #0B2612 0%, #1C1C1E 80%)','Kuning':'linear-gradient(to bottom, #331E00 0%, #1C1C1E 80%)','Merah':'linear-gradient(to bottom, #330C0A 0%, #1C1C1E 80%)','Perang':'linear-gradient(to bottom, #201A13 0%, #1C1C1E 80%)','Ungu':'linear-gradient(to bottom, #23102C 0%, #1C1C1E 80%)'};
