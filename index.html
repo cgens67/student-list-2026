@@ -174,6 +174,20 @@ body:not(.no-glass) .m-text-bg #mCn {
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
+.m-text-bg #mName {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    max-width: 100%;
+}
+.m-text-bg #mCn {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 2px;
+    opacity: 0.9;
+    max-width: 100%;
+}
+
 /* Modals - Solid */
 body.no-glass .modal-card:not(#modalCard) {
     background: var(--ios-modal) !important;
@@ -1466,64 +1480,124 @@ function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',colo
 window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
 window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
 
-function updateModalContent(student,index){
-    modalCurrentIndex=index;
-    currentStudentId=student.id;
+function updateModalContent(student, index) {
+    modalCurrentIndex = index;
+    currentStudentId = student.id;
     
-    document.getElementById("mName").innerText=student.name;
-    document.getElementById("mCn").innerText=student.cn;
+    const wrap = document.getElementById('mTextBgWrap');
+    const card = document.getElementById('modalCard');
+    const nameEl = document.getElementById('mName');
+    const cnEl = document.getElementById('mCn');
     
-    const rawClass=student.newClass.split(" ")[1]||"Biru";
-    const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
-    const avEl=document.getElementById("mAvatar");
-    avEl.innerText=student.name.charAt(0);
-    avEl.className=`avatar av-${cssClass}`;
+    // 1. Clear any stuck inline styles to measure true natural dimensions
+    if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
+    if (card) { card.style.height = ''; }
+    if (nameEl) { nameEl.style.width = ''; }
+    if (cnEl) { cnEl.style.width = ''; }
+
+    // 2. Measure starting dimensions BEFORE changing content
+    const startWrapWidth = wrap ? wrap.offsetWidth : 0;
+    const startWrapHeight = wrap ? wrap.offsetHeight : 0;
+    const startCardHeight = card ? card.offsetHeight : 0;
     
-    document.getElementById("mNew").innerText=student.newClass;
-    document.getElementById("mOld").innerText=student.oldClass;
-    document.getElementById("mSch").innerText=student.sch;
+    // 3. Update DOM content
+    if (nameEl) nameEl.innerText = student.name;
+    if (cnEl) cnEl.innerText = student.cn;
     
-    const rank=getRankStatus(student.oldClass,student.newClass);
-    document.getElementById("mRankIcon").innerHTML=`<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;
+    const rawClass = student.newClass.split(" ")[1] || "Biru";
+    const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
+    const avEl = document.getElementById("mAvatar");
+    if (avEl) {
+        avEl.innerText = student.name.charAt(0);
+        avEl.className = `avatar av-${cssClass}`;
+    }
+    
+    document.getElementById("mNew").innerText = student.newClass;
+    document.getElementById("mOld").innerText = student.oldClass;
+    document.getElementById("mSch").innerText = student.sch;
+    
+    const rank = getRankStatus(student.oldClass, student.newClass);
+    document.getElementById("mRankIcon").innerHTML = `<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;
     
     applyModalColors(student);
-    const btnStar=document.getElementById('btnStar');
+    const btnStar = document.getElementById('btnStar');
     
-    if(favorites.includes(student.id)){
+    if (favorites.includes(student.id)) {
         btnStar.classList.add('active');
-        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'
-    }else{
+        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star</span>';
+    } else {
         btnStar.classList.remove('active');
-        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'
+        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star_border</span>';
     }
     
-    const schLabel=document.getElementById("mLabelSch");
-    schLabel.innerText=(student.sch==="PB")?uiText[curLang].mLabelSchPB:uiText[curLang].mLabelSch;
+    const schLabel = document.getElementById("mLabelSch");
+    schLabel.innerText = (student.sch === "PB") ? uiText[curLang].mLabelSchPB : uiText[curLang].mLabelSch;
     
-    const navBtns=document.querySelectorAll('.btn-nav');
-    if(navBtns.length===2){
-        navBtns[0].disabled=(index===0);
-        navBtns[0].style.opacity=(index===0)?'0.3':'1';
-        navBtns[1].disabled=(index===currentFilteredData.length-1);
-        navBtns[1].style.opacity=(index===currentFilteredData.length-1)?'0.3':'1'
+    const navBtns = document.querySelectorAll('.btn-nav');
+    if (navBtns.length === 2) {
+        navBtns[0].disabled = (index === 0);
+        navBtns[0].style.opacity = (index === 0) ? '0.3' : '1';
+        navBtns[1].disabled = (index === currentFilteredData.length - 1);
+        navBtns[1].style.opacity = (index === currentFilteredData.length - 1) ? '0.3' : '1';
     }
     
-    const floatContainer=document.getElementById('cardFloatBg');
-    floatContainer.innerHTML='';
-    let iconName='',color='',animName='',posStyle='';
-    if(rank.icon==='thumb_up'){iconName='thumb_up';color='#34C759';animName='floatUp';posStyle='bottom:-80px; top:auto;'}
-    else if(rank.icon==='thumb_down'){iconName='thumb_down';color='#FF3B30';animName='floatDown';posStyle='top:-60px; bottom:auto;'}
-    if(iconName){
-        let html='';
-        for(let i=0;i<12;i++){
-            const left=Math.floor(Math.random()*100);
-            const delay=Math.random()*2;
-            const duration=4+Math.random()*3;
-            const size=50+Math.random()*80;
-            const blur=4+Math.random()*6;
-            html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
+    const floatContainer = document.getElementById('cardFloatBg');
+    if (floatContainer) {
+        floatContainer.innerHTML = '';
+        let iconName = '', color = '', animName = '', posStyle = '';
+        if (rank.icon === 'thumb_up') { iconName = 'thumb_up'; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
+        else if (rank.icon === 'thumb_down') { iconName = 'thumb_down'; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
+        if (iconName) {
+            let html = '';
+            for (let i = 0; i < 12; i++) {
+                const left = Math.floor(Math.random() * 100);
+                const delay = Math.random() * 2;
+                const duration = 4 + Math.random() * 3;
+                const size = 50 + Math.random() * 80;
+                const blur = 4 + Math.random() * 6;
+                html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`;
+            }
+            floatContainer.innerHTML = html;
         }
-        floatContainer.innerHTML=html
+    }
+
+    // 4. Measure NEW natural dimensions
+    const targetWrapWidth = wrap ? wrap.offsetWidth : 0;
+    const targetWrapHeight = wrap ? wrap.offsetHeight : 0;
+    const targetCardHeight = card ? card.offsetHeight : 0;
+
+    // 5. Animate dimensions using FLIP principle
+    if (wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
+        if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
+            // FIX THE TEXT GLITCH: Force the inner text elements to already be at the *target width*
+            // so they don't break lines awkwardly mid-animation while the wrapper width grows/shrinks.
+            nameEl.style.width = targetWrapWidth + 'px';
+            cnEl.style.width = targetWrapWidth + 'px';
+            
+            const wrapAnim = wrap.animate([
+                { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
+                { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+
+            wrapAnim.onfinish = () => {
+                // Clear all hardcoded styles once animation completes so it handles future responsive changes
+                wrap.style.width = '';
+                wrap.style.height = '';
+                nameEl.style.width = '';
+                cnEl.style.width = '';
+            };
+        }
+        
+        if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
+            const cardAnim = card.animate([
+                { height: startCardHeight + 'px' },
+                { height: targetCardHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            
+            cardAnim.onfinish = () => {
+                card.style.height = '';
+            };
+        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
@@ -1921,7 +1995,15 @@ window.loadAdminStudentForm = () => {
   const id = window.adminSelectedStudentId;
   if (id === "NEW") {
     document.getElementById('adminStId').value = ''; 
-    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value= student.cn || "-";
+    document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
+    document.getElementById('adminStOld').value = ''; 
+    window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
+    document.getElementById('adminStSch').value = '';
+  } else {
+    const student = window.adminTempStudents.find(s => s.id === id);
+    if(student) {
+      document.getElementById('adminStId').value = student.id; 
+      document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
       document.getElementById('adminStOld').value = student.oldClass || "-"; 
       window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
       document.getElementById('adminStSch').value = student.sch || "-";
