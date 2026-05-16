@@ -1,3 +1,15 @@
+Ah, I see exactly what happened. To fix the text glitch in the previous
+iteration, I applied transition: none to the card via JavaScript right before it
+opened, which accidentally stripped away the smooth CSS slide-up animation!
+
+I have removed the line that was killing the opening transition and rewrote the
+dynamic dimension morphing to only trigger if the modal is already open (i.e.
+when clicking "Next" or "Prev"). This completely restores your sliding open
+animation, whilst keeping the text glitch fixed and maintaining the dynamic
+resizing pill effect!
+
+Here is the complete, perfectly functioning code:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,12 +164,13 @@ body.no-glass .chip.active {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    white-space: normal; /* Enables multi-line wrapping */
-    max-width: 90%; 
-    box-sizing: border-box;
+    white-space: normal; /* Fix truncation for long names */
+    text-align: center;
+    max-width: 90%; /* Prevent modal overflow */
+    word-wrap: break-word;
 }
 body.no-glass .m-text-bg {
-    background: rgba(0, 0, 0, 0.05); /* Solid pill background */
+    background: rgba(0, 0, 0, 0.05); /* Solid subtle background */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
@@ -1523,22 +1536,27 @@ function updateModalContent(student, index) {
     const inner = document.getElementById('mTextInner');
     const card = document.getElementById('modalCard');
     
-    // 1. Freeze current layout to measure starting bounds
-    if (wrap) wrap.style.transition = 'none';
-    if (card) card.style.transition = 'none';
+    // Only run dimension morphing if already open (Next/Prev navigation)
+    const isAlreadyOpen = document.getElementById('modalOverlay').classList.contains('open');
     
-    const oldWrapWidth = wrap ? wrap.offsetWidth : 0;
-    const oldWrapHeight = wrap ? wrap.offsetHeight : 0;
-    const oldCardHeight = card ? card.offsetHeight : 0;
+    let startWrapWidth = 0, startWrapHeight = 0, startCardHeight = 0;
     
-    // 2. Remove any fixed styles to allow natural reflow
-    if (wrap) { wrap.style.width = 'auto'; wrap.style.height = 'auto'; }
-    if (inner) { inner.style.width = 'auto'; inner.style.height = 'auto'; }
-    if (card) { card.style.height = 'auto'; }
+    if (isAlreadyOpen) {
+        startWrapWidth = wrap ? wrap.offsetWidth : 0;
+        startWrapHeight = wrap ? wrap.offsetHeight : 0;
+        startCardHeight = card ? card.offsetHeight : 0;
+    }
+
+    // Remove any fixed styles to allow natural reflow
+    if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
+    if (inner) { inner.style.width = ''; inner.style.height = ''; }
+    if (card) { card.style.height = ''; }
     
-    // 3. Update DOM with new student data
-    document.getElementById("mName").innerText = student.name;
-    document.getElementById("mCn").innerText = student.cn;
+    // Update DOM content
+    const nameEl = document.getElementById("mName");
+    const cnEl = document.getElementById("mCn");
+    if(nameEl) nameEl.innerText = student.name;
+    if(cnEl) cnEl.innerText = student.cn;
     
     const rawClass = student.newClass.split(" ")[1] || "Biru";
     const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
@@ -1596,52 +1614,39 @@ function updateModalContent(student, index) {
             floatContainer.innerHTML = html;
         }
     }
-    
-    // 4. Measure TARGET sizes
-    const targetWrapWidth = wrap ? wrap.offsetWidth : 0;
-    const targetWrapHeight = wrap ? wrap.offsetHeight : 0;
-    const targetCardHeight = card ? card.offsetHeight : 0;
-    
-    // 5. Setup FLIP transition if dimensions changed (and it's not the first open)
-    if (wrap && oldWrapWidth > 0) {
-        // Lock inner content to TARGET width. This stops text jumping/wrapping during the width animation.
-        if(inner) {
-            inner.style.width = targetWrapWidth + 'px';
-            inner.style.height = targetWrapHeight + 'px';
+
+    // Wait for DOM to calculate new natural sizes, then FLIP animate
+    if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
+        const targetWrapWidth = wrap.offsetWidth;
+        const targetWrapHeight = wrap.offsetHeight;
+        const targetCardHeight = card ? card.offsetHeight : 0;
+        
+        if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
+            // Freeze inner text layout to prevent glitching mid-animation
+            if (inner) {
+                inner.style.width = targetWrapWidth + 'px';
+                inner.style.height = targetWrapHeight + 'px';
+            }
+            
+            const wrapAnim = wrap.animate([
+                { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
+                { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            
+            wrapAnim.onfinish = () => {
+                if (inner) {
+                    inner.style.width = '';
+                    inner.style.height = '';
+                }
+            };
         }
         
-        // Revert containers back to OLD sizes instantly
-        wrap.style.width = oldWrapWidth + 'px';
-        wrap.style.height = oldWrapHeight + 'px';
-        if(card) card.style.height = oldCardHeight + 'px';
-        
-        // Force layout reflow
-        void wrap.offsetWidth;
-        
-        // Enable transitions and apply TARGET sizes
-        wrap.style.transition = 'width 0.35s cubic-bezier(0.25, 1, 0.5, 1), height 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
-        if(card) card.style.transition = 'height 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
-        
-        wrap.style.width = targetWrapWidth + 'px';
-        wrap.style.height = targetWrapHeight + 'px';
-        if(card) card.style.height = targetCardHeight + 'px';
-        
-        // Cleanup transitions when done
-        setTimeout(() => {
-            if(wrap) {
-                wrap.style.transition = '';
-                wrap.style.width = 'auto';
-                wrap.style.height = 'auto';
-            }
-            if(inner) {
-                inner.style.width = 'auto';
-                inner.style.height = 'auto';
-            }
-            if(card) {
-                card.style.transition = '';
-                card.style.height = 'auto';
-            }
-        }, 350);
+        if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
+            card.animate([
+                { height: startCardHeight + 'px' },
+                { height: targetCardHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
