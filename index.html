@@ -151,15 +151,18 @@ body.no-glass .chip.active {
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
-    max-width: 90%; /* Prevent modal overflow */
+    overflow: hidden;
+    white-space: normal; /* Fix truncation for long names */
     text-align: center;
+    max-width: 90%; /* Prevent modal overflow */
+    word-wrap: break-word;
 }
 body.no-glass .m-text-bg {
-    background: rgba(0, 0, 0, 0.05); /* Solid subtle background */
+    background: rgba(0, 0, 0, 0.05);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 body.no-glass[data-theme="dark"] .m-text-bg {
     background: rgba(255, 255, 255, 0.1);
@@ -1229,7 +1232,7 @@ function applyDensity(compact){
 }
 window.toggleFilters=function(){triggerHaptic();isFilterOpen=!isFilterOpen;const drawer=document.getElementById("filterDrawer"),btn=document.getElementById("btnFilter");if(isFilterOpen){drawer.classList.add("open");btn.style.opacity="0.5"}else{drawer.classList.remove("open");btn.style.opacity="1"}}
 window.handleSort=function(type){triggerHaptic();if(currentSortType===type)sortAsc=!sortAsc;else{currentSortType=type;sortAsc=!0}updateSortUI();filterData()}
-function updateSortUI(){const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),btnBday=document.getElementById("btnSortBday"),arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass"),arrowBday=document.getElementById("arrowSortBday");if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip");arrowBday.classList.remove("flip")}else{arrowName.classList.add("flip");arrowClass.classList.add("flip");arrowBday.classList.add("flip")}if(currentSortType==='name'){btnName.classList.add("active");btnClass.classList.remove("active");btnBday.classList.remove("active");arrowName.classList.remove("hidden");arrowClass.classList.add("hidden");arrowBday.classList.add("hidden")}else if(currentSortType==='class'){btnName.classList.remove("active");btnClass.classList.add("active");btnBday.classList.remove("active");arrowClass.classList.remove("hidden");arrowName.classList.add("hidden");arrowBday.classList.add("hidden")}else{btnName.classList.remove("active");btnClass.classList.remove("active");btnBday.classList.add("active");arrowClass.classList.add("hidden");arrowName.classList.add("hidden");arrowBday.classList.remove("hidden")}}
+function updateSortUI(){const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),btnBday=document.getElementById("btnSortBday"),arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass"),arrowBday=document.getElementById("arrowSortBday");if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip");arrowBday.classList.remove("flip")}else{arrowName.classList.add("flip");arrowClass.classList.add("flip");arrowBday.classList.add("flip")}if(currentSortType==='name'){btnName.classList.add("active");btnClass.classList.remove("active");btnBday.classList.remove("active");arrowName.classList.remove("hidden");arrowClass.classList.add("hidden");arrowBday.classList.add("hidden")}else if(currentSortType==='class'){btnName.classList.remove("active");btnClass.classList.add("active");btnBday.classList.remove("active");arrowClass.classList.remove("hidden");arrowName.classList.add("hidden");arrowBday.classList.add("hidden")}else{btnName.classList.remove("active");btnClass.remove("active");btnBday.classList.add("active");arrowClass.classList.add("hidden");arrowName.classList.add("hidden");arrowBday.classList.remove("hidden")}}
 function getDistinct(key){return[...new Set(window.smkData.map(s=>s[key]))].filter(v=>v&&v!=='').sort()}
 function initFilterChips(){renderChipRow("chipCont2025",getDistinct("oldClass"),"year2025");renderChipRow("chipContOrigin",getDistinct("sch"),"origin")}
 function renderChipRow(containerId,list,stateKey){const cont=document.getElementById(containerId);if(!cont)return;let html=`<button class="chip active" onclick="setFilter('${stateKey}', '', this)">${uiText[curLang].all}</button>`;list.forEach(val=>{html+=`<button class="chip" onclick="setFilter('${stateKey}', '${val}', this)">${val}</button>`});cont.innerHTML=html}
@@ -1467,6 +1470,23 @@ function updateModalContent(student,index){
     modalCurrentIndex=index;
     currentStudentId=student.id;
     
+    const wrap = document.getElementById('mTextBgWrap');
+    const card = document.getElementById('modalCard');
+    
+    // 1. FIRST: Measure Old Dimensions
+    const oldWrapRect = wrap ? wrap.getBoundingClientRect() : null;
+    const oldCardRect = card ? card.getBoundingClientRect() : null;
+
+    // Clear inline styles that might interfere with natural rendering
+    if (wrap) {
+        wrap.style.width = '';
+        wrap.style.height = '';
+    }
+    if (card) {
+        card.style.height = '';
+    }
+    
+    // 2. DOM Updates (Causes internal reflow to new natural dimensions)
     document.getElementById("mName").innerText=student.name;
     document.getElementById("mCn").innerText=student.cn;
     
@@ -1521,6 +1541,29 @@ function updateModalContent(student,index){
             html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
         }
         floatContainer.innerHTML=html
+    }
+
+    // 3. LAST + PLAY: Measure New Dimensions and interpolate smoothly using FLIP logic
+    if (wrap && oldWrapRect && typeof wrap.animate === 'function') {
+        const newWrapRect = wrap.getBoundingClientRect();
+        
+        if (oldWrapRect.width !== newWrapRect.width || oldWrapRect.height !== newWrapRect.height) {
+            wrap.animate([
+                { width: oldWrapRect.width + 'px', height: oldWrapRect.height + 'px' },
+                { width: newWrapRect.width + 'px', height: newWrapRect.height + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
+    }
+    
+    if (card && oldCardRect && typeof card.animate === 'function') {
+        const newCardRect = card.getBoundingClientRect();
+        
+        if (oldCardRect.height !== newCardRect.height) {
+            card.animate([
+                { height: oldCardRect.height + 'px' },
+                { height: newCardRect.height + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
@@ -1623,7 +1666,7 @@ window.submitFeedback = async function() {
     btn.innerText = "Submitting...";
     btn.disabled = true;
     try {
-        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
+        const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now.now();
         const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
         
         if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
@@ -1710,7 +1753,7 @@ window.renderUpdateStep = function() {
         btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
     } else {
         step1.style.display = 'none'; step2.style.display = 'block';
-        title.innerText= txt.updateTitleRemoved || "Other Changes";
+        title.innerText = txt.updateTitleRemoved || "Other Changes";
         icon.innerText = uSettings.iconRemoved || "build_circle";
         iconBg.style.background = "#FF9500";
         iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
