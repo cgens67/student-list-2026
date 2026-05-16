@@ -151,8 +151,6 @@ body.no-glass .chip.active {
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.05);
-    overflow: hidden;
-    white-space: normal; /* Allow long names to wrap */
     max-width: 90%; /* Prevent modal overflow */
     text-align: center;
 }
@@ -164,7 +162,7 @@ body.no-glass .m-text-bg {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 body.no-glass[data-theme="dark"] .m-text-bg {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.1);
 }
 body:not(.no-glass) .m-text-bg #mName,
@@ -1301,7 +1299,8 @@ window.switchLanguage=function(lang){
             setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);
             setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);
             setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabSettings);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
             if(document.getElementById("lblNewFilterTitle")) setTextAndAnimateWidth(document.getElementById("lblNewFilterTitle"), txt.filter);
             if(document.getElementById("lblNewFilterReset")) setTextAndAnimateWidth(document.getElementById("lblNewFilterReset"), txt.clear);
             if(document.getElementById('ctxBtnCopyId')) document.getElementById('ctxBtnCopyId').innerText = txt.ctxCopyIdBtn;
@@ -1468,23 +1467,6 @@ function updateModalContent(student,index){
     modalCurrentIndex=index;
     currentStudentId=student.id;
     
-    const wrap = document.getElementById('mTextBgWrap');
-    const card = document.getElementById('modalCard');
-    
-    // Reset fixed inline sizes from previous animations to allow natural reflow
-    if (wrap) {
-        wrap.style.width = '';
-        wrap.style.height = '';
-    }
-    if (card) {
-        card.style.height = '';
-    }
-
-    // Measure start dimensions
-    const startWidth = wrap ? wrap.offsetWidth : 0;
-    const startHeight = wrap ? wrap.offsetHeight : 0;
-    const cardStartHeight = card ? card.offsetHeight : 0;
-    
     document.getElementById("mName").innerText=student.name;
     document.getElementById("mCn").innerText=student.cn;
     
@@ -1539,27 +1521,6 @@ function updateModalContent(student,index){
             html+=`<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`
         }
         floatContainer.innerHTML=html
-    }
-
-    // Measure target dimensions & smoothly animate width and height
-    if (wrap && typeof wrap.animate === 'function' && startWidth > 0) {
-        const targetWidth = wrap.offsetWidth;
-        const targetHeight = wrap.offsetHeight;
-        const cardTargetHeight = card ? card.offsetHeight : 0;
-        
-        if (startWidth !== targetWidth || startHeight !== targetHeight) {
-            wrap.animate([
-                { width: startWidth + 'px', height: startHeight + 'px' },
-                { width: targetWidth + 'px', height: targetHeight + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-        }
-        
-        if (card && cardStartHeight > 0 && cardStartHeight !== cardTargetHeight) {
-            card.animate([
-                { height: cardStartHeight + 'px' },
-                { height: cardTargetHeight + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-        }
     }
 }
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
@@ -1749,7 +1710,7 @@ window.renderUpdateStep = function() {
         btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
     } else {
         step1.style.display = 'none'; step2.style.display = 'block';
-        title.innerText = txt.updateTitleRemoved || "Other Changes";
+        title.innerText= txt.updateTitleRemoved || "Other Changes";
         icon.innerText = uSettings.iconRemoved || "build_circle";
         iconBg.style.background = "#FF9500";
         iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
