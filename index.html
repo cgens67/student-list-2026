@@ -1575,300 +1575,324 @@ window.switchLanguage=function(lang){
             if(document.getElementById('adminBtnDelete')) document.getElementById('adminBtnDelete').innerText = txt.adminDelete;
 
             if(document.getElementById('lblAdminNotice')) document.getElementById('lblAdminNotice').innerText = txt.adminNoticeLabel;
-            if(document.getElementById('adminClassNotice')) document.getElementById('adminClassNotice').placeholder = txt.adminNoticePlaceholder;
-            if(document.getElementById('lblAdminNoticeIcon')) document.getElementById('lblAdminNoticeIcon').innerText = txt.adminIconLabel;
-            if(document.getElementById('lblAdminNoticeColor')) document.getElementById('lblAdminNoticeColor').innerText = txt.adminColorLabel;
-            if(document.getElementById('lblAdminGuru')) document.getElementById('lblAdminGuru').innerText = txt.adminGuruLabel;
-            if(document.getElementById('lblAdminPenolong')) document.getElementById('lblAdminPenolong').innerText = txt.adminPenolongLabel;
-            if(document.getElementById('adminTg')) document.getElementById('adminTg').placeholder = txt.adminGuruLabel;
-            if(document.getElementById('adminTp')) document.getElementById('adminTp').placeholder = txt.adminPenolongLabel;
-            if(document.getElementById('adminBtnUpdateQueue2')) document.getElementById('adminBtnUpdateQueue2').innerText = txt.adminUpdateQueue;
+            if(document.getElementById('adminClassNotice')) document.getElementById('adminClassNotice').placeholder = txt.if(document.getElementById('lblAdminNoticeIcon')) document.getElementById('lblAdminNoticeIcon').innerText = txt.adminIconLabel;
+                if(document.getElementById('lblAdminNoticeColor')) document.getElementById('lblAdminNoticeColor').innerText = txt.adminColorLabel;
+                if(document.getElementById('lblAdminGuru')) document.getElementById('lblAdminGuru').innerText = txt.adminGuruLabel;
+                if(document.getElementById('lblAdminPenolong')) document.getElementById('lblAdminPenolong').innerText = txt.adminPenolongLabel;
+                if(document.getElementById('adminTg')) document.getElementById('adminTg').placeholder = txt.adminGuruLabel;
+                if(document.getElementById('adminTp')) document.getElementById('adminTp').placeholder = txt.adminPenolongLabel;
+                if(document.getElementById('adminBtnUpdateQueue2')) document.getElementById('adminBtnUpdateQueue2').innerText = txt.adminUpdateQueue;
 
-            if(document.getElementById('adminStudentSelectHeader')) {
-               if(window.adminSelectedStudentId === "NEW") {
-                  document.getElementById('adminStudentSelectHeader').innerHTML = `<span><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> ${txt.adminAddStudent}</span><span class="material-icons-round">expand_more</span>`;
-               }
-            }
-            if (window.refreshAdminStudentDropdown) window.refreshAdminStudentDropdown(window.adminSelectedStudentId);
-
-            // Admin Options Dropdowns
-            if(document.getElementById('optThDyn')) {
-                document.getElementById('optThDyn').innerText = txt.optThemeDyn;
-                document.getElementById('optThMorn').innerText = txt.optThemeMorn;
-                document.getElementById('optThAft').innerText = txt.optThemeAft;
-                document.getElementById('optThNight').innerText = txt.optThemeNight;
-                document.getElementById('optThXmas').innerText = txt.optThemeXmas;
-                document.getElementById('optThBeta1').innerText = txt.optThemeBeta1;
-                document.getElementById('optThBeta2').innerText = txt.optThemeBeta2;
-
-                document.getElementById('optMaintNo').innerText = txt.optMaintNo;
-                document.getElementById('optMaintYes').innerText = txt.optMaintYes;
-                
-                document.getElementById('optUpdNo').innerText = txt.optUpdateNo;
-                document.getElementById('optUpdYes').innerText = txt.optUpdateYes;
-
-                document.getElementById('optGlassNo').innerText = txt.optGlassNo;
-                document.getElementById('optGlassYes').innerText = txt.optGlassYes;
-                if(document.getElementById('optGlassDyn')) document.getElementById('optGlassDyn').innerText = txt.optGlassDyn;
-
-                document.getElementById('optHideThNo').innerText = txt.optUpdateNo;
-                document.getElementById('optHideThYes').innerText = txt.optUpdateYes;
-
-                document.getElementById('optHideStNo').innerText = txt.optUpdateNo;
-                document.getElementById('optHideStYes').innerText = txt.optUpdateYes;
-                
-                document.getElementById('optTextOrig').innerText = txt.optTextOrig;
-                document.getElementById('optTextRedesign').innerText = txt.optTextRedesign;
-            }
-
-            if (window.renderUpdateStep) window.renderUpdateStep();
-            
-            if(document.getElementById('adminOverlay').classList.contains('open')){
-                window.openAdminPanel();
-            }
-            
-            // Re-apply to update lag profile text
-            if(window.applyGlobalSettings) window.applyGlobalSettings();
-
-            if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
-            if(searchInput)searchInput.classList.remove("anim-placeholder");
-            
-            if(tCard&&tCard.classList.contains('show')){
-                tCard.style.height='auto';
-                const newHeight=tCard.offsetHeight;
-                tCard.style.height=startHeight+'px';
-                tCard.offsetHeight;
-                tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                tCard.style.height=newHeight+'px';
-                setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
-            }
-        } catch(err) {
-            console.error("Language translation error:", err);
-        } finally {
-            fadeTargets.forEach(el=>{
-                el.classList.remove('fade-out');
-            });
-        }
-    },250);
-}
-
-window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
-function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
-window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
-window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
-
-function updateModalContent(student, index) {
-    modalCurrentIndex = index;
-    currentStudentId = student.id;
-    
-    const wrap = document.getElementById('mTextBgWrap');
-    const inner = document.getElementById('mTextInner');
-    const card = document.getElementById('modalCard');
-    
-    // Only run dimension morphing if already open (Next/Prev navigation)
-    const isAlreadyOpen = document.getElementById('modalOverlay').classList.contains('open');
-    
-    let startWrapWidth = 0, startWrapHeight = 0, startCardHeight = 0;
-    
-    if (isAlreadyOpen) {
-        startWrapWidth = wrap ? wrap.offsetWidth : 0;
-        startWrapHeight = wrap ? wrap.offsetHeight : 0;
-        startCardHeight = card ? card.offsetHeight : 0;
-    }
-
-    // Remove any fixed styles to allow natural reflow
-    if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
-    if (inner) { inner.style.width = ''; inner.style.height = ''; }
-    if (card) { card.style.height = ''; }
-    
-    // Update DOM content
-    const nameEl = document.getElementById("mName");
-    const cnEl = document.getElementById("mCn");
-    if(nameEl) nameEl.innerText = student.name;
-    if(cnEl) cnEl.innerText = student.cn;
-    
-    const rawClass = student.newClass.split(" ")[1] || "Biru";
-    const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
-    const avEl = document.getElementById("mAvatar");
-    if(avEl) {
-        avEl.innerText = student.name.charAt(0);
-        avEl.className = `avatar av-${cssClass}`;
-    }
-    
-    document.getElementById("mNew").innerText = student.newClass;
-    document.getElementById("mOld").innerText = student.oldClass;
-    document.getElementById("mSch").innerText = student.sch;
-    
-    const rank = getRankStatus(student.oldClass, student.newClass);
-    document.getElementById("mRankIcon").innerHTML = `<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;
-    
-    applyModalColors(student);
-    const btnStar = document.getElementById('btnStar');
-    
-    if (favorites.includes(student.id)) {
-        btnStar.classList.add('active');
-        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star</span>';
-    } else {
-        btnStar.classList.remove('active');
-        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star_border</span>';
-    }
-    
-    const schLabel = document.getElementById("mLabelSch");
-    schLabel.innerText = (student.sch === "PB") ? uiText[curLang].mLabelSchPB : uiText[curLang].mLabelSch;
-    
-    const navBtns = document.querySelectorAll('.btn-nav');
-    if (navBtns.length === 2) {
-        navBtns[0].disabled = (index === 0);
-        navBtns[0].style.opacity = (index === 0) ? '0.3' : '1';
-        navBtns[1].disabled = (index === currentFilteredData.length - 1);
-        navBtns[1].style.opacity = (index === currentFilteredData.length - 1) ? '0.3' : '1';
-    }
-    
-    const floatContainer = document.getElementById('cardFloatBg');
-    if(floatContainer) {
-        floatContainer.innerHTML = '';
-        let iconName = '', color = '', animName = '', posStyle = '';
-        if (rank.icon === 'thumb_up') { iconName = 'thumb_up'; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
-        else if (rank.icon === 'thumb_down') { iconName = 'thumb_down'; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
-        if (iconName) {
-            let html = '';
-            for (let i = 0; i < 12; i++) {
-                const left = Math.floor(Math.random() * 100);
-                const delay = Math.random() * 2;
-                const duration = 4 + Math.random() * 3;
-                const size = 50 + Math.random() * 80;
-                const blur = 4 + Math.random() * 6;
-                html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`;
-            }
-            floatContainer.innerHTML = html;
-        }
-    }
-
-    // Wait for DOM to calculate new natural sizes, then FLIP animate
-    if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
-        const targetWrapWidth = wrap.offsetWidth;
-        const targetWrapHeight = wrap.offsetHeight;
-        const targetCardHeight = card ? card.offsetHeight : 0;
-        
-        if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
-            // Freeze inner text layout to prevent glitching mid-animation
-            if (inner) {
-                inner.style.width = targetWrapWidth + 'px';
-                inner.style.height = targetWrapHeight + 'px';
-            }
-            
-            const wrapAnim = wrap.animate([
-                { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
-                { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-            
-            wrapAnim.onfinish = () => {
-                if (inner) {
-                    inner.style.width = '';
-                    inner.style.height = '';
+                if(document.getElementById('adminStudentSelectHeader')) {
+                   if(window.adminSelectedStudentId === "NEW") {
+                      document.getElementById('adminStudentSelectHeader').innerHTML = `<span><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> ${txt.adminAddStudent}</span><span class="material-icons-round">expand_more</span>`;
+                   }
                 }
-            };
+                if (window.refreshAdminStudentDropdown) window.refreshAdminStudentDropdown(window.adminSelectedStudentId);
+
+                // Admin Options Dropdowns
+                if(document.getElementById('optThDyn')) {
+                    document.getElementById('optThDyn').innerText = txt.optThemeDyn;
+                    document.getElementById('optThMorn').innerText = txt.optThemeMorn;
+                    document.getElementById('optThAft').innerText = txt.optThemeAft;
+                    document.getElementById('optThNight').innerText = txt.optThemeNight;
+                    document.getElementById('optThXmas').innerText = txt.optThemeXmas;
+                    document.getElementById('optThBeta1').innerText = txt.optThemeBeta1;
+                    document.getElementById('optThBeta2').innerText = txt.optThemeBeta2;
+
+                    document.getElementById('optMaintNo').innerText = txt.optMaintNo;
+                    document.getElementById('optMaintYes').innerText = txt.optMaintYes;
+                    
+                    document.getElementById('optUpdNo').innerText = txt.optUpdateNo;
+                    document.getElementById('optUpdYes').innerText = txt.optUpdateYes;
+
+                    document.getElementById('optGlassNo').innerText = txt.optGlassNo;
+                    document.getElementById('optGlassYes').innerText = txt.optGlassYes;
+                    if(document.getElementById('optGlassDyn')) document.getElementById('optGlassDyn').innerText = txt.optGlassDyn;
+
+                    document.getElementById('optHideThNo').innerText = txt.optUpdateNo;
+                    document.getElementById('optHideThYes').innerText = txt.optUpdateYes;
+
+                    document.getElementById('optHideStNo').innerText = txt.optUpdateNo;
+                    document.getElementById('optHideStYes').innerText = txt.optUpdateYes;
+                    
+                    document.getElementById('optTextOrig').innerText = txt.optTextOrig;
+                    document.getElementById('optTextRedesign').innerText = txt.optTextRedesign;
+                }
+
+                if (window.renderUpdateStep) window.renderUpdateStep();
+                
+                if(document.getElementById('adminOverlay').classList.contains('open')){
+                    window.openAdminPanel();
+                }
+                
+                // Re-apply to update lag profile text
+                if(window.applyGlobalSettings) window.applyGlobalSettings();
+
+                if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
+                if(searchInput)searchInput.classList.remove("anim-placeholder");
+                
+                if(tCard&&tCard.classList.contains('show')){
+                    tCard.style.height='auto';
+                    const newHeight=tCard.offsetHeight;
+                    tCard.style.height=startHeight+'px';
+                    tCard.offsetHeight;
+                    tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                    tCard.style.height=newHeight+'px';
+                    setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
+                }
+            } catch(err) {
+                console.error("Language translation error:", err);
+            } finally {
+                fadeTargets.forEach(el=>{
+                    el.classList.remove('fade-out');
+                });
+            }
+        },250);
+    }
+
+    window.switchClass=function(cls){if(currentClass===cls)return;triggerHaptic();document.getElementById(`tab-${currentClass}`).classList.remove('active');const newTab=document.getElementById(`tab-${cls}`);newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls);const track=document.getElementById('classTabs');track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});filterData()}
+    function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=newC.split(' ')[1].charAt(0);const valOld=rankOrder[charOld]||6;const valNew=rankOrder[charNew]||6;if(valNew<valOld)return{icon:'thumb_up',color:'#34C759'};if(valNew>valOld)return{icon:'thumb_down',color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
+    window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
+    window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
+
+    // Define modal animation references globally so they can be cancelled
+    window.modalWrapAnim = null;
+    window.modalCardAnim = null;
+
+    function updateModalContent(student, index) {
+        modalCurrentIndex = index;
+        currentStudentId = student.id;
+        
+        const wrap = document.getElementById('mTextBgWrap');
+        const inner = document.getElementById('mTextInner');
+        const card = document.getElementById('modalCard');
+        
+        // CANCEL PREVIOUS ANIMATIONS STRICTLY to prevent 0px lock
+        if (window.modalWrapAnim && typeof window.modalWrapAnim.cancel === 'function') {
+            window.modalWrapAnim.cancel();
+            window.modalWrapAnim = null;
+        }
+        if (window.modalCardAnim && typeof window.modalCardAnim.cancel === 'function') {
+            window.modalCardAnim.cancel();
+            window.modalCardAnim = null;
         }
         
-        if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
-            card.animate([
-                { height: startCardHeight + 'px' },
-                { height: targetCardHeight + 'px' }
-            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        // Remove any inline dimensions applied by previous animation states
+        if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
+        if (inner) { inner.style.width = ''; inner.style.height = ''; }
+        if (card) { card.style.height = ''; }
+
+        // Only run dimension morphing if already open (Next/Prev navigation)
+        const isAlreadyOpen = document.getElementById('modalOverlay').classList.contains('open');
+        let startWrapWidth = 0, startWrapHeight = 0, startCardHeight = 0;
+        
+        if (isAlreadyOpen) {
+            startWrapWidth = wrap ? wrap.offsetWidth : 0;
+            startWrapHeight = wrap ? wrap.offsetHeight : 0;
+            startCardHeight = card ? card.offsetHeight : 0;
+        }
+        
+        // Update DOM content
+        const nameEl = document.getElementById("mName");
+        const cnEl = document.getElementById("mCn");
+        if(nameEl) nameEl.innerText = student.name;
+        if(cnEl) cnEl.innerText = student.cn;
+        
+        const rawClass = student.newClass.split(" ")[1] || "Biru";
+        const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
+        const avEl = document.getElementById("mAvatar");
+        if(avEl) {
+            avEl.innerText = student.name.charAt(0);
+            avEl.className = `avatar av-${cssClass}`;
+        }
+        
+        document.getElementById("mNew").innerText = student.newClass;
+        document.getElementById("mOld").innerText = student.oldClass;
+        document.getElementById("mSch").innerText = student.sch;
+        
+        const rank = getRankStatus(student.oldClass, student.newClass);
+        document.getElementById("mRankIcon").innerHTML = `<span class="material-icons-round" style="color:${rank.color}; font-size:24px;">${rank.icon}</span>`;
+        
+        applyModalColors(student);
+        const btnStar = document.getElementById('btnStar');
+        
+        if (favorites.includes(student.id)) {
+            btnStar.classList.add('active');
+            btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star</span>';
+        } else {
+            btnStar.classList.remove('active');
+            btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star_border</span>';
+        }
+        
+        const schLabel = document.getElementById("mLabelSch");
+        schLabel.innerText = (student.sch === "PB") ? uiText[curLang].mLabelSchPB : uiText[curLang].mLabelSch;
+        
+        const navBtns = document.querySelectorAll('.btn-nav');
+        if (navBtns.length === 2) {
+            navBtns[0].disabled = (index === 0);
+            navBtns[0].style.opacity = (index === 0) ? '0.3' : '1';
+            navBtns[1].disabled = (index === currentFilteredData.length - 1);
+            navBtns[1].style.opacity = (index === currentFilteredData.length - 1) ? '0.3' : '1';
+        }
+        
+        const floatContainer = document.getElementById('cardFloatBg');
+        if(floatContainer) {
+            floatContainer.innerHTML = '';
+            let iconName = '', color = '', animName = '', posStyle = '';
+            if (rank.icon === 'thumb_up') { iconName = 'thumb_up'; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
+            else if (rank.icon === 'thumb_down') { iconName = 'thumb_down'; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
+            if (iconName) {
+                let html = '';
+                for (let i = 0; i < 12; i++) {
+                    const left = Math.floor(Math.random() * 100);
+                    const delay = Math.random() * 2;
+                    const duration = 4 + Math.random() * 3;
+                    const size = 50 + Math.random() * 80;
+                    const blur = 4 + Math.random() * 6;
+                    html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`;
+                }
+                floatContainer.innerHTML = html;
+            }
+        }
+
+        // Wait for DOM to calculate new natural sizes, then FLIP animate
+        if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
+            const targetWrapWidth = wrap.offsetWidth;
+            const targetWrapHeight = wrap.offsetHeight;
+            const targetCardHeight = card ? card.offsetHeight : 0;
+            
+            if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
+                // Freeze inner text layout to prevent glitching mid-animation
+                if (inner) {
+                    inner.style.width = targetWrapWidth + 'px';
+                    inner.style.height = targetWrapHeight + 'px';
+                }
+                
+                window.modalWrapAnim = wrap.animate([
+                    { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
+                    { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
+                ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+                
+                window.modalWrapAnim.onfinish = () => {
+                    if (inner) {
+                        inner.style.width = '';
+                        inner.style.height = '';
+                    }
+                    if (wrap) {
+                        wrap.style.width = '';
+                        wrap.style.height = '';
+                    }
+                    window.modalWrapAnim = null;
+                };
+            }
+            
+            if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
+                window.modalCardAnim = card.animate([
+                    { height: startCardHeight + 'px' },
+                    { height: targetCardHeight + 'px' }
+                ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+
+                window.modalCardAnim.onfinish = () => {
+                    if (card) card.style.height = '';
+                    window.modalCardAnim = null;
+                }
+            }
         }
     }
-}
-window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
-function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}} window.updateProfileStats();}
-window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
 
-function applyModalColors(student){
-    const rawClass = student.newClass.split(" ")[1]||"Biru";
-    const cssClass = rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
-    const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
-    const darkBgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};
-    const bgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
-    
-    const solidBgColors = {'Biru':'linear-gradient(to bottom, #E6F2FF 0%, #FFFFFF 80%)','Hijau':'linear-gradient(to bottom, #EBF9ED 0%, #FFFFFF 80%)','Kuning':'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 80%)','Merah':'linear-gradient(to bottom, #FFECEB 0%, #FFFFFF 80%)','Perang':'linear-gradient(to bottom, #F6F3EF 0%, #FFFFFF 80%)','Ungu':'linear-gradient(to bottom, #F7EEFC 0%, #FFFFFF 80%)'};
-    const solidDarkBgColors = {'Biru':'linear-gradient(to bottom, #001A33 0%, #1C1C1E 80%)','Hijau':'linear-gradient(to bottom, #0B2612 0%, #1C1C1E 80%)','Kuning':'linear-gradient(to bottom, #331E00 0%, #1C1C1E 80%)','Merah':'linear-gradient(to bottom, #330C0A 0%, #1C1C1E 80%)','Perang':'linear-gradient(to bottom, #201A13 0%, #1C1C1E 80%)','Ungu':'linear-gradient(to bottom, #23102C 0%, #1C1C1E 80%)'};
-    
-    const modalCard = document.getElementById('modalCard'), mNew = document.getElementById('mNew'), btnDone = document.getElementById('btnClose');
-    const classColor = textColors[cssClass]||'#007AFF';
-    
-    const isSolid = document.body.classList.contains('no-glass');
+    // AND THEN THE REST OF THE JAVASCRIPT FROM PREVIOUS TO COMPLETE THE FILE
+    window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
+    function toggleFavId(id){const index=favorites.indexOf(id);if(index===-1){favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}} window.updateProfileStats();}
+    window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
 
-    if(isDark){
-        modalCard.style.background = isSolid ? (solidDarkBgColors[cssClass]||'#1C1C1E') : (darkBgColors[cssClass]||'rgba(40,40,40,0.85)');
-        mNew.style.color = classColor;
-    }else{
-        modalCard.style.background = isSolid ? (solidBgColors[cssClass]||'#FFFFFF') : (bgColors[cssClass]||'rgba(255,255,255,0.85)');
-        mNew.style.color = classColor;
+    function applyModalColors(student){
+        const rawClass = student.newClass.split(" ")[1]||"Biru";
+        const cssClass = rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
+        const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
+        const darkBgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};
+        const bgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
+        
+        const solidBgColors = {'Biru':'linear-gradient(to bottom, #E6F2FF 0%, #FFFFFF 80%)','Hijau':'linear-gradient(to bottom, #EBF9ED 0%, #FFFFFF 80%)','Kuning':'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 80%)','Merah':'linear-gradient(to bottom, #FFECEB 0%, #FFFFFF 80%)','Perang':'linear-gradient(to bottom, #F6F3EF 0%, #FFFFFF 80%)','Ungu':'linear-gradient(to bottom, #F7EEFC 0%, #FFFFFF 80%)'};
+        const solidDarkBgColors = {'Biru':'linear-gradient(to bottom, #001A33 0%, #1C1C1E 80%)','Hijau':'linear-gradient(to bottom, #0B2612 0%, #1C1C1E 80%)','Kuning':'linear-gradient(to bottom, #331E00 0%, #1C1C1E 80%)','Merah':'linear-gradient(to bottom, #330C0A 0%, #1C1C1E 80%)','Perang':'linear-gradient(to bottom, #201A13 0%, #1C1C1E 80%)','Ungu':'linear-gradient(to bottom, #23102C 0%, #1C1C1E 80%)'};
+        
+        const modalCard = document.getElementById('modalCard'), mNew = document.getElementById('mNew'), btnDone = document.getElementById('btnClose');
+        const classColor = textColors[cssClass]||'#007AFF';
+        
+        const isSolid = document.body.classList.contains('no-glass');
+
+        if(isDark){
+            modalCard.style.background = isSolid ? (solidDarkBgColors[cssClass]||'#1C1C1E') : (darkBgColors[cssClass]||'rgba(40,40,40,0.85)');
+            mNew.style.color = classColor;
+        }else{
+            modalCard.style.background = isSolid ? (solidBgColors[cssClass]||'#FFFFFF') : (bgColors[cssClass]||'rgba(255,255,255,0.85)');
+            mNew.style.color = classColor;
+        }
+        btnDone.style.backgroundColor = classColor;
+        btnDone.style.color = '#FFFFFF';
     }
-    btnDone.style.backgroundColor = classColor;
-    btnDone.style.color = '#FFFFFF';
-}
 
-window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
-window.openAbout=function(){
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(()=>document.getElementById("aboutOverlay").classList.add("open"),10)
-}
-window.closeAbout=function(){const modal=document.getElementById("aboutCard");modal.style.transform='';document.getElementById("aboutOverlay").classList.remove("open")}
-
-window.openProfile=function(){
-    triggerHaptic();
-    window.updateProfileStats();
-    if(window.cloudUser) {
-        document.getElementById('profEmail').innerText = window.cloudUser.email;
-        document.getElementById('profUid').innerText = "UID: " + window.cloudUser.uid.substring(0,8) + "...";
+    window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
+    window.openAbout=function(){
+        triggerHaptic();
+        document.getElementById('authMenu').classList.remove('show');
+        setTimeout(()=>document.getElementById("aboutOverlay").classList.add("open"),10)
     }
-    setTimeout(()=>document.getElementById("profileOverlay").classList.add("open"),10);
-}
-window.closeProfile=function(){
-    const modal=document.getElementById("profileCard");
-    modal.style.transform='';
-    document.getElementById("profileOverlay").classList.remove("open");
-}
-window.updateProfileStats=function(){
-    const favEl = document.getElementById('profFavCount');
-    const histEl = document.getElementById('profHistCount');
-    if(favEl) favEl.innerText = favorites.length + " Saved";
-    if(histEl) histEl.innerText = searchHistory.length + " Searches";
-}
-window.clearUserFavorites=function(){
-    if(favorites.length === 0) return;
-    if(!confirm(uiText[curLang].confirmClearFav || "Clear all favorites?")) return;
-    triggerHaptic();
-    favorites = [];
-    window.cloudSyncUserData();
-    window.updateProfileStats();
-    if(isFavMode) filterData();
-    else {
-        document.querySelectorAll('.fav-badge.show').forEach(b => b.classList.remove('show'));
-    }
-    window.showToast("Favorites Cleared", "delete");
-}
+    window.closeAbout=function(){const modal=document.getElementById("aboutCard");modal.style.transform='';document.getElementById("aboutOverlay").classList.remove("open")}
 
-window.openFaq=function(){
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(()=>document.getElementById("faqOverlay").classList.add("open"),10)
-}
-window.closeFaq=function(){const modal=document.getElementById("faqCard");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")}
-function triggerHaptic(){if(navigator.vibrate)navigator.vibrate(10)}
-function saveSearchHistory(term){term=term.trim();if(!term)return;searchHistory=searchHistory.filter(t=>t.toLowerCase()!==term.toLowerCase());searchHistory.unshift(term);if(searchHistory.length>5)searchHistory.pop();if(window.cloudSyncUserData)window.cloudSyncUserData();renderSearchHistory(); window.updateProfileStats();}
-window.clearSearchHistory=function(){triggerHaptic();searchHistory=[];if(window.cloudSyncUserData)window.cloudSyncUserData();const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');setTimeout(()=>{const cont=document.getElementById('searchHistoryPills');if(cont)cont.innerHTML=''},400); window.updateProfileStats(); window.showToast("History Cleared", "delete");}
-function renderSearchHistory(){const cont=document.getElementById('searchHistoryPills'),drawer=document.getElementById('historyDrawer');if(searchHistory.length===0||document.getElementById('searchInput').value!==""){if(drawer)drawer.classList.remove('open');return}let html='';searchHistory.forEach(term=>{html+=`<button class="history-pill" onclick="window.applySearch('${term}')">${term}</button>`});html+=`<button class="history-pill clear-hist" onclick="window.clearSearchHistory()"><span class="material-icons-round" style="font-size:14px;">delete_outline</span></button>`;cont.innerHTML=html;if(drawer)drawer.classList.add('open')}
-window.applySearch=function(term){document.getElementById('searchInput').value=term;const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');filterData();triggerHaptic()}
-window.openStats=function(){triggerHaptic();const btnOld=document.getElementById('btnStatOldClass'),card=document.getElementById('statsCard'),body=card.querySelector('.m-body');if(currentStatView==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}if(filterState.year2025!==""){btnOld.parentElement.style.display='none';window.switchStat('origin')}else{btnOld.parentElement.style.display='flex'}renderStats();setTimeout(()=>document.getElementById("statsOverlay").classList.add("open"),10)}
-window.closeStats=function(){const modal=document.getElementById("statsCard");modal.style.transform='';document.getElementById("statsOverlay").classList.remove("open")}
-window.switchStat=function(mode){if(currentStatMode===mode)return;triggerHaptic();updateStatsUI(mode,currentStatView)}
-window.toggleStatViewMode=function(){const newView=currentStatView==='list'?'map':'list';document.getElementById('iconStatView').innerText=newView==='list'?'pie_chart':'list';window.switchStatView(newView)}
-window.switchStatView=function(view){if(currentStatView===view)return;triggerHaptic();updateStatsUI(currentStatMode,view)}
-function updateStatsUI(mode,view){const card=document.getElementById('statsCard'),body=card.querySelector('.m-body');const currentHeight=card.offsetHeight;card.style.height=currentHeight+'px';const targets=[document.getElementById('statsVisuals'),document.getElementById('statsSummaryCard'),document.getElementById('statsDynamicRows'),document.getElementById('statsMap')].filter(Boolean);targets.forEach(el=>{el.classList.remove('fade-in');el.classList.add('fade-out')});setTimeout(()=>{currentStatMode=mode;currentStatView=view;if(view==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));if(mode==='origin')document.getElementById('btnStatOrigin').classList.add('active');else document.getElementById('btnStatOldClass').classList.add('active');renderStats();card.style.height='auto';const newHeight=card.offsetHeight;card.style.height=currentHeight+'px';card.offsetHeight;card.style.transition='transform .4s var(--ease-ios), background .4s, height .4s var(--ease-ios)';card.style.height=newHeight+'px';targets.forEach(el=>{el.classList.remove('fade-out');el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)});setTimeout(()=>{card.style.height=null;card.style.transition='';},400)},250)}
-window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
-function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
+    window.openProfile=function(){
+        triggerHaptic();
+        window.updateProfileStats();
+        if(window.cloudUser) {
+            document.getElementById('profEmail').innerText = window.cloudUser.email;
+            document.getElementById('profUid').innerText = "UID: " + window.cloudUser.uid.substring(0,8) + "...";
+        }
+        setTimeout(()=>document.getElementById("profileOverlay").classList.add("open"),10);
+    }
+    window.closeProfile=function(){
+        const modal=document.getElementById("profileCard");
+        modal.style.transform='';
+        document.getElementById("profileOverlay").classList.remove("open");
+    }
+    window.updateProfileStats=function(){
+        const favEl = document.getElementById('profFavCount');
+        const histEl = document.getElementById('profHistCount');
+        if(favEl) favEl.innerText = favorites.length + " Saved";
+        if(histEl) histEl.innerText = searchHistory.length + " Searches";
+    }
+    window.clearUserFavorites=function(){
+        if(favorites.length === 0) return;
+        if(!confirm(uiText[curLang].confirmClearFav || "Clear all favorites?")) return;
+        triggerHaptic();
+        favorites = [];
+        window.cloudSyncUserData();
+        window.updateProfileStats();
+        if(isFavMode) filterData();
+        else {
+            document.querySelectorAll('.fav-badge.show').forEach(b => b.classList.remove('show'));
+        }
+        window.showToast("Favorites Cleared", "delete");
+    }
+
+    window.openFaq=function(){
+        triggerHaptic();
+        document.getElementById('authMenu').classList.remove('show');
+        setTimeout(()=>document.getElementById("faqOverlay").classList.add("open"),10)
+    }
+    window.closeFaq=function(){const modal=document.getElementById("faqCard");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")}
+    function triggerHaptic(){if(navigator.vibrate)navigator.vibrate(10)}
+    function saveSearchHistory(term){term=term.trim();if(!term)return;searchHistory=searchHistory.filter(t=>t.toLowerCase()!==term.toLowerCase());searchHistory.unshift(term);if(searchHistory.length>5)searchHistory.pop();if(window.cloudSyncUserData)window.cloudSyncUserData();renderSearchHistory(); window.updateProfileStats();}
+    window.clearSearchHistory=function(){triggerHaptic();searchHistory=[];if(window.cloudSyncUserData)window.cloudSyncUserData();const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');setTimeout(()=>{const cont=document.getElementById('searchHistoryPills');if(cont)cont.innerHTML=''},400); window.updateProfileStats(); window.showToast("History Cleared", "delete");}
+    function renderSearchHistory(){const cont=document.getElementById('searchHistoryPills'),drawer=document.getElementById('historyDrawer');if(searchHistory.length===0||document.getElementById('searchInput').value!==""){if(drawer)drawer.classList.remove('open');return}let html='';searchHistory.forEach(term=>{html+=`<button class="history-pill" onclick="window.applySearch('${term}')">${term}</button>`});html+=`<button class="history-pill clear-hist" onclick="window.clearSearchHistory()"><span class="material-icons-round" style="font-size:14px;">delete_outline</span></button>`;cont.innerHTML=html;if(drawer)drawer.classList.add('open')}
+    window.applySearch=function(term){document.getElementById('searchInput').value=term;const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');filterData();triggerHaptic()}
+    window.openStats=function(){triggerHaptic();const btnOld=document.getElementById('btnStatOldClass'),card=document.getElementById('statsCard'),body=card.querySelector('.m-body');if(currentStatView==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}if(filterState.year2025!==""){btnOld.parentElement.style.display='none';window.switchStat('origin')}else{btnOld.parentElement.style.display='flex'}renderStats();setTimeout(()=>document.getElementById("statsOverlay").classList.add("open"),10)}
+    window.closeStats=function(){const modal=document.getElementById("statsCard");modal.style.transform='';document.getElementById("statsOverlay").classList.remove("open")}
+    window.switchStat=function(mode){if(currentStatMode===mode)return;triggerHaptic();updateStatsUI(mode,currentStatView)}
+    window.toggleStatViewMode=function(){const newView=currentStatView==='list'?'map':'list';document.getElementById('iconStatView').innerText=newView==='list'?'pie_chart':'list';window.switchStatView(newView)}
+    window.switchStatView=function(view){if(currentStatView===view)return;triggerHaptic();updateStatsUI(currentStatMode,view)}
+    function updateStatsUI(mode,view){const card=document.getElementById('statsCard'),body=card.querySelector('.m-body');const currentHeight=card.offsetHeight;card.style.height=currentHeight+'px';const targets=[document.getElementById('statsVisuals'),document.getElementById('statsSummaryCard'),document.getElementById('statsDynamicRows'),document.getElementById('statsMap')].filter(Boolean);targets.forEach(el=>{el.classList.remove('fade-in');el.classList.add('fade-out')});setTimeout(()=>{currentStatMode=mode;currentStatView=view;if(view==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));if(mode==='origin')document.getElementById('btnStatOrigin').classList.add('active');else document.getElementById('btnStatOldClass').classList.add('active');renderStats();card.style.height='auto';const newHeight=card.offsetHeight;card.style.height=currentHeight+'px';card.offsetHeight;card.style.transition='transform .4s var(--ease-ios), background .4s, height .4s var(--ease-ios)';card.style.height=newHeight+'px';targets.forEach(el=>{el.classList.remove('fade-out');el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)});setTimeout(()=>{card.style.height=null;card.style.transition='';},400)},250)}
+    window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
+    function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applySearch('${label}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 window.updateCounter=function(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
 function filterData(){const query=document.getElementById("searchInput").value.toLowerCase();const f25=filterState.year2025;const fOrigin=filterState.origin;const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode);const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");if(isGlobalMode){clearBtn.style.display='flex';tabs.style.display='none';tCard.classList.remove('show');tCard.style.height='';if(wrapSortClass)wrapSortClass.classList.remove("collapsed");if(wrapSortBday)wrapSortBday.classList.remove("collapsed");document.getElementById('classNoticeBanner').style.display='none';}else{clearBtn.style.display='none';tabs.style.display='flex';const data=window.teacherData[currentClass];if(data){document.getElementById('lblGuru').innerText=data.g;document.getElementById('lblPenolong').innerText=data.p;if(!tCard.classList.contains('show'))tCard.classList.add('show')}if(wrapSortClass)wrapSortClass.classList.add("collapsed");if(wrapSortBday)wrapSortBday.classList.add("collapsed");if(currentSortType!=='name')window.handleSort('name');const noticeRaw=window.classNotices && window.classNotices[currentClass];if(noticeRaw){let text="",icon="info",color="#FF9500";if(typeof noticeRaw==='object'&&noticeRaw!==null){text=noticeRaw.text||"";icon=noticeRaw.icon||"info";color=noticeRaw.color||"#FF9500";}else{text=noticeRaw;}if(text){const banner=document.getElementById('classNoticeBanner');const textEl=document.getElementById('classNoticeText');const iconEl=document.getElementById('classNoticeIcon');textEl.innerText=text;iconEl.innerText=icon;iconEl.style.color=color;banner.style.borderColor=window.hexToRgba(color,0.3);banner.style.background=window.hexToRgba(color,0.15);banner.style.display='flex';}else{document.getElementById('classNoticeBanner').style.display='none';}}else{document.getElementById('classNoticeBanner').style.display='none';}}let filtered;if(isGlobalMode)filtered=window.smkData.slice();else filtered=window.smkData.filter(s=>s.newClass.toUpperCase().includes(currentClass.toUpperCase()));if(query)filtered=filtered.filter(s=>s.name.toLowerCase().includes(query)||s.cn.toLowerCase().includes(query)||s.id.includes(query));if(f25)filtered=filtered.filter(s=>s.oldClass===f25);if(fOrigin)filtered=filtered.filter(s=>s.sch===fOrigin);if(isFavMode)filtered=filtered.filter(s=>favorites.includes(s.id));currentFilteredData=filtered;updateCounter(filtered.length);filtered.sort((a,b)=>{if(currentSortType==='name')return sortAsc?a.name.localeCompare(b.name):b.name.localeCompare(a.name);else if(currentSortType==='class'){const classA=a.newClass.split(" ")[1].charAt(0);const classB=b.newClass.split(" ")[1].charAt(0);const rankA=rankOrder[classA]||99;const rankB=rankOrder[classB]||99;return sortAsc?rankA-rankB:rankB-rankA}else{const aBday=a.id?String(a.id).replace(/[^0-9]/g, '').substring(0,6):"999999";const bBday=b.id?String(b.id).replace(/[^0-9]/g, '').substring(0,6):"999999";return sortAsc?aBday.localeCompare(bBday):bBday.localeCompare(aBday)}});const grid=document.getElementById("studentGrid");if(grid){grid.innerHTML="";if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;else{const displayList=filtered.slice(0,100);const html=displayList.map((student,index)=>{const delay=Math.min(index*0.02,0.4);const rank=getRankStatus(student.oldClass,student.newClass);const rawClass=student.newClass.split(" ")[1]||"Biru";const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();const isFav=favorites.includes(student.id);const favClass=isFav?'show':'';return`<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${student.cn}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`}).join('');grid.innerHTML=html}}}
 window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{window.showContextMenu(id)},500)}
