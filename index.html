@@ -1,3 +1,31 @@
+Here is the full updated raw code.
+
+What was changed:
+
+1.  In-UI Confirmations: The native confirm() popups for "Clear All Favorites"
+    and "Delete Student" have been replaced with a beautiful, iOS-style in-UI
+    overlay (#genericConfirmOverlay).
+2.  In-UI Database Error: The native alert() for Database Save Errors has been
+    routed to the existing sleek showAuthDialog UI overlay.
+3.  In-UI Custom Color Picker: The native OS color picker (<input type="color">)
+    has been completely removed. It is replaced with a custom-built 12-color
+    palette grid and a hex code text input that updates a live preview box.
+
+💡 How to read users' Feedback:
+
+To read the feedback submitted by users, you don't need to do anything in the
+app code. Just follow these steps:
+
+1.  Go to your Firebase Console (console.firebase.google.com).
+2.  Open your project (studentlist2026).
+3.  On the left menu, click Firestore Database.
+4.  In the middle data column, look for a collection named feedback.
+5.  Click on it. You will see a list of documents. Each document is a piece of
+    feedback containing the text, the user's email (or an anonymous ID), and the
+    timestamp.
+
+Full Updated Code (index.html):
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -518,7 +546,7 @@ window.hexToRgba = function(hex, alpha) {
   </div>
 </div>
 
-<div id="authDialogOverlay" class="auth-overlay" style="z-index:10000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);">
+<div id="authDialogOverlay" class="auth-overlay" style="z-index:10005;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);">
   <div class="auth-card" style="padding:30px 24px;">
     <div class="auth-title" id="dialogTitle" style="font-size:20px;">Title</div>
     <div class="auth-sub" id="dialogMsg" style="margin-bottom:0;white-space:pre-wrap;">Message</div>
@@ -527,7 +555,7 @@ window.hexToRgba = function(hex, alpha) {
 </div>
 
 <!-- IN-UI LOGOUT CONFIRMATION OVERLAY -->
-<div id="logoutConfirmOverlay" class="auth-overlay" style="z-index:10000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);">
+<div id="logoutConfirmOverlay" class="auth-overlay" style="z-index:10005;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);">
   <div class="auth-card" style="padding:30px 24px; max-width:320px;">
     <div class="auth-title" id="logoutTitle" style="font-size:20px;">Log Out?</div>
     <div class="auth-sub" id="logoutMsg" style="margin-bottom:24px; white-space:pre-wrap;">Are you sure you want to log out of your account?</div>
@@ -968,15 +996,25 @@ window.hexToRgba = function(hex, alpha) {
                        </div>
                        <!-- Custom Color Wrap -->
                        <div id="adminNoticeColorCustomWrapper" style="display:none; margin-top:8px; background:var(--ios-card); padding:10px; border-radius:12px; border:1px solid var(--chip-border);">
-                           <label style="font-size:11px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase; margin-bottom:6px; display:block;">Custom Color</label>
-                           <div style="display:flex; gap:12px; align-items:center;">
-                               <div style="position:relative; width:44px; height:44px; border-radius:50%; border:2px solid var(--glass-border); box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden; flex-shrink:0;">
-                                   <input type="color" id="adminNoticeColorPicker" value="#FF9500" style="position:absolute; top:-10px; left:-10px; width:64px; height:64px; border:none; cursor:pointer; padding:0; background:none;" oninput="window.setCustomColorHex(this.value)">
-                               </div>
-                               <div style="flex:1; position:relative;">
-                                   <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--ios-text-sec); font-family:monospace; font-weight:bold;">HEX</span>
-                                   <input type="text" id="adminNoticeColorHex" class="admin-input" placeholder="#FFFFFF" style="padding-left:45px; font-family:monospace; font-weight:bold; text-transform:uppercase;" oninput="window.updateCustomColorFromHex(this.value)">
-                               </div>
+                           <label style="font-size:11px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase; margin-bottom:6px; display:block;">Hex Code</label>
+                           <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+                               <div id="adminCustomColorPreview" style="width:36px; height:36px; border-radius:8px; background:#FF9500; border:1px solid var(--glass-border); box-shadow:0 2px 8px rgba(0,0,0,0.1);"></div>
+                               <input type="text" id="adminNoticeColorHex" class="admin-input" placeholder="#FFFFFF" style="flex:1; height:36px; font-family:monospace;" oninput="window.updateCustomColorPreview(this.value)">
+                           </div>
+                           <label style="font-size:11px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase; margin-bottom:6px; display:block;">Palette</label>
+                           <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px;" id="adminColorPalette">
+                               <div onclick="window.setCustomColorHex('#FF3B30')" style="aspect-ratio:1; border-radius:50%; background:#FF3B30; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#FF9500')" style="aspect-ratio:1; border-radius:50%; background:#FF9500; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#FFCC00')" style="aspect-ratio:1; border-radius:50%; background:#FFCC00; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#34C759')" style="aspect-ratio:1; border-radius:50%; background:#34C759; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#00C7BE')" style="aspect-ratio:1; border-radius:50%; background:#00C7BE; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#32ADE6')" style="aspect-ratio:1; border-radius:50%; background:#32ADE6; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#007AFF')" style="aspect-ratio:1; border-radius:50%; background:#007AFF; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#5856D6')" style="aspect-ratio:1; border-radius:50%; background:#5856D6; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#AF52DE')" style="aspect-ratio:1; border-radius:50%; background:#AF52DE; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#FF2D55')" style="aspect-ratio:1; border-radius:50%; background:#FF2D55; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#A2845E')" style="aspect-ratio:1; border-radius:50%; background:#A2845E; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
+                               <div onclick="window.setCustomColorHex('#8E8E93')" style="aspect-ratio:1; border-radius:50%; background:#8E8E93; cursor:pointer; box-shadow:var(--chip-shadow);"></div>
                            </div>
                        </div>
                    </div>
@@ -1983,19 +2021,6 @@ window.openFaq=function(){
     setTimeout(()=>document.getElementById("faqOverlay").classList.add("open"),10)
 }
 window.closeFaq=function(){const modal=document.getElementById("faqCard");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")}
-function triggerHaptic(){if(navigator.vibrate)navigator.vibrate(10)}
-function saveSearchHistory(term){term=term.trim();if(!term)return;window.searchHistory=window.searchHistory.filter(t=>t.toLowerCase()!==term.toLowerCase());window.searchHistory.unshift(term);if(window.searchHistory.length>5)window.searchHistory.pop();if(window.cloudSyncUserData)window.cloudSyncUserData();renderSearchHistory(); window.updateProfileStats();}
-window.clearSearchHistory=function(){triggerHaptic();window.searchHistory=[];if(window.cloudSyncUserData)window.cloudSyncUserData();const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');setTimeout(()=>{const cont=document.getElementById('searchHistoryPills');if(cont)cont.innerHTML=''},400); window.updateProfileStats(); window.showToast("History Cleared", "delete");}
-function renderSearchHistory(){const cont=document.getElementById('searchHistoryPills'),drawer=document.getElementById('historyDrawer');if(window.searchHistory.length===0||document.getElementById('searchInput').value!==""){if(drawer)drawer.classList.remove('open');return}let html='';window.searchHistory.forEach(term=>{html+=`<button class="history-pill" onclick="window.applySearch('${term}')">${term}</button>`});html+=`<button class="history-pill clear-hist" onclick="window.clearSearchHistory()"><span class="material-icons-round" style="font-size:14px;">delete_outline</span></button>`;cont.innerHTML=html;if(drawer)drawer.classList.add('open')}
-window.applySearch=function(term){document.getElementById('searchInput').value=term;const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');filterData();triggerHaptic()}
-window.openStats=function(){triggerHaptic();const btnOld=document.getElementById('btnStatOldClass'),card=document.getElementById('statsCard'),body=card.querySelector('.m-body');if(currentStatView==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}if(filterState.year2025!==""){btnOld.parentElement.style.display='none';window.switchStat('origin')}else{btnOld.parentElement.style.display='flex'}renderStats();setTimeout(()=>document.getElementById("statsOverlay").classList.add("open"),10)}
-window.closeStats=function(){const modal=document.getElementById("statsCard");modal.style.transform='';document.getElementById("statsOverlay").classList.remove("open")}
-window.switchStat=function(mode){if(currentStatMode===mode)return;triggerHaptic();updateStatsUI(mode,currentStatView)}
-window.toggleStatViewMode=function(){const newView=currentStatView==='list'?'map':'list';document.getElementById('iconStatView').innerText=newView==='list'?'pie_chart':'list';window.switchStatView(newView)}
-window.switchStatView=function(view){if(currentStatView===view)return;triggerHaptic();updateStatsUI(currentStatMode,view)}
-function updateStatsUI(mode,view){const card=document.getElementById('statsCard'),body=card.querySelector('.m-body');const currentHeight=card.offsetHeight;card.style.height=currentHeight+'px';const targets=[document.getElementById('statsVisuals'),document.getElementById('statsSummaryCard'),document.getElementById('statsDynamicRows'),document.getElementById('statsMap')].filter(Boolean);targets.forEach(el=>{el.classList.remove('fade-in');el.classList.add('fade-out')});setTimeout(()=>{currentStatMode=mode;currentStatView=view;if(view==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));if(mode==='origin')document.getElementById('btnStatOrigin').classList.add('active');else document.getElementById('btnStatOldClass').classList.add('active');renderStats();card.style.height='auto';const newHeight=card.offsetHeight;card.style.height=currentHeight+'px';card.offsetHeight;card.style.transition='transform .4s var(--ease-ios), background .4s, height .4s var(--ease-ios)';card.style.height=newHeight+'px';targets.forEach(el=>{el.classList.remove('fade-out');el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)});setTimeout(()=>{card.style.height=null;card.style.transition='';},400)},250)}
-window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
-function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")}
 function triggerHaptic(){if(navigator.vibrate)navigator.vibrate(10)}
 function saveSearchHistory(term){term=term.trim();if(!term)return;window.searchHistory=window.searchHistory.filter(t=>t.toLowerCase()!==term.toLowerCase());window.searchHistory.unshift(term);if(window.searchHistory.length>5)window.searchHistory.pop();if(window.cloudSyncUserData)window.cloudSyncUserData();renderSearchHistory(); window.updateProfileStats();}
 window.clearSearchHistory=function(){triggerHaptic();window.searchHistory=[];if(window.cloudSyncUserData)window.cloudSyncUserData();const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');setTimeout(()=>{const cont=document.getElementById('searchHistoryPills');if(cont)cont.innerHTML=''},400); window.updateProfileStats(); window.showToast("History Cleared", "delete");}
