@@ -1671,7 +1671,7 @@ window.showToast=function(msg,iconName="check_circle"){const container=document.
 function renderTabs(){
     const tabContainer=document.getElementById("classTabs");
     const allText = uiText[curLang].allClasses || "All Classes";
-    let html = `<div id="tab-All" class="tab-item ${currentClass==='All'?'active':''}" onclick="window.switchClass('All')">${allText}</div>`;
+    let html = `<div id="tab-All" class="tab-item ${currentClass==='All'?'active':''}" onclick="window.switchClass('All')"><span class="anim-text-change" id="lblAllClasses" style="display:inline-block">${allText}</span></div>`;
     html += classes.map((c)=>`<div id="tab-${c}" class="tab-item ${c===currentClass?'active':''}" onclick="window.switchClass('${c}')">2 ${c}</div>`).join('');
     tabContainer.innerHTML=html;
 }
@@ -1901,7 +1901,7 @@ window.switchLanguage=function(lang){
             }
 
             if (window.renderUpdateStep) window.renderUpdateStep();
-            if (window.renderTabs) window.renderTabs();
+            if (document.getElementById('lblAllClasses')) setTextAndAnimateWidth(document.getElementById('lblAllClasses'), txt.allClasses || "All Classes");
             
             if(document.getElementById('adminOverlay').classList.contains('open')){
                 window.openAdminPanel();
