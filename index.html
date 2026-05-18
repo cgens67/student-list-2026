@@ -1683,7 +1683,7 @@ window.closeMainMenu=function(){
     document.getElementById("mainMenuBackdrop").classList.remove("active");
 }
 
-window.switchLanguage=function(lang){
+window.switchLanguage=function(lang, skipSync=false){
     if(lang===curLang)return;
     triggerHaptic();
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
@@ -1908,6 +1908,8 @@ window.switchLanguage=function(lang){
             
             // Re-apply to update lag profile text
             if(window.applyGlobalSettings) window.applyGlobalSettings();
+            
+            if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
 
             if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
             if(searchInput)searchInput.classList.remove("anim-placeholder");
@@ -3139,7 +3141,8 @@ window.cloudSyncUserData=async function(){
             searchHistory: window.searchHistory || [],
             theme: isDark ? 'dark' : 'light',
             density: isCompactMode ? 'compact' : 'comfort',
-            reduceLag: window.userReduceLag || false
+            reduceLag: window.userReduceLag || false,
+            language: curLang
         }, {merge: !0});
     } catch(e) {
         console.error("Sync error:", e);
@@ -3170,6 +3173,7 @@ onAuthStateChanged(auth, async (user) => {
     let prefTheme = null;
     let prefDensity = null;
     let prefReduceLag = false;
+    let prefLanguage = null;
 
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -3180,6 +3184,7 @@ onAuthStateChanged(auth, async (user) => {
         prefTheme = dData.theme;
         prefDensity = dData.density;
         prefReduceLag = dData.reduceLag || false;
+        prefLanguage = dData.language;
       }
     } catch (e) {
       console.warn("Failed to fetch user profile, using defaults.");
@@ -3199,6 +3204,9 @@ onAuthStateChanged(auth, async (user) => {
         isCompactMode = (prefDensity === 'compact');
         localStorage.setItem('isCompact', isCompactMode);
         applyDensity(isCompactMode);
+    }
+    if (prefLanguage && prefLanguage !== curLang) {
+        window.switchLanguage(prefLanguage, true); // true = skip duplicate sync
     }
 
     if (window.updateProfileStats) window.updateProfileStats();
