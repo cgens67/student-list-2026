@@ -828,6 +828,36 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 </div>
 
+<!-- NEW ACCOUNT WELCOME GUIDE OVERLAY -->
+<div id="welcomeOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; transition:opacity 0.4s var(--ease-ios); opacity:0;">
+    <div style="background:var(--ios-card); border:1px solid var(--glass-border); box-shadow:var(--shadow-lg); border-radius:28px; width:100%; max-width:400px; overflow:hidden; display:flex; flex-direction:column; animation: fadeUp 0.5s var(--ease-spring) forwards;">
+        <div style="padding:30px 20px 20px; display:flex; flex-direction:column; align-items:center; border-bottom:1px solid var(--ios-sep);">
+            <div style="background:linear-gradient(135deg, #34C759, #30D158); border-radius:22px; width:70px; height:70px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; box-shadow:0 8px 24px rgba(52,199,89,0.3);">
+                <span class="material-icons-round" style="font-size:36px; color:#fff;">waving_hand</span>
+            </div>
+            <h1 style="font-size:24px; font-weight:800; color:var(--ios-text); margin:0 0 8px 0; letter-spacing:-0.02em;">Welcome!</h1>
+            <div style="font-size:14px; font-weight:500; color:var(--ios-text-sec);">Here's a quick guide to get you started.</div>
+        </div>
+        <div style="padding:20px; text-align:left; display:flex; flex-direction:column; gap:16px; background:var(--ios-input);">
+            <div style="display:flex; gap:12px; align-items:center;">
+                <span class="material-icons-round" style="color:var(--ios-blue); font-size:24px;">search</span>
+                <div style="font-size:14px; color:var(--ios-text); line-height:1.4;"><b>Search & Filter:</b> Find students by Name, Chinese Name, ID, or their previous schools easily.</div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <span class="material-icons-round" style="color:#FF2D55; font-size:24px;">star</span>
+                <div style="font-size:14px; color:var(--ios-text); line-height:1.4;"><b>Favorites:</b> Long-press a student or tap the star icon in their profile to save them to your list.</div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <span class="material-icons-round" style="color:#AF52DE; font-size:24px;">touch_app</span>
+                <div style="font-size:14px; color:var(--ios-text); line-height:1.4;"><b>Quick Actions:</b> Long-press any student to quickly copy their details.</div>
+            </div>
+        </div>
+        <div style="padding:16px 20px; background:var(--ios-card); border-top:1px solid var(--ios-sep);">
+            <button onclick="window.closeWelcomeGuide()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 12px var(--ios-blue-light); transition:transform 0.2s;">Let's Go!</button>
+        </div>
+    </div>
+</div>
+
 <div id="mainAppWrapper">
   <header class='ios-header' id='mainHeader'>
     <div class='header-meta'>
@@ -2355,6 +2385,19 @@ window.nextUpdateStep = function() {
     }
 };
 
+window.showWelcomeGuide = function() {
+    const overlay = document.getElementById('welcomeOverlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+};
+
+window.closeWelcomeGuide = function() {
+    triggerHaptic();
+    const overlay = document.getElementById('welcomeOverlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+};
+
 window.closeUpdateScreen = function() {
     document.getElementById('updateIntroScreen').style.opacity = '0';
     setTimeout(() => {
@@ -3144,7 +3187,7 @@ toggleAuthModeBtn.addEventListener('click',()=>{
     primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
     toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
 });
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"; window.justRegistered = true;}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){
     if(!window.cloudUser) return;
@@ -3255,13 +3298,19 @@ onAuthStateChanged(auth, async (user) => {
           
           loginScreen.classList.remove('active');
 
-          // STARTUP UPDATE SCREEN LOGIC
-          const uSettings = window.globalSettings.updateScreen || {};
-          const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-          if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-              window.showUpdateScreen();
-          } else {
+          if (window.justRegistered) {
               document.getElementById('mainAppWrapper').classList.add('visible');
+              window.showWelcomeGuide();
+              window.justRegistered = false; // Reset the flag so it never shows again
+          } else {
+              // NORMAL STARTUP UPDATE SCREEN LOGIC
+              const uSettings = window.globalSettings.updateScreen || {};
+              const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+              if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
+                  window.showUpdateScreen();
+              } else {
+                  document.getElementById('mainAppWrapper').classList.add('visible');
+              }
           }
 
         } 
