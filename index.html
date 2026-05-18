@@ -2851,8 +2851,7 @@ function filterData(){
         grid.innerHTML="";
         if(filtered.length===0)grid.innerHTML=`<div class="empty-msg">${uiText[curLang].empty}</div>`;
         else{
-            const displayList=filtered.slice(0,100);
-            const html=displayList.map((student,index)=>{
+            const html=filtered.map((student,index)=>{
                 const delay=Math.min(index*0.02,0.4);
                 const rank=getRankStatus(student.oldClass,student.newClass);
                 const rawClass=student.newClass.split(" ")[1]||"Biru";
@@ -3131,7 +3130,7 @@ toggleAuthModeBtn.addEventListener('click',()=>{
     primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
     toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
 });
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){
     if(!window.cloudUser) return;
