@@ -2493,6 +2493,8 @@ window.nextCoachStep = function() {
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     
     const tooltip = document.getElementById('coachTooltip');
+    tooltip.style.transition = 'none';
+    tooltip.style.opacity = '0';
     tooltip.innerText = uiText[curLang][step.textKey] || step.textKey;
     
     const contText = document.querySelector('.coach-continue');
@@ -2511,7 +2513,13 @@ window.nextCoachStep = function() {
             tooltip.style.right = '16px';
             tooltip.style.transform = 'none';
         }
-    }, 300); // wait for scroll to calculate correctly
+        
+        // Restore transition and fade in smoothly
+        setTimeout(() => {
+            tooltip.style.transition = 'all 0.3s var(--ease-spring)';
+            tooltip.style.opacity = '1';
+        }, 10);
+    }, 350); // wait for scroll to finish
 };
 
 window.closeUpdateScreen = function() {
