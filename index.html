@@ -600,6 +600,11 @@ window.hexToRgba = function(hex, alpha) {
 
 <div id="authScreen" class="auth-overlay active">
   <div class="auth-card" id="authCard">
+    <div class="lang-switch" style="position:absolute; top:16px; left:16px; z-index:5;">
+      <button class="lang-btn active" onclick="window.switchLanguage('en')">EN</button>
+      <button class="lang-btn" onclick="window.switchLanguage('bm')">BM</button>
+      <button class="lang-btn" onclick="window.switchLanguage('cn')">CN</button>
+    </div>
     <div class="auth-dots" onclick="toggleAuthMenu(event)"><span class="material-icons-round">more_vert</span></div>
     <div class="auth-menu" id="authMenu">
       <div class="auth-menu-item" onclick="window.openAbout()"><span id="menuAboutText">About App</span></div>
@@ -1686,8 +1691,10 @@ window.closeMainMenu=function(){
 window.switchLanguage=function(lang, skipSync=false){
     if(lang===curLang)return;
     triggerHaptic();
-    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelector(`.lang-btn[onclick="window.switchLanguage('${lang}')"]`).classList.add('active');
+    document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.innerText.toLowerCase() === lang) b.classList.add('active');
+    });
     
     const fadeTargets=document.querySelectorAll('.anim-text-change');
     const searchInput=document.getElementById("searchInput");
