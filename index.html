@@ -555,6 +555,30 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
     pointer-events: auto;
     transform: translateY(0);
 }
+
+/* COACH MARKS SYSTEM */
+#coachOverlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    z-index: 9999; display: flex; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+}
+#coachOverlay.show { opacity: 1; pointer-events: auto; }
+.coach-tooltip {
+    position: absolute; background: var(--ios-blue); color: #fff; padding: 14px 20px; border-radius: 16px;
+    font-weight: 600; font-size: 15px; box-shadow: 0 8px 24px rgba(0,122,255,0.4); max-width: 280px;
+    text-align: center; z-index: 10002; line-height: 1.4; transition: all 0.3s var(--ease-spring);
+}
+.coach-continue {
+    position: absolute; bottom: 40px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.8);
+    font-size: 15px; font-weight: 700; animation: fadeUp 1s ease infinite alternate; pointer-events: none;
+}
+.coach-highlight {
+    position: relative !important; z-index: 10000 !important; background: var(--ios-card) !important;
+    box-shadow: 0 0 0 4px var(--ios-blue), 0 8px 24px rgba(0,0,0,0.3) !important;
+    pointer-events: none !important; animation: coachPulse 2s infinite;
+}
+.coach-header-lift { z-index: 10001 !important; transform: none !important; }
+body.coach-active .action-row.coach-highlight { z-index: 10001 !important; }
+body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
 </style>
 </head>
 <body>
@@ -856,6 +880,12 @@ window.hexToRgba = function(hex, alpha) {
             <button onclick="window.closeWelcomeGuide()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 12px var(--ios-blue-light); transition:transform 0.2s;">Let's Go!</button>
         </div>
     </div>
+</div>
+
+<!-- COACH MARKS OVERLAY -->
+<div id="coachOverlay" onclick="window.nextCoachStep()">
+    <div id="coachTooltip" class="coach-tooltip"></div>
+    <div class="coach-continue">Tap anywhere to continue</div>
 </div>
 
 <div id="mainAppWrapper">
@@ -2395,7 +2425,75 @@ window.closeWelcomeGuide = function() {
     triggerHaptic();
     const overlay = document.getElementById('welcomeOverlay');
     overlay.style.opacity = '0';
-    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+    setTimeout(() => { 
+        overlay.style.display = 'none'; 
+        window.startCoachMarks(); // Start interactive tutorial
+    }, 400);
+};
+
+// COACH MARKS LOGIC
+window.coachSteps = [
+    { target: '.action-row', text: "Search, filter, or view statistics here!", pos: 'center' },
+    { target: '#studentGrid .ios-cell', text: "Tap a student to view details, or long-press for quick actions!", pos: 'bottom' },
+    { target: '#btnMenuToggle', text: "Access your profile, settings, and more from the menu.", pos: 'menu' }
+];
+window.currentCoachStep = -1;
+
+window.startCoachMarks = function() {
+    document.body.classList.add('coach-active');
+    document.getElementById('coachOverlay').classList.add('show');
+    window.currentCoachStep = -1;
+    window.nextCoachStep();
+};
+
+window.nextCoachStep = function() {
+    document.querySelectorAll('.coach-highlight').forEach(el => {
+        el.classList.remove('coach-highlight');
+        el.style.borderRadius = '';
+    });
+    document.getElementById('mainHeader').classList.remove('coach-header-lift');
+    
+    window.currentCoachStep++;
+    if (window.currentCoachStep >= window.coachSteps.length) {
+        document.getElementById('coachOverlay').classList.remove('show');
+        document.body.classList.remove('coach-active');
+        return;
+    }
+
+    const step = window.coachSteps[window.currentCoachStep];
+    const targetEl = document.querySelector(step.target);
+    if (!targetEl) {
+        window.nextCoachStep(); // skip if missing
+        return;
+    }
+
+    if (step.target === '#btnMenuToggle') {
+        document.getElementById('mainHeader').classList.add('coach-header-lift');
+    }
+
+    targetEl.classList.add('coach-highlight');
+    if(step.target === '.action-row') targetEl.style.borderRadius = '16px';
+    if(step.target === '#btnMenuToggle') targetEl.style.borderRadius = '50%';
+    
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    const tooltip = document.getElementById('coachTooltip');
+    tooltip.innerText = step.text;
+    
+    setTimeout(() => {
+        const rect = targetEl.getBoundingClientRect();
+        if (step.pos === 'center' || step.pos === 'bottom') {
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+            tooltip.style.left = '50%';
+            tooltip.style.right = 'auto';
+            tooltip.style.transform = 'translateX(-50%)';
+        } else if (step.pos === 'menu') {
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+            tooltip.style.left = 'auto';
+            tooltip.style.right = '16px';
+            tooltip.style.transform = 'none';
+        }
+    }, 300); // wait for scroll to calculate correctly
 };
 
 window.closeUpdateScreen = function() {
