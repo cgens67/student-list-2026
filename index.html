@@ -574,9 +574,9 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .coach-highlight {
     position: relative !important; z-index: 10000 !important; background: var(--ios-card) !important;
     box-shadow: 0 0 0 4px var(--ios-blue), 0 8px 24px rgba(0,0,0,0.3) !important;
-    pointer-events: none !important; animation: coachPulse 2s infinite;
+    pointer-events: none !important; opacity: 1 !important; transform: translateY(0) scale(1) !important; animation: none !important;
 }
-.coach-header-lift { z-index: 10001 !important; transform: none !important; }
+.coach-header-lift { z-index: 10001 !important; transform: translate3d(0,0,0) !important; }
 body.coach-active .action-row.coach-highlight { z-index: 10001 !important; }
 body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
 </style>
@@ -882,13 +882,12 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 </div>
 
-<!-- COACH MARKS OVERLAY -->
-<div id="coachOverlay" onclick="window.nextCoachStep()">
-    <div id="coachTooltip" class="coach-tooltip"></div>
-    <div class="coach-continue">Tap anywhere to continue</div>
-</div>
-
 <div id="mainAppWrapper">
+  <!-- COACH MARKS OVERLAY -->
+  <div id="coachOverlay" onclick="window.nextCoachStep()">
+      <div id="coachTooltip" class="coach-tooltip"></div>
+      <div class="coach-continue">Tap anywhere to continue</div>
+  </div>
   <header class='ios-header' id='mainHeader'>
     <div class='header-meta'>
       <div class='meta-left'>
@@ -2503,7 +2502,7 @@ window.nextCoachStep = function() {
             tooltip.style.right = 'auto';
             tooltip.style.transform = 'translateX(-50%)';
         } else if (step.pos === 'menu') {
-            tooltip.style.top = (rect.bottom + 20) + 'px';
+            tooltip.style.top = '145px'; // Safely clear the header height
             tooltip.style.left = 'auto';
             tooltip.style.right = '16px';
             tooltip.style.transform = 'none';
