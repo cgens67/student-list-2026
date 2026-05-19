@@ -2189,7 +2189,7 @@ function updateModalContent(student, index) {
     }
 }
 window.shareResult = async function() {
-    if (!window.currentStudentId) return;
+    if (!currentStudentId) return;
     triggerHaptic();
     const btn = document.getElementById('btnShare');
     const icon = btn.querySelector('span');
@@ -2199,7 +2199,7 @@ window.shareResult = async function() {
     btn.style.pointerEvents = "none";
     
     try {
-        const student = window.smkData.find(s => s.id === window.currentStudentId);
+        const student = window.smkData.find(s => s.id === currentStudentId);
         const container = document.getElementById('shareCardContainer');
         
         // Match Background
