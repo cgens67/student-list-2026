@@ -2292,9 +2292,14 @@ window.shareResult = async function() {
             
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
+                    const shareTexts = {
+                        en: `Here's ${student.name}'s info.`,
+                        bm: `Ini maklumat ${student.name}.`,
+                        cn: `这是 ${student.name} 的信息。`
+                    };
                     await navigator.share({
-                        title: 'Student Allocation 2026',
-                        text: `Check out ${student.name}'s new class for 2026!`,
+                        title: appTitleStr,
+                        text: shareTexts[curLang] || shareTexts.en,
                         files: [file]
                     });
                 } catch (e) {
