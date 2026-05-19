@@ -3472,19 +3472,48 @@ window.saveAdminData = async () => {
   }
 };
 
-window.toggleAuthMenu=(e)=>{e.stopPropagation();loginMenu.classList.toggle('show')};document.addEventListener('click',()=>loginMenu.classList.remove('show'));
-function showAuthMessage(msg,isError=!0){authErrorText.innerText=msg;authMsgBox.className=isError?'auth-error show':'auth-error show success';authMsgBox.querySelector('span').innerText=isError?'error_outline':'check_circle';authMsgBox.style.color=isError?'#FF3B30':'#34C759'}
-function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invalid email format.';if(code.includes('wrong-password')||code.includes('invalid-credential'))return 'Incorrect email or password.';if(code.includes('email-already-in-use'))return 'Email already registered.';if(code.includes('weak-password'))return 'Password too short (min 6).';return 'Authentication failed. Try again.'}
+// Re-add toggleCurrentFav which was accidentally removed earlier
+window.toggleCurrentFav = function(){
+    triggerHaptic();
+    if(!window.currentStudentId) return;
+    toggleFavId(window.currentStudentId);
+    const btnStar = document.getElementById('btnStar');
+    if(window.favorites.includes(window.currentStudentId)){
+        btnStar.classList.add('active');
+        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star</span>';
+    } else {
+        btnStar.classList.remove('active');
+        btnStar.innerHTML = '<span class="material-icons-round" style="font-size:20px">star_border</span>';
+    }
+};
+
+window.toggleAuthMenu = (e) => { e.stopPropagation(); loginMenu.classList.toggle('show'); };
+document.addEventListener('click', () => loginMenu.classList.remove('show'));
+
+function showAuthMessage(msg, isError=true) {
+    authErrorText.innerText = msg;
+    authMsgBox.className = isError ? 'auth-error show' : 'auth-error show success';
+    authMsgBox.querySelector('span').innerText = isError ? 'error_outline' : 'check_circle';
+    authMsgBox.style.color = isError ? '#FF3B30' : '#34C759';
+}
+
+function getFriendlyError(code) {
+    if(code.includes('invalid-email')) return 'Invalid email format.';
+    if(code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect email or password.';
+    if(code.includes('email-already-in-use')) return 'Email already registered.';
+    if(code.includes('weak-password')) return 'Password too short (min 6).';
+    return 'Authentication failed. Try again.';
+}
 
 toggleAuthModeBtn.addEventListener('click', () => {
     window.isSignUpMode = !window.isSignUpMode;
     authMsgBox.classList.remove('show');
-    authTitle.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authTitleS : "Create Account") : (uiText[curLang] ? uiText[curLang].authTitleL : "Welcome Back");
-    authSub.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSubS : "Sign up to access records") : (uiText[curLang] ? uiText[curLang].authSubL : "Log in to view student records");
+    authTitle.innerText = window.isSignUpMode ? (uiText[curLang] && uiText[curLang].authTitleS ? uiText[curLang].authTitleS : "Create Account") : (uiText[curLang] && uiText[curLang].authTitleL ? uiText[curLang].authTitleL : "Welcome Back");
+    authSub.innerText = window.isSignUpMode ? (uiText[curLang] && uiText[curLang].authSubS ? uiText[curLang].authSubS : "Sign up to access records") : (uiText[curLang] && uiText[curLang].authSubL ? uiText[curLang].authSubL : "Log in to view student records");
     authIcon.innerText = window.isSignUpMode ? "person_add" : "lock_outline";
-    primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In");
+    primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] && uiText[curLang].authSignUpBtn ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] && uiText[curLang].authLoginBtn ? uiText[curLang].authLoginBtn : "Log In");
     primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
-    toggleAuthModeBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authToggleS : "Already have an account? Log In") : (uiText[curLang] ? uiText[curLang].authToggleL : "Don't have an account? Sign Up");
+    toggleAuthModeBtn.innerText = window.isSignUpMode ? (uiText[curLang] && uiText[curLang].authToggleS ? uiText[curLang].authToggleS : "Already have an account? Log In") : (uiText[curLang] && uiText[curLang].authToggleL ? uiText[curLang].authToggleL : "Don't have an account? Sign Up");
 });
 
 primaryAuthBtn.addEventListener('click', () => {
@@ -3514,182 +3543,192 @@ primaryAuthBtn.addEventListener('click', () => {
     }
 });
 
-window.cloudSyncUserData=async function(){
+window.cloudSyncUserData = async function() {
     if(!window.cloudUser) return;
     try {
-        await setDoc(doc(db,"users",window.cloudUser.uid), {
+        await setDoc(doc(db, "users", window.cloudUser.uid), {
             favorites: window.favorites || [],
             searchHistory: window.searchHistory || [],
             theme: isDark ? 'dark' : 'light',
             density: isCompactMode ? 'compact' : 'comfort',
             reduceLag: window.userReduceLag || false,
             language: curLang
-        }, {merge: !0});
+        }, {merge: true});
     } catch(e) {
         console.error("Sync error:", e);
     }
 };
 
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    window.cloudUser = user;
+  try {
+      if (user) {
+        window.cloudUser = user;
 
-    if (user.email === ADMIN_EMAIL) {
-      document.getElementById('adminControlBtn').style.display = 'flex';
-      window.unsubscribeAuditLogs = onSnapshot(doc(db, "appData", "auditLogs"), (docSnap) => {
-          if(docSnap.exists()) {
-              window.auditLogs = docSnap.data().logs || [];
-              if(document.getElementById('adminOverlay').classList.contains('open')) {
-                  if(window.renderAuditLogUI) window.renderAuditLogUI();
+        // Safely get admin email in case it was deleted
+        const adminEmail = (typeof ADMIN_EMAIL !== 'undefined') ? ADMIN_EMAIL : "loochinsiang5735@gmail.com";
+
+        if (user.email === adminEmail) {
+          document.getElementById('adminControlBtn').style.display = 'flex';
+          window.unsubscribeAuditLogs = onSnapshot(doc(db, "appData", "auditLogs"), (docSnap) => {
+              if(docSnap.exists()) {
+                  window.auditLogs = docSnap.data().logs || [];
+                  if(document.getElementById('adminOverlay').classList.contains('open')) {
+                      if(window.renderAuditLogUI) window.renderAuditLogUI();
+                  }
               }
+          });
+        } else {
+          document.getElementById('adminControlBtn').style.display = 'none';
+        }
+
+        let userFavorites = [];
+        let userSearchHistory = [];
+        let prefTheme = null;
+        let prefDensity = null;
+        let prefReduceLag = false;
+        let prefLanguage = null;
+
+        try {
+          const docSnap = await getDoc(doc(db, "users", user.uid));
+          if (docSnap.exists()) {
+            const dData = docSnap.data();
+            userFavorites = dData.favorites || [];
+            userSearchHistory = dData.searchHistory || [];
+            prefTheme = dData.theme;
+            prefDensity = dData.density;
+            prefReduceLag = dData.reduceLag || false;
+            prefLanguage = dData.language;
           }
-      });
-    } else {
-      document.getElementById('adminControlBtn').style.display = 'none';
-    }
+        } catch (e) {
+          console.warn("Failed to fetch user profile, using defaults.");
+        }
 
-    let userFavorites = [];
-    let userSearchHistory = [];
-    let prefTheme = null;
-    let prefDensity = null;
-    let prefReduceLag = false;
-    let prefLanguage = null;
+        window.favorites = userFavorites;
+        window.searchHistory = userSearchHistory;
+        window.userReduceLag = prefReduceLag;
+        localStorage.setItem('userReduceLag', prefReduceLag);
 
-    try {
-      const docSnap = await getDoc(doc(db, "users", user.uid));
-      if (docSnap.exists()) {
-        const dData = docSnap.data();
-        userFavorites = dData.favorites || [];
-        userSearchHistory = dData.searchHistory || [];
-        prefTheme = dData.theme;
-        prefDensity = dData.density;
-        prefReduceLag = dData.reduceLag || false;
-        prefLanguage = dData.language;
-      }
-    } catch (e) {
-      console.warn("Failed to fetch user profile, using defaults.");
-    }
+        if (prefTheme === 'dark' || prefTheme === 'light') {
+            if(window.enableDark) enableDark(prefTheme === 'dark', true); 
+        }
+        if (prefDensity === 'compact' || prefDensity === 'comfort') {
+            isCompactMode = (prefDensity === 'compact');
+            localStorage.setItem('isCompact', isCompactMode);
+            if(window.applyDensity) applyDensity(isCompactMode);
+        }
+        if (prefLanguage && prefLanguage !== curLang) {
+            if(window.switchLanguage) window.switchLanguage(prefLanguage, true); 
+        }
 
-    window.favorites = userFavorites;
-    window.searchHistory = userSearchHistory;
-    window.userReduceLag = prefReduceLag;
-    localStorage.setItem('userReduceLag', prefReduceLag);
+        if (window.updateProfileStats) window.updateProfileStats();
+        if (window.renderSearchHistory) window.renderSearchHistory();
 
-    if (prefTheme === 'dark' || prefTheme === 'light') {
-        enableDark(prefTheme === 'dark', true); 
-    }
-    if (prefDensity === 'compact' || prefDensity === 'comfort') {
-        isCompactMode = (prefDensity === 'compact');
-        localStorage.setItem('isCompact', isCompactMode);
-        applyDensity(isCompactMode);
-    }
-    if (prefLanguage && prefLanguage !== curLang) {
-        window.switchLanguage(prefLanguage, true); 
-    }
+        window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'dynamic', hideTheme: 'false', hideStats: 'false', forceCoachMarks: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
+            const newStudents = data.students || [];
+            const newTeachers = data.teachers || {};
+            const newNotices = data.classNotices || {};
 
-    if (window.updateProfileStats) window.updateProfileStats();
-    if (window.renderSearchHistory) window.renderSearchHistory();
+            if (window.isInitialLoad) {
+              window.smkData = newStudents;
+              window.teacherData = newTeachers;
+              window.globalSettings = newSettings;
+              window.classNotices = newNotices;
+              
+              window.isInitialLoad = false;
 
-    window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'dynamic', hideTheme: 'false', hideStats: 'false', forceCoachMarks: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
-        const newStudents = data.students ||[];
-        const newTeachers = data.teachers || {};
-        const newNotices = data.classNotices || {};
-
-        if (window.isInitialLoad) {
-          window.smkData = newStudents;
-          window.teacherData = newTeachers;
-          window.globalSettings = newSettings;
-          window.classNotices = newNotices;
-          
-          window.isInitialLoad = false;
-
-          if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              document.getElementById('mainAppWrapper').classList.remove('visible');
-              document.getElementById('maintenanceScreen').classList.add('visible');
+              if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== adminEmail) {
+                  document.getElementById('mainAppWrapper').classList.remove('visible');
+                  document.getElementById('maintenanceScreen').classList.add('visible');
+                  loginScreen.classList.remove('active');
+                  return;
+              }
+              
+              if(window.applyGlobalSettings) window.applyGlobalSettings();
+              if(window.initFilterChips) window.initFilterChips();
+              if(window.renderTabs) window.renderTabs();
+              if(window.filterData) window.filterData();
+              
               loginScreen.classList.remove('active');
-              return;
-          }
-          
-          if(window.applyGlobalSettings) window.applyGlobalSettings();
-          if(window.initFilterChips) window.initFilterChips();
-          if(window.renderTabs) window.renderTabs();
-          if(window.filterData) window.filterData();
-          
-          loginScreen.classList.remove('active');
 
-          if (window.justRegistered || window.globalSettings.forceCoachMarks === 'true') {
-              document.getElementById('mainAppWrapper').classList.add('visible');
-              if(window.showWelcomeGuide) {
-                  const overlay = document.getElementById('welcomeOverlay');
-                  if(overlay) { overlay.style.display = 'flex'; setTimeout(() => { overlay.style.opacity = '1'; }, 10); }
-              }
-              window.justRegistered = false; 
-          } else {
-              const uSettings = window.globalSettings.updateScreen || {};
-              const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-              if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-                  if(window.showUpdateScreen) window.showUpdateScreen();
+              if (window.justRegistered || window.globalSettings.forceCoachMarks === 'true') {
+                  document.getElementById('mainAppWrapper').classList.add('visible');
+                  if(window.showWelcomeGuide) {
+                      const overlay = document.getElementById('welcomeOverlay');
+                      if(overlay) { overlay.style.display = 'flex'; setTimeout(() => { overlay.style.opacity = '1'; }, 10); }
+                  }
+                  window.justRegistered = false; 
               } else {
+                  const uSettings = window.globalSettings.updateScreen || {};
+                  const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+                  if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
+                      if(window.showUpdateScreen) window.showUpdateScreen();
+                  } else {
+                      document.getElementById('mainAppWrapper').classList.add('visible');
+                  }
+              }
+
+            } 
+            else {
+              if (newSettings.maintenance === 'true' && window.cloudUser.email !== adminEmail) {
+                  if(window.closeModal) window.closeModal(); if(window.closeStats) window.closeStats(); if(window.closeAbout) window.closeAbout(); if(window.closeFaq) window.closeFaq(); if(window.closeMainMenu) window.closeMainMenu(); if(window.closeAdminPanel) window.closeAdminPanel(); if(window.closeFeedback) window.closeFeedback();
+                  document.getElementById('mainAppWrapper').classList.remove('visible');
+                  document.getElementById('maintenanceScreen').classList.add('visible');
+                  return;
+              } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
+                  document.getElementById('maintenanceScreen').classList.remove('visible');
                   document.getElementById('mainAppWrapper').classList.add('visible');
               }
-          }
 
-        } 
-        else {
-          if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              if(window.closeModal) window.closeModal(); if(window.closeStats) window.closeStats(); if(window.closeAbout) window.closeAbout(); if(window.closeFaq) window.closeFaq(); if(window.closeMainMenu) window.closeMainMenu(); if(window.closeAdminPanel) window.closeAdminPanel(); if(window.closeFeedback) window.closeFeedback();
-              document.getElementById('mainAppWrapper').classList.remove('visible');
-              document.getElementById('maintenanceScreen').classList.add('visible');
-              return;
-          } else if (newSettings.maintenance === 'false' && document.getElementById('maintenanceScreen').classList.contains('visible')) {
-              document.getElementById('maintenanceScreen').classList.remove('visible');
-              document.getElementById('mainAppWrapper').classList.add('visible');
-          }
+              if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
+                window.globalSettings = newSettings;
+                if(window.applyGlobalSettings) window.applyGlobalSettings();
+              }
 
-          if (JSON.stringify(window.globalSettings) !== JSON.stringify(newSettings)) {
-            window.globalSettings = newSettings;
-            if(window.applyGlobalSettings) window.applyGlobalSettings();
-          }
+              const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
+                                  JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
+                                  JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
 
-          const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
-                              JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
-                              JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
-
-          if (dataChanged) {
-            window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
-            const promptBanner = document.getElementById('updatePromptBanner');
-            if(promptBanner) promptBanner.classList.add('show');
+              if (dataChanged) {
+                window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
+                const promptBanner = document.getElementById('updatePromptBanner');
+                if(promptBanner) promptBanner.classList.add('show');
+              }
+            }
+          } else {
+              console.error("Firebase schoolInfo document does not exist!");
+              showAuthMessage("Database error: Data missing.", true);
           }
-        }
+        });
+        
+      } else {
+        if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo();
+        if (window.unsubscribeAuditLogs) window.unsubscribeAuditLogs();
+        
+        window.isInitialLoad = true;
+        window.cloudUser = null;
+        window.favorites = [];
+        window.searchHistory = [];
+        window.auditLogs = [];
+        
+        const searchInput = document.getElementById('searchInput');
+        if(searchInput) searchInput.value = '';
+        
+        if(mainApp) mainApp.classList.remove('visible');
+        if(loginScreen) loginScreen.classList.add('active');
+        if(emailInput) emailInput.value = ''; 
+        if(passwordInput) passwordInput.value = '';
+        if(primaryAuthBtn) primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In");
+        
+        if (window.filterData) window.filterData();
       }
-    });
-    
-  } else {
-    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo();
-    if (window.unsubscribeAuditLogs) window.unsubscribeAuditLogs();
-    
-    window.isInitialLoad = true;
-    window.cloudUser = null;
-    window.favorites = [];
-    window.searchHistory = [];
-    window.auditLogs = [];
-    
-    const searchInput = document.getElementById('searchInput');
-    if(searchInput) searchInput.value = '';
-    
-    if(mainApp) mainApp.classList.remove('visible');
-    if(loginScreen) loginScreen.classList.add('active');
-    if(emailInput) emailInput.value = ''; 
-    if(passwordInput) passwordInput.value = '';
-    if(primaryAuthBtn) primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In");
-    
-    if (window.filterData) window.filterData();
+  } catch(globalErr) {
+      console.error("CRITICAL AUTH ERROR:", globalErr);
+      showAuthMessage("A critical error occurred. Please refresh.", true);
   }
 });
 </script>
-
 </body>
 </html>
