@@ -1473,22 +1473,33 @@ window.hexToRgba = function(hex, alpha) {
   
   <!-- INVISIBLE SHARE CARD TEMPLATE -->
   <div id="shareCardContainer" style="position:fixed; top:-9999px; left:-9999px; width:1080px; height:1080px; display:flex; align-items:center; justify-content:center; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
-      <div id="shareCardInner" style="background:#FFFFFF; border-radius:48px; padding:60px; width:800px; box-shadow:0 30px 80px rgba(0,0,0,0.2); text-align:center; display:flex; flex-direction:column; align-items:center;">
-          <div id="scAvatar" style="width:160px; height:160px; border-radius:50%; font-size:64px; font-weight:700; color:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:30px; box-shadow:0 16px 40px rgba(0,0,0,0.2);">A</div>
+      <div id="shareCardInner" style="background:#FFFFFF; border-radius:48px; padding:60px; width:800px; box-shadow:0 30px 80px rgba(0,0,0,0.2); text-align:center; display:flex; flex-direction:column; align-items:center; position:relative;">
+          <div id="scAvatar" style="width:160px; height:160px; border-radius:50%; font-size:64px; font-weight:700; color:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:20px; box-shadow:0 16px 40px rgba(0,0,0,0.2);">A</div>
           <div id="scName" style="font-size:48px; font-weight:800; color:#1D1D1F; line-height:1.2; margin-bottom:10px;">Name</div>
+          <div id="scId" style="font-size:24px; font-weight:700; color:#8E8E93; margin-bottom:10px;">ID: 123456789</div>
           <div id="scCn" style="font-size:28px; font-weight:600; color:#8E8E93; margin-bottom:40px;">Chinese Name</div>
-          <div style="display:flex; width:100%; gap:20px; align-items:center; justify-content:center; margin-bottom:50px;">
+          <div style="display:flex; width:100%; gap:20px; align-items:center; justify-content:center; margin-bottom:30px;">
               <div style="flex:1; background:#F2F2F7; border-radius:24px; padding:30px;">
                   <div style="font-size:20px; color:#8E8E93; font-weight:700; text-transform:uppercase; margin-bottom:10px;" id="scOldTitle">Previous Class</div>
                   <div id="scOld" style="font-size:40px; font-weight:800; color:#1D1D1F;">1 BIRU</div>
               </div>
               <div style="font-size:48px; color:#C7C7CC;">➔</div>
-              <div id="scNewBg" style="flex:1; background:#E5F1FF; border-radius:24px; padding:30px;">
+              <div id="scNewBg" style="flex:1; background:#E5F1FF; border-radius:24px; padding:30px; position:relative;">
                   <div id="scNewTitle" style="font-size:20px; color:#007AFF; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Current Class</div>
                   <div id="scNew" style="font-size:40px; font-weight:800; color:#007AFF;">2 BIRU</div>
+                  <div id="scStatusIcon" style="position:absolute; top:25px; right:25px; font-family:'Material Icons Round'; font-size:36px;">thumb_up</div>
               </div>
           </div>
-          <div style="font-size:24px; font-weight:600; color:#8E8E93;">Student Allocation 2026</div>
+          <div style="display:flex; width:100%; justify-content:center; gap:20px; margin-bottom:40px;">
+              <div style="background:#F2F2F7; border-radius:16px; padding:15px 30px; display:flex; align-items:center; gap:12px;">
+                  <span class="material-icons-round" style="color:#8E8E93; font-size:28px;">school</span>
+                  <div style="text-align:left;">
+                      <div id="scSchTitle" style="font-size:14px; font-weight:800; color:#8E8E93; text-transform:uppercase;">Primary School</div>
+                      <div id="scSch" style="font-size:20px; font-weight:800; color:#1D1D1F;">School Name</div>
+                  </div>
+              </div>
+          </div>
+          <div id="scFooter" style="font-size:24px; font-weight:700; color:#8E8E93;">Student Allocation 2026</div>
       </div>
   </div>
 
@@ -2196,9 +2207,21 @@ window.shareResult = async function() {
     const btn = document.getElementById('btnShare');
     const icon = btn.querySelector('span');
     const originalIcon = icon.innerText;
-    icon.innerText = "hourglass_empty";
+    
+    // Add Loading Animation
+    icon.innerText = "autorenew"; 
+    icon.classList.add('spin-anim'); // Activates CSS spin animation
     btn.style.opacity = "0.5";
     btn.style.pointerEvents = "none";
+    
+    // Localization for generation text
+    const localTxt = {
+        en: { gen: "Generating Image...", saved: "Image Saved!", fail: "Failed to generate image" },
+        bm: { gen: "Menjana Imej...", saved: "Imej Disimpan!", fail: "Gagal menjana imej" },
+        cn: { gen: "正在生成图片...", saved: "图片已保存！", fail: "生成图片失败" }
+    };
+    const lTxt = localTxt[curLang] || localTxt.en;
+    window.showToast(lTxt.gen, "hourglass_top");
     
     try {
         const student = window.smkData.find(s => s.id === currentStudentId);
@@ -2216,9 +2239,25 @@ window.shareResult = async function() {
         
         // Populate Data
         document.getElementById('scName').innerText = student.name;
+        document.getElementById('scId').innerText = "ID: " + student.id;
         document.getElementById('scCn').innerText = student.cn || "-";
         document.getElementById('scOld').innerText = student.oldClass || "-";
         document.getElementById('scNew').innerText = student.newClass;
+        document.getElementById('scSchTitle').innerText = txt.mLabelSch || "Primary School";
+        document.getElementById('scSch').innerText = student.sch || "-";
+        
+        // Translate Footer using main App Title (removing line breaks)
+        let appTitleStr = (txt.title || "Student Allocation 2026").replace(/<br\s*\/?>/gi, ' ');
+        document.getElementById('scFooter').innerText = appTitleStr;
+
+        // Status Icon Logic (Thumb up/down)
+        const rank = getRankStatus(student.oldClass, student.newClass);
+        const stIcon = document.getElementById('scStatusIcon');
+        if (stIcon) {
+            stIcon.innerText = rank.icon;
+            stIcon.style.color = rank.color;
+            stIcon.style.display = rank.icon === 'remove' ? 'none' : 'block';
+        }
         
         // Colors & Avatar
         const rawClass = student.newClass.split(" ")[1] || "Biru";
@@ -2262,28 +2301,30 @@ window.shareResult = async function() {
                     console.log("Sharing cancelled", e);
                 }
             } else {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                window.showToast("Image saved!", "download_done");
-            }
-            icon.innerText = originalIcon;
-            btn.style.opacity = "1";
-            btn.style.pointerEvents = "auto";
-        }, 'image/png');
-        
-    } catch (err) {
-        console.error(err);
-        window.showToast("Failed to generate image", "error");
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            window.showToast(lTxt.saved, "download_done");
+        }
+        icon.classList.remove('spin-anim');
         icon.innerText = originalIcon;
         btn.style.opacity = "1";
         btn.style.pointerEvents = "auto";
-    }
+    }, 'image/png');
+    
+} catch (err) {
+    console.error(err);
+    window.showToast(lTxt.fail, "error");
+    icon.classList.remove('spin-anim');
+    icon.innerText = originalIcon;
+    btn.style.opacity = "1";
+    btn.style.pointerEvents = "auto";
+}
 };
 
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(window.favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
