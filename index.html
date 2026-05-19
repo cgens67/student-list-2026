@@ -3406,7 +3406,7 @@ toggleAuthModeBtn.addEventListener('click',()=>{
     primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
     toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
 });
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"; window.justRegistered = true;}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
+primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){ window.justRegistered = true; createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!";}).catch(err=>{ window.justRegistered = false; showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){
     if(!window.cloudUser) return;
@@ -3496,41 +3496,45 @@ onAuthStateChanged(auth, async (user) => {
         const newNotices = data.classNotices || {};
 
         if (window.isInitialLoad) {
-          window.smkData = newStudents;
-          window.teacherData = newTeachers;
-          window.globalSettings = newSettings;
-          window.classNotices = newNotices;
-          
-          window.isInitialLoad = false;
+                  window.isInitialLoad = false;
+                  window.smkData = newStudents;
+                  window.teacherData = newTeachers;
+                  window.globalSettings = newSettings;
+                  window.classNotices = newNotices;
+                  
+                  // Forcefully hide the login screen immediately
+                  loginScreen.classList.remove('active');
 
-          if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              document.getElementById('mainAppWrapper').classList.remove('visible');
-              document.getElementById('maintenanceScreen').classList.add('visible');
-              loginScreen.classList.remove('active');
-              return;
-          }
-          
-          if(window.applyGlobalSettings) window.applyGlobalSettings();
-          if(window.initFilterChips) window.initFilterChips();
-          if(window.renderTabs) window.renderTabs();
-          if(window.filterData) window.filterData();
-          
-          loginScreen.classList.remove('active');
-
-          if (window.justRegistered || window.globalSettings.forceCoachMarks === 'true') {
-              document.getElementById('mainAppWrapper').classList.add('visible');
-              window.showWelcomeGuide();
-              window.justRegistered = false; // Reset the flag so it never shows again
-          } else {
-              // NORMAL STARTUP UPDATE SCREEN LOGIC
-              const uSettings = window.globalSettings.updateScreen || {};
-              const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
-              if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-                  window.showUpdateScreen();
-              } else {
-                  document.getElementById('mainAppWrapper').classList.add('visible');
-              }
-          }
+                  try {
+                      if (window.globalSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
+                          document.getElementById('mainAppWrapper').classList.remove('visible');
+                          document.getElementById('maintenanceScreen').classList.add('visible');
+                          return;
+                      }
+                      
+                      if(window.applyGlobalSettings) window.applyGlobalSettings();
+                      if(window.initFilterChips) window.initFilterChips();
+                      if(window.renderTabs) window.renderTabs();
+                      if(window.filterData) window.filterData();
+                      
+                      if (window.justRegistered || window.globalSettings.forceCoachMarks === 'true') {
+                          document.getElementById('mainAppWrapper').classList.add('visible');
+                          if(window.showWelcomeGuide) window.showWelcomeGuide();
+                          window.justRegistered = false; 
+                      } else {
+                          const uSettings = window.globalSettings.updateScreen || {};
+                          const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
+                          if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
+                              if(window.showUpdateScreen) window.showUpdateScreen();
+                          } else {
+                              document.getElementById('mainAppWrapper').classList.add('visible');
+                          }
+                      }
+                  } catch (e) {
+                      console.error("Startup rendering error:", e);
+                      document.getElementById('mainAppWrapper').classList.add('visible');
+                  }
+                }
 
         } 
         else {
