@@ -2056,6 +2056,10 @@ function updateModalContent(student, index) {
         startWrapHeight = wrap ? wrap.offsetHeight : 0;
         startCardHeight = card ? card.offsetHeight : 0;
     }
+    
+    if (wrap && typeof wrap.getAnimations === 'function') wrap.getAnimations().forEach(a => a.cancel());
+    if (card && typeof card.getAnimations === 'function') card.getAnimations().forEach(a => a.cancel());
+
 
     // Remove any fixed styles to allow natural reflow
     if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
@@ -2143,7 +2147,7 @@ function updateModalContent(student, index) {
                 { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
             ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
             
-            wrapAnim.onfinish = () => {
+            wrapAnim.onfinish = wrapAnim.oncancel = () => {
                 if (inner) {
                     inner.style.width = '';
                     inner.style.height= '';
