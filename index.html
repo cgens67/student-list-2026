@@ -1828,86 +1828,81 @@ window.closeMainMenu=function(){
     document.getElementById("mainMenuBackdrop").classList.remove("active");
 }
 
-window.switchLanguage=function(lang, skipSync=false){
-    if(lang===curLang)return;
+window.switchLanguage = function(lang, skipSync=false) {
+    lang = lang.toLowerCase().trim();
+    if(!uiText[lang]) lang = 'en'; // Failsafe
+    if(lang === curLang) return;
+    
     triggerHaptic();
     document.querySelectorAll('.lang-btn').forEach(b => {
         b.classList.remove('active');
-        if (b.innerText.toLowerCase() === lang) b.classList.add('active');
+        if (b.textContent.trim().toLowerCase() === lang) b.classList.add('active');
     });
     
-    const fadeTargets=document.querySelectorAll('.anim-text-change');
-    const searchInput=document.getElementById("searchInput");
-    const titleEl=document.getElementById("labelTitle");
-    const authEmail=document.getElementById("authEmail");
-    const authPassword=document.getElementById("authPassword");
+    const fadeTargets = document.querySelectorAll('.anim-text-change');
+    const searchInput = document.getElementById("searchInput");
+    const titleEl = document.getElementById("labelTitle");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
     
-    if(titleEl)titleEl.classList.add("blur-fade-out");
-    if(searchInput)searchInput.classList.add("anim-placeholder");
-    if(authEmail)authEmail.classList.add("anim-placeholder");
-    if(authPassword)authPassword.classList.add("anim-placeholder");
+    if(titleEl) titleEl.classList.add("blur-fade-out");
+    if(searchInput) searchInput.classList.add("anim-placeholder");
+    if(authEmail) authEmail.classList.add("anim-placeholder");
+    if(authPassword) authPassword.classList.add("anim-placeholder");
+
+    const tCard = document.getElementById('classInfoCard');
+    const startHeight = tCard ? tCard.offsetHeight : 0;
     
-    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'tabBtn-audit', 'tabBtn-feedback', 'tabBtn-analytics', 'lblAdminAuditTitle', 'lblAdminAuditDesc', 'lblAdminFeedbackTitle', 'lblAdminFeedbackDesc', 'lblAdminAnalyticsTitle', 'lblAdminAnalyticsDesc', 'lblStatTotalUsers', 'lblStatTotalFavs', 'lblStatRecentActivity', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain', 'lblNewFilterTitle', 'lblNewFilterReset', 'lblAdminNotice', 'lblAdminNoticeIcon', 'lblAdminNoticeColor', 'lblAdminNoticeStyle', 'lblAdminGuru', 'lblAdminPenolong', 'menuProfileText', 'lblProfileTitle', 'lblProfTheme', 'lblProfDensity', 'lblProfClearFav', 'lblProfClearHist', 'btnProfDone', 'profThemeTxt', 'profDensityTxt', 'lblProfReduceLag'];
-    const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
-    
-    fadeTargets.forEach(el=> el.classList.add('fade-out'));
-    
-    const tCard=document.getElementById('classInfoCard');
-    const startHeight=tCard?tCard.offsetHeight:0;
-    
-    setTimeout(()=>{
+    setTimeout(() => {
         try {
-            if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}
-            curLang=lang;
-            const txt=uiText[lang];
+            if(tCard && tCard.classList.contains('show')){ tCard.style.height = startHeight + 'px'; tCard.style.transition = 'none'; }
+            curLang = lang;
+            const txt = uiText[lang];
             
-            if(titleEl)titleEl.innerHTML=txt.title;
-            if(document.getElementById("btnClose")) document.getElementById("btnClose").innerText=txt.btnClose;
-            if(document.getElementById("aboutCloseBtn")) document.getElementById("aboutCloseBtn").innerText=txt.btnClose;
-            if(document.getElementById("faqCloseBtn")) document.getElementById("faqCloseBtn").innerText=txt.faqClose;
-            if(document.getElementById("btnProfDone")) document.getElementById("btnProfDone").innerText=txt.btnClose;
+            if(titleEl) titleEl.innerHTML = txt.title;
+            if(document.getElementById("btnClose")) document.getElementById("btnClose").innerText = txt.btnClose;
+            if(document.getElementById("aboutCloseBtn")) document.getElementById("aboutCloseBtn").innerText = txt.btnClose;
+            if(document.getElementById("faqCloseBtn")) document.getElementById("faqCloseBtn").innerText = txt.faqClose;
+            if(document.getElementById("btnProfDone")) document.getElementById("btnProfDone").innerText = txt.btnClose;
             
-            setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);
-            setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);
-            if(searchInput)searchInput.placeholder=txt.ph;
-            setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);
-            setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);
-            setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);
-            setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);
-            setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);
-            setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);
-            setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);
-            setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);
-            setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);
-            setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);
-            setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);
-            setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);
-            setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);
-            setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);
-            setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
+            setTextAndAnimateWidth(document.getElementById("txtFilter"), txt.filter);
+            setTextAndAnimateWidth(document.getElementById("lblClear"), txt.clear);
+            if(searchInput) searchInput.placeholder = txt.ph;
+            setTextAndAnimateWidth(document.getElementById("label2025"), txt.label2025);
+            setTextAndAnimateWidth(document.getElementById("labelOrigin"), txt.labelOrigin);
+            setTextAndAnimateWidth(document.getElementById("labelSort"), txt.labelSort);
+            setTextAndAnimateWidth(document.getElementById("mLabelCur"), txt.mLabelCur);
+            setTextAndAnimateWidth(document.getElementById("mLabelOld"), txt.mLabelOld);
+            setTextAndAnimateWidth(document.getElementById("mLabelStat"), txt.mLabelStat);
+            setTextAndAnimateWidth(document.getElementById("mLabelSch"), txt.mLabelSch);
+            setTextAndAnimateWidth(document.getElementById("labelStatsTitle"), txt.labelStatsTitle);
+            setTextAndAnimateWidth(document.getElementById("lblGuruTitle"), txt.tGuru);
+            setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"), txt.tPenolong);
+            setTextAndAnimateWidth(document.getElementById("txtSortName"), txt.txtName);
+            setTextAndAnimateWidth(document.getElementById("txtSortClass"), txt.txtClass);
+            setTextAndAnimateWidth(document.getElementById("txtSortBday"), txt.txtSortBday);
+            setTextAndAnimateWidth(document.getElementById("lblAdminTitle"), txt.adminTitle);
+            setTextAndAnimateWidth(document.getElementById("lblAdminSub"), txt.adminSub);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-students"), txt.tabStudents);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"), txt.tabTeachers);
+            setTextAndAnimateWidth(document.getElementById("tabBtn-settings"), txt.tabSettings);
+            
             if(document.getElementById("tabBtn-audit")) setTextAndAnimateWidth(document.getElementById("tabBtn-audit"), txt.tabAudit || "Audit Log");
             if(document.getElementById("tabBtn-feedback")) setTextAndAnimateWidth(document.getElementById("tabBtn-feedback"), txt.tabFeedback || "Feedback");
             if(document.getElementById("tabBtn-analytics")) setTextAndAnimateWidth(document.getElementById("tabBtn-analytics"), txt.tabAnalytics || "Analytics");
-            
             if(document.getElementById("lblAdminAuditTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminAuditTitle"), txt.adminAuditTitle || "Admin Activity Log");
             if(document.getElementById("lblAdminAuditDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminAuditDesc"), txt.adminAuditDesc || "Tracks detailed changes made in the dashboard.");
             if(document.getElementById("lblAdminFeedbackTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminFeedbackTitle"), txt.adminFeedbackTitle || "User Feedback");
             if(document.getElementById("lblAdminFeedbackDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminFeedbackDesc"), txt.adminFeedbackDesc || "Messages and bug reports submitted by users.");
-            
             if(document.getElementById("lblAdminAnalyticsTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminAnalyticsTitle"), txt.adminAnalyticsTitle || "System Analytics");
             if(document.getElementById("lblAdminAnalyticsDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminAnalyticsDesc"), txt.adminAnalyticsDesc || "Overview of user engagement and activity.");
             if(document.getElementById("lblStatTotalUsers")) setTextAndAnimateWidth(document.getElementById("lblStatTotalUsers"), txt.statTotalUsers || "Total Users");
             if(document.getElementById("lblStatTotalFavs")) setTextAndAnimateWidth(document.getElementById("lblStatTotalFavs"), txt.statTotalFavs || "Total Favorites");
             if(document.getElementById("lblStatRecentActivity")) setTextAndAnimateWidth(document.getElementById("lblStatRecentActivity"), txt.statRecentActivity || "Recent User Activity");
-            
             if(document.getElementById("lblNewFilterTitle")) setTextAndAnimateWidth(document.getElementById("lblNewFilterTitle"), txt.filter);
             if(document.getElementById("lblNewFilterReset")) setTextAndAnimateWidth(document.getElementById("lblNewFilterReset"), txt.clear);
             if(document.getElementById('ctxBtnCopyId')) document.getElementById('ctxBtnCopyId').innerText = txt.ctxCopyIdBtn;
             
-            // Profile Translations
             if(document.getElementById("lblProfileTitle")) setTextAndAnimateWidth(document.getElementById("lblProfileTitle"), txt.lblProfileTitle);
             if(document.getElementById("lblProfTheme")) setTextAndAnimateWidth(document.getElementById("lblProfTheme"), txt.lblProfTheme);
             if(document.getElementById("lblProfDensity")) setTextAndAnimateWidth(document.getElementById("lblProfDensity"), txt.lblProfDensity);
@@ -1915,22 +1910,19 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById("lblProfClearHist")) setTextAndAnimateWidth(document.getElementById("lblProfClearHist"), txt.lblProfClearHist);
             if(document.getElementById("lblProfReduceLag")) setTextAndAnimateWidth(document.getElementById("lblProfReduceLag"), txt.lblProfReduceLag);
             
-            const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");
-            if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);
-            if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);
+            const btnOrigin = document.getElementById("txtStatOrigin"), btnOld = document.getElementById("txtStatOldClass");
+            if(btnOrigin) setTextAndAnimateWidth(btnOrigin, txt.statTabOrigin);
+            if(btnOld) setTextAndAnimateWidth(btnOld, txt.statTabOldClass);
             updateFilterLabels(txt.all);
             
-            document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);
-            document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);
-            document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);
+            document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el => el.innerText = txt.empty);
+            document.querySelectorAll('.stats-empty-sub').forEach(el => el.innerText = txt.emptySub);
+            document.querySelectorAll('.stats-dash-label-title').forEach(el => el.innerText = txt.totalStudents);
             
-            // Login Screen Menus
             if(document.getElementById('menuAboutText')) document.getElementById('menuAboutText').innerText = txt.menuAbout;
             if(document.getElementById('menuHelpText')) document.getElementById('menuHelpText').innerText = txt.menuHelp;
             if(document.getElementById('menuFaqText')) document.getElementById('menuFaqText').innerText = txt.menuAbout === 'Mengenai Aplikasi' ? 'Soalan Lazim / Bantuan' : (txt.menuAbout === '关于应用' ? '常见问题 / 帮助' : 'FAQ / Help');
             if(document.getElementById('menuFeedbackText')) document.getElementById('menuFeedbackText').innerText = txt.menuFeedback;
-            
-            // Main App Menus
             if(document.getElementById('menuHeaderMain')) document.getElementById('menuHeaderMain').innerText = txt.menuHeaderMain;
             if(document.getElementById('menuThemeTextMain')) document.getElementById('menuThemeTextMain').innerText = isDark ? txt.menuThemeLight : txt.menuThemeDark;
             if(document.getElementById('menuDensityTextMain')) document.getElementById('menuDensityTextMain').innerText = isCompactMode ? txt.menuDensityComfort : txt.menuDensityCompact;
@@ -1993,7 +1985,6 @@ window.switchLanguage=function(lang, skipSync=false){
             
             if(document.getElementById('lblAdminTextStyle')) document.getElementById('lblAdminTextStyle').innerText = txt.adminEditAbout === '编辑“关于应用”文本' ? '学生姓名样式' : (txt.adminEditAbout === 'Sunting Teks \'Mengenai Aplikasi\'' ? 'Gaya Nama Murid' : 'Student Name Style');
             
-            // Translations for Admin Form labels and placeholders
             if(document.getElementById('adminStudentSearch')) document.getElementById('adminStudentSearch').placeholder = txt.adminSearchStudent;
             if(document.getElementById('adminStId')) document.getElementById('adminStId').placeholder = txt.adminIdPlaceholder;
             if(document.getElementById('adminStName')) document.getElementById('adminStName').placeholder = txt.adminNamePlaceholder;
@@ -2021,7 +2012,6 @@ window.switchLanguage=function(lang, skipSync=false){
             }
             if (window.refreshAdminStudentDropdown) window.refreshAdminStudentDropdown(window.adminSelectedStudentId);
 
-            // Admin Options Dropdowns
             if(document.getElementById('optThDyn')) {
                 document.getElementById('optThDyn').innerText = txt.optThemeDyn;
                 document.getElementById('optThMorn').innerText = txt.optThemeMorn;
@@ -2061,34 +2051,30 @@ window.switchLanguage=function(lang, skipSync=false){
                 window.openAdminPanel();
             }
             
-            // Re-apply to update lag profile text
             if(window.applyGlobalSettings) window.applyGlobalSettings();
-            
             if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
 
-            if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
-            if(searchInput)searchInput.classList.remove("anim-placeholder");
-            if(authEmail)authEmail.classList.remove("anim-placeholder");
-            if(authPassword)authPassword.classList.remove("anim-placeholder");
-            
-            if(tCard&&tCard.classList.contains('show')){
-                tCard.style.height='auto';
-                const newHeight=tCard.offsetHeight;
-                tCard.style.height=startHeight+'px';
-                tCard.offsetHeight;
-                tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                tCard.style.height=newHeight+'px';
-                setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
-            }
         } catch(err) {
             console.error("Language translation error:", err);
         } finally {
-            fadeTargets.forEach(el=>{
-                el.classList.remove('fade-out');
-            });
+            fadeTargets.forEach(el => el.classList.remove('fade-out'));
+            if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
+            if(searchInput) searchInput.classList.remove("anim-placeholder");
+            if(authEmail) authEmail.classList.remove("anim-placeholder");
+            if(authPassword) authPassword.classList.remove("anim-placeholder");
+            
+            if(tCard && tCard.classList.contains('show')){
+                tCard.style.height = 'auto';
+                const newHeight = tCard.offsetHeight;
+                tCard.style.height = startHeight + 'px';
+                tCard.offsetHeight;
+                tCard.style.transition = 'height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                tCard.style.height = newHeight + 'px';
+                setTimeout(() => { tCard.style.height = 'auto'; tCard.style.overflow = 'visible'; tCard.style.transition = ''; }, 400);
+            }
         }
-    },250);
-}
+    }, 250);
+};
 
 window.switchClass=function(cls){
     if(currentClass===cls)return;
