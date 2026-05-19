@@ -583,6 +583,16 @@ body.coach-active .action-row.coach-highlight { z-index: 10001 !important; }
 body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
 .spin-anim { animation: spinIcon 1s linear infinite; }
 @keyframes spinIcon { 100% { transform: rotate(360deg); } }
+
+/* Fix Coach Marks Blur Issue */
+body.coach-active .action-row {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+body.bg-beta.coach-active .action-row {
+    z-index: 10001 !important;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -2621,7 +2631,7 @@ window.closeWelcomeGuide = function() {
 
 // COACH MARKS LOGIC
 window.coachSteps = [
-    { target: '.ios-search-field', textKey: 'coachStep1', pos: 'bottom' },
+    { target: '.search-box', textKey: 'coachStep1', pos: 'bottom' },
     { target: '#btnFavToggle', textKey: 'coachStep2', pos: 'bottom' },
     { target: '#btnStatsToggle', textKey: 'coachStep3', pos: 'bottom' },
     { target: '#classTabs', textKey: 'coachStep4', pos: 'bottom' },
@@ -2663,7 +2673,7 @@ window.nextCoachStep = function() {
     }
 
     targetEl.classList.add('coach-highlight');
-    if(step.target === '.ios-search-field' || step.target === '#btnFavToggle' || step.target === '#btnStatsToggle' || step.target === '#classTabs') targetEl.style.borderRadius = '12px';
+    if(step.target === '.search-box' || step.target === '#btnFavToggle' || step.target === '#btnStatsToggle' || step.target === '#classTabs') targetEl.style.borderRadius = '12px';
     if(step.target === '#studentGrid .ios-cell') targetEl.style.borderRadius = '16px';
     if(step.target === '#btnMenuToggle') targetEl.style.borderRadius = '50%';
     
