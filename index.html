@@ -3479,12 +3479,12 @@ function getFriendlyError(code){if(code.includes('invalid-email'))return 'Invali
 toggleAuthModeBtn.addEventListener('click', () => {
     window.isSignUpMode = !window.isSignUpMode;
     authMsgBox.classList.remove('show');
-    authTitle.innerText = window.isSignUpMode ? uiText[curLang].authTitleS : uiText[curLang].authTitleL;
-    authSub.innerText = window.isSignUpMode ? uiText[curLang].authSubS : uiText[curLang].authSubL;
+    authTitle.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authTitleS : "Create Account") : (uiText[curLang] ? uiText[curLang].authTitleL : "Welcome Back");
+    authSub.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSubS : "Sign up to access records") : (uiText[curLang] ? uiText[curLang].authSubL : "Log in to view student records");
     authIcon.innerText = window.isSignUpMode ? "person_add" : "lock_outline";
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
+    primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In");
     primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
-    toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
+    toggleAuthModeBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authToggleS : "Already have an account? Log In") : (uiText[curLang] ? uiText[curLang].authToggleL : "Don't have an account? Sign Up");
 });
 
 primaryAuthBtn.addEventListener('click', () => {
@@ -3499,32 +3499,20 @@ primaryAuthBtn.addEventListener('click', () => {
     if (window.isSignUpMode) {
         createUserWithEmailAndPassword(auth, email, password).then(() => {
             primaryAuthBtn.innerText = "Success!";
-            window.justRegistered = true; // Flags the Welcome Guide to open
+            window.justRegistered = true; 
         }).catch(err => {
             showAuthMessage(getFriendlyError(err.code));
-            primaryAuthBtn.innerText = uiText[curLang].authSignUpBtn;
+            primaryAuthBtn.innerText = uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up";
         });
     } else {
         signInWithEmailAndPassword(auth, email, password).then(() => {
             primaryAuthBtn.innerText = "Success!";
         }).catch(err => {
             showAuthMessage(getFriendlyError(err.code));
-            primaryAuthBtn.innerText = uiText[curLang].authLoginBtn;
+            primaryAuthBtn.innerText = uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In";
         });
     }
 });
-
-toggleAuthModeBtn.addEventListener('click',()=>{
-    window.isSignUpMode = !window.isSignUpMode;
-    authMsgBox.classList.remove('show');
-    authTitle.innerText = window.isSignUpMode ? uiText[curLang].authTitleS : uiText[curLang].authTitleL;
-    authSub.innerText = window.isSignUpMode ? uiText[curLang].authSubS : uiText[curLang].authSubL;
-    authIcon.innerText = window.isSignUpMode ? "person_add" : "lock_outline";
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
-    primaryAuthBtn.style.background = window.isSignUpMode ? "#34C759" : "var(--ios-blue)";
-    toggleAuthModeBtn.innerText = window.isSignUpMode ? uiText[curLang].authToggleS : uiText[curLang].authToggleL;
-});
-primaryAuthBtn.addEventListener('click',()=>{const email=emailInput.value.trim(),password=passwordInput.value.trim();if(!email||!password){showAuthMessage("Fill in all fields.");return}primaryAuthBtn.innerText="Processing...";if(window.isSignUpMode){createUserWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"; window.justRegistered = true;}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authSignUpBtn})}else{signInWithEmailAndPassword(auth,email,password).then(()=>{primaryAuthBtn.innerText="Success!"}).catch(err=>{showAuthMessage(getFriendlyError(err.code));primaryAuthBtn.innerText=uiText[curLang].authLoginBtn})}});
 
 window.cloudSyncUserData=async function(){
     if(!window.cloudUser) return;
@@ -3560,7 +3548,6 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('adminControlBtn').style.display = 'none';
     }
 
-    // Default clear state so it doesn't leak from previous account login
     let userFavorites = [];
     let userSearchHistory = [];
     let prefTheme = null;
@@ -3583,15 +3570,13 @@ onAuthStateChanged(auth, async (user) => {
       console.warn("Failed to fetch user profile, using defaults.");
     }
 
-    // Update global variables specifically for this account
     window.favorites = userFavorites;
     window.searchHistory = userSearchHistory;
     window.userReduceLag = prefReduceLag;
     localStorage.setItem('userReduceLag', prefReduceLag);
 
-    // Apply Account Preferences
     if (prefTheme === 'dark' || prefTheme === 'light') {
-        enableDark(prefTheme === 'dark', true); // true = skip duplicate sync
+        enableDark(prefTheme === 'dark', true); 
     }
     if (prefDensity === 'compact' || prefDensity === 'comfort') {
         isCompactMode = (prefDensity === 'compact');
@@ -3599,7 +3584,7 @@ onAuthStateChanged(auth, async (user) => {
         applyDensity(isCompactMode);
     }
     if (prefLanguage && prefLanguage !== curLang) {
-        window.switchLanguage(prefLanguage, true); // true = skip duplicate sync
+        window.switchLanguage(prefLanguage, true); 
     }
 
     if (window.updateProfileStats) window.updateProfileStats();
@@ -3637,14 +3622,16 @@ onAuthStateChanged(auth, async (user) => {
 
           if (window.justRegistered || window.globalSettings.forceCoachMarks === 'true') {
               document.getElementById('mainAppWrapper').classList.add('visible');
-              window.showWelcomeGuide();
-              window.justRegistered = false; // Reset the flag so it never shows again
+              if(window.showWelcomeGuide) {
+                  const overlay = document.getElementById('welcomeOverlay');
+                  if(overlay) { overlay.style.display = 'flex'; setTimeout(() => { overlay.style.opacity = '1'; }, 10); }
+              }
+              window.justRegistered = false; 
           } else {
-              // NORMAL STARTUP UPDATE SCREEN LOGIC
               const uSettings = window.globalSettings.updateScreen || {};
               const combinedLog = (uSettings.changelogAdded || '') + (uSettings.changelogRemoved || '') + (uSettings.changelog || '');
               if (uSettings.enabled === 'true' && localStorage.getItem('lastSeenChangelog2') !== combinedLog) {
-                  window.showUpdateScreen();
+                  if(window.showUpdateScreen) window.showUpdateScreen();
               } else {
                   document.getElementById('mainAppWrapper').classList.add('visible');
               }
@@ -3653,7 +3640,7 @@ onAuthStateChanged(auth, async (user) => {
         } 
         else {
           if (newSettings.maintenance === 'true' && window.cloudUser.email !== ADMIN_EMAIL) {
-              window.closeModal(); window.closeStats(); window.closeAbout(); window.closeFaq(); window.closeMainMenu(); window.closeAdminPanel(); window.closeFeedback();
+              if(window.closeModal) window.closeModal(); if(window.closeStats) window.closeStats(); if(window.closeAbout) window.closeAbout(); if(window.closeFaq) window.closeFaq(); if(window.closeMainMenu) window.closeMainMenu(); if(window.closeAdminPanel) window.closeAdminPanel(); if(window.closeFeedback) window.closeFeedback();
               document.getElementById('mainAppWrapper').classList.remove('visible');
               document.getElementById('maintenanceScreen').classList.add('visible');
               return;
@@ -3673,18 +3660,16 @@ onAuthStateChanged(auth, async (user) => {
 
           if (dataChanged) {
             window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
-            document.getElementById('updatePromptBanner').classList.add('show');
+            const promptBanner = document.getElementById('updatePromptBanner');
+            if(promptBanner) promptBanner.classList.add('show');
           }
         }
       }
     });
     
   } else {
-    // -------------------------------------------------------------
-    // STRICT CLEAR ON LOGOUT TO PREVENT DATA LEAKING ACROSS ACCOUNTS
-    // -------------------------------------------------------------
-    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo(); // Stop listening
-    if (window.unsubscribeAuditLogs) window.unsubscribeAuditLogs(); // Stop listening
+    if (window.unsubscribeSchoolInfo) window.unsubscribeSchoolInfo();
+    if (window.unsubscribeAuditLogs) window.unsubscribeAuditLogs();
     
     window.isInitialLoad = true;
     window.cloudUser = null;
@@ -3692,17 +3677,14 @@ onAuthStateChanged(auth, async (user) => {
     window.searchHistory = [];
     window.auditLogs = [];
     
-    // Do not clear the underlying school data, just the personal preferences.
-    // We clear UI state to reset back to defaults when logging back in.
+    const searchInput = document.getElementById('searchInput');
+    if(searchInput) searchInput.value = '';
     
-    // Clean inputs
-    document.getElementById('searchInput').value = '';
-    
-    mainApp.classList.remove('visible');
-    loginScreen.classList.add('active');
-    emailInput.value = ''; 
-    passwordInput.value = '';
-    primaryAuthBtn.innerText = window.isSignUpMode ? uiText[curLang].authSignUpBtn : uiText[curLang].authLoginBtn;
+    if(mainApp) mainApp.classList.remove('visible');
+    if(loginScreen) loginScreen.classList.add('active');
+    if(emailInput) emailInput.value = ''; 
+    if(passwordInput) passwordInput.value = '';
+    if(primaryAuthBtn) primaryAuthBtn.innerText = window.isSignUpMode ? (uiText[curLang] ? uiText[curLang].authSignUpBtn : "Sign Up") : (uiText[curLang] ? uiText[curLang].authLoginBtn : "Log In");
     
     if (window.filterData) window.filterData();
   }
