@@ -1977,32 +1977,30 @@ window.applyUserTheme = function() {
 
 window.updateProfileThemeText = function() {
     const profTxt = document.getElementById('profBgThemeTxt');
-    const profThemeTxt = document.getElementById('profThemeTxt');
     if(!profTxt) return;
     const txt = uiText[curLang] || uiText.en;
     
+    // Always keep Light/Dark mode row active
+    const pThemeRow = document.querySelector('[onclick="window.toggleTheme()"]');
+    if(pThemeRow) pThemeRow.style.opacity = "1";
+    const profThemeTxt = document.getElementById('profThemeTxt');
+    if(profThemeTxt) {
+        profThemeTxt.innerText = isDark ? txt.menuThemeDark : txt.menuThemeLight;
+        profThemeTxt.style.color = "var(--ios-blue)";
+    }
+
     if (window.isThemeLocked && window.isThemeLocked()) {
         profTxt.innerText = txt.themeLockedAdmin || "Locked by Admin";
         profTxt.style.color = "var(--ios-text-sec)";
-        if(profThemeTxt) {
-            profThemeTxt.innerText = txt.themeLockedAdmin || "Locked by Admin";
-            profThemeTxt.style.color = "var(--ios-text-sec)";
-        }
         
-        // Dim the clickable container rows
-        const pThemeRow = document.querySelector('[onclick="window.toggleTheme()"]');
         const pBgRow = document.querySelector('[onclick="window.openThemeCustomizer()"]');
-        if(pThemeRow) pThemeRow.style.opacity = "0.4";
         if(pBgRow) pBgRow.style.opacity = "0.4";
         return;
     }
 
-    // Restore clickable opacity states
-    const pThemeRow = document.querySelector('[onclick="window.toggleTheme()"]');
+    // Restore clickable background customizer row
     const pBgRow = document.querySelector('[onclick="window.openThemeCustomizer()"]');
-    if(pThemeRow) pThemeRow.style.opacity = "1";
     if(pBgRow) pBgRow.style.opacity = "1";
-    if(profThemeTxt) profThemeTxt.style.color = "var(--ios-blue)";
     profTxt.style.color = "var(--ios-blue)";
 
     const type = window.userThemeObj.type;
@@ -2196,16 +2194,7 @@ window.closeDoodleMode = function() {
 };
 
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0, true);else enableDark(!1, true)}
-window.toggleTheme=function(skipSync = false){
-    if(window.isThemeLocked && window.isThemeLocked()) {
-        const txt = uiText[curLang] || uiText.en;
-        window.showToast(txt.themeLockedAdmin || "Locked by Admin", "lock");
-        return;
-    }
-    triggerHaptic();
-    enableDark(!isDark); 
-    if(!skipSync) window.cloudSyncUserData();
-}
+window.toggleTheme=function(skipSync = false){triggerHaptic();enableDark(!isDark); if(!skipSync) window.cloudSyncUserData();}
 function enableDark(bool){
     isDark=bool;
     document.body.setAttribute('data-theme',isDark?'dark':'light');
