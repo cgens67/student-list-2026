@@ -594,6 +594,24 @@ body.bg-beta.coach-active .action-row {
     z-index: 10001 !important;
 }
 
+/* Action Bar Button Animation */
+#btnDutyToggle {
+    transition: max-width 0.4s var(--ease-ios), opacity 0.3s ease, margin 0.4s var(--ease-ios), padding 0.4s var(--ease-ios), border-width 0.4s var(--ease-ios), transform 0.4s var(--ease-spring);
+    max-width: 42px;
+    opacity: 1;
+    overflow: hidden;
+}
+#btnDutyToggle.hidden-btn {
+    max-width: 0 !important;
+    opacity: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    transform: scale(0.5);
+    pointer-events: none;
+}
+
 /* Redesigned Theme Grid */
 .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
 .theme-card { aspect-ratio: 2.5 / 1; border-radius: 12px; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; padding: 8px; cursor: pointer; transition: transform 0.2s; position: relative; overflow: hidden; box-shadow: var(--glass-shadow); }
@@ -869,7 +887,7 @@ window.hexToRgba = function(hex, alpha) {
         <div class='stats-sub'>2 Hijau</div>
     </div>
     <div class='m-body' style="padding-top:5px; background:transparent;">
-        <div class="seg-control" style="margin-bottom:16px; overflow-x:auto; white-space:nowrap; scrollbar-width:none;">
+        <div class="seg-control" style="margin-bottom:16px; overflow-x:auto; white-space:nowrap; scrollbar-width:none; padding:4px;">
             <button class="seg-btn active anim-text-change" id="uDayBtn_Monday" onclick="window.switchUserDutyDay('Monday')">Mon</button>
             <button class="seg-btn anim-text-change" id="uDayBtn_Tuesday" onclick="window.switchUserDutyDay('Tuesday')">Tue</button>
             <button class="seg-btn anim-text-change" id="uDayBtn_Wednesday" onclick="window.switchUserDutyDay('Wednesday')">Wed</button>
@@ -877,22 +895,38 @@ window.hexToRgba = function(hex, alpha) {
             <button class="seg-btn anim-text-change" id="uDayBtn_Friday" onclick="window.switchUserDutyDay('Friday')">Fri</button>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
-                <div style="font-size:14px; font-weight:800; color:var(--ios-blue); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">border_color</span> <span id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard (擦白板)</span></div>
-                <div id="dutyListWipe"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <!-- Wipe -->
+            <div style="background:rgba(0,122,255,0.08); border-radius:20px; padding:16px; border:1px solid rgba(0,122,255,0.15);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <div style="background:#007AFF; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,122,255,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">border_color</span></div>
+                    <div style="font-size:12px; font-weight:800; color:#007AFF; text-transform:uppercase; line-height:1.1;" id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard<br><span style="font-size:10px; opacity:0.8;">(擦白板)</span></div>
+                </div>
+                <div id="dutyListWipe" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
-            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
-                <div style="font-size:14px; font-weight:800; color:#34C759; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">mop</span> <span id="lblDutySweep" class="anim-text-change">Sweep Floor (扫地)</span></div>
-                <div id="dutyListSweep"></div>
+            <!-- Sweep -->
+            <div style="background:rgba(52,199,89,0.08); border-radius:20px; padding:16px; border:1px solid rgba(52,199,89,0.15);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <div style="background:#34C759; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(52,199,89,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">mop</span></div>
+                    <div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; line-height:1.1;" id="lblDutySweep" class="anim-text-change">Sweep Floor<br><span style="font-size:10px; opacity:0.8;">(扫地)</span></div>
+                </div>
+                <div id="dutyListSweep" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
-            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
-                <div style="font-size:14px; font-weight:800; color:#FF9500; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">desk</span> <span id="lblDutyArrange" class="anim-text-change">Arrange Desks (排桌椅)</span></div>
-                <div id="dutyListArrange"></div>
+            <!-- Arrange -->
+            <div style="background:rgba(255,149,0,0.08); border-radius:20px; padding:16px; border:1px solid rgba(255,149,0,0.15);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <div style="background:#FF9500; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,149,0,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">desk</span></div>
+                    <div style="font-size:12px; font-weight:800; color:#FF9500; text-transform:uppercase; line-height:1.1;" id="lblDutyArrange" class="anim-text-change">Arrange Desks<br><span style="font-size:10px; opacity:0.8;">(排桌椅)</span></div>
+                </div>
+                <div id="dutyListArrange" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
-            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
-                <div style="font-size:14px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">delete</span> <span id="lblDutyTrash" class="anim-text-change">Empty Trash (丢垃圾)</span></div>
-                <div id="dutyListTrash"></div>
+            <!-- Trash -->
+            <div style="background:rgba(255,59,48,0.08); border-radius:20px; padding:16px; border:1px solid rgba(255,59,48,0.15);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <div style="background:#FF3B30; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,59,48,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">delete</span></div>
+                    <div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; line-height:1.1;" id="lblDutyTrash" class="anim-text-change">Empty Trash<br><span style="font-size:10px; opacity:0.8;">(丢垃圾)</span></div>
+                </div>
+                <div id="dutyListTrash" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
         </div>
     </div>
@@ -1164,7 +1198,7 @@ window.hexToRgba = function(hex, alpha) {
       <div class='search-box'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/></div>
       <button class='btn-icon-only' id='btnFavToggle' onclick='window.toggleFavMode()'><span class='material-icons-round' style='font-size:22px'>favorite</span></button>
       <button class='btn-icon-only' id='btnStatsToggle' onclick='window.openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
-      <button class='btn-icon-only' id='btnDutyToggle' onclick='window.openDutyRoster()' style='display:none;'><span class='material-icons-round' style='font-size:22px'>cleaning_services</span></button>
+      <button class='btn-icon-only hidden-btn' id='btnDutyToggle' onclick='window.openDutyRoster()'><span class='material-icons-round' style='font-size:22px'>cleaning_services</span></button>
       <button class='btn-filter' id='btnFilter' onclick='window.toggleFilters()'><span class='material-icons-round' style='font-size:20px'>tune</span><span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span></button>
     </div>
 
@@ -2592,10 +2626,10 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById("btnThemeCustCancel")) document.getElementById("btnThemeCustCancel").innerText = txt.logoutCancel;
             if(document.getElementById("lblBtnDuty")) document.getElementById("lblBtnDuty").innerText = txt.btnDuty || "Duty Roster";
             if(document.getElementById("lblDutyTitle")) document.getElementById("lblDutyTitle").innerText = txt.dutyTitle || "Cleaning Duty Roster";
-            if(document.getElementById("lblDutyWipe")) document.getElementById("lblDutyWipe").innerText = (txt.dutyWipe || "Wipe Whiteboard") + " (擦白板)";
-            if(document.getElementById("lblDutySweep")) document.getElementById("lblDutySweep").innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
-            if(document.getElementById("lblDutyArrange")) document.getElementById("lblDutyArrange").innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
-            if(document.getElementById("lblDutyTrash")) document.getElementById("lblDutyTrash").innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+            if(document.getElementById("lblDutyWipe")) document.getElementById("lblDutyWipe").innerHTML = (txt.dutyWipe || "Wipe Whiteboard") + "<br><span style='font-size:10px; opacity:0.8;'>(擦白板)</span>";
+            if(document.getElementById("lblDutySweep")) document.getElementById("lblDutySweep").innerHTML = (txt.dutySweep || "Sweep Floor") + "<br><span style='font-size:10px; opacity:0.8;'>(扫地)</span>";
+            if(document.getElementById("lblDutyArrange")) document.getElementById("lblDutyArrange").innerHTML = (txt.dutyArrange || "Arrange Desks") + "<br><span style='font-size:10px; opacity:0.8;'>(排桌椅)</span>";
+            if(document.getElementById("lblDutyTrash")) document.getElementById("lblDutyTrash").innerHTML = (txt.dutyTrash || "Empty Trash") + "<br><span style='font-size:10px; opacity:0.8;'>(丢垃圾)</span>";
             
             const shortDays = {en:['Mon','Tue','Wed','Thu','Fri'], bm:['Isn','Sel','Rab','Kha','Jum'], cn:['一','二','三','四','五']};
             const sD = shortDays[curLang] || shortDays.en;
@@ -3155,19 +3189,29 @@ window.renderUserDuty = function() {
     const emptyDay = { wipe: [], sweep: [], arrange: [], trash: [] };
     const duty = rawDuty[window.userDutyDay] || emptyDay;
     
-    const renderList = (ids) => {
-        if(!ids || ids.length === 0) return `<div style="color:var(--ios-text-sec); font-style:italic; font-size:14px; margin-top:4px;">${uiText[curLang].dutyEmpty || "No students assigned."}</div>`;
+    const renderList = (ids, colorHex) => {
+        if(!ids || ids.length === 0) return `<div style="color:var(--ios-text-sec); font-style:italic; font-size:12px; padding:12px 0; text-align:center; opacity:0.6;">${uiText[curLang].dutyEmpty || "Empty"}</div>`;
         return ids.map(id => {
             const stu = window.smkData.find(s => s.id === id);
             const name = stu ? stu.name : id;
-            return `<div style="font-size:15px; font-weight:700; color:var(--ios-text); margin-top:8px;">${name}</div>`;
+            const initial = name.charAt(0);
+            const cn = (stu && stu.cn && stu.cn !== "-") ? `<div style="font-size:11px; opacity:0.7; margin-top:3px;">${stu.cn}</div>` : "";
+            
+            return `
+            <div style="background:var(--ios-card); border-radius:12px; padding:10px; display:flex; align-items:center; gap:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05); border:1px solid var(--glass-border);">
+                <div style="width:28px; height:28px; border-radius:50%; background:${window.hexToRgba(colorHex, 0.15)}; color:${colorHex}; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; flex-shrink:0;">${initial}</div>
+                <div style="line-height:1.1; overflow:hidden;">
+                    <div style="font-size:13px; font-weight:700; color:var(--ios-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name}</div>
+                    ${cn}
+                </div>
+            </div>`;
         }).join('');
     };
 
-    document.getElementById('dutyListWipe').innerHTML = renderList(duty.wipe);
-    document.getElementById('dutyListSweep').innerHTML = renderList(duty.sweep);
-    document.getElementById('dutyListArrange').innerHTML = renderList(duty.arrange);
-    document.getElementById('dutyListTrash').innerHTML = renderList(duty.trash);
+    document.getElementById('dutyListWipe').innerHTML = renderList(duty.wipe, '#007AFF');
+    document.getElementById('dutyListSweep').innerHTML = renderList(duty.sweep, '#34C759');
+    document.getElementById('dutyListArrange').innerHTML = renderList(duty.arrange, '#FF9500');
+    document.getElementById('dutyListTrash').innerHTML = renderList(duty.trash, '#FF3B30');
 };
 
 window.openDutyRoster = function() {
@@ -3272,20 +3316,24 @@ window.downloadDutyRoster = async function(type) {
             daysKeys.forEach((dKey, i) => {
                 const duty = rawDuty[dKey] || emptyDay;
                 const renderA4List = (ids) => {
-                    if(!ids || ids.length === 0) return `-`;
+                    if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic;">-</div>`;
                     return ids.map(id => {
                         const stu = window.smkData.find(s => s.id === id);
-                        return `<div>${stu ? stu.name : id}</div>`;
-                    }).join('<div style="margin:20px 0;"></div>');
+                        let nameHtml = stu ? stu.name : id;
+                        if(stu && stu.cn && stu.cn !== "-") {
+                            nameHtml += `<div style="font-size:36px; font-weight:500; color:#8E8E93; margin-top:8px;">${stu.cn}</div>`;
+                        }
+                        return `<div style="line-height:1.2;">${nameHtml}</div>`;
+                    }).join('<div style="margin:45px 0; border-top:2px dashed #E5E5EA;"></div>');
                 };
                 
                 tableHTML += `
                 <tr style="border-bottom:4px solid #D1D1D6;">
-                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:800; color:#1D1D1F; background:#F2F2F7;">${currentDays[i]}</td>
-                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.wipe)}</td>
-                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.sweep)}</td>
-                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.arrange)}</td>
-                    <td style="padding:40px; font-weight:600;">${renderA4List(duty.trash)}</td>
+                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:800; font-size:48px; color:#1D1D1F; background:#F2F2F7;">${currentDays[i]}</td>
+                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.wipe)}</td>
+                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.sweep)}</td>
+                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.arrange)}</td>
+                    <td style="padding:60px 40px; font-weight:700; font-size:44px;">${renderA4List(duty.trash)}</td>
                 </tr>`;
             });
             document.getElementById('a4TableBody').innerHTML = tableHTML;
@@ -4134,7 +4182,13 @@ function filterData(){
     const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");
     
     const btnDutyToggle = document.getElementById("btnDutyToggle");
-    if(btnDutyToggle) btnDutyToggle.style.display = (!isGlobalMode && currentClass === 'Hijau') ? 'flex' : 'none';
+    if(btnDutyToggle) {
+        if (!isGlobalMode && currentClass === 'Hijau') {
+            btnDutyToggle.classList.remove('hidden-btn');
+        } else {
+            btnDutyToggle.classList.add('hidden-btn');
+        }
+    }
     
     if(isGlobalMode){
         if(query!==""||f25!==""||fOrigin!==""||isFavMode) {
