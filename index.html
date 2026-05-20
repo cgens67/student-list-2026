@@ -557,6 +557,19 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
     transform: translateY(0);
 }
 
+/* THEME STUDIO & DOODLE */
+.doodle-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; transition: opacity 0.3s; }
+.doodle-bg.draw-mode { pointer-events: auto; z-index: 10000; cursor: crosshair; }
+.draw-toolbar { display: none; position: fixed; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); background: var(--ios-modal); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); padding: 12px 20px; border-radius: 50px; box-shadow: var(--shadow-lg), var(--glass-highlight); border: 1px solid var(--glass-border); z-index: 10005; gap: 15px; align-items: center; }
+.draw-toolbar.show { display: flex; animation: fadeUp 0.4s var(--ease-spring); }
+.draw-tool-btn { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--ios-input); color: var(--ios-text); box-shadow: var(--glass-shadow); transition: transform 0.2s; }
+.draw-tool-btn:active { transform: scale(0.85); }
+.draw-color-picker { width: 32px; height: 32px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; padding: 0; overflow: hidden; }
+.draw-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+.draw-color-picker::-webkit-color-swatch { border: none; border-radius: 50%; }
+.color-grad-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: var(--ios-input); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--chip-border); }
+.theme-studio-switch { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--ios-card); border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 20px; box-shadow: var(--glass-shadow); }
+
 /* COACH MARKS SYSTEM */
 #coachOverlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
@@ -584,16 +597,6 @@ body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
 .spin-anim { animation: spinIcon 1s linear infinite; }
 @keyframes spinIcon { 100% { transform: rotate(360deg); } }
 
-/* THEME STUDIO & DOODLE STYLES */
-.theme-builder-canvas { width: 100%; height: 300px; background: #fff; border-radius: 16px; touch-action: none; border: 1px solid var(--glass-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); cursor: crosshair; }
-.color-picker-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; padding: 0; outline: none; transition: transform 0.2s; }
-.color-picker-btn:active { transform: scale(0.85); }
-.color-picker-btn::-webkit-color-swatch-wrapper { padding: 0; }
-.color-picker-btn::-webkit-color-swatch { border: none; border-radius: 50%; }
-.brush-tool { width: 36px; height: 36px; border-radius: 50%; background: var(--ios-input); border: 1px solid var(--chip-border); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; transition: 0.2s; }
-.brush-tool.active { background: var(--ios-blue); color: #fff; border-color: transparent; box-shadow: 0 4px 12px var(--ios-blue-light); }
-.brush-tool:active { transform: scale(0.9); }
-
 /* Fix Coach Marks Blur Issue */
 body.coach-active .action-row {
     animation: none !important;
@@ -607,7 +610,6 @@ body.bg-beta.coach-active .action-row {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-<div id="doodleBgLayer" style="position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;"></div>
 
 <script>
 // GLOBAL variables
@@ -722,12 +724,8 @@ window.hexToRgba = function(hex, alpha) {
       
       <div class="info-group prof-anim" style="margin-bottom:16px; animation-delay: 0.1s;">
          <div class="info-item" onclick="window.toggleTheme()" style="cursor:pointer;">
-            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">dark_mode</span> <span id="lblProfTheme">Theme</span></span>
+            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">palette</span> <span id="lblProfTheme">Theme</span></span>
             <span class="m-val-highlight anim-text-change" id="profThemeTxt" style="color:var(--ios-blue); font-weight:600;">Dark Mode</span>
-         </div>
-         <div class="info-item" onclick="window.openThemeStudio()" style="cursor:pointer;">
-            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round" style="color:#AF52DE;">brush</span> <span>Theme Studio</span></span>
-            <span class="m-val-highlight anim-text-change" style="color:#AF52DE; font-weight:600;">Customize</span>
          </div>
          <div class="info-item" onclick="window.toggleDensity()" style="cursor:pointer;">
             <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">view_agenda</span> <span id="lblProfDensity">View Mode</span></span>
@@ -756,44 +754,6 @@ window.hexToRgba = function(hex, alpha) {
   </div>
 </div>
 
-<!-- THEME STUDIO OVERLAY -->
-<div class='modal-bg' id='themeStudioOverlay' style="z-index: 10002;" onclick='window.closeThemeStudio()'>
-  <div class='modal-card' id='themeStudioCard' onclick='event.stopPropagation()'>
-    <div class='m-head'><div class='stats-title anim-text-change'>Theme Studio</div><div class='stats-sub anim-text-change'>Design your own gradient and doodle</div></div>
-    <div class='m-body' style="padding-top:10px; display:flex; flex-direction:column; gap:16px;">
-      
-      <!-- Gradient Color Pickers -->
-      <div>
-         <div style="font-size:12px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase; margin-bottom:8px;">Background Gradient Colors</div>
-         <div style="display:flex; gap:16px; justify-content:center;">
-             <input type="color" id="tsColor1" class="color-picker-btn" value="#ffecd2" onchange="window.updateStudioLiveBg()">
-             <input type="color" id="tsColor2" class="color-picker-btn" value="#fcb69f" onchange="window.updateStudioLiveBg()">
-             <input type="color" id="tsColor3" class="color-picker-btn" value="#ff9a9e" onchange="window.updateStudioLiveBg()">
-         </div>
-      </div>
-
-      <!-- Doodle Canvas -->
-      <div style="position:relative; width:100%;">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-             <div style="font-size:12px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Doodle Area</div>
-             <div style="display:flex; gap:8px;">
-                 <input type="color" id="tsBrushColor" style="width:30px; height:30px; border-radius:50%; border:none; padding:0; background:transparent; cursor:pointer;" value="#000000">
-                 <button class="brush-tool active" onclick="window.setBrushSize(3, this)"><span style="width:4px; height:4px; background:currentColor; border-radius:50%;"></span></button>
-                 <button class="brush-tool" onclick="window.setBrushSize(8, this)"><span style="width:10px; height:10px; background:currentColor; border-radius:50%;"></span></button>
-                 <button class="brush-tool" onclick="window.clearDoodle()"><span class="material-icons-round" style="font-size:16px;">delete_outline</span></button>
-             </div>
-         </div>
-         <canvas id="tsCanvas" class="theme-builder-canvas"></canvas>
-      </div>
-
-    </div>
-    <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
-        <button class='btn-done' style="background-color:#FF3B30; color:#fff; flex:1;" onclick='window.disableCustomTheme()'>Reset to Default</button>
-        <button id="saveThemeBtn" class='btn-done' style="background-color:#AF52DE; flex:1.5;" onclick='window.saveCustomTheme()'>Apply & Save</button>
-    </div>
-  </div>
-</div>
-
 <!-- NEW FEEDBACK SECTION -->
 <div class='modal-bg' id='feedbackOverlay' style="z-index: 10001;" onclick='window.closeFeedback()'>
   <div class='modal-card' id='feedbackCard' onclick='event.stopPropagation()'>
@@ -804,6 +764,42 @@ window.hexToRgba = function(hex, alpha) {
     <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
         <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeFeedback()'>Cancel</button>
         <button id="submitFeedbackBtn" class='btn-done' style="flex:1.5;" onclick='window.submitFeedback()'>Submit Feedback</button>
+    </div>
+  </div>
+</div>
+
+<!-- THEME STUDIO OVERLAY -->
+<div class='modal-bg' id='themeStudioOverlay' style="z-index: 10001;" onclick='window.closeThemeStudio()'>
+  <div class='modal-card' id='themeStudioCard' onclick='event.stopPropagation()'>
+    <div class='m-head'>
+        <div class='handle'></div>
+        <div class='stats-title anim-text-change' id='tsTitle'>Theme Studio</div>
+        <div class='stats-sub anim-text-change' id='tsSub'>Customize background colors & draw!</div>
+    </div>
+    <div class='m-body' style="padding-top:10px;">
+      <div class="theme-studio-switch">
+         <div style="font-weight:600; font-size:15px; color:var(--ios-text);" id="tsEnableText" class="anim-text-change">Use Custom Theme</div>
+         <input type="checkbox" id="tsEnableToggle" onchange="window.toggleCustomTheme(this.checked)" style="transform:scale(1.2); accent-color:var(--ios-blue);">
+      </div>
+      <div id="tsColorPanel" style="opacity:0.5; pointer-events:none; transition:opacity 0.3s;">
+          <div class="color-grad-row">
+             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad1" class="anim-text-change">Top Color</span>
+             <input type="color" id="cg1" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
+          </div>
+          <div class="color-grad-row">
+             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad2" class="anim-text-change">Middle Color</span>
+             <input type="color" id="cg2" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
+          </div>
+          <div class="color-grad-row">
+             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad3" class="anim-text-change">Bottom Color</span>
+             <input type="color" id="cg3" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
+          </div>
+      </div>
+      <button class="btn-done anim-text-change" id="tsDrawBtn" onclick="window.enterDrawMode()" style="margin-top:10px; background:var(--ios-card); color:var(--ios-blue); border:1px solid var(--ios-blue); box-shadow:none;"><span class="material-icons-round" style="vertical-align:middle; margin-right:6px;">draw</span> Draw on Background</button>
+    </div>
+    <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
+        <button class='btn-done' style="background-color:var(--ios-input); color:#FF3B30; flex:1;" onclick='window.clearDoodle()'><span class="material-icons-round" style="vertical-align:middle; margin-right:4px; font-size:18px;">delete</span> <span id="tsClearBtn" class="anim-text-change">Clear Doodle</span></button>
+        <button class='btn-done anim-text-change' style="flex:1.5;" id='tsSaveBtn' onclick='window.closeThemeStudio()'>Done</button>
     </div>
   </div>
 </div>
@@ -951,6 +947,14 @@ window.hexToRgba = function(hex, alpha) {
 </div>
 
 <div id="mainAppWrapper">
+  <canvas id="doodleCanvas" class="doodle-bg"></canvas>
+  <div id="drawToolbar" class="draw-toolbar">
+     <input type="color" id="drawColor" class="draw-color-picker" value="#FF2D55">
+     <button class="draw-tool-btn" onclick="window.changeBrushSize()" id="brushSizeBtn"><span class="material-icons-round" style="font-size:16px;">brush</span></button>
+     <button class="draw-tool-btn" onclick="window.clearDoodle()"><span class="material-icons-round">delete_outline</span></button>
+     <div style="width:1px; height:24px; background:var(--ios-sep);"></div>
+     <button class="draw-tool-btn" onclick="window.exitDrawMode()" style="background:#34C759; color:#fff; width:auto; padding:0 16px; border-radius:20px; font-weight:700;"><span class="material-icons-round" style="margin-right:4px; font-size:18px;">check</span> <span id="txtDrawDone" class="anim-text-change">Done</span></button>
+  </div>
   <!-- COACH MARKS OVERLAY -->
   <div id="coachOverlay" onclick="window.nextCoachStep()">
       <div id="coachTooltip" class="coach-tooltip"></div>
@@ -1486,6 +1490,10 @@ window.hexToRgba = function(hex, alpha) {
             <span class='material-icons-round mm-icon'>account_circle</span>
             <span class="anim-text-change" id='menuProfileText'>Account Profile</span>
           </button>
+          <button class='mm-btn' onclick='window.openThemeStudio(); window.closeMainMenu();'>
+            <span class='material-icons-round mm-icon' style="color:#AF52DE;">palette</span>
+            <span class="anim-text-change" id='menuThemeStudioText'>Theme Studio</span>
+          </button>
           <button class='mm-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
             <span class='material-icons-round mm-icon' id='iconThemeMain'>dark_mode</span>
             <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
@@ -1575,10 +1583,8 @@ window.hexToRgba = function(hex, alpha) {
 // ==========================================
 window.smkData =[];
 window.teacherData = {};
-window.userCustomTheme = { active: false, c1: '#ffecd2', c2: '#fcb69f', c3: '#ff9a9e', doodle: null };
-
 window.globalSettings = { 
-  theme: 'dynamic', maintenance: 'false', hideTheme: 'false', hideStats: 'false', disableGlass: 'dynamic', textStyle: 'original', forceCoachMarks: 'false', the 
+  theme: 'dynamic', maintenance: 'false', hideTheme: 'false', hideStats: 'false', disableGlass: 'dynamic', textStyle: 'original', forceCoachMarks: 'false',
   aboutData: {
     title: "Student Allocation List 2026",
     version: "Version 6.0 (Secured Edition)",
@@ -1637,45 +1643,15 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  
-  // 1. Auto-inject Doodle Layer safely to ensure it always exists
-  let doodleLayer = document.getElementById('doodleBgLayer');
-  if (!doodleLayer) {
-      doodleLayer = document.createElement('div');
-      doodleLayer.id = 'doodleBgLayer';
-      doodleLayer.style.cssText = "position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;";
-      document.body.prepend(doodleLayer);
-  }
-  
-  // Custom User Theme Override
-  if (window.userCustomTheme && window.userCustomTheme.active) {
-      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-      body.style.setProperty('--grad-1', window.userCustomTheme.c1);
-      body.style.setProperty('--grad-2', window.userCustomTheme.c2);
-      body.style.setProperty('--grad-3', window.userCustomTheme.c3);
-      if (window.userCustomTheme.doodle) {
-          doodleLayer.style.backgroundImage = `url(${window.userCustomTheme.doodle})`;
-          doodleLayer.style.opacity = '1';
-      } else {
-          doodleLayer.style.opacity = '0';
-      }
+  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
+  const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+  if (themeMode === 'dynamic') {
+    const hour = new Date().getHours();
+    if(hour>=7 && hour<11) body.classList.add('bg-morning');
+    else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
+    else body.classList.add('bg-night');
   } else {
-      // Revert to Admin Themes
-      body.style.removeProperty('--grad-1');
-      body.style.removeProperty('--grad-2');
-      body.style.removeProperty('--grad-3');
-      if (doodleLayer) doodleLayer.style.opacity = '0';
-      
-      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-      const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
-      if (themeMode === 'dynamic') {
-        const hour = new Date().getHours();
-        if(hour>=7 && hour<11) body.classList.add('bg-morning');
-        else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
-        else body.classList.add('bg-night');
-      } else {
-        body.classList.add('bg-' + themeMode);
-      }
+    body.classList.add('bg-' + themeMode);
   }
   
   const adminGlass = (window.globalSettings && window.globalSettings.disableGlass) ? window.globalSettings.disableGlass : 'dynamic';
@@ -1705,99 +1681,7 @@ window.applyGlobalSettings = function() {
   if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
   else body.classList.remove('text-redesign-active');
   
-  const menuBtn = document.getElementById('btnMenuToggle');
-  if (menuBtn) {
-      if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
-          menuBtn.style.display = 'none';
-      } else {
-          menuBtn.style.display = 'flex';
-      }
-  }
-  
-  const statsBtn = document.getElementById('btnStatsToggle');
-  if (statsBtn) {
-      statsBtn.style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
-  }
-  
-  const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", design: "Designed with Smooth iOS Performance in mind", footer: "Hosted on Vercel | Secured by Firebase" };
-  const designText = about.design || "Designed with Smooth iOS Performance in mind";
-  
-  const aboutCont = document.getElementById('aboutContent');
-  if (aboutCont) {
-      aboutCont.innerHTML = `
-          <div style="color:var(--ios-blue); margin-bottom:12px;"><span class="material-icons-round" style="font-size:42px;">info</span></div>
-          <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:4px;">${about.title}</div>
-          <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:16px;">${about.version}</div>
-          <div style="font-size:14px; line-height:1.4; color:var(--ios-text-sec); margin-bottom:20px;">${(about.desc || '').replace(/\n+/g, '<br><br>')}</div>
-          <div style='font-size:12px
-  
-  // 1. Auto-inject Doodle Layer safely to ensure it always exists
-  let doodleLayer = document.getElementById('doodleBgLayer');
-  if (!doodleLayer) {
-      doodleLayer = document.createElement('div');
-      doodleLayer.id = 'doodleBgLayer';
-      doodleLayer.style.cssText = "position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;";
-      document.body.prepend(doodleLayer);
-  }
-  
-  // Custom User Theme Override
-  if (window.userCustomTheme && window.userCustomTheme.active) {
-      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-      body.style.setProperty('--grad-1', window.userCustomTheme.c1);
-      body.style.setProperty('--grad-2', window.userCustomTheme.c2);
-      body.style.setProperty('--grad-3', window.userCustomTheme.c3);
-      if (window.userCustomTheme.doodle) {
-          doodleLayer.style.backgroundImage = `url(${window.userCustomTheme.doodle})`;
-          doodleLayer.style.opacity = '1';
-      } else {
-          doodleLayer.style.opacity = '0';
-      }
-  } else {
-      // Revert to Admin Themes
-      body.style.removeProperty('--grad-1');
-      body.style.removeProperty('--grad-2');
-      body.style.removeProperty('--grad-3');
-      if (doodleLayer) doodleLayer.style.opacity = '0';
-      
-      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-      const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
-      if (themeMode === 'dynamic') {
-        const hour = new Date().getHours();
-        if(hour>=7 && hour<11) body.classList.add('bg-morning');
-        else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
-        else body.classList.add('bg-night');
-      } else {
-        body.classList.add('bg-' + themeMode);
-      }
-  }
-  
-  const adminGlass = (window.globalSettings && window.globalSettings.disableGlass) ? window.globalSettings.disableGlass : 'dynamic';
-  let isGlassDisabled = false;
-  
-  const lagTxtEl = document.getElementById('profReduceLagTxt');
-  const lagRowEl = document.getElementById('profLagRow');
-  const txtObj = uiText[curLang] || uiText.en;
-  
-  if (adminGlass === 'true') {
-      isGlassDisabled = true;
-      if(lagTxtEl) { lagTxtEl.innerText = txtObj.lagOn + " (Admin)"; lagTxtEl.style.color = "var(--ios-blue)"; }
-      if(lagRowEl) lagRowEl.style.opacity = "0.5";
-  } else if (adminGlass === 'false') {
-      isGlassDisabled = false;
-      if(lagTxtEl) { lagTxtEl.innerText = txtObj.lagDisabled; lagTxtEl.style.color = "var(--ios-text-sec)"; }
-      if(lagRowEl) lagRowEl.style.opacity = "0.5";
-  } else {
-      isGlassDisabled = window.userReduceLag;
-      if(lagTxtEl) { lagTxtEl.innerText = isGlassDisabled ? txtObj.lagOn : txtObj.lagOff; lagTxtEl.style.color = "var(--ios-blue)"; }
-      if(lagRowEl) lagRowEl.style.opacity = "1";
-  }
-  
-  if(isGlassDisabled) body.classList.add('no-glass');
-  else body.classList.remove('no-glass');
-  
-  if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
-  else body.classList.remove('text-redesign-active');
-  
+  if(window.applyCustomThemeSettings) window.applyCustomThemeSettings();
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
       document.getElementById('btnMenuToggle').style.display = 'none';
   }
@@ -1817,7 +1701,108 @@ window.applyGlobalSettings = function() {
 }
 function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
-function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
+// THEME STUDIO & DOODLE LOGIC
+window.openThemeStudio = function() {
+    triggerHaptic();
+    const useCustom = localStorage.getItem('useCustomTheme') === 'true';
+    document.getElementById('tsEnableToggle').checked = useCustom;
+    document.getElementById('tsColorPanel').style.opacity = useCustom ? '1' : '0.5';
+    document.getElementById('tsColorPanel').style.pointerEvents = useCustom ? 'auto' : 'none';
+
+    document.getElementById('cg1').value = localStorage.getItem('cGrad1') || '#e0c3fc';
+    document.getElementById('cg2').value = localStorage.getItem('cGrad2') || '#8ec5fc';
+    document.getElementById('cg3').value = localStorage.getItem('cGrad3') || '#4facfe';
+
+    setTimeout(()=>document.getElementById("themeStudioOverlay").classList.add("open"), 10);
+};
+
+window.closeThemeStudio = function() { document.getElementById("themeStudioOverlay").classList.remove("open"); };
+
+window.toggleCustomTheme = function(isChecked) {
+    triggerHaptic();
+    localStorage.setItem('useCustomTheme', isChecked);
+    document.getElementById('tsColorPanel').style.opacity = isChecked ? '1' : '0.5';
+    document.getElementById('tsColorPanel').style.pointerEvents = isChecked ? 'auto' : 'none';
+    window.applyCustomThemeSettings();
+};
+
+window.updateCustomGradientPreview = function() {
+    localStorage.setItem('cGrad1', document.getElementById('cg1').value);
+    localStorage.setItem('cGrad2', document.getElementById('cg2').value);
+    localStorage.setItem('cGrad3', document.getElementById('cg3').value);
+    window.applyCustomThemeSettings();
+};
+
+window.applyCustomThemeSettings = function() {
+    if(localStorage.getItem('useCustomTheme') === 'true') {
+        document.body.style.setProperty('--grad-1', localStorage.getItem('cGrad1') || '#e0c3fc');
+        document.body.style.setProperty('--grad-2', localStorage.getItem('cGrad2') || '#8ec5fc');
+        document.body.style.setProperty('--grad-3', localStorage.getItem('cGrad3') || '#4facfe');
+        document.body.classList.add('custom-theme-active');
+    } else {
+        document.body.style.removeProperty('--grad-1');
+        document.body.style.removeProperty('--grad-2');
+        document.body.style.removeProperty('--grad-3');
+        document.body.classList.remove('custom-theme-active');
+    }
+};
+
+let dCanvas, dCtx, isDoodling = false, brushSizes = [3, 8, 16], currentBrushIdx = 0;
+window.initDoodleCanvas = function() {
+    dCanvas = document.getElementById('doodleCanvas');
+    if(!dCanvas) return;
+    dCtx = dCanvas.getContext('2d', { willReadFrequently: true });
+    window.resizeDoodleCanvas();
+    window.addEventListener('resize', () => {
+        const saved = dCanvas.toDataURL(); 
+        window.resizeDoodleCanvas();
+        const img = new Image();
+        img.onload = () => dCtx.drawImage(img, 0, 0);
+        img.src = saved;
+    });
+    window.loadDoodle();
+
+    const startDraw = (e) => {
+        if(!dCanvas.classList.contains('draw-mode')) return;
+        isDoodling = true; draw(e, true);
+    };
+    const stopDraw = () => { if(isDoodling) { isDoodling = false; dCtx.beginPath(); window.saveDoodle(); } };
+    const draw = (e, isStart = false) => {
+        if(!isDoodling) return;
+        e.preventDefault();
+        const rect = dCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left; const y = clientY - rect.top;
+
+        dCtx.lineWidth = brushSizes[currentBrushIdx];
+        dCtx.lineCap = 'round'; dCtx.strokeStyle = document.getElementById('drawColor').value;
+
+        if(isStart) { dCtx.beginPath(); dCtx.moveTo(x, y); } 
+        else { dCtx.lineTo(x, y); dCtx.stroke(); dCtx.beginPath(); dCtx.moveTo(x, y); }
+    };
+
+    dCanvas.addEventListener('mousedown', startDraw); dCanvas.addEventListener('mousemove', draw);
+    dCanvas.addEventListener('mouseup', stopDraw); dCanvas.addEventListener('mouseout', stopDraw);
+    dCanvas.addEventListener('touchstart', startDraw, {passive: false});
+    dCanvas.addEventListener('touchmove', draw, {passive: false});
+    dCanvas.addEventListener('touchend', stopDraw);
+};
+
+window.resizeDoodleCanvas = function() { dCanvas.width = window.innerWidth; dCanvas.height = window.innerHeight; };
+
+window.enterDrawMode = function() {
+    triggerHaptic(); window.closeThemeStudio();
+    dCanvas.classList.add('draw-mode'); document.getElementById('drawToolbar').classList.add('show');
+};
+window.exitDrawMode = function() {
+    triggerHaptic(); dCanvas.classList.remove('draw-mode'); document.getElementById('drawToolbar').classList.remove('show');
+};
+window.changeBrushSize = function() {
+    triggerHaptic(); currentBrushIdx = (currentBrushIdx + 1) % brushSizes.length;
+    const icon = document.getElementById('brushSizeBtn').querySelector('span');
+    if(currentBrushIdx === 0) icon.style.fontSize = '16px';
+    else if(currentBrushIdx === 1) icon.style.fo
 
 // Strict Modal Drag Logic to fix input interaction bugs
 function initModalDrag(modal,overlayId){
@@ -1869,7 +1854,12 @@ function initModalDrag(modal,overlayId){
     }
 }
 window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='profileCard')overlayId='profileOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='profileOverlay')window.closeProfile();}
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='profileOverlay')window.closeProfile();else if(overlayId==='themeStudioOverlay')window.closeThemeStudio();}
+
+// Inject New Theme Studio Translations
+uiText.en.menuThemeStudio = "Theme Studio"; uiText.en.tsTitle = "Theme Studio"; uiText.en.tsSub = "Customize background colors & draw!"; uiText.en.tsEnableText = "Use Custom Theme"; uiText.en.tsGrad1 = "Top Color"; uiText.en.tsGrad2 = "Middle Color"; uiText.en.tsGrad3 = "Bottom Color"; uiText.en.tsDrawBtn = "Draw on Background"; uiText.en.tsClearBtn = "Clear Doodle"; uiText.en.tsDone = "Done";
+uiText.bm.menuThemeStudio = "Studio Tema"; uiText.bm.tsTitle = "Studio Tema"; uiText.bm.tsSub = "Sesuaikan warna latar belakang & lukis!"; uiText.bm.tsEnableText = "Guna Tema Tersuai"; uiText.bm.tsGrad1 = "Warna Atas"; uiText.bm.tsGrad2 = "Warna Tengah"; uiText.bm.tsGrad3 = "Warna Bawah"; uiText.bm.tsDrawBtn = "Lukis pada Latar Belakang"; uiText.bm.tsClearBtn = "Padam Lukisan"; uiText.bm.tsDone = "Selesai";
+uiText.cn.menuThemeStudio = "主题工作室"; uiText.cn.tsTitle = "主题工作室"; uiText.cn.tsSub = "自定义背景颜色和涂鸦！"; uiText.cn.tsEnableText = "使用自定义主题"; uiText.cn.tsGrad1 = "顶部颜色"; uiText.cn.tsGrad2 = "中间颜色"; uiText.cn.tsGrad3 = "底部颜色"; uiText.cn.tsDrawBtn = "在背景上涂鸦"; uiText.cn.tsClearBtn = "清除涂鸦"; uiText.cn.tsDone = "完成";
 
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0, true);else enableDark(!1, true)}
 window.toggleTheme=function(skipSync = false){triggerHaptic();enableDark(!isDark); if(!skipSync) window.cloudSyncUserData();}
@@ -2098,6 +2088,19 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById('menuFeedbackText2')) document.getElementById('menuFeedbackText2').innerText = txt.menuFeedback;
             if(document.getElementById('menuAboutText2')) document.getElementById('menuAboutText2').innerText = txt.menuAbout;
             if(document.getElementById('menuLogoutTextMain')) document.getElementById('menuLogoutTextMain').innerText = txt.logoutConfirm;
+            
+            // Theme Studio Localization
+            if(document.getElementById('menuThemeStudioText')) document.getElementById('menuThemeStudioText').innerText = txt.menuThemeStudio;
+            if(document.getElementById('tsTitle')) document.getElementById('tsTitle').innerText = txt.tsTitle;
+            if(document.getElementById('tsSub')) document.getElementById('tsSub').innerText = txt.tsSub;
+            if(document.getElementById('tsEnableText')) document.getElementById('tsEnableText').innerText = txt.tsEnableText;
+            if(document.getElementById('tsGrad1')) document.getElementById('tsGrad1').innerText = txt.tsGrad1;
+            if(document.getElementById('tsGrad2')) document.getElementById('tsGrad2').innerText = txt.tsGrad2;
+            if(document.getElementById('tsGrad3')) document.getElementById('tsGrad3').innerText = txt.tsGrad3;
+            if(document.getElementById('tsDrawBtn')) document.getElementById('tsDrawBtn').innerHTML = `<span class="material-icons-round" style="vertical-align:middle; margin-right:6px;">draw</span> ${txt.tsDrawBtn}`;
+            if(document.getElementById('tsClearBtn')) document.getElementById('tsClearBtn').innerText = txt.tsClearBtn;
+            if(document.getElementById('txtDrawDone')) document.getElementById('txtDrawDone').innerText = txt.tsDone;
+            if(document.getElementById('tsSaveBtn')) document.getElementById('tsSaveBtn').innerText = txt.tsDone;
 
             if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
             if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
@@ -2708,146 +2711,6 @@ window.proceedSignOut=function(){
 };
 
 // ==========================================
-// THEME STUDIO & DOODLE LOGIC
-// ==========================================
-let tsCtx = null;
-let isDrawing = false;
-let currentBrushSize = 3;
-
-window.openThemeStudio = function() {
-    triggerHaptic();
-    document.getElementById('profileOverlay').classList.remove('open');
-    setTimeout(() => {
-        document.getElementById('themeStudioOverlay').classList.add('open');
-        initThemeCanvas();
-        
-        // Load current custom theme into pickers
-        if(window.userCustomTheme.active) {
-            document.getElementById('tsColor1').value = window.userCustomTheme.c1;
-            document.getElementById('tsColor2').value = window.userCustomTheme.c2;
-            document.getElementById('tsColor3').value = window.userCustomTheme.c3;
-        }
-        window.updateStudioLiveBg();
-    }, 300);
-};
-
-window.closeThemeStudio = function() {
-    document.getElementById('themeStudioOverlay').classList.remove('open');
-};
-
-window.updateStudioLiveBg = function() {
-    const c1 = document.getElementById('tsColor1').value;
-    const c2 = document.getElementById('tsColor2').value;
-    const c3 = document.getElementById('tsColor3').value;
-    document.getElementById('tsCanvas').style.background = `linear-gradient(135deg, ${c1}, ${c2}, ${c3})`;
-};
-
-function initThemeCanvas() {
-    const canvas = document.getElementById('tsCanvas');
-    tsCtx = canvas.getContext('2d');
-    
-    // High-Res rendering (1080x1080 internal resolution)
-    canvas.width = 1080;
-    canvas.height = 1080;
-    tsCtx.lineCap = 'round';
-    tsCtx.lineJoin = 'round';
-
-    // Draw existing doodle if present
-    if (window.userCustomTheme.doodle) {
-        const img = new Image();
-        img.onload = () => tsCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        img.src = window.userCustomTheme.doodle;
-    }
-
-    const getPos = (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-            x: ((clientX - rect.left) / rect.width) * canvas.width,
-            y: ((clientY - rect.top) / rect.height) * canvas.height
-        };
-    };
-
-    const startDraw = (e) => {
-        isDrawing = true;
-        const pos = getPos(e);
-        tsCtx.beginPath();
-        tsCtx.moveTo(pos.x, pos.y);
-        // Multiplier to match scaled screen brush size to 1080p canvas
-        tsCtx.lineWidth = currentBrushSize * (canvas.width / canvas.getBoundingClientRect().width); 
-        tsCtx.strokeStyle = document.getElementById('tsBrushColor').value;
-        e.preventDefault(); 
-    };
-
-    const draw = (e) => {
-        if (!isDrawing) return;
-        const pos = getPos(e);
-        tsCtx.lineTo(pos.x, pos.y);
-        tsCtx.stroke();
-        e.preventDefault();
-    };
-
-    const stopDraw = () => { isDrawing = false; };
-
-    canvas.onmousedown = startDraw; canvas.ontouchstart = startDraw;
-    canvas.onmousemove = draw; canvas.ontouchmove = draw;
-    canvas.onmouseup = stopDraw; canvas.onmouseleave = stopDraw; canvas.ontouchend = stopDraw;
-}
-
-window.setBrushSize = function(size, btn) {
-    currentBrushSize = size;
-    document.querySelectorAll('.brush-tool').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-};
-
-window.clearDoodle = function() {
-    if(tsCtx) tsCtx.clearRect(0, 0, 1080, 1080);
-};
-
-window.disableCustomTheme = function() {
-    window.userCustomTheme.active = false;
-    window.userCustomTheme.doodle = null;
-    window.applyGlobalSettings();
-    if(window.cloudSyncUserData) window.cloudSyncUserData();
-    window.closeThemeStudio();
-    window.showToast("Theme Reset to Default", "refresh");
-};
-
-window.saveCustomTheme = function() {
-    const btn = document.getElementById('saveThemeBtn');
-    btn.innerText = "Saving...";
-    
-    // Compress doodle to Base64 (WebP at 50% quality is very lightweight)
-    const canvas = document.getElementById('tsCanvas');
-    let dataUrl = null;
-    
-    // Only save doodle if canvas isn't totally blank
-    const blankCheck = document.createElement('canvas');
-    blankCheck.width = canvas.width; blankCheck.height = canvas.height;
-    if(canvas.toDataURL() !== blankCheck.toDataURL()) {
-        dataUrl = canvas.toDataURL('image/webp', 0.5); 
-    }
-
-    window.userCustomTheme = {
-        active: true,
-        c1: document.getElementById('tsColor1').value,
-        c2: document.getElementById('tsColor2').value,
-        c3: document.getElementById('tsColor3').value,
-        doodle: dataUrl
-    };
-
-    window.applyGlobalSettings();
-    if(window.cloudSyncUserData) window.cloudSyncUserData();
-    
-    setTimeout(() => {
-        btn.innerText = "Apply & Save";
-        window.closeThemeStudio();
-        window.showToast("Custom Theme Applied!", "palette");
-    }, 500);
-};
-
-// ==========================================
 // FEEDBACK SYSTEM LOGIC
 // ==========================================
 window.openFeedback = function() {
@@ -3080,7 +2943,7 @@ window.closeUpdateScreen = function() {
     localStorage.setItem('lastSeenChangelog2', combinedLog);
 };
 
-if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",() => { initApp(); if(window.initDoodleCanvas) window.initDoodleCanvas(); initModalDrag(document.getElementById('themeStudioCard'),'themeStudioOverlay'); })}else{initApp(); if(window.initDoodleCanvas) window.initDoodleCanvas(); initModalDrag(document.getElementById('themeStudioCard'),'themeStudioOverlay'); }
 
 // ==========================================
 // GENERIC CUSTOM DROPDOWN LOGIC
@@ -3875,8 +3738,7 @@ window.cloudSyncUserData=async function(){
             theme: isDark ? 'dark' : 'light',
             density: isCompactMode ? 'compact' : 'comfort',
             reduceLag: window.userReduceLag || false,
-            language: curLang,
-            customTheme: window.userCustomTheme || null
+            language: curLang
         }, {merge: !0});
     } catch(e) {
         console.error("Sync error:", e);
@@ -3908,7 +3770,6 @@ onAuthStateChanged(auth, async (user) => {
     let prefDensity = null;
     let prefReduceLag = false;
     let prefLanguage = null;
-    let prefCustomTheme = null;
 
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -3920,7 +3781,6 @@ onAuthStateChanged(auth, async (user) => {
         prefDensity = dData.density;
         prefReduceLag = dData.reduceLag || false;
         prefLanguage = dData.language;
-        prefCustomTheme = dData.customTheme || null;
       }
     } catch (e) {
       console.warn("Failed to fetch user profile, using defaults.");
@@ -3943,12 +3803,6 @@ onAuthStateChanged(auth, async (user) => {
     }
     if (prefLanguage && prefLanguage !== curLang) {
         window.switchLanguage(prefLanguage, true); // true = skip duplicate sync
-    }
-    
-    if (prefCustomTheme) {
-        window.userCustomTheme = prefCustomTheme;
-    } else {
-        window.userCustomTheme = { active: false, c1: '#ffecd2', c2: '#fcb69f', c3: '#ff9a9e', doodle: null };
     }
 
     if (window.updateProfileStats) window.updateProfileStats();
