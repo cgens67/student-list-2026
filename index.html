@@ -619,7 +619,15 @@ body.bg-beta.coach-active .action-row {
 @supports (padding-bottom:env(safe-area-inset-bottom)){#doodleToolbar.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
 .d-color { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; flex-shrink:0; }
 .d-color.active { border-color: var(--ios-text); transform: scale(1.15); }
-</style>
+
+    /* Admin Duty List CSS */
+    .admin-duty-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--ios-sep); cursor: pointer; font-size: 13px; color: var(--ios-text); }
+    .admin-duty-row:last-child { border-bottom: none; }
+    .admin-duty-row:active { background: rgba(0,0,0,0.05); }
+    [data-theme="dark"] .admin-duty-row:active { background: rgba(255,255,255,0.05); }
+    .admin-duty-chk { color: var(--ios-blue); display: none; }
+    .admin-duty-row.assigned .admin-duty-chk { display: block; }
+    </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -874,6 +882,66 @@ window.hexToRgba = function(hex, alpha) {
   </div>
 </div>
 
+<!-- DUTY LIST OVERLAY (2 Hijau Only) -->
+<div class='modal-bg' id='dutyListOverlay' style="z-index: 10001;" onclick='window.closeDutyList()'>
+  <div class='modal-card' id='dutyListCard' onclick='event.stopPropagation()' style="max-width:550px;">
+    <div class='m-head'>
+       <div class='handle'></div>
+       <button class='btn-share' id='btnShareDuty' onclick='window.shareDutyList()'><span class='material-icons-round' style='font-size:20px'>ios_share</span></button>
+       <div class='stats-title anim-text-change' id="lblDutyModalTitle">Jadual Bertugas Kebersihan</div>
+       <div class='stats-sub anim-text-change' id="lblDutyModalSub" style="color:var(--ios-blue); font-weight:700;">2 Hijau (2H)</div>
+    </div>
+    
+    <div class='m-body' style="padding-top:10px;">
+       <div id="dutyListPrintArea" style="background:var(--ios-card); border-radius:20px; border:1px solid var(--glass-border); padding:24px; display:flex; flex-direction:column; gap:16px; box-shadow:var(--glass-shadow); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);">
+          <div style="text-align:center; margin-bottom:8px;">
+             <h3 id="lblDutyPrintHeader" style="margin:0; font-size:18px; font-weight:800; color:var(--ios-text); letter-spacing:-0.01em;">JADUAL BERTUGAS KEBERSIHAN</h3>
+             <span style="font-size:13px; font-weight:700; color:var(--ios-text-sec);" id="lblDutyPrintSub">Disediakan oleh: Unit Kebersihan (2H)</span>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;" id="dutyListGrid">
+             <!-- 擦白板 -->
+             <div style="background:var(--ios-input); border:1px solid var(--glass-border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px; color:#AF52DE;">
+                   <span class="material-icons-round" style="font-size:18px;">layers</span>
+                   <span style="font-size:14px; font-weight:800;" id="lblDutyCatWhiteboard">擦白板</span>
+                </div>
+                <div style="font-size:13px; color:var(--ios-text); font-weight:600; min-height:50px; display:flex; flex-direction:column; gap:4px;" id="duty-whiteboard-list">-</div>
+             </div>
+             <!-- 扫地 -->
+             <div style="background:var(--ios-input); border:1px solid var(--glass-border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px; color:#34C759;">
+                   <span class="material-icons-round" style="font-size:18px;">cleaning_services</span>
+                   <span style="font-size:14px; font-weight:800;" id="lblDutyCatSweep">扫地</span>
+                </div>
+                <div style="font-size:13px; color:var(--ios-text); font-weight:600; min-height:50px; display:flex; flex-direction:column; gap:4px;" id="duty-sweep-list">-</div>
+             </div>
+             <!-- 排桌椅 -->
+             <div style="background:var(--ios-input); border:1px solid var(--glass-border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px; color:#007AFF;">
+                   <span class="material-icons-round" style="font-size:18px;">grid_on</span>
+                   <span style="font-size:14px; font-weight:800;" id="lblDutyCatArrange">排桌椅</span>
+                </div>
+                <div style="font-size:13px; color:var(--ios-text); font-weight:600; min-height:50px; display:flex; flex-direction:column; gap:4px;" id="duty-arrange-list">-</div>
+             </div>
+             <!-- 丢垃圾 -->
+             <div style="background:var(--ios-input); border:1px solid var(--glass-border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px; color:#FF3B30;">
+                   <span class="material-icons-round" style="font-size:18px;">delete</span>
+                   <span style="font-size:14px; font-weight:800;" id="lblDutyCatTrash">丢垃圾</span>
+                </div>
+                <div style="font-size:13px; color:var(--ios-text); font-weight:600; min-height:50px; display:flex; flex-direction:column; gap:4px;" id="duty-trash-list">-</div>
+             </div>
+          </div>
+       </div>
+    </div>
+    
+    <div class='m-foot'>
+       <button class='btn-done anim-text-change' onclick='window.closeDutyList()' id="btnDutyDone">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- ABOUT OVERLAY -->
 <div class='modal-bg' id='aboutOverlay' style="z-index: 10001;" onclick='window.closeAbout()'>
   <div class='modal-card' id='aboutCard' onclick='event.stopPropagation()'>
@@ -1086,9 +1154,13 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 
     <div class='teacher-card' id='classInfoCard'>
-      <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
-      <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
-    </div>
+          <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
+          <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
+        </div>
+        <button id="btnDutyList" class="btn-done" style="display:none; margin-top:0px; margin-bottom:16px; background:var(--ios-blue); font-size:15px; border-radius:16px; padding:14px; align-items:center; justify-content:center; gap:8px;" onclick="window.openDutyList()">
+            <span class="material-icons-round" style="font-size:20px; vertical-align:middle;">cleaning_services</span>
+            <span class="anim-text-change" id="lblDutyListBtn">Jadual Bertugas Kebersihan (2H)</span>
+        </button>
 
     <div class='student-grid' id='studentGrid'></div>
   </div>
@@ -1318,6 +1390,35 @@ window.hexToRgba = function(hex, alpha) {
                <input type="text" id="adminTg" placeholder="Guru Kelas Name" class="admin-input">
                <label id="lblAdminPenolong" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec);">Penolong</label>
                <input type="text" id="adminTp" placeholder="Penolong Name" class="admin-input">
+               
+               <!-- 2 Hijau Duty List Editor Section -->
+               <div id="adminDutyListSection" style="display:none; margin-top:15px; border-top:1px solid var(--ios-sep); padding-top:15px; flex-direction:column; gap:8px;">
+                  <label style="font-size:14px; font-weight:bold; color:var(--ios-text);" id="lblAdminDutyHeader">Jadual Bertugas Kebersihan (2 Hijau)</label>
+                  
+                  <div style="background:var(--ios-card); border-radius:12px; border:1px solid var(--chip-border); padding:10px; display:flex; flex-direction:column; gap:10px;">
+                      <div>
+                          <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); display:block; margin-bottom:4px;" id="lblAdminAssignCategory">Select Category to Assign</label>
+                          <div class="custom-select-container">
+                              <div class="custom-select-header" id="adminDutyCatHeader" onclick="window.toggleCustomSelect('adminDutyCatDropdown')">
+                                  <span>擦白板</span><span class="material-icons-round">expand_more</span>
+                              </div>
+                              <div class="custom-select-dropdown" id="adminDutyCatDropdown" data-value="whiteboard">
+                                  <div class="custom-option" onclick="window.selectOption('adminDutyCatDropdown', 'whiteboard', '擦白板', 'adminDutyCatHeader', 'renderAdminDutyStudents')">擦白板 (Padam Papan)</div>
+                                  <div class="custom-option" onclick="window.selectOption('adminDutyCatDropdown', 'sweep', '扫地', 'adminDutyCatHeader', 'renderAdminDutyStudents')">扫地 (Sapu Lantai)</div>
+                                  <div class="custom-option" onclick="window.selectOption('adminDutyCatDropdown', 'arrange', '排桌椅', 'adminDutyCatHeader', 'renderAdminDutyStudents')">排桌椅 (Susun Meja)</div>
+                                  <div class="custom-option" onclick="window.selectOption('adminDutyCatDropdown', 'trash', '丢垃圾', 'adminDutyCatHeader', 'renderAdminDutyStudents')">丢垃圾 (Buang Sampah)</div>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div>
+                          <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); display:block; margin-bottom:4px;" id="lblAdminDutyStudents">Select 2 Hijau Students</label>
+                          <div style="max-height:180px; overflow-y:auto; border:1px solid var(--chip-border); border-radius:8px; background:var(--ios-input);" id="adminDutyStudentsList">
+                              <!-- populated dynamically -->
+                          </div>
+                      </div>
+                  </div>
+               </div>
                
                <button id="adminBtnUpdateQueue2" onclick="window.adminApplyTeacher()" style="background:var(--ios-blue); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; margin-top:5px; cursor:pointer;">Update Queue</button>
             </div>
@@ -1673,9 +1774,9 @@ window.favorites=[];
 window.searchHistory=[];
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", tabAudit:"Audit Log", tabFeedback: "Feedback", tabAnalytics: "Analytics", adminAuditTitle: "Admin Activity Log", adminAuditDesc: "Tracks detailed changes made in the dashboard.", adminFeedbackTitle: "User Feedback", adminFeedbackDesc: "Messages and bug reports submitted by users.", adminAnalyticsTitle: "System Analytics", adminAnalyticsDesc: "Overview of user engagement and activity.", statTotalUsers: "Total Users", statTotalFavs: "Total Favorites", statRecentActivity: "Recent User Activity", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", adminForceCoach: "Force Welcome Guide & Coach Marks", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchStudent: "Search by name...", adminIdPlaceholder: "Student ID (e.g. 120116040351)", adminNamePlaceholder: "Full Name", adminCnPlaceholder: "Chinese Name (or -)", adminOldPlaceholder: "Old Class (e.g. 1B)", adminSchPlaceholder: "Primary School", adminUpdateQueue: "Update Queue", adminDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePlaceholder: "e.g. Information may be inaccurate due to...", adminIconLabel: "Notice Icon", adminColorLabel: "Notice Color", adminStyleLabel: "Notice Style", adminGuruLabel: "Class Teacher", adminPenolongLabel: "Assistant Teacher", optTextOrig: "Original Style", optTextRedesign: "Secondary Redesigned Text Theme", menuProfileText: "Account Profile", lblProfileTitle: "Account & Settings", lblProfTheme: "Theme", lblProfDensity: "View Mode", lblProfClearFav: "Clear All Favorites", lblProfClearHist: "Clear Search History", confirmClearFav: "Are you sure you want to clear all favorites?", lblProfReduceLag: "Reduce Lag", optGlassDyn: "Dynamic (Follow User Settings)", lagDisabled: "Disabled by Admin", lagOn: "On", lagOff: "Off", toastLagAdmin: "Setting locked by Admin", allClasses: "All Classes", coachStep1: "Use the search bar to find students by name, Chinese name, or ID.", coachStep2: "Tap the heart icon to view only your saved favorite students.", coachStep3: "Check out detailed allocation statistics and charts here!", coachStep4: "Swipe and tap these tabs to quickly switch between classes.", coachStep5: "Tap a student to view details, or long-press for quick actions!", coachStep6: "Access your profile, app settings, and more from the menu.", coachContinue: "Tap anywhere to continue", lblProfBgTheme: "Background", themeCustTitle: "Background Theme", themeCustSub: "Customize your app background", themeCustLabel: "Choose Theme", themeCustDefault: "Default", themeCustCustom: "Custom Colors", themeCustCreate: "Create Your Own", themeCustTop: "Top", themeCustMid: "Middle", themeCustBot: "Bottom", themeCustSave: "Save Theme", drawOnBg: "Draw on Background", clearDoodleBtn: "Clear Doodle", clearDoodleDesc: "Are you sure you want to clear your background drawing?", doodleSaved: "Doodle Saved!", themeLockedAdmin: "Locked by Admin"},
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", tabAudit:"Audit Log", tabFeedback: "Feedback", tabAnalytics: "Analytics", adminAuditTitle: "Admin Activity Log", adminAuditDesc: "Tracks detailed changes made in the dashboard.", adminFeedbackTitle: "User Feedback", adminFeedbackDesc: "Messages and bug reports submitted by users.", adminAnalyticsTitle: "System Analytics", adminAnalyticsDesc: "Overview of user engagement and activity.", statTotalUsers: "Total Users", statTotalFavs: "Total Favorites", statRecentActivity: "Recent User Activity", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", adminForceCoach: "Force Welcome Guide & Coach Marks", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchStudent: "Search by name...", adminIdPlaceholder: "Student ID (e.g. 120116040351)", adminNamePlaceholder: "Full Name", adminCnPlaceholder: "Chinese Name (or -)", adminOldPlaceholder: "Old Class (e.g. 1B)", adminSchPlaceholder: "Primary School", adminUpdateQueue: "Update Queue", adminDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePlaceholder: "e.g. Information may be inaccurate due to...", adminIconLabel: "Notice Icon", adminColorLabel: "Notice Color", adminStyleLabel: "Notice Style", adminGuruLabel: "Class Teacher", adminPenolongLabel: "Assistant Teacher", optTextOrig: "Original Style", optTextRedesign: "Secondary Redesigned Text Theme", menuProfileText: "Account Profile", lblProfileTitle: "Account & Settings", lblProfTheme: "Theme", lblProfDensity: "View Mode", lblProfClearFav: "Clear All Favorites", lblProfClearHist: "Clear Search History", confirmClearFav: "Are you sure you want to clear all favorites?", lblProfReduceLag: "Reduce Lag", optGlassDyn: "Dynamic (Follow User Settings)", lagDisabled: "Disabled by Admin", lagOn: "On", lagOff: "Off", toastLagAdmin: "Setting locked by Admin", allClasses: "All Classes", coachStep1: "Use the search bar to find students by name, Chinese name, or ID.", coachStep2: "Tap the heart icon to view only your saved favorite students.", coachStep3: "Check out detailed allocation statistics and charts here!", coachStep4: "Swipe and tap these tabs to quickly switch between classes.", coachStep5: "Tap a student to view details, or long-press for quick actions!", coachStep6: "Access your profile, app settings, and more from the menu.", coachContinue: "Tap anywhere to continue", lblProfBgTheme: "Background", themeCustTitle: "Background Theme", themeCustSub: "Customize your app background", themeCustLabel: "Choose Theme", themeCustDefault: "Default", themeCustCustom: "Custom Colors", themeCustCreate: "Create Your Own", themeCustTop: "Top", themeCustMid: "Middle", themeCustBot: "Bottom", themeCustSave: "Save Theme", drawOnBg: "Draw on Background", clearDoodleBtn: "Clear Doodle", clearDoodleDesc: "Are you sure you want to clear your background drawing?", doodleSaved: "Doodle Saved!", themeLockedAdmin: "Locked by Admin", lblDutyListBtn: "Cleaning Duty List (2H)", lblDutyModalTitle: "Cleaning Duty List", lblDutyPrintHeader: "CLEANING DUTY LIST", lblDutyPrintSub: "Prepared by: Hygiene Unit (2H)", lblAdminDutyHeader: "Cleaning Duty List (2 Hijau)", lblAdminAssignCategory: "Select Category to Assign", lblAdminDutyStudents: "Select 2 Hijau Students"},
   bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", tabAudit:"Log Audit", tabFeedback: "Maklum Balas", tabAnalytics: "Analitik", adminAuditTitle: "Log Aktiviti Admin", adminAuditDesc: "Menjejaki perubahan terperinci yang dibuat dalam papan pemuka.", adminFeedbackTitle: "Maklum Balas Pengguna", adminFeedbackDesc: "Mesej dan laporan pepijat daripada pengguna.", adminAnalyticsTitle: "Analitik Sistem", adminAnalyticsDesc: "Gambaran keseluruhan penglibatan dan aktiviti pengguna.", statTotalUsers: "Jumlah Pengguna", statTotalFavs: "Jumlah Kegemaran", statRecentActivity: "Aktiviti Pengguna Terkini", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", adminForceCoach: "Paksa Panduan Selamat Datang & Tanda Jurulatih", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)", adminAddStudent: "Tambah Murid Baharu", adminSearchStudent: "Cari berdasarkan nama...", adminIdPlaceholder: "ID Murid (cth. 120116040351)", adminNamePlaceholder: "Nama Penuh", adminCnPlaceholder: "Nama Cina (atau -)", adminOldPlaceholder: "Kelas Lama (cth. 1B)", adminSchPlaceholder: "Sekolah Rendah", adminUpdateQueue: "Kemas Kini Barisan", adminDelete: "Padam", adminNoticeLabel: "Notis Kelas / Sepanduk Amaran", adminNoticePlaceholder: "cth. Maklumat mungkin tidak tepat kerana...", adminIconLabel: "Ikon Notis", adminColorLabel: "Warna Notis", adminStyleLabel: "Gaya Notis", adminGuruLabel: "Guru Kelas", adminPenolongLabel: "Penolong", optTextOrig: "Gaya Asal", optTextRedesign: "Tema Teks Reka Bentuk Kedua", menuProfileText: "Profil Akaun", lblProfileTitle: "Akaun & Tetapan", lblProfTheme: "Tema", lblProfDensity: "Mod Paparan", lblProfClearFav: "Padam Semua Kegemaran", lblProfClearHist: "Padam Sejarah Carian", confirmClearFav: "Adakah anda pasti ingin memadam semua kegemaran?", lblProfReduceLag: "Kurangkan Kelengahan (Lag)", optGlassDyn: "Dinamik (Ikut Tetapan Pengguna)", lagDisabled: "Dilumpuhkan oleh Admin", lagOn: "Hidup", lagOff: "Mati", toastLagAdmin: "Tetapan dikunci oleh Admin", allClasses: "Semua Kelas", coachStep1: "Gunakan bar carian untuk mencari murid mengikut nama, nama Cina, atau ID.", coachStep2: "Ketik ikon hati untuk melihat murid kegemaran anda yang tersimpan.", coachStep3: "Lihat statistik dan carta penempatan terperinci di sini!", coachStep4: "Sapu dan ketik tab ini untuk menukar kelas dengan pantas.", coachStep5: "Ketik murid untuk butiran, atau tekan lama untuk tindakan pantas!", coachStep6: "Akses profil anda, tetapan aplikasi, dan banyak lagi dari menu.", coachContinue: "Ketik di mana-mana untuk meneruskan", lblProfBgTheme: "Latar Belakang", themeCustTitle: "Tema Latar Belakang", themeCustSub: "Ubah suai latar belakang aplikasi anda", themeCustLabel: "Pilih Tema", themeCustDefault: "Lalai", themeCustCustom: "Warna Tersuai", themeCustCreate: "Cipta Tema Anda", themeCustTop: "Atas", themeCustMid: "Tengah", themeCustBot: "Bawah", themeCustSave: "Simpan Tema", drawOnBg: "Lukis pada Latar Belakang", clearDoodleBtn: "Padam Lukisan", clearDoodleDesc: "Adakah anda pasti ingin memadam lukisan latar belakang anda?", doodleSaved: "Lukisan Disimpan!", themeLockedAdmin: "Dikunci oleh Admin"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", tabAudit:"审计日志", tabFeedback: "用户反馈", tabAnalytics: "数据分析", adminAuditTitle: "管理员活动日志", adminAuditDesc: "记录在仪表板中所做的详细更改。", adminFeedbackTitle: "用户反馈", adminFeedbackDesc: "用户提交的反馈和错误报告。", adminAnalyticsTitle: "系统分析", adminAnalyticsDesc: "用户参与度和活动概览。", statTotalUsers: "总用户数", statTotalFavs: "总收藏数", statRecentActivity: "最近用户活动", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", adminForceCoach: "强制显示欢迎指南和提示", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchStudent: "按姓名搜索...", adminIdPlaceholder: "学生 ID (例: 120116040351)", adminNamePlaceholder: "全名", adminCnPlaceholder: "中文名 (或 -)", adminOldPlaceholder: "原班级 (例: 1B)", adminSchPlaceholder: "毕业小学", adminUpdateQueue: "更新队列", adminDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePlaceholder: "例如：信息可能不准确，因为...", adminIconLabel: "通知图标", adminColorLabel: "通知颜色", adminStyleLabel: "通知样式", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", optTextOrig: "原始样式", optTextRedesign: "辅助重设计文本主题", menuProfileText: "账户资料", lblProfileTitle: "账户与设置", lblProfTheme: "主题", lblProfDensity: "视图模式", lblProfClearFav: "清除所有收藏", lblProfClearHist: "清除搜索历史", confirmClearFav: "确定要清除所有收藏吗？", lblProfReduceLag: "减少卡顿 (Lag)", optGlassDyn: "动态 (跟随用户设置)", lagDisabled: "被管理员禁用", lagOn: "开", lagOff: "关", toastLagAdmin: "已被管理员锁定", allClasses: "所有班级", coachStep1: "使用搜索栏通过姓名、中文名或 ID 查找学生。", coachStep2: "点击心形图标仅查看您收藏的学生。", coachStep3: "在这里查看详细的分班统计数据和图表！", coachStep4: "滑动并点击这些选项卡即可快速切换班级。", coachStep5: "点击学生查看详情，或长按使用快捷操作！", coachStep6: "从菜单访问您的个人资料、应用设置等。", coachContinue: "点击任意位置继续", lblProfBgTheme: "应用背景", themeCustTitle: "背景主题", themeCustSub: "自定义您的应用背景", themeCustLabel: "选择主题", themeCustDefault: "默认", themeCustCustom: "自定义颜色", themeCustCreate: "创建自己的主题", themeCustTop: "顶部", themeCustMid: "中间", themeCustBot: "底部", themeCustSave: "保存主题", drawOnBg: "在背景上涂鸦", clearDoodleBtn: "清除涂鸦", clearDoodleDesc: "您确定要清除您的背景涂鸦吗？", doodleSaved: "涂鸦已保存！", themeLockedAdmin: "被管理员锁定"}
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", tabAudit:"审计日志", tabFeedback: "用户反馈", tabAnalytics: "数据分析", adminAuditTitle: "管理员活动日志", adminAuditDesc: "记录在仪表板中所做的详细更改。", adminFeedbackTitle: "用户反馈", adminFeedbackDesc: "用户提交的反馈和错误报告。", adminAnalyticsTitle: "系统分析", adminAnalyticsDesc: "用户参与度和活动概览。", statTotalUsers: "总用户数", statTotalFavs: "总收藏数", statRecentActivity: "最近用户活动", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", adminForceCoach: "强制显示欢迎指南和提示", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchStudent: "按姓名搜索...", adminIdPlaceholder: "学生 ID (例: 120116040351)", adminNamePlaceholder: "全名", adminCnPlaceholder: "中文名 (或 -)", adminOldPlaceholder: "原班级 (例: 1B)", adminSchPlaceholder: "毕业小学", adminUpdateQueue: "更新队列", adminDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePlaceholder: "例如：信息可能不准确，因为...", adminIconLabel: "通知图标", adminColorLabel: "通知颜色", adminStyleLabel: "通知样式", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", optTextOrig: "原始样式", optTextRedesign: "辅助重设计文本主题", menuProfileText: "账户资料", lblProfileTitle: "账户与设置", lblProfTheme: "主题", lblProfDensity: "视图模式", lblProfClearFav: "清除所有收藏", lblProfClearHist: "清除搜索历史", confirmClearFav: "确定要清除所有收藏吗？", lblProfReduceLag: "减少卡顿 (Lag)", optGlassDyn: "动态 (跟随用户设置)", lagDisabled: "被管理员禁用", lagOn: "开", lagOff: "关", toastLagAdmin: "已被管理员锁定", allClasses: "所有班级", coachStep1: "使用搜索栏通过姓名、中文名或 ID 查找学生。", coachStep2: "点击心形图标仅查看您收藏的学生。", coachStep3: "在这里查看详细的分班统计数据和图表！", coachStep4: "滑动并点击这些选项卡即可快速切换班级。", coachStep5: "点击学生查看详情，或长按使用快捷操作！", coachStep6: "从菜单访问您的个人资料、应用设置等。", coachContinue: "点击任意位置继续", lblProfBgTheme: "应用背景", themeCustTitle: "背景主题", themeCustSub: "自定义您的应用背景", themeCustLabel: "选择主题", themeCustDefault: "默认", themeCustCustom: "自定义颜色", themeCustCreate: "创建自己的主题", themeCustTop: "顶部", themeCustMid: "中间", themeCustBot: "底部", themeCustSave: "保存主题", drawOnBg: "在背景上涂鸦", clearDoodleBtn: "清除涂鸦", clearDoodleDesc: "您确定要清除您的背景涂鸦吗？", doodleSaved: "涂鸦已保存！", themeLockedAdmin: "被管理员锁定", lblDutyListBtn: "卫生值日表 (2H)", lblDutyModalTitle: "值日表", lblDutyPrintHeader: "班级卫生值日表", lblDutyPrintSub: "制表：卫生小组 (2H)", lblAdminDutyHeader: "值日表设置 (2 Hijau)", lblAdminAssignCategory: "选择要分配的值日项目", lblAdminDutyStudents: "选择 2 Hijau 学生"}
 };
 
 // Generic UI Confirm Dialog Function
@@ -1697,7 +1798,7 @@ window.closeGenericConfirm = function() {
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();window.initDoodle();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('profileCard'),'profileOverlay');initModalDrag(document.getElementById('themeCustomizerCard'),'themeCustomizerOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();window.initDoodle();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('profileCard'),'profileOverlay');initModalDrag(document.getElementById('themeCustomizerCard'),'themeCustomizerOverlay');initModalDrag(document.getElementById('dutyListCard'),'dutyListOverlay');initDesktopScroll()}
 
 window.applyGlobalSettings = function() {
   const body = document.body;
@@ -2006,6 +2107,156 @@ window.updateProfileThemeText = function() {
     const type = window.userThemeObj.type;
     const labels = {'default':txt.themeCustDefault||'Default', 'preset2':'Ocean Blue', 'preset3':'Sunset Orange', 'custom':txt.themeCustCustom||'Custom Colors'};
     profTxt.innerText = labels[type] || 'Default';
+};
+
+// ==========================================
+// 2 HIJAU DUTY LIST ENGINE
+// ==========================================
+window.classDuty2H = { whiteboard: [], sweep: [], arrange: [], trash: [] };
+window.adminTempDuty2H = { whiteboard: [], sweep: [], arrange: [], trash: [] };
+
+window.openDutyList = function() {
+    triggerHaptic();
+    const cats = ['whiteboard', 'sweep', 'arrange', 'trash'];
+    cats.forEach(cat => {
+        const listEl = document.getElementById(`duty-${cat}-list`);
+        if(!listEl) return;
+        const studentIds = window.classDuty2H[cat] || [];
+        
+        if (studentIds.length === 0) {
+            listEl.innerText = "-";
+        } else {
+            const names = studentIds.map(id => {
+                const stu = window.smkData.find(s => s.id === id);
+                return stu ? stu.name : null;
+            }).filter(Boolean);
+            
+            if(names.length === 0) {
+                listEl.innerText = "-";
+            } else {
+                listEl.innerHTML = names.map(n => `<div style="padding:2px 0;">&bull; ${n}</div>`).join('');
+            }
+        }
+    });
+    setTimeout(() => document.getElementById('dutyListOverlay').classList.add('open'), 10);
+};
+
+window.closeDutyList = function() {
+    const modal = document.getElementById("dutyListCard");
+    modal.style.transform = '';
+    document.getElementById("dutyListOverlay").classList.remove("open");
+};
+
+window.shareDutyList = async function() {
+    triggerHaptic();
+    const btn = document.getElementById('btnShareDuty');
+    const icon = btn.querySelector('span');
+    const originalIcon = icon.innerText;
+    icon.innerText = "hourglass_empty";
+    btn.style.opacity = "0.5";
+    btn.style.pointerEvents = "none";
+    
+    const txt = uiText[curLang] || uiText.en;
+    const localTxt = {
+        en: { gen: "Generating Duty List Image...", saved: "Duty List Saved!", fail: "Failed to generate image" },
+        bm: { gen: "Menjana Imej Jadual Bertugas...", saved: "Jadual Bertugas Disimpan!", fail: "Gagal menjana imej" },
+        cn: { gen: "正在生成值日表图片...", saved: "值日表已保存！", fail: "生成图片失败" }
+    };
+    const lTxt = localTxt[curLang] || localTxt.en;
+    window.showToast(lTxt.gen, "hourglass_top");
+    
+    try {
+        const container = document.getElementById('dutyListPrintArea');
+        const canvas = await html2canvas(container, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: window.getComputedStyle(document.body).backgroundColor
+        });
+        
+        canvas.toBlob(async (blob) => {
+            const fileName = `Jadual_Bertugas_2Hijau.png`;
+            const file = new File([blob], fileName, { type: 'image/png' });
+            
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    const shareTexts = {
+                        en: `Here is 2 Hijau's Cleaning Duty List.`,
+                        bm: `Berikut adalah Jadual Bertugas Kebersihan 2 Hijau.`,
+                        cn: `这是 2 Hijau 班的值日表。`
+                    };
+                    await navigator.share({
+                        title: txt.lblDutyModalTitle || "Jadual Bertugas Kebersihan",
+                        text: shareTexts[curLang] || shareTexts.en,
+                        files: [file]
+                    });
+                } catch (e) {
+                    console.log("Sharing cancelled", e);
+                }
+            } else {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                window.showToast(lTxt.saved, "download_done");
+            }
+            icon.innerText = originalIcon;
+            btn.style.opacity = "1";
+            btn.style.pointerEvents = "auto";
+        }, 'image/png');
+    } catch (err) {
+        console.error(err);
+        window.showToast(lTxt.fail, "error");
+        icon.innerText = originalIcon;
+        btn.style.opacity = "1";
+        btn.style.pointerEvents = "auto";
+    }
+};
+
+window.renderAdminDutyStudents = function() {
+    const cat = document.getElementById('adminDutyCatDropdown').getAttribute('data-value') || 'whiteboard';
+    const listContainer = document.getElementById('adminDutyStudentsList');
+    if(!listContainer) return;
+    
+    const hijauStudents = window.adminTempStudents.filter(s => s.newClass && s.newClass.toUpperCase().includes('2 HIJAU'));
+    
+    if (hijauStudents.length === 0) {
+        listContainer.innerHTML = '<div style="padding:15px; text-align:center; color:var(--ios-text-sec); font-size:12px;">No 2 Hijau students found in database.</div>';
+        return;
+    }
+    
+    if (!window.adminTempDuty2H) {
+        window.adminTempDuty2H = { whiteboard: [], sweep: [], arrange: [], trash: [] };
+    }
+    if (!window.adminTempDuty2H[cat]) {
+        window.adminTempDuty2H[cat] = [];
+    }
+    
+    let html = '';
+    hijauStudents.forEach(stu => {
+        const isAssigned = window.adminTempDuty2H[cat].includes(stu.id);
+        html += `
+        <div class="admin-duty-row ${isAssigned ? 'assigned' : ''}" onclick="window.toggleAdminDutyStudent('${stu.id}', '${cat}')">
+            <span>${stu.name}</span>
+            <span class="material-icons-round admin-duty-chk">check_circle</span>
+        </div>`;
+    });
+    listContainer.innerHTML = html;
+};
+
+window.toggleAdminDutyStudent = function(studentId, cat) {
+    triggerHaptic();
+    if(!window.adminTempDuty2H[cat]) window.adminTempDuty2H[cat] = [];
+    const index = window.adminTempDuty2H[cat].indexOf(studentId);
+    if(index === -1) {
+        window.adminTempDuty2H[cat].push(studentId);
+    } else {
+        window.adminTempDuty2H[cat].splice(index, 1);
+    }
+    window.renderAdminDutyStudents();
 };
 
 // DOODLE CANVAS LOGIC
@@ -2407,6 +2658,14 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById("btnDrawDoodle")) document.getElementById("btnDrawDoodle").innerHTML = '<span class="material-icons-round" style="font-size:18px; vertical-align:middle; margin-right:4px;">draw</span> ' + txt.drawOnBg;
             if(document.getElementById("btnThemeCustSave")) document.getElementById("btnThemeCustSave").innerText = txt.themeCustSave;
             if(document.getElementById("btnThemeCustCancel")) document.getElementById("btnThemeCustCancel").innerText = txt.logoutCancel;
+            if(document.getElementById("lblDutyListBtn")) setTextAndAnimateWidth(document.getElementById("lblDutyListBtn"), txt.lblDutyListBtn);
+            if(document.getElementById("lblDutyModalTitle")) setTextAndAnimateWidth(document.getElementById("lblDutyModalTitle"), txt.lblDutyModalTitle);
+            if(document.getElementById("lblDutyPrintHeader")) document.getElementById("lblDutyPrintHeader").innerText = txt.lblDutyPrintHeader;
+            if(document.getElementById("lblDutyPrintSub")) document.getElementById("lblDutyPrintSub").innerText = txt.lblDutyPrintSub;
+            if(document.getElementById("btnDutyDone")) document.getElementById("btnDutyDone").innerText = txt.btnClose;
+            if(document.getElementById("lblAdminDutyHeader")) setTextAndAnimateWidth(document.getElementById("lblAdminDutyHeader"), txt.lblAdminDutyHeader);
+            if(document.getElementById("lblAdminAssignCategory")) setTextAndAnimateWidth(document.getElementById("lblAdminAssignCategory"), txt.lblAdminAssignCategory);
+            if(document.getElementById("lblAdminDutyStudents")) setTextAndAnimateWidth(document.getElementById("lblAdminDutyStudents"), txt.lblAdminDutyStudents);
             if(document.getElementById("lblProfClearFav")) setTextAndAnimateWidth(document.getElementById("lblProfClearFav"), txt.lblProfClearFav);
             if(document.getElementById("lblProfClearHist")) setTextAndAnimateWidth(document.getElementById("lblProfClearHist"), txt.lblProfClearHist);
             if(document.getElementById("lblProfReduceLag")) setTextAndAnimateWidth(document.getElementById("lblProfReduceLag"), txt.lblProfReduceLag);
@@ -3391,9 +3650,10 @@ window.switchAdminTab = (tab) => {
 };
 
 window.openAdminPanel = () => {
-  window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
-  window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
-  window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
+      window.adminTempStudents = JSON.parse(JSON.stringify(window.smkData));
+      window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
+      window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
+      window.adminTempDuty2H = JSON.parse(JSON.stringify(window.classDuty2H || { whiteboard: [], sweep: [], arrange: [], trash: [] }));
   
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
@@ -3648,6 +3908,7 @@ window.applyPendingUpdate = () => {
     window.smkData = window.pendingDataUpdate.students;
     window.teacherData = window.pendingDataUpdate.teachers;
     window.classNotices = window.pendingDataUpdate.notices;
+    window.classDuty2H = window.pendingDataUpdate.dutyList2H;
     window.pendingDataUpdate = null;
 
     if(window.initFilterChips) window.initFilterChips();
@@ -3746,8 +4007,14 @@ function filterData(){
             }else{
                 document.getElementById('classNoticeBanner').classList.remove('show');
             }
-        }else{
+        } else {
             document.getElementById('classNoticeBanner').classList.remove('show');
+        }
+        
+        const isHijau = (currentClass === 'Hijau');
+        const btnDuty = document.getElementById('btnDutyList');
+        if (btnDuty) {
+            btnDuty.style.display = (!isGlobalMode && isHijau) ? 'flex' : 'none';
         }
     }
     
@@ -4027,7 +4294,8 @@ window.saveAdminData = async () => {
       students: window.adminTempStudents,
       teachers: window.adminTempTeachers,
       classNotices: window.adminTempNotices,
-      settings: newSettings
+      settings: newSettings,
+      dutyList2H: window.adminTempDuty2H || { whiteboard: [], sweep: [], arrange: [], trash: [] }
     });
     
     // Local override so admin doesn't see update prompt
@@ -4165,18 +4433,20 @@ onAuthStateChanged(auth, async (user) => {
     if (window.renderSearchHistory) window.renderSearchHistory();
 
     window.unsubscribeSchoolInfo = onSnapshot(doc(db, "appData", "schoolInfo"), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'dynamic', hideTheme: 'false', hideStats: 'false', forceCoachMarks: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
-        const newStudents = data.students ||[];
-        const newTeachers = data.teachers || {};
-        const newNotices = data.classNotices || {};
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const newSettings = data.settings || { theme: 'dynamic', maintenance: 'false', disableGlass: 'dynamic', hideTheme: 'false', hideStats: 'false', forceCoachMarks: 'false', aboutData: {}, updateScreen: { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' } };
+            const newStudents = data.students ||[];
+            const newTeachers = data.teachers || {};
+            const newNotices = data.classNotices || {};
+            const newDuty2H = data.dutyList2H || { whiteboard: [], sweep: [], arrange: [], trash: [] };
 
-        if (window.isInitialLoad) {
-          window.smkData = newStudents;
-          window.teacherData = newTeachers;
-          window.globalSettings = newSettings;
-          window.classNotices = newNotices;
+            if (window.isInitialLoad) {
+              window.smkData = newStudents;
+              window.teacherData = newTeachers;
+              window.globalSettings = newSettings;
+              window.classNotices = newNotices;
+              window.classDuty2H = newDuty2H;
           
           window.isInitialLoad = false;
 
@@ -4226,14 +4496,7 @@ onAuthStateChanged(auth, async (user) => {
             if(window.applyGlobalSettings) window.applyGlobalSettings();
           }
 
-          const dataChanged = JSON.stringify(window.smkData) !== JSON.stringify(newStudents) ||
-                              JSON.stringify(window.teacherData) !== JSON.stringify(newTeachers) ||
-                              JSON.stringify(window.classNotices) !== JSON.stringify(newNotices);
-
-          if (dataChanged) {
-            window.pendingDataUpdate = { students: newStudents, teachers: newTeachers, notices: newNotices };
-            document.getElementById('updatePromptBanner').classList.add('show');
-          }
+          k
         }
       }
     });
