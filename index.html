@@ -557,19 +557,6 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
     transform: translateY(0);
 }
 
-/* THEME STUDIO & DOODLE */
-.doodle-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; transition: opacity 0.3s; }
-.doodle-bg.draw-mode { pointer-events: auto; z-index: 10000; cursor: crosshair; }
-.draw-toolbar { display: none; position: fixed; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); background: var(--ios-modal); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); padding: 12px 20px; border-radius: 50px; box-shadow: var(--shadow-lg), var(--glass-highlight); border: 1px solid var(--glass-border); z-index: 10005; gap: 15px; align-items: center; }
-.draw-toolbar.show { display: flex; animation: fadeUp 0.4s var(--ease-spring); }
-.draw-tool-btn { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--ios-input); color: var(--ios-text); box-shadow: var(--glass-shadow); transition: transform 0.2s; }
-.draw-tool-btn:active { transform: scale(0.85); }
-.draw-color-picker { width: 32px; height: 32px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; padding: 0; overflow: hidden; }
-.draw-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
-.draw-color-picker::-webkit-color-swatch { border: none; border-radius: 50%; }
-.color-grad-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: var(--ios-input); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--chip-border); }
-.theme-studio-switch { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--ios-card); border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 20px; box-shadow: var(--glass-shadow); }
-
 /* COACH MARKS SYSTEM */
 #coachOverlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
@@ -768,42 +755,6 @@ window.hexToRgba = function(hex, alpha) {
   </div>
 </div>
 
-<!-- THEME STUDIO OVERLAY -->
-<div class='modal-bg' id='themeStudioOverlay' style="z-index: 10001;" onclick='window.closeThemeStudio()'>
-  <div class='modal-card' id='themeStudioCard' onclick='event.stopPropagation()'>
-    <div class='m-head'>
-        <div class='handle'></div>
-        <div class='stats-title anim-text-change' id='tsTitle'>Theme Studio</div>
-        <div class='stats-sub anim-text-change' id='tsSub'>Customize background colors & draw!</div>
-    </div>
-    <div class='m-body' style="padding-top:10px;">
-      <div class="theme-studio-switch">
-         <div style="font-weight:600; font-size:15px; color:var(--ios-text);" id="tsEnableText" class="anim-text-change">Use Custom Theme</div>
-         <input type="checkbox" id="tsEnableToggle" onchange="window.toggleCustomTheme(this.checked)" style="transform:scale(1.2); accent-color:var(--ios-blue);">
-      </div>
-      <div id="tsColorPanel" style="opacity:0.5; pointer-events:none; transition:opacity 0.3s;">
-          <div class="color-grad-row">
-             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad1" class="anim-text-change">Top Color</span>
-             <input type="color" id="cg1" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
-          </div>
-          <div class="color-grad-row">
-             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad2" class="anim-text-change">Middle Color</span>
-             <input type="color" id="cg2" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
-          </div>
-          <div class="color-grad-row">
-             <span style="font-size:14px; font-weight:600; color:var(--ios-text-sec);" id="tsGrad3" class="anim-text-change">Bottom Color</span>
-             <input type="color" id="cg3" class="draw-color-picker" onchange="window.updateCustomGradientPreview()">
-          </div>
-      </div>
-      <button class="btn-done anim-text-change" id="tsDrawBtn" onclick="window.enterDrawMode()" style="margin-top:10px; background:var(--ios-card); color:var(--ios-blue); border:1px solid var(--ios-blue); box-shadow:none;"><span class="material-icons-round" style="vertical-align:middle; margin-right:6px;">draw</span> Draw on Background</button>
-    </div>
-    <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
-        <button class='btn-done' style="background-color:var(--ios-input); color:#FF3B30; flex:1;" onclick='window.clearDoodle()'><span class="material-icons-round" style="vertical-align:middle; margin-right:4px; font-size:18px;">delete</span> <span id="tsClearBtn" class="anim-text-change">Clear Doodle</span></button>
-        <button class='btn-done anim-text-change' style="flex:1.5;" id='tsSaveBtn' onclick='window.closeThemeStudio()'>Done</button>
-    </div>
-  </div>
-</div>
-
 <!-- ABOUT OVERLAY -->
 <div class='modal-bg' id='aboutOverlay' style="z-index: 10001;" onclick='window.closeAbout()'>
   <div class='modal-card' id='aboutCard' onclick='event.stopPropagation()'>
@@ -947,14 +898,6 @@ window.hexToRgba = function(hex, alpha) {
 </div>
 
 <div id="mainAppWrapper">
-  <canvas id="doodleCanvas" class="doodle-bg"></canvas>
-  <div id="drawToolbar" class="draw-toolbar">
-     <input type="color" id="drawColor" class="draw-color-picker" value="#FF2D55">
-     <button class="draw-tool-btn" onclick="window.changeBrushSize()" id="brushSizeBtn"><span class="material-icons-round" style="font-size:16px;">brush</span></button>
-     <button class="draw-tool-btn" onclick="window.clearDoodle()"><span class="material-icons-round">delete_outline</span></button>
-     <div style="width:1px; height:24px; background:var(--ios-sep);"></div>
-     <button class="draw-tool-btn" onclick="window.exitDrawMode()" style="background:#34C759; color:#fff; width:auto; padding:0 16px; border-radius:20px; font-weight:700;"><span class="material-icons-round" style="margin-right:4px; font-size:18px;">check</span> <span id="txtDrawDone" class="anim-text-change">Done</span></button>
-  </div>
   <!-- COACH MARKS OVERLAY -->
   <div id="coachOverlay" onclick="window.nextCoachStep()">
       <div id="coachTooltip" class="coach-tooltip"></div>
@@ -1490,10 +1433,6 @@ window.hexToRgba = function(hex, alpha) {
             <span class='material-icons-round mm-icon'>account_circle</span>
             <span class="anim-text-change" id='menuProfileText'>Account Profile</span>
           </button>
-          <button class='mm-btn' onclick='window.openThemeStudio(); window.closeMainMenu();'>
-            <span class='material-icons-round mm-icon' style="color:#AF52DE;">palette</span>
-            <span class="anim-text-change" id='menuThemeStudioText'>Theme Studio</span>
-          </button>
           <button class='mm-btn' onclick='window.toggleTheme(); window.closeMainMenu();'>
             <span class='material-icons-round mm-icon' id='iconThemeMain'>dark_mode</span>
             <span class="anim-text-change" id='menuThemeTextMain'>Dark Mode</span>
@@ -1681,7 +1620,6 @@ window.applyGlobalSettings = function() {
   if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
   else body.classList.remove('text-redesign-active');
   
-  if(window.applyCustomThemeSettings) window.applyCustomThemeSettings();
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
       document.getElementById('btnMenuToggle').style.display = 'none';
   }
@@ -1701,108 +1639,7 @@ window.applyGlobalSettings = function() {
 }
 function checkTimeOfDay(){ window.applyGlobalSettings(); }
 
-// THEME STUDIO & DOODLE LOGIC
-window.openThemeStudio = function() {
-    triggerHaptic();
-    const useCustom = localStorage.getItem('useCustomTheme') === 'true';
-    document.getElementById('tsEnableToggle').checked = useCustom;
-    document.getElementById('tsColorPanel').style.opacity = useCustom ? '1' : '0.5';
-    document.getElementById('tsColorPanel').style.pointerEvents = useCustom ? 'auto' : 'none';
-
-    document.getElementById('cg1').value = localStorage.getItem('cGrad1') || '#e0c3fc';
-    document.getElementById('cg2').value = localStorage.getItem('cGrad2') || '#8ec5fc';
-    document.getElementById('cg3').value = localStorage.getItem('cGrad3') || '#4facfe';
-
-    setTimeout(()=>document.getElementById("themeStudioOverlay").classList.add("open"), 10);
-};
-
-window.closeThemeStudio = function() { document.getElementById("themeStudioOverlay").classList.remove("open"); };
-
-window.toggleCustomTheme = function(isChecked) {
-    triggerHaptic();
-    localStorage.setItem('useCustomTheme', isChecked);
-    document.getElementById('tsColorPanel').style.opacity = isChecked ? '1' : '0.5';
-    document.getElementById('tsColorPanel').style.pointerEvents = isChecked ? 'auto' : 'none';
-    window.applyCustomThemeSettings();
-};
-
-window.updateCustomGradientPreview = function() {
-    localStorage.setItem('cGrad1', document.getElementById('cg1').value);
-    localStorage.setItem('cGrad2', document.getElementById('cg2').value);
-    localStorage.setItem('cGrad3', document.getElementById('cg3').value);
-    window.applyCustomThemeSettings();
-};
-
-window.applyCustomThemeSettings = function() {
-    if(localStorage.getItem('useCustomTheme') === 'true') {
-        document.body.style.setProperty('--grad-1', localStorage.getItem('cGrad1') || '#e0c3fc');
-        document.body.style.setProperty('--grad-2', localStorage.getItem('cGrad2') || '#8ec5fc');
-        document.body.style.setProperty('--grad-3', localStorage.getItem('cGrad3') || '#4facfe');
-        document.body.classList.add('custom-theme-active');
-    } else {
-        document.body.style.removeProperty('--grad-1');
-        document.body.style.removeProperty('--grad-2');
-        document.body.style.removeProperty('--grad-3');
-        document.body.classList.remove('custom-theme-active');
-    }
-};
-
-let dCanvas, dCtx, isDoodling = false, brushSizes = [3, 8, 16], currentBrushIdx = 0;
-window.initDoodleCanvas = function() {
-    dCanvas = document.getElementById('doodleCanvas');
-    if(!dCanvas) return;
-    dCtx = dCanvas.getContext('2d', { willReadFrequently: true });
-    window.resizeDoodleCanvas();
-    window.addEventListener('resize', () => {
-        const saved = dCanvas.toDataURL(); 
-        window.resizeDoodleCanvas();
-        const img = new Image();
-        img.onload = () => dCtx.drawImage(img, 0, 0);
-        img.src = saved;
-    });
-    window.loadDoodle();
-
-    const startDraw = (e) => {
-        if(!dCanvas.classList.contains('draw-mode')) return;
-        isDoodling = true; draw(e, true);
-    };
-    const stopDraw = () => { if(isDoodling) { isDoodling = false; dCtx.beginPath(); window.saveDoodle(); } };
-    const draw = (e, isStart = false) => {
-        if(!isDoodling) return;
-        e.preventDefault();
-        const rect = dCanvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const x = clientX - rect.left; const y = clientY - rect.top;
-
-        dCtx.lineWidth = brushSizes[currentBrushIdx];
-        dCtx.lineCap = 'round'; dCtx.strokeStyle = document.getElementById('drawColor').value;
-
-        if(isStart) { dCtx.beginPath(); dCtx.moveTo(x, y); } 
-        else { dCtx.lineTo(x, y); dCtx.stroke(); dCtx.beginPath(); dCtx.moveTo(x, y); }
-    };
-
-    dCanvas.addEventListener('mousedown', startDraw); dCanvas.addEventListener('mousemove', draw);
-    dCanvas.addEventListener('mouseup', stopDraw); dCanvas.addEventListener('mouseout', stopDraw);
-    dCanvas.addEventListener('touchstart', startDraw, {passive: false});
-    dCanvas.addEventListener('touchmove', draw, {passive: false});
-    dCanvas.addEventListener('touchend', stopDraw);
-};
-
-window.resizeDoodleCanvas = function() { dCanvas.width = window.innerWidth; dCanvas.height = window.innerHeight; };
-
-window.enterDrawMode = function() {
-    triggerHaptic(); window.closeThemeStudio();
-    dCanvas.classList.add('draw-mode'); document.getElementById('drawToolbar').classList.add('show');
-};
-window.exitDrawMode = function() {
-    triggerHaptic(); dCanvas.classList.remove('draw-mode'); document.getElementById('drawToolbar').classList.remove('show');
-};
-window.changeBrushSize = function() {
-    triggerHaptic(); currentBrushIdx = (currentBrushIdx + 1) % brushSizes.length;
-    const icon = document.getElementById('brushSizeBtn').querySelector('span');
-    if(currentBrushIdx === 0) icon.style.fontSize = '16px';
-    else if(currentBrushIdx === 1) icon.style.fo
+function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 
 // Strict Modal Drag Logic to fix input interaction bugs
 function initModalDrag(modal,overlayId){
@@ -1854,12 +1691,7 @@ function initModalDrag(modal,overlayId){
     }
 }
 window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='profileCard')overlayId='profileOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
-function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='profileOverlay')window.closeProfile();else if(overlayId==='themeStudioOverlay')window.closeThemeStudio();}
-
-// Inject New Theme Studio Translations
-uiText.en.menuThemeStudio = "Theme Studio"; uiText.en.tsTitle = "Theme Studio"; uiText.en.tsSub = "Customize background colors & draw!"; uiText.en.tsEnableText = "Use Custom Theme"; uiText.en.tsGrad1 = "Top Color"; uiText.en.tsGrad2 = "Middle Color"; uiText.en.tsGrad3 = "Bottom Color"; uiText.en.tsDrawBtn = "Draw on Background"; uiText.en.tsClearBtn = "Clear Doodle"; uiText.en.tsDone = "Done";
-uiText.bm.menuThemeStudio = "Studio Tema"; uiText.bm.tsTitle = "Studio Tema"; uiText.bm.tsSub = "Sesuaikan warna latar belakang & lukis!"; uiText.bm.tsEnableText = "Guna Tema Tersuai"; uiText.bm.tsGrad1 = "Warna Atas"; uiText.bm.tsGrad2 = "Warna Tengah"; uiText.bm.tsGrad3 = "Warna Bawah"; uiText.bm.tsDrawBtn = "Lukis pada Latar Belakang"; uiText.bm.tsClearBtn = "Padam Lukisan"; uiText.bm.tsDone = "Selesai";
-uiText.cn.menuThemeStudio = "主题工作室"; uiText.cn.tsTitle = "主题工作室"; uiText.cn.tsSub = "自定义背景颜色和涂鸦！"; uiText.cn.tsEnableText = "使用自定义主题"; uiText.cn.tsGrad1 = "顶部颜色"; uiText.cn.tsGrad2 = "中间颜色"; uiText.cn.tsGrad3 = "底部颜色"; uiText.cn.tsDrawBtn = "在背景上涂鸦"; uiText.cn.tsClearBtn = "清除涂鸦"; uiText.cn.tsDone = "完成";
+function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='profileOverlay')window.closeProfile();}
 
 function initTheme(){const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))enableDark(!0, true);else enableDark(!1, true)}
 window.toggleTheme=function(skipSync = false){triggerHaptic();enableDark(!isDark); if(!skipSync) window.cloudSyncUserData();}
@@ -2088,19 +1920,6 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById('menuFeedbackText2')) document.getElementById('menuFeedbackText2').innerText = txt.menuFeedback;
             if(document.getElementById('menuAboutText2')) document.getElementById('menuAboutText2').innerText = txt.menuAbout;
             if(document.getElementById('menuLogoutTextMain')) document.getElementById('menuLogoutTextMain').innerText = txt.logoutConfirm;
-            
-            // Theme Studio Localization
-            if(document.getElementById('menuThemeStudioText')) document.getElementById('menuThemeStudioText').innerText = txt.menuThemeStudio;
-            if(document.getElementById('tsTitle')) document.getElementById('tsTitle').innerText = txt.tsTitle;
-            if(document.getElementById('tsSub')) document.getElementById('tsSub').innerText = txt.tsSub;
-            if(document.getElementById('tsEnableText')) document.getElementById('tsEnableText').innerText = txt.tsEnableText;
-            if(document.getElementById('tsGrad1')) document.getElementById('tsGrad1').innerText = txt.tsGrad1;
-            if(document.getElementById('tsGrad2')) document.getElementById('tsGrad2').innerText = txt.tsGrad2;
-            if(document.getElementById('tsGrad3')) document.getElementById('tsGrad3').innerText = txt.tsGrad3;
-            if(document.getElementById('tsDrawBtn')) document.getElementById('tsDrawBtn').innerHTML = `<span class="material-icons-round" style="vertical-align:middle; margin-right:6px;">draw</span> ${txt.tsDrawBtn}`;
-            if(document.getElementById('tsClearBtn')) document.getElementById('tsClearBtn').innerText = txt.tsClearBtn;
-            if(document.getElementById('txtDrawDone')) document.getElementById('txtDrawDone').innerText = txt.tsDone;
-            if(document.getElementById('tsSaveBtn')) document.getElementById('tsSaveBtn').innerText = txt.tsDone;
 
             if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
             if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
@@ -2943,7 +2762,7 @@ window.closeUpdateScreen = function() {
     localStorage.setItem('lastSeenChangelog2', combinedLog);
 };
 
-if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",() => { initApp(); if(window.initDoodleCanvas) window.initDoodleCanvas(); initModalDrag(document.getElementById('themeStudioCard'),'themeStudioOverlay'); })}else{initApp(); if(window.initDoodleCanvas) window.initDoodleCanvas(); initModalDrag(document.getElementById('themeStudioCard'),'themeStudioOverlay'); }
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
 // ==========================================
 // GENERIC CUSTOM DROPDOWN LOGIC
