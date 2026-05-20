@@ -863,42 +863,56 @@ window.hexToRgba = function(hex, alpha) {
 <!-- DUTY ROSTER OVERLAY -->
 <div class='modal-bg' id='dutyOverlay' style="z-index: 10001;" onclick='window.closeDutyRoster()'>
   <div class='modal-card' id='dutyCard' onclick='event.stopPropagation()'>
-    <div class='m-head'>
+    <div class='m-head' style="padding-bottom:10px;">
         <div class='handle'></div>
-        <div style="background:var(--ios-blue); width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; box-shadow:0 8px 24px var(--ios-blue-light);">
-            <span class="material-icons-round" style="font-size:32px; color:#fff;">cleaning_services</span>
-        </div>
         <div class='stats-title anim-text-change' id="lblDutyTitle">Cleaning Duty Roster</div>
         <div class='stats-sub'>2 Hijau</div>
     </div>
-    <div class='m-body' style="padding-top:10px;">
-        <div class="info-group">
-            <div style="padding:16px; border-bottom:1px solid var(--ios-sep);">
-                <div style="font-size:13px; font-weight:800; color:var(--ios-blue); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;"><span class="material-icons-round" style="font-size:16px;">border_color</span> <span id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard (擦白板)</span></div>
+    <div class='m-body' style="padding-top:5px; background:transparent;">
+        <div class="seg-control" style="margin-bottom:16px; overflow-x:auto; white-space:nowrap; scrollbar-width:none;">
+            <button class="seg-btn active anim-text-change" id="uDayBtn_Monday" onclick="window.switchUserDutyDay('Monday')">Mon</button>
+            <button class="seg-btn anim-text-change" id="uDayBtn_Tuesday" onclick="window.switchUserDutyDay('Tuesday')">Tue</button>
+            <button class="seg-btn anim-text-change" id="uDayBtn_Wednesday" onclick="window.switchUserDutyDay('Wednesday')">Wed</button>
+            <button class="seg-btn anim-text-change" id="uDayBtn_Thursday" onclick="window.switchUserDutyDay('Thursday')">Thu</button>
+            <button class="seg-btn anim-text-change" id="uDayBtn_Friday" onclick="window.switchUserDutyDay('Friday')">Fri</button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="font-size:14px; font-weight:800; color:var(--ios-blue); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">border_color</span> <span id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard (擦白板)</span></div>
                 <div id="dutyListWipe"></div>
             </div>
-            <div style="padding:16px; border-bottom:1px solid var(--ios-sep);">
-                <div style="font-size:13px; font-weight:800; color:#34C759; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;"><span class="material-icons-round" style="font-size:16px;">mop</span> <span id="lblDutySweep" class="anim-text-change">Sweep Floor (扫地)</span></div>
+            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="font-size:14px; font-weight:800; color:#34C759; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">mop</span> <span id="lblDutySweep" class="anim-text-change">Sweep Floor (扫地)</span></div>
                 <div id="dutyListSweep"></div>
             </div>
-            <div style="padding:16px; border-bottom:1px solid var(--ios-sep);">
-                <div style="font-size:13px; font-weight:800; color:#FF9500; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;"><span class="material-icons-round" style="font-size:16px;">desk</span> <span id="lblDutyArrange" class="anim-text-change">Arrange Desks (排桌椅)</span></div>
+            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="font-size:14px; font-weight:800; color:#FF9500; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">desk</span> <span id="lblDutyArrange" class="anim-text-change">Arrange Desks (排桌椅)</span></div>
                 <div id="dutyListArrange"></div>
             </div>
-            <div style="padding:16px;">
-                <div style="font-size:13px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;"><span class="material-icons-round" style="font-size:16px;">delete</span> <span id="lblDutyTrash" class="anim-text-change">Empty Trash (丢垃圾)</span></div>
+            <div style="background:var(--ios-card); border-radius:16px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="font-size:14px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span class="material-icons-round">delete</span> <span id="lblDutyTrash" class="anim-text-change">Empty Trash (丢垃圾)</span></div>
                 <div id="dutyListTrash"></div>
             </div>
         </div>
     </div>
     <div class='m-foot' style="display:flex; gap:10px; border-top:1px solid var(--glass-border);">
         <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeDutyRoster()'>Close</button>
-        <button id="btnDownloadDuty" class='btn-done' style="flex:1.5; background:var(--ios-blue); display:flex; justify-content:center; align-items:center; gap:6px;" onclick='window.downloadDutyRoster()'><span class="material-icons-round" style="font-size:20px;">share</span> Share</button>
+        <button id="btnDownloadDuty" class='btn-done' style="flex:1.5; background:var(--ios-blue); display:flex; justify-content:center; align-items:center; gap:6px;" onclick='window.openDutyShareMenu()'><span class="material-icons-round" style="font-size:20px;">share</span> Share</button>
     </div>
   </div>
 </div>
 
-<!-- INVISIBLE DUTY SHARE CARD TEMPLATE -->
+<!-- SHARE DUTY CONTEXT MENU -->
+<div class='cm-backdrop' id='dutyShareBackdrop' onclick='window.closeDutyShareMenu()'>
+  <div class='cm-menu' id='dutyShareMenu'>
+    <div class='cm-header' id='dsHeader'>Export Duty Roster</div>
+    <button class='cm-item' onclick='window.downloadDutyRoster("modern")'><span id='dsBtnModern'>Share Modern Card (Today)</span><span class='material-icons-round cm-icon'>view_carousel</span></button>
+    <button class='cm-item' onclick='window.downloadDutyRoster("a4")'><span id='dsBtnA4'>Share A4 Print List (Weekly)</span><span class='material-icons-round cm-icon'>print</span></button>
+  </div>
+</div>
+
+<!-- INVISIBLE DUTY SHARE CARD TEMPLATE (MODERN) -->
 <div id="dutyShareCardContainer" style="position:fixed; top:-9999px; left:-9999px; width:1080px; height:1400px; display:flex; align-items:center; justify-content:center; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
     <div id="dutyShareCardInner" style="background:#FFFFFF; border-radius:48px; padding:60px; width:800px; box-shadow:0 30px 80px rgba(0,0,0,0.2); display:flex; flex-direction:column;">
         <div style="display:flex; align-items:center; gap:24px; margin-bottom:40px;">
@@ -907,7 +921,7 @@ window.hexToRgba = function(hex, alpha) {
             </div>
             <div>
                 <div id="scDutyTitle" style="font-size:48px; font-weight:800; color:#1D1D1F; line-height:1.1;">Cleaning Duty Roster</div>
-                <div style="font-size:32px; font-weight:700; color:#007AFF; margin-top:8px;">2 Hijau</div>
+                <div style="font-size:32px; font-weight:700; color:#007AFF; margin-top:8px;">2 Hijau &bull; <span id="scDutyDayText">Monday</span></div>
             </div>
         </div>
         
@@ -944,6 +958,25 @@ window.hexToRgba = function(hex, alpha) {
         
         <div style="margin-top:50px; text-align:center; font-size:24px; font-weight:700; color:#8E8E93;">Student Allocation 2026</div>
     </div>
+</div>
+
+<!-- INVISIBLE DUTY A4 PRINT TEMPLATE -->
+<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#FFFFFF; display:flex; flex-direction:column; align-items:center; padding:120px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
+    <div style="font-size:90px; font-weight:900; color:#1D1D1F; text-transform:uppercase; margin-bottom:20px; letter-spacing:2px;" id="a4Title">2 HIJAU CLEANING DUTY ROSTER</div>
+    <div style="font-size:40px; font-weight:600; color:#8E8E93; margin-bottom:80px;">Student Allocation 2026</div>
+    <table style="width:100%; border-collapse:collapse; text-align:left; font-size:40px; color:#1D1D1F; border: 4px solid #D1D1D6;">
+        <thead>
+            <tr style="background:#F2F2F7; border-bottom:4px solid #D1D1D6;">
+                <th style="padding:40px; border-right:4px solid #D1D1D6; width:15%;">Day</th>
+                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#007AFF;" id="a4Wipe">Wipe Whiteboard</th>
+                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#34C759;" id="a4Sweep">Sweep Floor</th>
+                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#FF9500;" id="a4Arrange">Arrange Desks</th>
+                <th style="padding:40px; color:#FF3B30;" id="a4Trash">Empty Trash</th>
+            </tr>
+        </thead>
+        <tbody id="a4TableBody">
+        </tbody>
+    </table>
 </div>
 
 <!-- NEW FEEDBACK SECTION -->
@@ -1131,6 +1164,7 @@ window.hexToRgba = function(hex, alpha) {
       <div class='search-box'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/></div>
       <button class='btn-icon-only' id='btnFavToggle' onclick='window.toggleFavMode()'><span class='material-icons-round' style='font-size:22px'>favorite</span></button>
       <button class='btn-icon-only' id='btnStatsToggle' onclick='window.openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
+      <button class='btn-icon-only' id='btnDutyToggle' onclick='window.openDutyRoster()' style='display:none;'><span class='material-icons-round' style='font-size:22px'>cleaning_services</span></button>
       <button class='btn-filter' id='btnFilter' onclick='window.toggleFilters()'><span class='material-icons-round' style='font-size:20px'>tune</span><span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span></button>
     </div>
 
@@ -1174,7 +1208,6 @@ window.hexToRgba = function(hex, alpha) {
     <div class='teacher-card' id='classInfoCard'>
       <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
       <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
-      <button id="btnViewDuty" class="reset-btn" onclick="window.openDutyRoster()" style="display:none; margin-top:10px; width:100%; justify-content:center; background:var(--ios-blue-light); color:var(--ios-blue); border-color:transparent;"><span class="material-icons-round" style="font-size:18px;">cleaning_services</span> <span id="lblBtnDuty" class="anim-text-change">Duty Roster</span></button>
     </div>
 
     <div class='student-grid' id='studentGrid'></div>
@@ -1410,25 +1443,61 @@ window.hexToRgba = function(hex, alpha) {
                    <hr style="border:none; border-top:1px solid var(--ios-sep); margin:10px 0;">
                    <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); display:block; margin-bottom:8px;">Cleaning Duty (2 Hijau)</label>
                    
+                   <div class="seg-control" style="margin-bottom:12px; overflow-x:auto; white-space:nowrap; scrollbar-width:none;">
+                       <button class="seg-btn active anim-text-change" id="aDayBtn_Monday" onclick="window.switchAdminDutyDay('Monday')">Mon</button>
+                       <button class="seg-btn anim-text-change" id="aDayBtn_Tuesday" onclick="window.switchAdminDutyDay('Tuesday')">Tue</button>
+                       <button class="seg-btn anim-text-change" id="aDayBtn_Wednesday" onclick="window.switchAdminDutyDay('Wednesday')">Wed</button>
+                       <button class="seg-btn anim-text-change" id="aDayBtn_Thursday" onclick="window.switchAdminDutyDay('Thursday')">Thu</button>
+                       <button class="seg-btn anim-text-change" id="aDayBtn_Friday" onclick="window.switchAdminDutyDay('Friday')">Fri</button>
+                   </div>
+
+                   <!-- Wipe -->
                    <div style="background:var(--ios-card); padding:10px; border-radius:12px; border:1px solid var(--chip-border); margin-bottom:8px;">
                        <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">Wipe Whiteboard (擦白板)</div>
                        <div id="adminDutyChips_wipe" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px;"></div>
-                       <select id="adminDutySel_wipe" class="admin-input" onchange="window.adminAddDuty('wipe', this.value); this.value='';"><option value="">+ Add Student</option></select>
+                       <div class="custom-select-container">
+                           <div class="custom-select-header" onclick="window.toggleCustomSelect('adminDutyDropdown_wipe')"><span>+ Add Student</span><span class="material-icons-round">expand_more</span></div>
+                           <div class="custom-select-dropdown" id="adminDutyDropdown_wipe">
+                               <input type="text" class="admin-input" placeholder="Search..." onkeyup="window.filterDutyStudents(this, 'wipe')" style="margin-bottom:8px;">
+                               <div id="adminDutyList_wipe" style="max-height:150px; overflow-y:auto;"></div>
+                           </div>
+                       </div>
                    </div>
+                   <!-- Sweep -->
                    <div style="background:var(--ios-card); padding:10px; border-radius:12px; border:1px solid var(--chip-border); margin-bottom:8px;">
                        <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">Sweep Floor (扫地)</div>
                        <div id="adminDutyChips_sweep" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px;"></div>
-                       <select id="adminDutySel_sweep" class="admin-input" onchange="window.adminAddDuty('sweep', this.value); this.value='';"><option value="">+ Add Student</option></select>
+                       <div class="custom-select-container">
+                           <div class="custom-select-header" onclick="window.toggleCustomSelect('adminDutyDropdown_sweep')"><span>+ Add Student</span><span class="material-icons-round">expand_more</span></div>
+                           <div class="custom-select-dropdown" id="adminDutyDropdown_sweep">
+                               <input type="text" class="admin-input" placeholder="Search..." onkeyup="window.filterDutyStudents(this, 'sweep')" style="margin-bottom:8px;">
+                               <div id="adminDutyList_sweep" style="max-height:150px; overflow-y:auto;"></div>
+                           </div>
+                       </div>
                    </div>
+                   <!-- Arrange -->
                    <div style="background:var(--ios-card); padding:10px; border-radius:12px; border:1px solid var(--chip-border); margin-bottom:8px;">
                        <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">Arrange Desks (排桌椅)</div>
                        <div id="adminDutyChips_arrange" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px;"></div>
-                       <select id="adminDutySel_arrange" class="admin-input" onchange="window.adminAddDuty('arrange', this.value); this.value='';"><option value="">+ Add Student</option></select>
+                       <div class="custom-select-container">
+                           <div class="custom-select-header" onclick="window.toggleCustomSelect('adminDutyDropdown_arrange')"><span>+ Add Student</span><span class="material-icons-round">expand_more</span></div>
+                           <div class="custom-select-dropdown" id="adminDutyDropdown_arrange">
+                               <input type="text" class="admin-input" placeholder="Search..." onkeyup="window.filterDutyStudents(this, 'arrange')" style="margin-bottom:8px;">
+                               <div id="adminDutyList_arrange" style="max-height:150px; overflow-y:auto;"></div>
+                           </div>
+                       </div>
                    </div>
+                   <!-- Trash -->
                    <div style="background:var(--ios-card); padding:10px; border-radius:12px; border:1px solid var(--chip-border); margin-bottom:8px;">
                        <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">Empty Trash (丢垃圾)</div>
                        <div id="adminDutyChips_trash" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px;"></div>
-                       <select id="adminDutySel_trash" class="admin-input" onchange="window.adminAddDuty('trash', this.value); this.value='';"><option value="">+ Add Student</option></select>
+                       <div class="custom-select-container">
+                           <div class="custom-select-header" onclick="window.toggleCustomSelect('adminDutyDropdown_trash')"><span>+ Add Student</span><span class="material-icons-round">expand_more</span></div>
+                           <div class="custom-select-dropdown" id="adminDutyDropdown_trash">
+                               <input type="text" class="admin-input" placeholder="Search..." onkeyup="window.filterDutyStudents(this, 'trash')" style="margin-bottom:8px;">
+                               <div id="adminDutyList_trash" style="max-height:150px; overflow-y:auto;"></div>
+                           </div>
+                       </div>
                    </div>
                </div>
 
@@ -1787,9 +1856,9 @@ window.favorites=[];
 window.searchHistory=[];
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", tabAudit:"Audit Log", tabFeedback: "Feedback", tabAnalytics: "Analytics", adminAuditTitle: "Admin Activity Log", adminAuditDesc: "Tracks detailed changes made in the dashboard.", adminFeedbackTitle: "User Feedback", adminFeedbackDesc: "Messages and bug reports submitted by users.", adminAnalyticsTitle: "System Analytics", adminAnalyticsDesc: "Overview of user engagement and activity.", statTotalUsers: "Total Users", statTotalFavs: "Total Favorites", statRecentActivity: "Recent User Activity", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", adminForceCoach: "Force Welcome Guide & Coach Marks", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchStudent: "Search by name...", adminIdPlaceholder: "Student ID (e.g. 120116040351)", adminNamePlaceholder: "Full Name", adminCnPlaceholder: "Chinese Name (or -)", adminOldPlaceholder: "Old Class (e.g. 1B)", adminSchPlaceholder: "Primary School", adminUpdateQueue: "Update Queue", adminDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePlaceholder: "e.g. Information may be inaccurate due to...", adminIconLabel: "Notice Icon", adminColorLabel: "Notice Color", adminStyleLabel: "Notice Style", adminGuruLabel: "Class Teacher", adminPenolongLabel: "Assistant Teacher", optTextOrig: "Original Style", optTextRedesign: "Secondary Redesigned Text Theme", menuProfileText: "Account Profile", lblProfileTitle: "Account & Settings", lblProfTheme: "Theme", lblProfDensity: "View Mode", lblProfClearFav: "Clear All Favorites", lblProfClearHist: "Clear Search History", confirmClearFav: "Are you sure you want to clear all favorites?", lblProfReduceLag: "Reduce Lag", optGlassDyn: "Dynamic (Follow User Settings)", lagDisabled: "Disabled by Admin", lagOn: "On", lagOff: "Off", toastLagAdmin: "Setting locked by Admin", allClasses: "All Classes", coachStep1: "Use the search bar to find students by name, Chinese name, or ID.", coachStep2: "Tap the heart icon to view only your saved favorite students.", coachStep3: "Check out detailed allocation statistics and charts here!", coachStep4: "Swipe and tap these tabs to quickly switch between classes.", coachStep5: "Tap a student to view details, or long-press for quick actions!", coachStep6: "Access your profile, app settings, and more from the menu.", coachContinue: "Tap anywhere to continue", lblProfBgTheme: "Background", themeCustTitle: "Background Theme", themeCustSub: "Customize your app background", themeCustLabel: "Choose Theme", themeCustDefault: "Default", themeCustCustom: "Custom Colors", themeCustCreate: "Create Your Own", themeCustTop: "Top", themeCustMid: "Middle", themeCustBot: "Bottom", themeCustSave: "Save Theme", drawOnBg: "Draw on Background", clearDoodleBtn: "Clear Doodle", clearDoodleDesc: "Are you sure you want to clear your background drawing?", doodleSaved: "Doodle Saved!", themeLockedAdmin: "Locked by Admin", btnDuty: "Duty Roster", dutyTitle: "Cleaning Duty Roster", dutyWipe: "Wipe Whiteboard", dutySweep: "Sweep Floor", dutyArrange: "Arrange Desks", dutyTrash: "Empty Trash", dutyEmpty: "No students assigned."},
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", tabAudit:"Audit Log", tabFeedback: "Feedback", tabAnalytics: "Analytics", adminAuditTitle: "Admin Activity Log", adminAuditDesc: "Tracks detailed changes made in the dashboard.", adminFeedbackTitle: "User Feedback", adminFeedbackDesc: "Messages and bug reports submitted by users.", adminAnalyticsTitle: "System Analytics", adminAnalyticsDesc: "Overview of user engagement and activity.", statTotalUsers: "Total Users", statTotalFavs: "Total Favorites", statRecentActivity: "Recent User Activity", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminEditAbout: "Edit 'About' Text", adminForceCoach: "Force Welcome Guide & Coach Marks", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchStudent: "Search by name...", adminIdPlaceholder: "Student ID (e.g. 120116040351)", adminNamePlaceholder: "Full Name", adminCnPlaceholder: "Chinese Name (or -)", adminOldPlaceholder: "Old Class (e.g. 1B)", adminSchPlaceholder: "Primary School", adminUpdateQueue: "Update Queue", adminDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePlaceholder: "e.g. Information may be inaccurate due to...", adminIconLabel: "Notice Icon", adminColorLabel: "Notice Color", adminStyleLabel: "Notice Style", adminGuruLabel: "Class Teacher", adminPenolongLabel: "Assistant Teacher", optTextOrig: "Original Style", optTextRedesign: "Secondary Redesigned Text Theme", menuProfileText: "Account Profile", lblProfileTitle: "Account & Settings", lblProfTheme: "Theme", lblProfDensity: "View Mode", lblProfClearFav: "Clear All Favorites", lblProfClearHist: "Clear Search History", confirmClearFav: "Are you sure you want to clear all favorites?", lblProfReduceLag: "Reduce Lag", optGlassDyn: "Dynamic (Follow User Settings)", lagDisabled: "Disabled by Admin", lagOn: "On", lagOff: "Off", toastLagAdmin: "Setting locked by Admin", allClasses: "All Classes", coachStep1: "Use the search bar to find students by name, Chinese name, or ID.", coachStep2: "Tap the heart icon to view only your saved favorite students.", coachStep3: "Check out detailed allocation statistics and charts here!", coachStep4: "Swipe and tap these tabs to quickly switch between classes.", coachStep5: "Tap a student to view details, or long-press for quick actions!", coachStep6: "Access your profile, app settings, and more from the menu.", coachContinue: "Tap anywhere to continue", lblProfBgTheme: "Background", themeCustTitle: "Background Theme", themeCustSub: "Customize your app background", themeCustLabel: "Choose Theme", themeCustDefault: "Default", themeCustCustom: "Custom Colors", themeCustCreate: "Create Your Own", themeCustTop: "Top", themeCustMid: "Middle", themeCustBot: "Bottom", themeCustSave: "Save Theme", drawOnBg: "Draw on Background", clearDoodleBtn: "Clear Doodle", clearDoodleDesc: "Are you sure you want to clear your background drawing?", doodleSaved: "Doodle Saved!", themeLockedAdmin: "Locked by Admin", btnDuty: "Duty Roster", dutyTitle: "Cleaning Duty Roster", dutyWipe: "Wipe Whiteboard", dutySweep: "Sweep Floor", dutyArrange: "Arrange Desks", dutyTrash: "Empty Trash", dutyEmpty: "No students assigned.", dutyMon: "Monday", dutyTue: "Tuesday", dutyWed: "Wednesday", dutyThu: "Thursday", dutyFri: "Friday", dutyMax: "Maximum 2 students allowed per duty!", shareModern: "Share Modern Card", shareA4: "Share A4 Print List"},
   bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", tabAudit:"Log Audit", tabFeedback: "Maklum Balas", tabAnalytics: "Analitik", adminAuditTitle: "Log Aktiviti Admin", adminAuditDesc: "Menjejaki perubahan terperinci yang dibuat dalam papan pemuka.", adminFeedbackTitle: "Maklum Balas Pengguna", adminFeedbackDesc: "Mesej dan laporan pepijat daripada pengguna.", adminAnalyticsTitle: "Analitik Sistem", adminAnalyticsDesc: "Gambaran keseluruhan penglibatan dan aktiviti pengguna.", statTotalUsers: "Jumlah Pengguna", statTotalFavs: "Jumlah Kegemaran", statRecentActivity: "Aktiviti Pengguna Terkini", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", adminForceCoach: "Paksa Panduan Selamat Datang & Tanda Jurulatih", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)", adminAddStudent: "Tambah Murid Baharu", adminSearchStudent: "Cari berdasarkan nama...", adminIdPlaceholder: "ID Murid (cth. 120116040351)", adminNamePlaceholder: "Nama Penuh", adminCnPlaceholder: "Nama Cina (atau -)", adminOldPlaceholder: "Kelas Lama (cth. 1B)", adminSchPlaceholder: "Sekolah Rendah", adminUpdateQueue: "Kemas Kini Barisan", adminDelete: "Padam", adminNoticeLabel: "Notis Kelas / Sepanduk Amaran", adminNoticePlaceholder: "cth. Maklumat mungkin tidak tepat kerana...", adminIconLabel: "Ikon Notis", adminColorLabel: "Warna Notis", adminStyleLabel: "Gaya Notis", adminGuruLabel: "Guru Kelas", adminPenolongLabel: "Penolong", optTextOrig: "Gaya Asal", optTextRedesign: "Tema Teks Reka Bentuk Kedua", menuProfileText: "Profil Akaun", lblProfileTitle: "Akaun & Tetapan", lblProfTheme: "Tema", lblProfDensity: "Mod Paparan", lblProfClearFav: "Padam Semua Kegemaran", lblProfClearHist: "Padam Sejarah Carian", confirmClearFav: "Adakah anda pasti ingin memadam semua kegemaran?", lblProfReduceLag: "Kurangkan Kelengahan (Lag)", optGlassDyn: "Dinamik (Ikut Tetapan Pengguna)", lagDisabled: "Dilumpuhkan oleh Admin", lagOn: "Hidup", lagOff: "Mati", toastLagAdmin: "Tetapan dikunci oleh Admin", allClasses: "Semua Kelas", coachStep1: "Gunakan bar carian untuk mencari murid mengikut nama, nama Cina, atau ID.", coachStep2: "Ketik ikon hati untuk melihat murid kegemaran anda yang tersimpan.", coachStep3: "Lihat statistik dan carta penempatan terperinci di sini!", coachStep4: "Sapu dan ketik tab ini untuk menukar kelas dengan pantas.", coachStep5: "Ketik murid untuk butiran, atau tekan lama untuk tindakan pantas!", coachStep6: "Akses profil anda, tetapan aplikasi, dan banyak lagi dari menu.", coachContinue: "Ketik di mana-mana untuk meneruskan", lblProfBgTheme: "Latar Belakang", themeCustTitle: "Tema Latar Belakang", themeCustSub: "Ubah suai latar belakang aplikasi anda", themeCustLabel: "Pilih Tema", themeCustDefault: "Lalai", themeCustCustom: "Warna Tersuai", themeCustCreate: "Cipta Tema Anda", themeCustTop: "Atas", themeCustMid: "Tengah", themeCustBot: "Bawah", themeCustSave: "Simpan Tema", drawOnBg: "Lukis pada Latar Belakang", clearDoodleBtn: "Padam Lukisan", clearDoodleDesc: "Adakah anda pasti ingin memadam lukisan latar belakang anda?", doodleSaved: "Lukisan Disimpan!", themeLockedAdmin: "Dikunci oleh Admin", btnDuty: "Jadual Bertugas", dutyTitle: "Jadual Kebersihan", dutyWipe: "Padam Papan Putih", dutySweep: "Sapu Sampah", dutyArrange: "Susun Meja", dutyTrash: "Buang Sampah", dutyEmpty: "Tiada murid ditugaskan."},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", tabAudit:"审计日志", tabFeedback: "用户反馈", tabAnalytics: "数据分析", adminAuditTitle: "管理员活动日志", adminAuditDesc: "记录在仪表板中所做的详细更改。", adminFeedbackTitle: "用户反馈", adminFeedbackDesc: "用户提交的反馈和错误报告。", adminAnalyticsTitle: "系统分析", adminAnalyticsDesc: "用户参与度和活动概览。", statTotalUsers: "总用户数", statTotalFavs: "总收藏数", statRecentActivity: "最近用户活动", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", adminForceCoach: "强制显示欢迎指南和提示", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchStudent: "按姓名搜索...", adminIdPlaceholder: "学生 ID (例: 120116040351)", adminNamePlaceholder: "全名", adminCnPlaceholder: "中文名 (或 -)", adminOldPlaceholder: "原班级 (例: 1B)", adminSchPlaceholder: "毕业小学", adminUpdateQueue: "更新队列", adminDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePlaceholder: "例如：信息可能不准确，因为...", adminIconLabel: "通知图标", adminColorLabel: "通知颜色", adminStyleLabel: "通知样式", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", optTextOrig: "原始样式", optTextRedesign: "辅助重设计文本主题", menuProfileText: "账户资料", lblProfileTitle: "账户与设置", lblProfTheme: "主题", lblProfDensity: "视图模式", lblProfClearFav: "清除所有收藏", lblProfClearHist: "清除搜索历史", confirmClearFav: "确定要清除所有收藏吗？", lblProfReduceLag: "减少卡顿 (Lag)", optGlassDyn: "动态 (跟随用户设置)", lagDisabled: "被管理员禁用", lagOn: "开", lagOff: "关", toastLagAdmin: "已被管理员锁定", allClasses: "所有班级", coachStep1: "使用搜索栏通过姓名、中文名或 ID 查找学生。", coachStep2: "点击心形图标仅查看您收藏的学生。", coachStep3: "在这里查看详细的分班统计数据和图表！", coachStep4: "滑动并点击这些选项卡即可快速切换班级。", coachStep5: "点击学生查看详情，或长按使用快捷操作！", coachStep6: "从菜单访问您的个人资料、应用设置等。", coachContinue: "点击任意位置继续", lblProfBgTheme: "应用背景", themeCustTitle: "背景主题", themeCustSub: "自定义您的应用背景", themeCustLabel: "选择主题", themeCustDefault: "默认", themeCustCustom: "自定义颜色", themeCustCreate: "创建自己的主题", themeCustTop: "顶部", themeCustMid: "中间", themeCustBot: "底部", themeCustSave: "保存主题", drawOnBg: "在背景上涂鸦", clearDoodleBtn: "清除涂鸦", clearDoodleDesc: "您确定要清除您的背景涂鸦吗？", doodleSaved: "涂鸦已保存！", themeLockedAdmin: "被管理员锁定", btnDuty: "值日表", dutyTitle: "卫生值日表", dutyWipe: "擦白板", dutySweep: "扫地", dutyArrange: "排桌椅", dutyTrash: "丢垃圾", dutyEmpty: "未分配学生。"}
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", tabAudit:"审计日志", tabFeedback: "用户反馈", tabAnalytics: "数据分析", adminAuditTitle: "管理员活动日志", adminAuditDesc: "记录在仪表板中所做的详细更改。", adminFeedbackTitle: "用户反馈", adminFeedbackDesc: "用户提交的反馈和错误报告。", adminAnalyticsTitle: "系统分析", adminAnalyticsDesc: "用户参与度和活动概览。", statTotalUsers: "总用户数", statTotalFavs: "总收藏数", statRecentActivity: "最近用户活动", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminEditAbout: "编辑“关于应用”文本", adminForceCoach: "强制显示欢迎指南和提示", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchStudent: "按姓名搜索...", adminIdPlaceholder: "学生 ID (例: 120116040351)", adminNamePlaceholder: "全名", adminCnPlaceholder: "中文名 (或 -)", adminOldPlaceholder: "原班级 (例: 1B)", adminSchPlaceholder: "毕业小学", adminUpdateQueue: "更新队列", adminDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePlaceholder: "例如：信息可能不准确，因为...", adminIconLabel: "通知图标", adminColorLabel: "通知颜色", adminStyleLabel: "通知样式", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", optTextOrig: "原始样式", optTextRedesign: "辅助重设计文本主题", menuProfileText: "账户资料", lblProfileTitle: "账户与设置", lblProfTheme: "主题", lblProfDensity: "视图模式", lblProfClearFav: "清除所有收藏", lblProfClearHist: "清除搜索历史", confirmClearFav: "确定要清除所有收藏吗？", lblProfReduceLag: "减少卡顿 (Lag)", optGlassDyn: "动态 (跟随用户设置)", lagDisabled: "被管理员禁用", lagOn: "开", lagOff: "关", toastLagAdmin: "已被管理员锁定", allClasses: "所有班级", coachStep1: "使用搜索栏通过姓名、中文名或 ID 查找学生。", coachStep2: "点击心形图标仅查看您收藏的学生。", coachStep3: "在这里查看详细的分班统计数据和图表！", coachStep4: "滑动并点击这些选项卡即可快速切换班级。", coachStep5: "点击学生查看详情，或长按使用快捷操作！", coachStep6: "从菜单访问您的个人资料、应用设置等。", coachContinue: "点击任意位置继续", lblProfBgTheme: "应用背景", themeCustTitle: "背景主题", themeCustSub: "自定义您的应用背景", themeCustLabel: "选择主题", themeCustDefault: "默认", themeCustCustom: "自定义颜色", themeCustCreate: "创建自己的主题", themeCustTop: "顶部", themeCustMid: "中间", themeCustBot: "底部", themeCustSave: "保存主题", drawOnBg: "在背景上涂鸦", clearDoodleBtn: "清除涂鸦", clearDoodleDesc: "您确定要清除您的背景涂鸦吗？", doodleSaved: "涂鸦已保存！", themeLockedAdmin: "被管理员锁定", btnDuty: "值日表", dutyTitle: "卫生值日表", dutyWipe: "擦白板", dutySweep: "扫地", dutyArrange: "排桌椅", dutyTrash: "丢垃圾", dutyEmpty: "未分配学生。", dutyMon: "星期一", dutyTue: "星期二", dutyWed: "星期三", dutyThu: "星期四", dutyFri: "星期五", dutyMax: "每项任务最多只能分配2名学生！", shareModern: "分享现代卡片", shareA4: "分享 A4 打印表"}
 };
 
 // Generic UI Confirm Dialog Function
@@ -2527,6 +2596,16 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById("lblDutySweep")) document.getElementById("lblDutySweep").innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
             if(document.getElementById("lblDutyArrange")) document.getElementById("lblDutyArrange").innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
             if(document.getElementById("lblDutyTrash")) document.getElementById("lblDutyTrash").innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+            
+            const shortDays = {en:['Mon','Tue','Wed','Thu','Fri'], bm:['Isn','Sel','Rab','Kha','Jum'], cn:['一','二','三','四','五']};
+            const sD = shortDays[curLang] || shortDays.en;
+            ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach((d, i) => {
+                if(document.getElementById('uDayBtn_'+d)) document.getElementById('uDayBtn_'+d).innerText = sD[i];
+                if(document.getElementById('aDayBtn_'+d)) document.getElementById('aDayBtn_'+d).innerText = sD[i];
+            });
+
+            if(document.getElementById('dsBtnModern')) document.getElementById('dsBtnModern').innerHTML = `${txt.shareModern || "Share Modern Card"} <span class='material-icons-round cm-icon'>view_carousel</span>`;
+            if(document.getElementById('dsBtnA4')) document.getElementById('dsBtnA4').innerHTML = `${txt.shareA4 || "Share A4 Print List"} <span class='material-icons-round cm-icon'>print</span>`;
             if(document.getElementById("lblProfClearFav")) setTextAndAnimateWidth(document.getElementById("lblProfClearFav"), txt.lblProfClearFav);
             if(document.getElementById("lblProfClearHist")) setTextAndAnimateWidth(document.getElementById("lblProfClearHist"), txt.lblProfClearHist);
             if(document.getElementById("lblProfReduceLag")) setTextAndAnimateWidth(document.getElementById("lblProfReduceLag"), txt.lblProfReduceLag);
@@ -3059,15 +3138,29 @@ window.openAbout=function(){
 }
 window.closeAbout=function(){const modal=document.getElementById("aboutCard");modal.style.transform='';document.getElementById("aboutOverlay").classList.remove("open")}
 
-window.openDutyRoster = function() {
+window.userDutyDay = 'Monday';
+
+window.switchUserDutyDay = function(day) {
     triggerHaptic();
-    const duty = window.dutyData['Hijau'] || { wipe: [], sweep: [], arrange: [], trash: [] };
+    window.userDutyDay = day;
+    ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(d => {
+        document.getElementById('uDayBtn_'+d).classList.remove('active');
+    });
+    document.getElementById('uDayBtn_'+day).classList.add('active');
+    window.renderUserDuty();
+};
+
+window.renderUserDuty = function() {
+    const rawDuty = window.dutyData['Hijau'] || {};
+    const emptyDay = { wipe: [], sweep: [], arrange: [], trash: [] };
+    const duty = rawDuty[window.userDutyDay] || emptyDay;
+    
     const renderList = (ids) => {
-        if(!ids || ids.length === 0) return `<div style="color:var(--ios-text-sec); font-style:italic; font-size:14px;">${uiText[curLang].dutyEmpty || "No students assigned."}</div>`;
+        if(!ids || ids.length === 0) return `<div style="color:var(--ios-text-sec); font-style:italic; font-size:14px; margin-top:4px;">${uiText[curLang].dutyEmpty || "No students assigned."}</div>`;
         return ids.map(id => {
             const stu = window.smkData.find(s => s.id === id);
             const name = stu ? stu.name : id;
-            return `<div style="font-size:15px; font-weight:600; color:var(--ios-text); padding:4px 0;">• ${name}</div>`;
+            return `<div style="font-size:15px; font-weight:700; color:var(--ios-text); margin-top:8px;">${name}</div>`;
         }).join('');
     };
 
@@ -3075,7 +3168,11 @@ window.openDutyRoster = function() {
     document.getElementById('dutyListSweep').innerHTML = renderList(duty.sweep);
     document.getElementById('dutyListArrange').innerHTML = renderList(duty.arrange);
     document.getElementById('dutyListTrash').innerHTML = renderList(duty.trash);
+};
 
+window.openDutyRoster = function() {
+    triggerHaptic();
+    window.switchUserDutyDay('Monday');
     setTimeout(() => document.getElementById("dutyOverlay").classList.add("open"), 10);
 };
 
@@ -3083,16 +3180,19 @@ window.closeDutyRoster = function() {
     document.getElementById("dutyOverlay").classList.remove("open");
 };
 
-window.downloadDutyRoster = async function() {
+window.openDutyShareMenu = function() {
     triggerHaptic();
-    const btn = document.getElementById('btnDownloadDuty');
-    const icon = btn.querySelector('span');
-    const originalIcon = icon.innerText;
-    icon.innerText = "autorenew"; 
-    icon.classList.add('spin-anim');
-    btn.style.opacity = "0.5";
-    btn.style.pointerEvents = "none";
+    document.getElementById('dutyShareBackdrop').classList.add('active');
+};
 
+window.closeDutyShareMenu = function() {
+    document.getElementById('dutyShareBackdrop').classList.remove('active');
+};
+
+window.downloadDutyRoster = async function(type) {
+    triggerHaptic();
+    window.closeDutyShareMenu();
+    
     const localTxt = {
         en: { gen: "Generating Image...", saved: "Duty Roster Saved!", fail: "Failed to generate image" },
         bm: { gen: "Menjana Imej...", saved: "Jadual Disimpan!", fail: "Gagal menjana imej" },
@@ -3102,52 +3202,99 @@ window.downloadDutyRoster = async function() {
     window.showToast(lTxt.gen, "hourglass_top");
 
     try {
-        const container = document.getElementById('dutyShareCardContainer');
-        const bodyStyle = window.getComputedStyle(document.body);
-        container.style.backgroundImage = bodyStyle.backgroundImage;
-        container.style.backgroundColor = bodyStyle.backgroundColor;
-        
-        const isDarkTheme = document.body.getAttribute('data-theme') === 'dark';
-        const isSolid = document.body.classList.contains('no-glass');
-        const innerCard = document.getElementById('dutyShareCardInner');
-        
-        if (!isSolid) {
-            innerCard.style.background = isDarkTheme ? 'rgba(30,30,30,0.65)' : 'rgba(255,255,255,0.75)';
-            innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.5)';
-        } else {
-            innerCard.style.background = isDarkTheme ? '#1C1C1E' : '#FFFFFF';
-            innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : 'none';
-        }
-
-        const txtMain = isDarkTheme ? '#FFFFFF' : '#1D1D1F';
-        document.getElementById('scDutyTitle').style.color = txtMain;
-        
-        const renderShareList = (ids) => {
-            if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic; font-size:24px;">-</div>`;
-            return ids.map(id => {
-                const stu = window.smkData.find(s => s.id === id);
-                return `<div style="font-size:26px; font-weight:700; color:${txtMain}; padding:4px 0;">• ${stu ? stu.name : id}</div>`;
-            }).join('');
-        };
-        
-        const duty = window.dutyData['Hijau'] || { wipe: [], sweep: [], arrange: [], trash: [] };
-        document.getElementById('scDutyListWipe').innerHTML = renderShareList(duty.wipe);
-        document.getElementById('scDutyListSweep').innerHTML = renderShareList(duty.sweep);
-        document.getElementById('scDutyListArrange').innerHTML = renderShareList(duty.arrange);
-        document.getElementById('scDutyListTrash').innerHTML = renderShareList(duty.trash);
-
         const txt = uiText[curLang] || uiText.en;
-        document.getElementById('scDutyTitle').innerText = txt.dutyTitle || "Cleaning Duty Roster";
-        document.getElementById('scDutyWipe').innerText = (txt.dutyWipe || "Wipe Whiteboard") + " (擦白板)";
-        document.getElementById('scDutySweep').innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
-        document.getElementById('scDutyArrange').innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
-        document.getElementById('scDutyTrash').innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+        const daysKeys = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+        const daysTrans = {en:['Monday','Tuesday','Wednesday','Thursday','Friday'], bm:['Isnin','Selasa','Rabu','Khamis','Jumaat'], cn:['星期一','星期二','星期三','星期四','星期五']};
+        const currentDays = daysTrans[curLang] || daysTrans.en;
+        const rawDuty = window.dutyData['Hijau'] || {};
+        const emptyDay = { wipe: [], sweep: [], arrange: [], trash: [] };
+
+        let container, fileName;
+
+        if (type === 'modern') {
+            container = document.getElementById('dutyShareCardContainer');
+            fileName = `2_Hijau_Duty_${window.userDutyDay}.png`;
+            const duty = rawDuty[window.userDutyDay] || emptyDay;
+            
+            const bodyStyle = window.getComputedStyle(document.body);
+            container.style.backgroundImage = bodyStyle.backgroundImage;
+            container.style.backgroundColor = bodyStyle.backgroundColor;
+            
+            const isDarkTheme = document.body.getAttribute('data-theme') === 'dark';
+            const isSolid = document.body.classList.contains('no-glass');
+            const innerCard = document.getElementById('dutyShareCardInner');
+            
+            if (!isSolid) {
+                innerCard.style.background = isDarkTheme ? 'rgba(30,30,30,0.65)' : 'rgba(255,255,255,0.75)';
+                innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.5)';
+            } else {
+                innerCard.style.background = isDarkTheme ? '#1C1C1E' : '#FFFFFF';
+                innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : 'none';
+            }
+
+            const txtMain = isDarkTheme ? '#FFFFFF' : '#1D1D1F';
+            document.getElementById('scDutyTitle').style.color = txtMain;
+            
+            const renderShareList = (ids) => {
+                if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic; font-size:24px; margin-top:8px;">-</div>`;
+                return ids.map(id => {
+                    const stu = window.smkData.find(s => s.id === id);
+                    return `<div style="font-size:26px; font-weight:700; color:${txtMain}; margin-top:12px;">${stu ? stu.name : id}</div>`;
+                }).join('');
+            };
+            
+            document.getElementById('scDutyListWipe').innerHTML = renderShareList(duty.wipe);
+            document.getElementById('scDutyListSweep').innerHTML = renderShareList(duty.sweep);
+            document.getElementById('scDutyListArrange').innerHTML = renderShareList(duty.arrange);
+            document.getElementById('scDutyListTrash').innerHTML = renderShareList(duty.trash);
+
+            document.getElementById('scDutyTitle').innerText = txt.dutyTitle || "Cleaning Duty Roster";
+            const dayIndex = daysKeys.indexOf(window.userDutyDay);
+            document.getElementById('scDutyDayText').innerText = currentDays[dayIndex];
+            
+            document.getElementById('scDutyWipe').innerText = (txt.dutyWipe || "Wipe Whiteboard") + " (擦白板)";
+            document.getElementById('scDutySweep').innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
+            document.getElementById('scDutyArrange').innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
+            document.getElementById('scDutyTrash').innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+            
+        } else {
+            // A4 PRINT
+            container = document.getElementById('dutyA4Container');
+            fileName = `2_Hijau_Duty_Weekly_A4.png`;
+            
+            document.getElementById('a4Title').innerText = (txt.dutyTitle || "Cleaning Duty Roster").toUpperCase() + " (2 HIJAU)";
+            document.getElementById('a4Wipe').innerText = (txt.dutyWipe || "Wipe Whiteboard") + " (擦白板)";
+            document.getElementById('a4Sweep').innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
+            document.getElementById('a4Arrange').innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
+            document.getElementById('a4Trash').innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+
+            let tableHTML = "";
+            daysKeys.forEach((dKey, i) => {
+                const duty = rawDuty[dKey] || emptyDay;
+                const renderA4List = (ids) => {
+                    if(!ids || ids.length === 0) return `-`;
+                    return ids.map(id => {
+                        const stu = window.smkData.find(s => s.id === id);
+                        return `<div>${stu ? stu.name : id}</div>`;
+                    }).join('<div style="margin:20px 0;"></div>');
+                };
+                
+                tableHTML += `
+                <tr style="border-bottom:4px solid #D1D1D6;">
+                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:800; color:#1D1D1F; background:#F2F2F7;">${currentDays[i]}</td>
+                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.wipe)}</td>
+                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.sweep)}</td>
+                    <td style="padding:40px; border-right:4px solid #D1D1D6; font-weight:600;">${renderA4List(duty.arrange)}</td>
+                    <td style="padding:40px; font-weight:600;">${renderA4List(duty.trash)}</td>
+                </tr>`;
+            });
+            document.getElementById('a4TableBody').innerHTML = tableHTML;
+        }
 
         await new Promise(r => setTimeout(r, 100));
 
-        const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: null });
+        const canvas = await html2canvas(container, { scale: 1, useCORS: true, backgroundColor: (type === 'a4' ? '#FFFFFF' : null) });
         canvas.toBlob(async (blob) => {
-            const fileName = `2_Hijau_Duty_Roster.png`;
             const file = new File([blob], fileName, { type: 'image/png' });
             
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -3159,17 +3306,13 @@ window.downloadDutyRoster = async function() {
                 const a = document.createElement('a');
                 a.href = url; a.download = fileName;
                 document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-                window.showToast(lTxt.saved, "download_done");
+                window.showToast(localTxt[curLang].saved, "download_done");
             }
-            icon.classList.remove('spin-anim'); icon.innerText = originalIcon;
-            btn.style.opacity = "1"; btn.style.pointerEvents = "auto";
         }, 'image/png');
 
     } catch (err) {
         console.error(err);
         window.showToast(lTxt.fail, "error");
-        icon.classList.remove('spin-anim'); icon.innerText = originalIcon;
-        btn.style.opacity = "1"; btn.style.pointerEvents = "auto";
     }
 };
 
@@ -3630,7 +3773,12 @@ window.openAdminPanel = () => {
   window.adminTempTeachers = JSON.parse(JSON.stringify(window.teacherData));
   window.adminTempNotices = JSON.parse(JSON.stringify(window.classNotices || {}));
   window.adminTempDuty = JSON.parse(JSON.stringify(window.dutyData || {}));
-  if(!window.adminTempDuty['Hijau']) window.adminTempDuty['Hijau'] = { wipe: [], sweep: [], arrange: [], trash: [] };
+  
+  const emptyDay = () => ({ wipe: [], sweep: [], arrange: [], trash: [] });
+  // Migrate if old single-day structure
+  if (!window.adminTempDuty['Hijau'] || !window.adminTempDuty['Hijau']['Monday']) {
+      window.adminTempDuty['Hijau'] = { Monday: emptyDay(), Tuesday: emptyDay(), Wednesday: emptyDay(), Thursday: emptyDay(), Friday: emptyDay() };
+  }
   
   const t = window.globalSettings.theme || 'dynamic';
   document.getElementById('adminThemeDropdown').setAttribute('data-value', t);
@@ -3826,24 +3974,49 @@ window.adminDeleteStudent = () => {
   );
 };
 
+window.adminCurrentDutyDay = 'Monday';
+
+window.switchAdminDutyDay = (day) => {
+    window.adminCurrentDutyDay = day;
+    ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(d => {
+        document.getElementById('aDayBtn_'+d).classList.remove('active');
+    });
+    document.getElementById('aDayBtn_'+day).classList.add('active');
+    window.renderAdminDutyDropdowns();
+    window.renderAdminDutyChips();
+};
+
 window.renderAdminDutyDropdowns = () => {
     const hijauStudents = window.adminTempStudents.filter(s => s.newClass.toUpperCase().includes('HIJAU')).sort((a,b)=>a.name.localeCompare(b.name));
-    let opts = '<option value="">+ Add Student</option>';
-    hijauStudents.forEach(s => { opts += `<option value="${s.id}">${s.name}</option>`; });
+    
     ['wipe', 'sweep', 'arrange', 'trash'].forEach(cat => {
-        document.getElementById('adminDutySel_' + cat).innerHTML = opts;
+        let html = '';
+        hijauStudents.forEach(s => {
+            const cnText = (s.cn && s.cn !== "-") ? ` &bull; ${s.cn}` : "";
+            html += `<div class="custom-option duty-opt-${cat}" onclick="window.adminAddDuty('${cat}', '${s.id}')">${s.name}${cnText}</div>`;
+        });
+        document.getElementById('adminDutyList_' + cat).innerHTML = html;
+    });
+};
+
+window.filterDutyStudents = (input, cat) => {
+    const query = input.value.toLowerCase();
+    document.querySelectorAll('.duty-opt-' + cat).forEach(el => {
+        if(el.innerText.toLowerCase().includes(query)) el.style.display = 'block';
+        else el.style.display = 'none';
     });
 };
 
 window.renderAdminDutyChips = () => {
-    const duty = window.adminTempDuty['Hijau'] || { wipe: [], sweep: [], arrange: [], trash: [] };
+    const day = window.adminCurrentDutyDay;
+    const dutyData = window.adminTempDuty['Hijau'][day];
     ['wipe', 'sweep', 'arrange', 'trash'].forEach(cat => {
         const cont = document.getElementById('adminDutyChips_' + cat);
         let html = '';
-        (duty[cat] || []).forEach(id => {
+        (dutyData[cat] || []).forEach(id => {
             const stu = window.adminTempStudents.find(s => s.id === id);
             const name = stu ? stu.name : id;
-            html += `<div style="background:var(--ios-input); padding:4px 8px; border-radius:10px; font-size:12px; display:flex; align-items:center; gap:4px; border:1px solid var(--glass-border); margin-bottom:4px;">${name} <span class="material-icons-round" style="font-size:14px; color:#FF3B30; cursor:pointer;" onclick="window.adminRemoveDuty('${cat}', '${id}')">close</span></div>`;
+            html += `<div style="background:var(--ios-input); padding:6px 12px; border-radius:12px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; border:1px solid var(--glass-border); margin-bottom:4px;">${name} <span class="material-icons-round" style="font-size:16px; color:#FF3B30; cursor:pointer;" onclick="window.adminRemoveDuty('${cat}', '${id}')">close</span></div>`;
         });
         cont.innerHTML = html;
     });
@@ -3851,16 +4024,24 @@ window.renderAdminDutyChips = () => {
 
 window.adminAddDuty = (cat, id) => {
     if(!id) return;
-    if(!window.adminTempDuty['Hijau']) window.adminTempDuty['Hijau'] = { wipe: [], sweep: [], arrange: [], trash: [] };
-    if(!window.adminTempDuty['Hijau'][cat].includes(id)) {
-        window.adminTempDuty['Hijau'][cat].push(id);
-        window.renderAdminDutyChips();
+    const day = window.adminCurrentDutyDay;
+    if(!window.adminTempDuty['Hijau'][day][cat].includes(id)) {
+        if(window.adminTempDuty['Hijau'][day][cat].length >= 2) {
+            window.showToast(uiText[curLang].dutyMax || "Maximum 2 students allowed per duty!", "error_outline");
+        } else {
+            window.adminTempDuty['Hijau'][day][cat].push(id);
+            window.renderAdminDutyChips();
+        }
     }
+    const drop = document.getElementById('adminDutyDropdown_' + cat);
+    drop.classList.remove('show');
+    drop.parentElement.classList.remove('active-select');
+    drop.parentElement.style.zIndex = '1';
 };
 
 window.adminRemoveDuty = (cat, id) => {
-    if(!window.adminTempDuty['Hijau']) return;
-    window.adminTempDuty['Hijau'][cat] = window.adminTempDuty['Hijau'][cat].filter(x => x !== id);
+    const day = window.adminCurrentDutyDay;
+    window.adminTempDuty['Hijau'][day][cat] = window.adminTempDuty['Hijau'][day][cat].filter(x => x !== id);
     window.renderAdminDutyChips();
 };
 
@@ -3952,6 +4133,9 @@ function filterData(){
     const isGlobalMode=(query!==""||f25!==""||fOrigin!==""||isFavMode||currentClass==='All');
     const clearBtn=document.getElementById("reset-bar"),tabs=document.getElementById("classTabs"),wrapSortClass=document.getElementById("btnSortClassWrapper"),wrapSortBday=document.getElementById("btnSortBdayWrapper"),tCard=document.getElementById("classInfoCard");
     
+    const btnDutyToggle = document.getElementById("btnDutyToggle");
+    if(btnDutyToggle) btnDutyToggle.style.display = (!isGlobalMode && currentClass === 'Hijau') ? 'flex' : 'none';
+    
     if(isGlobalMode){
         if(query!==""||f25!==""||fOrigin!==""||isFavMode) {
             clearBtn.classList.add('show');
@@ -3976,12 +4160,6 @@ function filterData(){
         }
         if(wrapSortClass)wrapSortClass.classList.add("collapsed");
         if(wrapSortBday)wrapSortBday.classList.add("collapsed");
-        
-        const btnDuty = document.getElementById("btnViewDuty");
-        if (btnDuty) {
-            btnDuty.style.display = (currentClass === 'Hijau') ? 'flex' : 'none';
-        }
-        
         if(currentSortType!=='name'){
             // Reset to name sort when entering a specific class
             currentSortType='name';
