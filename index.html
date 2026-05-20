@@ -581,6 +581,17 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 body.coach-active .header-controls { overflow: visible !important; }
 body.coach-active .action-row.coach-highlight { z-index: 10001 !important; }
 body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
+
+/* THEME STUDIO CUSTOMIZATION */
+body.theme-custom {
+    background-image: linear-gradient(135deg, var(--c-grad-1) 0%, var(--c-grad-2) 50%, var(--c-grad-3) 100%) !important;
+}
+#customBgLayer { position: fixed; inset: 0; z-index: -2; background-size: cover; background-position: center; opacity: 0; transition: opacity 0.4s; pointer-events: none; }
+#doodleCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+#doodleCanvas.active { z-index: 9999; pointer-events: auto; cursor: crosshair; touch-action: none; }
+.doodle-toolbar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 12px 20px; border-radius: 24px; display: flex; gap: 12px; align-items: center; z-index: 10000; box-shadow: var(--shadow-lg); transition: bottom 0.4s var(--ease-spring); }
+.doodle-toolbar.show { bottom: 30px; }
+@supports (padding-bottom:env(safe-area-inset-bottom)){.doodle-toolbar.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
 .spin-anim { animation: spinIcon 1s linear infinite; }
 @keyframes spinIcon { 100% { transform: rotate(360deg); } }
 
@@ -603,6 +614,8 @@ body.bg-beta.coach-active .action-row {
 window.isSignUpMode = false;
 window.userReduceLag = localStorage.getItem('userReduceLag') === 'true';
 window.auditLogs = [];
+window.personalTheme = JSON.parse(localStorage.getItem('personalTheme')) || { mode: 'global', g1: '#e0c3fc', g2: '#8ec5fc', g3: '#4facfe', bgImage: null, doodle: null };
+window.tempPersonalTheme = null;
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.onkeydown = function(e){if(e.keyCode==123)return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='I'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='C'.charCodeAt(0))return!1;if(e.ctrlKey&&e.shiftKey&&e.keyCode=='J'.charCodeAt(0))return!1;if(e.ctrlKey&&e.keyCode=='U'.charCodeAt(0))return!1}
@@ -710,9 +723,9 @@ window.hexToRgba = function(hex, alpha) {
       </div>
       
       <div class="info-group prof-anim" style="margin-bottom:16px; animation-delay: 0.1s;">
-         <div class="info-item" onclick="window.toggleTheme()" style="cursor:pointer;">
-            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">palette</span> <span id="lblProfTheme">Theme</span></span>
-            <span class="m-val-highlight anim-text-change" id="profThemeTxt" style="color:var(--ios-blue); font-weight:600;">Dark Mode</span>
+         <div class="info-item" onclick="window.openThemeStudio()" style="cursor:pointer;">
+            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">palette</span> <span id="lblProfTheme">Theme Studio</span></span>
+            <span class="m-val-highlight anim-text-change" id="profThemeTxt" style="color:var(--ios-blue); font-weight:600;">Customize</span>
          </div>
          <div class="info-item" onclick="window.toggleDensity()" style="cursor:pointer;">
             <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">view_agenda</span> <span id="lblProfDensity">View Mode</span></span>
@@ -893,6 +906,68 @@ window.hexToRgba = function(hex, alpha) {
         </div>
         <div style="padding:16px 20px; background:var(--ios-card); border-top:1px solid var(--ios-sep);">
             <button onclick="window.closeWelcomeGuide()" style="width:100%; padding:14px; border-radius:14px; border:none; background:var(--ios-blue); font-size:17px; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 12px var(--ios-blue-light); transition:transform 0.2s;">Let's Go!</button>
+        </div>
+    </div>
+</div>
+
+<!-- THEME STUDIO & DOODLE CANVAS -->
+<div id="customBgLayer"></div>
+<canvas id="doodleCanvas"></canvas>
+<div id="doodleToolbar" class="doodle-toolbar">
+    <input type="color" id="doodleColor" value="#007AFF" style="width:36px; height:36px; border-radius:50%; border:none; padding:0; cursor:pointer; background:transparent;">
+    <input type="range" id="doodleSize" min="2" max="25" value="5" style="width:80px; accent-color:var(--ios-blue);">
+    <button class="btn-icon-only" onclick="window.clearDoodle()" style="width:36px; height:36px; color:#FF3B30;"><span class="material-icons-round">delete_outline</span></button>
+    <button class="update-btn" onclick="window.stopDoodleMode()" style="padding:8px 16px;">Done</button>
+</div>
+
+<div class="modal-bg" id="themeStudioOverlay" onclick="window.closeThemeStudio()" style="z-index: 10002;">
+    <div class="modal-card" id="themeStudioCard" onclick="event.stopPropagation()">
+        <div class="m-head"><div class="stats-title anim-text-change" id="lblTsTitle">Theme Studio</div><div class="stats-sub anim-text-change" id="lblTsSub">Personalize your app's look & feel</div></div>
+        <div class="m-body" style="padding-top:10px;">
+            <div class="seg-control" style="margin-bottom:15px;">
+                <button class="seg-btn active" id="tsBtnGlobal" onclick="window.setPersonalThemeMode('global')">Global Theme</button>
+                <button class="seg-btn" id="tsBtnCustom" onclick="window.setPersonalThemeMode('custom')">Personal Custom</button>
+            </div>
+
+            <div id="tsCustomControls" style="display:none; flex-direction:column; gap:16px;">
+                <div class="info-group">
+                    <div class="info-item">
+                        <span class="m-label" style="font-weight:600;">Gradient Colors</span>
+                        <div style="display:flex; gap:8px;">
+                            <input type="color" id="cg1" oninput="window.applyCustomLive()" style="border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; background:transparent;">
+                            <input type="color" id="cg2" oninput="window.applyCustomLive()" style="border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; background:transparent;">
+                            <input type="color" id="cg3" oninput="window.applyCustomLive()" style="border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; background:transparent;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                        <span class="m-label" style="font-weight:600;">Background Image</span>
+                        <div style="display:flex; gap:10px; width:100%;">
+                            <label class="update-btn" style="flex:1; text-align:center; background:var(--ios-input); color:var(--ios-text); padding:10px; cursor:pointer;">
+                                Upload Image
+                                <input type="file" id="bgImageInput" accept="image/*" style="display:none;" onchange="window.handleBgUpload(event)">
+                            </label>
+                            <button class="update-btn" style="background:#FF3B30; padding:10px; display:none;" id="btnRemoveBg" onclick="window.removeBgImage()">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-done" style="background:linear-gradient(135deg, #AF52DE, #5856D6); box-shadow:0 8px 24px rgba(175,82,222,0.3);" onclick="window.startDoodleMode()">
+                    <span class="material-icons-round" style="vertical-align:middle; margin-right:8px;">brush</span> Draw & Doodle on Screen
+                </button>
+            </div>
+            
+            <div id="tsGlobalControls" style="display:block; text-align:center; padding:30px 10px;">
+                 <span class="material-icons-round" style="font-size:48px; color:var(--ios-blue); margin-bottom:10px;">public</span>
+                 <div style="font-size:16px; font-weight:700; color:var(--ios-text);">Following Global Settings</div>
+                 <div style="font-size:13px; color:var(--ios-text-sec); margin-top:6px;">Your app background will dynamically match the current time of day or admin events.</div>
+            </div>
+        </div>
+        <div class="m-foot" style="border-top:1px solid var(--glass-border); padding-top:20px;">
+            <button class="btn-done" style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick="window.closeThemeStudio()">Cancel</button>
+            <button class="btn-done" style="flex:1.5;" onclick="window.saveThemeStudio()">Save Theme</button>
         </div>
     </div>
 </div>
@@ -1582,9 +1657,31 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-  const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
-  if (themeMode === 'dynamic') {
+  const customBgLayer = document.getElementById('customBgLayer');
+  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta', 'theme-custom');
+  
+  // Custom Theme Override
+  if (window.personalTheme && window.personalTheme.mode === 'custom') {
+      body.classList.add('theme-custom');
+      body.style.setProperty('--c-grad-1', window.personalTheme.g1 || '#e0c3fc');
+      body.style.setProperty('--c-grad-2', window.personalTheme.g2 || '#8ec5fc');
+      body.style.setProperty('--c-grad-3', window.personalTheme.g3 || '#4facfe');
+      
+      if (window.personalTheme.bgImage) {
+          customBgLayer.style.backgroundImage = `url(${window.personalTheme.bgImage})`;
+          customBgLayer.style.opacity = '1';
+      } else {
+          customBgLayer.style.opacity = '0';
+      }
+      
+      // Load Doodle
+      window.redrawDoodle(window.personalTheme.doodle);
+  } else {
+      customBgLayer.style.opacity = '0';
+      window.redrawDoodle(null);
+      
+      const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+      if (themeMode === 'dynamic') {
     const hour = new Date().getHours();
     if(hour>=7 && hour<11) body.classList.add('bg-morning');
     else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
@@ -2388,7 +2485,128 @@ window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;t
 function toggleFavId(id){const index=window.favorites.indexOf(id);if(index===-1){window.favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{window.favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}} window.updateProfileStats();}
 window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
 
-function applyModalColors(student){
+// ==========================================
+// THEME STUDIO & DOODLE LOGIC
+// ==========================================
+window.openThemeStudio = function() {
+    triggerHaptic();
+    window.closeProfile();
+    window.tempPersonalTheme = JSON.parse(JSON.stringify(window.personalTheme));
+    
+    // Setup UI
+    document.getElementById('cg1').value = window.tempPersonalTheme.g1 || '#e0c3fc';
+    document.getElementById('cg2').value = window.tempPersonalTheme.g2 || '#8ec5fc';
+    document.getElementById('cg3').value = window.tempPersonalTheme.g3 || '#4facfe';
+    
+    document.getElementById('btnRemoveBg').style.display = window.tempPersonalTheme.bgImage ? 'block' : 'none';
+    
+    window.setPersonalThemeMode(window.tempPersonalTheme.mode || 'global');
+    setTimeout(() => document.getElementById("themeStudioOverlay").classList.add("open"), 250);
+};
+
+window.closeThemeStudio = function() {
+    document.getElementById("themeStudioOverlay").classList.remove("open");
+    window.applyGlobalSettings(); // Revert unsaved live changes
+};
+
+window.setPersonalThemeMode = function(mode) {
+    window.tempPersonalTheme.mode = mode;
+    document.getElementById('tsBtnGlobal').classList.toggle('active', mode === 'global');
+    document.getElementById('tsBtnCustom').classList.toggle('active', mode === 'custom');
+    
+    document.getElementById('tsGlobalControls').style.display = mode === 'global' ? 'block' : 'none';
+    document.getElementById('tsCustomControls').style.display = mode === 'custom' ? 'flex' : 'none';
+    
+    window.applyCustomLive();
+};
+
+window.applyCustomLive = function() {
+    if (window.tempPersonalTheme.mode === 'custom') {
+        window.tempPersonalTheme.g1 = document.getElementById('cg1').value;
+        window.tempPersonalTheme.g2 = document.getElementById('cg2').value;
+        window.tempPersonalTheme.g3 = document.getElementById('cg3').value;
+        
+        document.body.classList.add('theme-custom');
+        document.body.style.setProperty('--c-grad-1', window.tempPersonalTheme.g1);
+        document.body.style.setProperty('--c-grad-2', window.tempPersonalTheme.g2);
+        document.body.style.setProperty('--c-grad-3', window.tempPersonalTheme.g3);
+        
+        const layer = document.getElementById('customBgLayer');
+        if (window.tempPersonalTheme.bgImage) {
+            layer.style.backgroundImage = `url(${window.tempPersonalTheme.bgImage})`;
+            layer.style.opacity = '1';
+        } else {
+            layer.style.opacity = '0';
+        }
+    } else {
+        document.body.classList.remove('theme-custom');
+        document.getElementById('customBgLayer').style.opacity = '0';
+    }
+};
+
+window.handleBgUpload = function(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            // Compress Image
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 1080;
+            const scaleSize = MAX_WIDTH / img.width;
+            canvas.width = Math.min(MAX_WIDTH, img.width);
+            canvas.height = img.height * (canvas.width / img.width);
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+            window.tempPersonalTheme.bgImage = dataUrl;
+            document.getElementById('btnRemoveBg').style.display = 'block';
+            window.applyCustomLive();
+        }
+        img.src = event.target.result;
+    }
+    reader.readAsDataURL(file);
+};
+
+window.removeBgImage = function() {
+    window.tempPersonalTheme.bgImage = null;
+    document.getElementById('btnRemoveBg').style.display = 'none';
+    window.applyCustomLive();
+};
+
+window.saveThemeStudio = function() {
+    window.personalTheme = JSON.parse(JSON.stringify(window.tempPersonalTheme));
+    localStorage.setItem('personalTheme', JSON.stringify(window.personalTheme));
+    window.cloudSyncUserData(); // Save to cloud!
+    window.closeThemeStudio();
+    window.showToast("Theme Saved", "palette");
+};
+
+// --- DOODLE LOGIC ---
+const dCanvas = document.getElementById('doodleCanvas');
+const dCtx = dCanvas.getContext('2d');
+let isDrawing = false;
+
+window.resizeDoodleCanvas = function() {
+    dCanvas.width = window.innerWidth;
+    dCanvas.height = window.innerHeight;
+    window.redrawDoodle(window.tempPersonalTheme ? window.tempPersonalTheme.doodle : window.personalTheme.doodle);
+};
+window.addEventListener('resize', window.resizeDoodleCanvas);
+
+window.redrawDoodle = function(dataUrl) {
+    dCtx.clearRect(0, 0, dCanvas.width, dCanvas.height);
+    if(dataUrl) {
+        const img = new Image();
+        img.onload = () => dCtx.drawImage(img, 0, 0, dCanvas.width, dCanvas.height);
+        img.src = dataUrl;
+    }
+};
+
+window.startDoodleMode = function() {
+    document.getElementById("themeStudioOverlay").classList.remove("o
     const rawClass = student.newClass.split(" ")[1]||"Biru";
     const cssClass = rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
     const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
@@ -3557,7 +3775,8 @@ window.cloudSyncUserData=async function(){
             theme: isDark ? 'dark' : 'light',
             density: isCompactMode ? 'compact' : 'comfort',
             reduceLag: window.userReduceLag || false,
-            language: curLang
+            language: curLang,
+            personalTheme: window.personalTheme || null
         }, {merge: !0});
     } catch(e) {
         console.error("Sync error:", e);
@@ -3600,6 +3819,10 @@ onAuthStateChanged(auth, async (user) => {
         prefDensity = dData.density;
         prefReduceLag = dData.reduceLag || false;
         prefLanguage = dData.language;
+        if (dData.personalTheme) {
+            window.personalTheme = dData.personalTheme;
+            localStorage.setItem('personalTheme', JSON.stringify(window.personalTheme));
+        }
       }
     } catch (e) {
       console.warn("Failed to fetch user profile, using defaults.");
