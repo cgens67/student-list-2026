@@ -624,9 +624,9 @@ body.bg-beta.coach-active .action-row {
 </head>
 <body>
 
-<canvas id="bgDoodleCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; transition: z-index 0.3s;"></canvas>
-<div id="doodleToolbar" style="position:fixed; bottom:-160px; left:50%; transform:translateX(-50%); background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); padding:16px; border-radius:24px; display:flex; flex-direction:column; gap:16px; z-index:8001; transition:bottom 0.4s var(--ease-spring); box-shadow:var(--shadow-lg); width:90%; max-width:400px;">
-    <div style="display:flex; gap:12px; align-items:center; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;" id="doodleColorsWrap">
+<canvas id="bgDoodleCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none; transition: z-index 0.3s;"></canvas>
+<div id="doodleToolbar" style="position:fixed; bottom:-160px; left:50%; transform:translateX(-50%); background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); padding:16px; border-radius:24px; display:flex; flex-direction:column; gap:16px; z-index:8001; transition:bottom 0.4s var(--ease-ios); box-shadow:var(--shadow-lg); width:90%; max-width:400px;">
+    <div style="display:flex; gap:12px; align-items:center; overflow-x:auto; padding:6px 0; scrollbar-width:none;" id="doodleColorsWrap">
         <div class="d-color active" style="background:#FFFFFF; box-shadow:0 2px 4px rgba(0,0,0,0.2);" onclick="window.setDoodleColor('#FFFFFF', this)"></div>
         <div class="d-color" style="background:#000000; box-shadow:0 2px 4px rgba(0,0,0,0.2);" onclick="window.setDoodleColor('#000000', this)"></div>
         <div class="d-color" style="background:#FF3B30; box-shadow:0 2px 4px rgba(0,0,0,0.2);" onclick="window.setDoodleColor('#FF3B30', this)"></div>
