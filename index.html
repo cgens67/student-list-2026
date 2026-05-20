@@ -1637,7 +1637,15 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  const doodleLayer = document.getElementById('doodleBgLayer');
+  
+  // 1. Auto-inject Doodle Layer safely to ensure it always exists
+  let doodleLayer = document.getElementById('doodleBgLayer');
+  if (!doodleLayer) {
+      doodleLayer = document.createElement('div');
+      doodleLayer.id = 'doodleBgLayer';
+      doodleLayer.style.cssText = "position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;";
+      document.body.prepend(doodleLayer);
+  }
   
   // Custom User Theme Override
   if (window.userCustomTheme && window.userCustomTheme.active) {
@@ -1656,7 +1664,7 @@ window.applyGlobalSettings = function() {
       body.style.removeProperty('--grad-1');
       body.style.removeProperty('--grad-2');
       body.style.removeProperty('--grad-3');
-      doodleLayer.style.opacity = '0';
+      if (doodleLayer) doodleLayer.style.opacity = '0';
       
       body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
       const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
