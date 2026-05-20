@@ -611,7 +611,7 @@ body.bg-beta.coach-active .action-row {
 .u-color-swatch { aspect-ratio: 1; border-radius: 50%; cursor: pointer; box-shadow: var(--chip-shadow); transition: transform 0.2s; border: 1px solid var(--glass-border); }
 .u-color-swatch:active { transform: scale(0.9); }
 
-#bgDoodleCanvas.draw-mode { z-index: 8000 !important; pointer-events: auto !important; cursor: crosshair !important; }
+#bgDoodleCanvas.draw-mode { z-index: 8000 !important; pointer-events: auto !important; cursor: crosshair !important; touch-action: none !important; }
 #doodleToolbar.show { bottom: 30px; }
 @supports (padding-bottom:env(safe-area-inset-bottom)){#doodleToolbar.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
 .d-color { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; flex-shrink:0; }
@@ -621,7 +621,7 @@ body.bg-beta.coach-active .action-row {
 </head>
 <body>
 
-<canvas id="bgDoodleCanvas" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:0; pointer-events:none; transition: z-index 0.3s;"></canvas>
+<canvas id="bgDoodleCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; transition: z-index 0.3s;"></canvas>
 <div id="doodleToolbar" style="position:fixed; bottom:-100px; left:50%; transform:translateX(-50%); background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); padding:10px 20px; border-radius:100px; display:flex; gap:12px; align-items:center; z-index:8001; transition:bottom 0.4s var(--ease-spring); box-shadow:var(--shadow-lg);">
     <div class="d-color active" style="background:#FFFFFF; box-shadow:0 2px 4px rgba(0,0,0,0.2);" onclick="window.setDoodleColor('#FFFFFF', this)"></div>
     <div class="d-color" style="background:#000000; box-shadow:0 2px 4px rgba(0,0,0,0.2);" onclick="window.setDoodleColor('#000000', this)"></div>
@@ -1844,12 +1844,35 @@ window.openThemeCustomizer = function() {
 
 window.setUserTheme = function(type) {
     triggerHaptic();
+    const card = document.getElementById('themeCustomizerCard');
+    const startHeight = card.offsetHeight;
+    
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
     const activeCard = document.getElementById('tc-' + type);
     if(activeCard) activeCard.classList.add('active');
     
-    document.getElementById('userCustomColorsWrapper').style.display = (type === 'custom') ? 'block' : 'none';
+    const wrapper = document.getElementById('userCustomColorsWrapper');
+    if (type === 'custom') {
+        wrapper.style.display = 'block';
+        wrapper.style.animation = 'fadeUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+    } else {
+        wrapper.style.display = 'none';
+    }
+    
     window.previewUserTheme(type);
+
+    const targetHeight = card.scrollHeight;
+    if (startHeight !== targetHeight && typeof card.animate === 'function') {
+        card.style.height = startHeight + 'px';
+        const anim = card.animate([
+            { height: startHeight + 'px' },
+            { height: targetHeight + 'px' }
+        ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        anim.onfinish = () => card.style.height = 'auto';
+        anim.oncancel = () => card.style.height = 'auto';
+    } else {
+        card.style.height = 'auto';
+    }
 };
 
 window.previewUserTheme = function(typeOverride) {
@@ -1933,6 +1956,7 @@ let dIsDrawing = false;
 let dCtx = null;
 let dCurStroke = null;
 let dCurColor = '#FFFFFF';
+let dLastPt = null;
 
 window.initDoodle = function() {
     const c = document.getElementById('bgDoodleCanvas');
@@ -1967,8 +1991,10 @@ function dStart(e) {
     if(!document.getElementById('bgDoodleCanvas').classList.contains('draw-mode')) return;
     dIsDrawing = true;
     dCurStroke = { c: dCurColor, w: 4, p: [] };
+    dLastPt = null; // Important fix: reset previous line connection
     dPushPt(e.clientX, e.clientY);
     window.userDoodle.push(dCurStroke);
+    window.renderDoodle(); // Render dot immediately on single tap
 }
 function dMove(e) {
     if(!dIsDrawing || !dCurStroke) return;
@@ -1976,9 +2002,9 @@ function dMove(e) {
     window.renderDoodle();
 }
 function dEnd() { dIsDrawing = false; dCurStroke = null; }
-let dLastPt = null;
+
 function dPushPt(x,y) {
-    if(!dLastPt || Math.hypot(x-dLastPt.x, y-dLastPt.y) > 4) {
+    if(!dLastPt || Math.hypot(x-dLastPt.x, y-dLastPt.y) > 2) {
         dCurStroke.p.push(parseFloat((x/window.innerWidth).toFixed(4)), parseFloat((y/window.innerHeight).toFixed(4)));
         dLastPt = {x,y};
     }
@@ -1993,13 +2019,19 @@ window.renderDoodle = function() {
     dCtx.lineJoin = 'round';
 
     window.userDoodle.forEach(stroke => {
-        if(stroke.p.length < 2) return;
+        if(!stroke.p || stroke.p.length < 2) return;
         dCtx.beginPath();
         dCtx.strokeStyle = stroke.c;
         dCtx.lineWidth = stroke.w;
         dCtx.moveTo(stroke.p[0] * w, stroke.p[1] * h);
-        for(let i=2; i<stroke.p.length; i+=2) {
-            dCtx.lineTo(stroke.p[i] * w, stroke.p[i+1] * h);
+        
+        if (stroke.p.length === 2) {
+            // Draw a tiny dot for single taps
+            dCtx.lineTo(stroke.p[0] * w + 0.5, stroke.p[1] * h + 0.5);
+        } else {
+            for(let i=2; i<stroke.p.length; i+=2) {
+                dCtx.lineTo(stroke.p[i] * w, stroke.p[i+1] * h);
+            }
         }
         dCtx.stroke();
     });
