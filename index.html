@@ -1705,6 +1705,99 @@ window.applyGlobalSettings = function() {
   if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
   else body.classList.remove('text-redesign-active');
   
+  const menuBtn = document.getElementById('btnMenuToggle');
+  if (menuBtn) {
+      if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
+          menuBtn.style.display = 'none';
+      } else {
+          menuBtn.style.display = 'flex';
+      }
+  }
+  
+  const statsBtn = document.getElementById('btnStatsToggle');
+  if (statsBtn) {
+      statsBtn.style.display = (window.globalSettings && window.globalSettings.hideStats === 'true') ? 'none' : 'flex';
+  }
+  
+  const about = (window.globalSettings && window.globalSettings.aboutData) ? window.globalSettings.aboutData : { title: "Student Allocation List 2026", version: "Version 6.0 (Secured Edition)", desc: "Check allocations, view origin maps, and use Quick Actions.", design: "Designed with Smooth iOS Performance in mind", footer: "Hosted on Vercel | Secured by Firebase" };
+  const designText = about.design || "Designed with Smooth iOS Performance in mind";
+  
+  const aboutCont = document.getElementById('aboutContent');
+  if (aboutCont) {
+      aboutCont.innerHTML = `
+          <div style="color:var(--ios-blue); margin-bottom:12px;"><span class="material-icons-round" style="font-size:42px;">info</span></div>
+          <div style="font-size:18px; font-weight:800; color:var(--ios-text); margin-bottom:4px;">${about.title}</div>
+          <div style="font-size:13px; color:var(--ios-blue); font-weight:600; margin-bottom:16px;">${about.version}</div>
+          <div style="font-size:14px; line-height:1.4; color:var(--ios-text-sec); margin-bottom:20px;">${(about.desc || '').replace(/\n+/g, '<br><br>')}</div>
+          <div style='font-size:12px
+  
+  // 1. Auto-inject Doodle Layer safely to ensure it always exists
+  let doodleLayer = document.getElementById('doodleBgLayer');
+  if (!doodleLayer) {
+      doodleLayer = document.createElement('div');
+      doodleLayer.id = 'doodleBgLayer';
+      doodleLayer.style.cssText = "position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;";
+      document.body.prepend(doodleLayer);
+  }
+  
+  // Custom User Theme Override
+  if (window.userCustomTheme && window.userCustomTheme.active) {
+      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
+      body.style.setProperty('--grad-1', window.userCustomTheme.c1);
+      body.style.setProperty('--grad-2', window.userCustomTheme.c2);
+      body.style.setProperty('--grad-3', window.userCustomTheme.c3);
+      if (window.userCustomTheme.doodle) {
+          doodleLayer.style.backgroundImage = `url(${window.userCustomTheme.doodle})`;
+          doodleLayer.style.opacity = '1';
+      } else {
+          doodleLayer.style.opacity = '0';
+      }
+  } else {
+      // Revert to Admin Themes
+      body.style.removeProperty('--grad-1');
+      body.style.removeProperty('--grad-2');
+      body.style.removeProperty('--grad-3');
+      if (doodleLayer) doodleLayer.style.opacity = '0';
+      
+      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
+      const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+      if (themeMode === 'dynamic') {
+        const hour = new Date().getHours();
+        if(hour>=7 && hour<11) body.classList.add('bg-morning');
+        else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
+        else body.classList.add('bg-night');
+      } else {
+        body.classList.add('bg-' + themeMode);
+      }
+  }
+  
+  const adminGlass = (window.globalSettings && window.globalSettings.disableGlass) ? window.globalSettings.disableGlass : 'dynamic';
+  let isGlassDisabled = false;
+  
+  const lagTxtEl = document.getElementById('profReduceLagTxt');
+  const lagRowEl = document.getElementById('profLagRow');
+  const txtObj = uiText[curLang] || uiText.en;
+  
+  if (adminGlass === 'true') {
+      isGlassDisabled = true;
+      if(lagTxtEl) { lagTxtEl.innerText = txtObj.lagOn + " (Admin)"; lagTxtEl.style.color = "var(--ios-blue)"; }
+      if(lagRowEl) lagRowEl.style.opacity = "0.5";
+  } else if (adminGlass === 'false') {
+      isGlassDisabled = false;
+      if(lagTxtEl) { lagTxtEl.innerText = txtObj.lagDisabled; lagTxtEl.style.color = "var(--ios-text-sec)"; }
+      if(lagRowEl) lagRowEl.style.opacity = "0.5";
+  } else {
+      isGlassDisabled = window.userReduceLag;
+      if(lagTxtEl) { lagTxtEl.innerText = isGlassDisabled ? txtObj.lagOn : txtObj.lagOff; lagTxtEl.style.color = "var(--ios-blue)"; }
+      if(lagRowEl) lagRowEl.style.opacity = "1";
+  }
+  
+  if(isGlassDisabled) body.classList.add('no-glass');
+  else body.classList.remove('no-glass');
+  
+  if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
+  else body.classList.remove('text-redesign-active');
+  
   if(window.globalSettings && window.globalSettings.hideTheme === 'true') {
       document.getElementById('btnMenuToggle').style.display = 'none';
   }
