@@ -612,7 +612,10 @@ body.bg-beta.coach-active .action-row {
 .u-color-swatch:active { transform: scale(0.9); }
 
 #bgDoodleCanvas.draw-mode { z-index: 8000 !important; pointer-events: auto !important; cursor: crosshair !important; touch-action: none !important; }
-#doodleToolbar.show { bottom: 30px; }
+#doodleToolbar.show { bottom: 30px !important; }
+@supports (padding-bottom:env(safe-area-inset-bottom)){
+    #doodleToolbar.show { bottom: calc(30px + env(safe-area-inset-bottom)) !important; }
+}
 @supports (padding-bottom:env(safe-area-inset-bottom)){#doodleToolbar.show{bottom:calc(30px + env(safe-area-inset-bottom))}}
 .d-color { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; flex-shrink:0; }
 .d-color.active { border-color: var(--ios-text); transform: scale(1.15); }
