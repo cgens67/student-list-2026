@@ -584,6 +584,16 @@ body.coach-active .ios-cell.coach-highlight { z-index: 10001 !important; }
 .spin-anim { animation: spinIcon 1s linear infinite; }
 @keyframes spinIcon { 100% { transform: rotate(360deg); } }
 
+/* THEME STUDIO & DOODLE STYLES */
+.theme-builder-canvas { width: 100%; height: 300px; background: #fff; border-radius: 16px; touch-action: none; border: 1px solid var(--glass-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); cursor: crosshair; }
+.color-picker-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; padding: 0; outline: none; transition: transform 0.2s; }
+.color-picker-btn:active { transform: scale(0.85); }
+.color-picker-btn::-webkit-color-swatch-wrapper { padding: 0; }
+.color-picker-btn::-webkit-color-swatch { border: none; border-radius: 50%; }
+.brush-tool { width: 36px; height: 36px; border-radius: 50%; background: var(--ios-input); border: 1px solid var(--chip-border); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; transition: 0.2s; }
+.brush-tool.active { background: var(--ios-blue); color: #fff; border-color: transparent; box-shadow: 0 4px 12px var(--ios-blue-light); }
+.brush-tool:active { transform: scale(0.9); }
+
 /* Fix Coach Marks Blur Issue */
 body.coach-active .action-row {
     animation: none !important;
@@ -597,6 +607,7 @@ body.bg-beta.coach-active .action-row {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+<div id="doodleBgLayer" style="position:fixed; inset:0; z-index:-5; pointer-events:none; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 0.5s;"></div>
 
 <script>
 // GLOBAL variables
@@ -711,8 +722,12 @@ window.hexToRgba = function(hex, alpha) {
       
       <div class="info-group prof-anim" style="margin-bottom:16px; animation-delay: 0.1s;">
          <div class="info-item" onclick="window.toggleTheme()" style="cursor:pointer;">
-            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">palette</span> <span id="lblProfTheme">Theme</span></span>
+            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">dark_mode</span> <span id="lblProfTheme">Theme</span></span>
             <span class="m-val-highlight anim-text-change" id="profThemeTxt" style="color:var(--ios-blue); font-weight:600;">Dark Mode</span>
+         </div>
+         <div class="info-item" onclick="window.openThemeStudio()" style="cursor:pointer;">
+            <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round" style="color:#AF52DE;">brush</span> <span>Theme Studio</span></span>
+            <span class="m-val-highlight anim-text-change" style="color:#AF52DE; font-weight:600;">Customize</span>
          </div>
          <div class="info-item" onclick="window.toggleDensity()" style="cursor:pointer;">
             <span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;"><span class="material-icons-round">view_agenda</span> <span id="lblProfDensity">View Mode</span></span>
@@ -737,6 +752,44 @@ window.hexToRgba = function(hex, alpha) {
     </div>
     <div class="m-foot prof-anim" style="animation-delay: 0.2s;">
       <button class="btn-done anim-text-change" onclick="window.closeProfile()" id="btnProfDone">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- THEME STUDIO OVERLAY -->
+<div class='modal-bg' id='themeStudioOverlay' style="z-index: 10002;" onclick='window.closeThemeStudio()'>
+  <div class='modal-card' id='themeStudioCard' onclick='event.stopPropagation()'>
+    <div class='m-head'><div class='stats-title anim-text-change'>Theme Studio</div><div class='stats-sub anim-text-change'>Design your own gradient and doodle</div></div>
+    <div class='m-body' style="padding-top:10px; display:flex; flex-direction:column; gap:16px;">
+      
+      <!-- Gradient Color Pickers -->
+      <div>
+         <div style="font-size:12px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase; margin-bottom:8px;">Background Gradient Colors</div>
+         <div style="display:flex; gap:16px; justify-content:center;">
+             <input type="color" id="tsColor1" class="color-picker-btn" value="#ffecd2" onchange="window.updateStudioLiveBg()">
+             <input type="color" id="tsColor2" class="color-picker-btn" value="#fcb69f" onchange="window.updateStudioLiveBg()">
+             <input type="color" id="tsColor3" class="color-picker-btn" value="#ff9a9e" onchange="window.updateStudioLiveBg()">
+         </div>
+      </div>
+
+      <!-- Doodle Canvas -->
+      <div style="position:relative; width:100%;">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+             <div style="font-size:12px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Doodle Area</div>
+             <div style="display:flex; gap:8px;">
+                 <input type="color" id="tsBrushColor" style="width:30px; height:30px; border-radius:50%; border:none; padding:0; background:transparent; cursor:pointer;" value="#000000">
+                 <button class="brush-tool active" onclick="window.setBrushSize(3, this)"><span style="width:4px; height:4px; background:currentColor; border-radius:50%;"></span></button>
+                 <button class="brush-tool" onclick="window.setBrushSize(8, this)"><span style="width:10px; height:10px; background:currentColor; border-radius:50%;"></span></button>
+                 <button class="brush-tool" onclick="window.clearDoodle()"><span class="material-icons-round" style="font-size:16px;">delete_outline</span></button>
+             </div>
+         </div>
+         <canvas id="tsCanvas" class="theme-builder-canvas"></canvas>
+      </div>
+
+    </div>
+    <div class='m-foot' style="flex-shrink: 0; display:flex; gap:10px; justify-content:space-between; border-top:1px solid var(--glass-border);">
+        <button class='btn-done' style="background-color:#FF3B30; color:#fff; flex:1;" onclick='window.disableCustomTheme()'>Reset to Default</button>
+        <button id="saveThemeBtn" class='btn-done' style="background-color:#AF52DE; flex:1.5;" onclick='window.saveCustomTheme()'>Apply & Save</button>
     </div>
   </div>
 </div>
@@ -1522,8 +1575,10 @@ window.hexToRgba = function(hex, alpha) {
 // ==========================================
 window.smkData =[];
 window.teacherData = {};
+window.userCustomTheme = { active: false, c1: '#ffecd2', c2: '#fcb69f', c3: '#ff9a9e', doodle: null };
+
 window.globalSettings = { 
-  theme: 'dynamic', maintenance: 'false', hideTheme: 'false', hideStats: 'false', disableGlass: 'dynamic', textStyle: 'original', forceCoachMarks: 'false',
+  theme: 'dynamic', maintenance: 'false', hideTheme: 'false', hideStats: 'false', disableGlass: 'dynamic', textStyle: 'original', forceCoachMarks: 'false', the 
   aboutData: {
     title: "Student Allocation List 2026",
     version: "Version 6.0 (Secured Edition)",
@@ -1582,15 +1637,37 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
 
 window.applyGlobalSettings = function() {
   const body = document.body;
-  body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
-  const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
-  if (themeMode === 'dynamic') {
-    const hour = new Date().getHours();
-    if(hour>=7 && hour<11) body.classList.add('bg-morning');
-    else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
-    else body.classList.add('bg-night');
+  const doodleLayer = document.getElementById('doodleBgLayer');
+  
+  // Custom User Theme Override
+  if (window.userCustomTheme && window.userCustomTheme.active) {
+      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
+      body.style.setProperty('--grad-1', window.userCustomTheme.c1);
+      body.style.setProperty('--grad-2', window.userCustomTheme.c2);
+      body.style.setProperty('--grad-3', window.userCustomTheme.c3);
+      if (window.userCustomTheme.doodle) {
+          doodleLayer.style.backgroundImage = `url(${window.userCustomTheme.doodle})`;
+          doodleLayer.style.opacity = '1';
+      } else {
+          doodleLayer.style.opacity = '0';
+      }
   } else {
-    body.classList.add('bg-' + themeMode);
+      // Revert to Admin Themes
+      body.style.removeProperty('--grad-1');
+      body.style.removeProperty('--grad-2');
+      body.style.removeProperty('--grad-3');
+      doodleLayer.style.opacity = '0';
+      
+      body.classList.remove('bg-morning', 'bg-afternoon', 'bg-night', 'bg-christmas', 'bg-newfilter', 'bg-beta');
+      const themeMode = (window.globalSettings && window.globalSettings.theme) ? window.globalSettings.theme : 'dynamic';
+      if (themeMode === 'dynamic') {
+        const hour = new Date().getHours();
+        if(hour>=7 && hour<11) body.classList.add('bg-morning');
+        else if(hour>=11 && hour<18) body.classList.add('bg-afternoon');
+        else body.classList.add('bg-night');
+      } else {
+        body.classList.add('bg-' + themeMode);
+      }
   }
   
   const adminGlass = (window.globalSettings && window.globalSettings.disableGlass) ? window.globalSettings.disableGlass : 'dynamic';
@@ -2527,6 +2604,146 @@ window.closeLogoutConfirm=function(){
 window.proceedSignOut=function(){
     window.closeLogoutConfirm();
     if(window.appSignOut)window.appSignOut();
+};
+
+// ==========================================
+// THEME STUDIO & DOODLE LOGIC
+// ==========================================
+let tsCtx = null;
+let isDrawing = false;
+let currentBrushSize = 3;
+
+window.openThemeStudio = function() {
+    triggerHaptic();
+    document.getElementById('profileOverlay').classList.remove('open');
+    setTimeout(() => {
+        document.getElementById('themeStudioOverlay').classList.add('open');
+        initThemeCanvas();
+        
+        // Load current custom theme into pickers
+        if(window.userCustomTheme.active) {
+            document.getElementById('tsColor1').value = window.userCustomTheme.c1;
+            document.getElementById('tsColor2').value = window.userCustomTheme.c2;
+            document.getElementById('tsColor3').value = window.userCustomTheme.c3;
+        }
+        window.updateStudioLiveBg();
+    }, 300);
+};
+
+window.closeThemeStudio = function() {
+    document.getElementById('themeStudioOverlay').classList.remove('open');
+};
+
+window.updateStudioLiveBg = function() {
+    const c1 = document.getElementById('tsColor1').value;
+    const c2 = document.getElementById('tsColor2').value;
+    const c3 = document.getElementById('tsColor3').value;
+    document.getElementById('tsCanvas').style.background = `linear-gradient(135deg, ${c1}, ${c2}, ${c3})`;
+};
+
+function initThemeCanvas() {
+    const canvas = document.getElementById('tsCanvas');
+    tsCtx = canvas.getContext('2d');
+    
+    // High-Res rendering (1080x1080 internal resolution)
+    canvas.width = 1080;
+    canvas.height = 1080;
+    tsCtx.lineCap = 'round';
+    tsCtx.lineJoin = 'round';
+
+    // Draw existing doodle if present
+    if (window.userCustomTheme.doodle) {
+        const img = new Image();
+        img.onload = () => tsCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        img.src = window.userCustomTheme.doodle;
+    }
+
+    const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: ((clientX - rect.left) / rect.width) * canvas.width,
+            y: ((clientY - rect.top) / rect.height) * canvas.height
+        };
+    };
+
+    const startDraw = (e) => {
+        isDrawing = true;
+        const pos = getPos(e);
+        tsCtx.beginPath();
+        tsCtx.moveTo(pos.x, pos.y);
+        // Multiplier to match scaled screen brush size to 1080p canvas
+        tsCtx.lineWidth = currentBrushSize * (canvas.width / canvas.getBoundingClientRect().width); 
+        tsCtx.strokeStyle = document.getElementById('tsBrushColor').value;
+        e.preventDefault(); 
+    };
+
+    const draw = (e) => {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        tsCtx.lineTo(pos.x, pos.y);
+        tsCtx.stroke();
+        e.preventDefault();
+    };
+
+    const stopDraw = () => { isDrawing = false; };
+
+    canvas.onmousedown = startDraw; canvas.ontouchstart = startDraw;
+    canvas.onmousemove = draw; canvas.ontouchmove = draw;
+    canvas.onmouseup = stopDraw; canvas.onmouseleave = stopDraw; canvas.ontouchend = stopDraw;
+}
+
+window.setBrushSize = function(size, btn) {
+    currentBrushSize = size;
+    document.querySelectorAll('.brush-tool').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+};
+
+window.clearDoodle = function() {
+    if(tsCtx) tsCtx.clearRect(0, 0, 1080, 1080);
+};
+
+window.disableCustomTheme = function() {
+    window.userCustomTheme.active = false;
+    window.userCustomTheme.doodle = null;
+    window.applyGlobalSettings();
+    if(window.cloudSyncUserData) window.cloudSyncUserData();
+    window.closeThemeStudio();
+    window.showToast("Theme Reset to Default", "refresh");
+};
+
+window.saveCustomTheme = function() {
+    const btn = document.getElementById('saveThemeBtn');
+    btn.innerText = "Saving...";
+    
+    // Compress doodle to Base64 (WebP at 50% quality is very lightweight)
+    const canvas = document.getElementById('tsCanvas');
+    let dataUrl = null;
+    
+    // Only save doodle if canvas isn't totally blank
+    const blankCheck = document.createElement('canvas');
+    blankCheck.width = canvas.width; blankCheck.height = canvas.height;
+    if(canvas.toDataURL() !== blankCheck.toDataURL()) {
+        dataUrl = canvas.toDataURL('image/webp', 0.5); 
+    }
+
+    window.userCustomTheme = {
+        active: true,
+        c1: document.getElementById('tsColor1').value,
+        c2: document.getElementById('tsColor2').value,
+        c3: document.getElementById('tsColor3').value,
+        doodle: dataUrl
+    };
+
+    window.applyGlobalSettings();
+    if(window.cloudSyncUserData) window.cloudSyncUserData();
+    
+    setTimeout(() => {
+        btn.innerText = "Apply & Save";
+        window.closeThemeStudio();
+        window.showToast("Custom Theme Applied!", "palette");
+    }, 500);
 };
 
 // ==========================================
@@ -3557,7 +3774,8 @@ window.cloudSyncUserData=async function(){
             theme: isDark ? 'dark' : 'light',
             density: isCompactMode ? 'compact' : 'comfort',
             reduceLag: window.userReduceLag || false,
-            language: curLang
+            language: curLang,
+            customTheme: window.userCustomTheme || null
         }, {merge: !0});
     } catch(e) {
         console.error("Sync error:", e);
@@ -3589,6 +3807,7 @@ onAuthStateChanged(auth, async (user) => {
     let prefDensity = null;
     let prefReduceLag = false;
     let prefLanguage = null;
+    let prefCustomTheme = null;
 
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -3600,6 +3819,7 @@ onAuthStateChanged(auth, async (user) => {
         prefDensity = dData.density;
         prefReduceLag = dData.reduceLag || false;
         prefLanguage = dData.language;
+        prefCustomTheme = dData.customTheme || null;
       }
     } catch (e) {
       console.warn("Failed to fetch user profile, using defaults.");
@@ -3622,6 +3842,12 @@ onAuthStateChanged(auth, async (user) => {
     }
     if (prefLanguage && prefLanguage !== curLang) {
         window.switchLanguage(prefLanguage, true); // true = skip duplicate sync
+    }
+    
+    if (prefCustomTheme) {
+        window.userCustomTheme = prefCustomTheme;
+    } else {
+        window.userCustomTheme = { active: false, c1: '#ffecd2', c2: '#fcb69f', c3: '#ff9a9e', doodle: null };
     }
 
     if (window.updateProfileStats) window.updateProfileStats();
