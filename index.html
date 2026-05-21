@@ -3131,7 +3131,9 @@ window.downloadDutyRoster = async function() {
         daysKeys.forEach((dKey, i) => {
             const duty = rawDuty[dKey] || emptyDay;
             const isLast = i === daysKeys.length - 1;
-            const rowBorder = isLast ? "" : "border-bottom:8px solid #D1D1D6;";
+            
+            // FIX: Added radii & overflow hidden to the ROW wrapper
+            const rowBorder = isLast ? "border-bottom-left-radius:32px; border-bottom-right-radius:32px; overflow:hidden;" : "border-bottom:8px solid #D1D1D6;";
             
             const renderA4List = (ids) => {
                 if(!ids || ids.length === 0) return `<div style="color:#C7C7CC; font-weight:600; font-size:60px; display:flex; height:100%; align-items:center; justify-content:center;">-</div>`;
@@ -3145,8 +3147,9 @@ window.downloadDutyRoster = async function() {
                 }).join('<div style="width:40%; height:4px; background:#D1D1D6; margin:0 auto; border-radius:4px; flex-shrink:0;"></div>') + '</div>';
             };
             
-            const blRadius = isLast ? "border-bottom-left-radius:32px;" : "";
-            const brRadius = isLast ? "border-bottom-right-radius:32px;" : "";
+            // FIX: Added background-clip to force proper html2canvas path clipping
+            const blRadius = isLast ? "border-bottom-left-radius:32px; overflow:hidden; background-clip:padding-box;" : "";
+            const brRadius = isLast ? "border-bottom-right-radius:32px; overflow:hidden; background-clip:padding-box;" : "";
             
             tableHTML += `
             <div style="display:flex; flex:1; min-height:0; ${rowBorder}">
