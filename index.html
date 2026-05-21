@@ -895,36 +895,36 @@ window.hexToRgba = function(hex, alpha) {
             <button class="seg-btn anim-text-change" id="uDayBtn_Friday" onclick="window.switchUserDutyDay('Friday')">Fri</button>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="display:flex; flex-direction:column; gap:12px; padding-bottom: 20px;">
             <!-- Wipe -->
-            <div style="background:rgba(0,122,255,0.08); border-radius:20px; padding:16px; border:1px solid rgba(0,122,255,0.15);">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <div style="background:#007AFF; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,122,255,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">border_color</span></div>
-                    <div style="font-size:12px; font-weight:800; color:#007AFF; text-transform:uppercase; line-height:1.1;" id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard<br><span style="font-size:10px; opacity:0.8;">(擦白板)</span></div>
+            <div style="background:var(--ios-card); border-radius:20px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="background:rgba(0,122,255,0.15); width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-icons-round" style="font-size:20px; color:var(--ios-blue);">border_color</span></div>
+                    <div style="font-size:14px; font-weight:800; color:var(--ios-blue); text-transform:uppercase; line-height:1.2;" id="lblDutyWipe" class="anim-text-change">Wipe Whiteboard<br><span style="font-size:11px; opacity:0.8;">(擦白板)</span></div>
                 </div>
                 <div id="dutyListWipe" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
             <!-- Sweep -->
-            <div style="background:rgba(52,199,89,0.08); border-radius:20px; padding:16px; border:1px solid rgba(52,199,89,0.15);">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <div style="background:#34C759; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(52,199,89,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">mop</span></div>
-                    <div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; line-height:1.1;" id="lblDutySweep" class="anim-text-change">Sweep Floor<br><span style="font-size:10px; opacity:0.8;">(扫地)</span></div>
+            <div style="background:var(--ios-card); border-radius:20px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="background:rgba(52,199,89,0.15); width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-icons-round" style="font-size:20px; color:#34C759;">brush</span></div>
+                    <div style="font-size:14px; font-weight:800; color:#34C759; text-transform:uppercase; line-height:1.2;" id="lblDutySweep" class="anim-text-change">Sweep Floor<br><span style="font-size:11px; opacity:0.8;">(扫地)</span></div>
                 </div>
                 <div id="dutyListSweep" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
             <!-- Arrange -->
-            <div style="background:rgba(255,149,0,0.08); border-radius:20px; padding:16px; border:1px solid rgba(255,149,0,0.15);">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <div style="background:#FF9500; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,149,0,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">desk</span></div>
-                    <div style="font-size:12px; font-weight:800; color:#FF9500; text-transform:uppercase; line-height:1.1;" id="lblDutyArrange" class="anim-text-change">Arrange Desks<br><span style="font-size:10px; opacity:0.8;">(排桌椅)</span></div>
+            <div style="background:var(--ios-card); border-radius:20px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="background:rgba(255,149,0,0.15); width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-icons-round" style="font-size:20px; color:#FF9500;">desk</span></div>
+                    <div style="font-size:14px; font-weight:800; color:#FF9500; text-transform:uppercase; line-height:1.2;" id="lblDutyArrange" class="anim-text-change">Arrange Desks<br><span style="font-size:11px; opacity:0.8;">(排桌椅)</span></div>
                 </div>
                 <div id="dutyListArrange" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
             <!-- Trash -->
-            <div style="background:rgba(255,59,48,0.08); border-radius:20px; padding:16px; border:1px solid rgba(255,59,48,0.15);">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <div style="background:#FF3B30; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,59,48,0.3);"><span class="material-icons-round" style="font-size:18px; color:#fff;">delete</span></div>
-                    <div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; line-height:1.1;" id="lblDutyTrash" class="anim-text-change">Empty Trash<br><span style="font-size:10px; opacity:0.8;">(丢垃圾)</span></div>
+            <div style="background:var(--ios-card); border-radius:20px; padding:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="background:rgba(255,59,48,0.15); width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-icons-round" style="font-size:20px; color:#FF3B30;">delete</span></div>
+                    <div style="font-size:14px; font-weight:800; color:#FF3B30; text-transform:uppercase; line-height:1.2;" id="lblDutyTrash" class="anim-text-change">Empty Trash<br><span style="font-size:11px; opacity:0.8;">(丢垃圾)</span></div>
                 </div>
                 <div id="dutyListTrash" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
@@ -932,17 +932,21 @@ window.hexToRgba = function(hex, alpha) {
     </div>
     <div class='m-foot' style="display:flex; gap:10px; border-top:1px solid var(--glass-border);">
         <button class='btn-done' style="background-color:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.closeDutyRoster()'>Close</button>
-        <button id="btnDownloadDuty" class='btn-done' style="flex:1.5; background:var(--ios-blue); display:flex; justify-content:center; align-items:center; gap:6px;" onclick='window.openDutyShareMenu()'><span class="material-icons-round" style="font-size:20px;">share</span> Share</button>
+        <button id="btnDownloadDuty" class='btn-done' style="flex:1.5; background:var(--ios-blue); display:flex; justify-content:center; align-items:center; gap:6px;" onclick='window.openDutyShareMenu()'><span class="material-icons-round" style="font-size:20px;">ios_share</span> Share</button>
     </div>
   </div>
 </div>
 
-<!-- SHARE DUTY CONTEXT MENU -->
-<div class='cm-backdrop' id='dutyShareBackdrop' onclick='window.closeDutyShareMenu()'>
-  <div class='cm-menu' id='dutyShareMenu'>
-    <div class='cm-header' id='dsHeader'>Export Duty Roster</div>
-    <button class='cm-item' onclick='window.downloadDutyRoster("modern")'><span id='dsBtnModern'>Share Modern Card (Today)</span><span class='material-icons-round cm-icon'>view_carousel</span></button>
-    <button class='cm-item' onclick='window.downloadDutyRoster("a4")'><span id='dsBtnA4'>Share A4 Print List (Weekly)</span><span class='material-icons-round cm-icon'>print</span></button>
+<!-- SHARE DUTY CUSTOM MODAL -->
+<div class='modal-bg' id='dutyExportOverlay' style="z-index: 10005;" onclick='window.closeDutyShareMenu()'>
+  <div class='modal-card' id='dutyExportCard' style='max-width: 400px; margin: auto; border-radius: 28px;' onclick='event.stopPropagation()'>
+     <div class='m-head'><div class='stats-title anim-text-change' id="dsHeader">Export Duty Roster</div><div class='stats-sub'>Select a design format</div></div>
+     <div class='m-body' style="padding-top:10px; padding-bottom:30px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <button onclick="window.downloadDutyRoster('modern')" style="background:var(--ios-blue); color:#fff; padding:16px; border-radius:16px; border:none; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;"><span class="material-icons-round">view_carousel</span> <span id="dsBtnModern" class="anim-text-change">Share Modern Card</span></button>
+            <button onclick="window.downloadDutyRoster('a4')" style="background:var(--ios-input); color:var(--ios-text); padding:16px; border-radius:16px; border:1px solid var(--glass-border); font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;"><span class="material-icons-round">print</span> <span id="dsBtnA4" class="anim-text-change">Share A4 Print List</span></button>
+        </div>
+     </div>
   </div>
 </div>
 
@@ -969,7 +973,7 @@ window.hexToRgba = function(hex, alpha) {
             </div>
             <div style="background:rgba(52,199,89,0.1); border-radius:32px; padding:40px;">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-                    <span class="material-icons-round" style="font-size:36px; color:#34C759;">mop</span>
+                    <span class="material-icons-round" style="font-size:36px; color:#34C759;">brush</span>
                     <div id="scDutySweep" style="font-size:22px; font-weight:800; color:#34C759; text-transform:uppercase;">Sweep Floor</div>
                 </div>
                 <div id="scDutyListSweep"></div>
@@ -994,18 +998,18 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 </div>
 
-<!-- INVISIBLE DUTY A4 PRINT TEMPLATE -->
-<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#FFFFFF; display:flex; flex-direction:column; align-items:center; padding:120px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
-    <div style="font-size:90px; font-weight:900; color:#1D1D1F; text-transform:uppercase; margin-bottom:20px; letter-spacing:2px;" id="a4Title">2 HIJAU CLEANING DUTY ROSTER</div>
-    <div style="font-size:40px; font-weight:600; color:#8E8E93; margin-bottom:80px;">Student Allocation 2026</div>
-    <table style="width:100%; border-collapse:collapse; text-align:left; font-size:40px; color:#1D1D1F; border: 4px solid #D1D1D6;">
+<!-- INVISIBLE DUTY A4 PRINT TEMPLATE (ULTRA LARGE) -->
+<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#FFFFFF; display:flex; flex-direction:column; align-items:center; padding:80px 100px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
+    <div style="font-size:120px; font-weight:900; color:#000000; text-transform:uppercase; margin-bottom:10px; letter-spacing:2px;" id="a4Title">2 HIJAU CLEANING DUTY ROSTER</div>
+    <div style="font-size:45px; font-weight:700; color:#666666; margin-bottom:60px;">Student Allocation 2026</div>
+    <table style="width:100%; border-collapse:collapse; text-align:left; color:#000000; border: 8px solid #000000;">
         <thead>
-            <tr style="background:#F2F2F7; border-bottom:4px solid #D1D1D6;">
-                <th style="padding:40px; border-right:4px solid #D1D1D6; width:15%;">Day</th>
-                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#007AFF;" id="a4Wipe">Wipe Whiteboard</th>
-                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#34C759;" id="a4Sweep">Sweep Floor</th>
-                <th style="padding:40px; border-right:4px solid #D1D1D6; color:#FF9500;" id="a4Arrange">Arrange Desks</th>
-                <th style="padding:40px; color:#FF3B30;" id="a4Trash">Empty Trash</th>
+            <tr style="border-bottom:8px solid #000000;">
+                <th style="padding:40px 30px; border-right:8px solid #000000; width:12%; font-size:64px; font-weight:900; background:#F2F2F7; text-align:center;">Day</th>
+                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#007AFF; text-align:center;" id="a4Wipe">Wipe Whiteboard</th>
+                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#34C759; text-align:center;" id="a4Sweep">Sweep Floor</th>
+                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#FF9500; text-align:center;" id="a4Arrange">Arrange Desks</th>
+                <th style="padding:40px 30px; font-size:60px; font-weight:900; color:#FF3B30; text-align:center;" id="a4Trash">Empty Trash</th>
             </tr>
         </thead>
         <tbody id="a4TableBody">
@@ -1914,7 +1918,7 @@ window.closeGenericConfirm = function() {
 };
 
 function updateAppThemeColor(cls){const colors={'Biru':{hex:'#007AFF',text:'#007AFF',darkText:'#32ADE6',rgbaLight:'rgba(0,122,255,0.15)',darkRgbaLight:'rgba(50,173,230,0.25)'},'Hijau':{hex:'#34C759',text:'#28A745',darkText:'#32D74B',rgbaLight:'rgba(52,199,89,0.15)',darkRgbaLight:'rgba(50,215,75,0.25)'},'Kuning':{hex:'#FF9500',text:'#E08300',darkText:'#FFD60A',rgbaLight:'rgba(255,149,0,0.15)',darkRgbaLight:'rgba(255,214,10,0.25)'},'Merah':{hex:'#FF3B30',text:'#D70015',darkText:'#FF6961',rgbaLight:'rgba(255,59,48,0.15)',darkRgbaLight:'rgba(255,105,97,0.25)'},'Perang':{hex:'#A2845E',text:'#8A6D4A',darkText:'#C9A67D',rgbaLight:'rgba(162,132,94,0.15)',darkRgbaLight:'rgba(201,166,125,0.25)'},'Ungu':{hex:'#AF52DE',text:'#9A45C8',darkText:'#DA8FFF',rgbaLight:'rgba(175,82,222,0.15)',darkRgbaLight:'rgba(218,143,255,0.25)'}};const theme=colors[cls]||colors['Biru'];const root=document.body;root.style.setProperty('--ios-blue',isDark?theme.darkText:theme.hex);root.style.setProperty('--ios-blue-text',isDark?theme.darkText:theme.text);root.style.setProperty('--ios-blue-light',isDark?theme.darkRgbaLight:theme.rgbaLight);root.style.setProperty('--chip-act-bg',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-border',isDark?theme.darkText:theme.hex);root.style.setProperty('--chip-act-txt','#FFFFFF')}
-function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();window.initDoodle();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('profileCard'),'profileOverlay');initModalDrag(document.getElementById('dutyCard'),'dutyOverlay');initModalDrag(document.getElementById('themeCustomizerCard'),'themeCustomizerOverlay');initDesktopScroll()}
+function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlobalSettings();initDensity();renderTabs();initFilterChips();updateSortUI();renderSearchHistory();filterData();window.initDoodle();const searchInput=document.getElementById("searchInput");if(searchInput){searchInput.addEventListener("input",()=>{const drawer=document.getElementById('historyDrawer');if(searchInput.value==="")renderSearchHistory();else if(drawer)drawer.classList.remove('open');filterData()});searchInput.addEventListener("focus",()=>renderSearchHistory());searchInput.addEventListener("keypress",(e)=>{if(e.key==='Enter'){searchInput.blur();if(searchInput.value.trim()!=="")saveSearchHistory(searchInput.value)}})}let lastScroll=0;const header=document.querySelector('.ios-header');window.addEventListener('scroll',()=>{const currentScroll=window.scrollY;if(Math.abs(currentScroll-lastScroll)<10)return;if(currentScroll>10){if(currentScroll>lastScroll&&currentScroll>80)header.classList.add('nav-hidden');else if(currentScroll<lastScroll)header.classList.remove('nav-hidden')}else header.classList.remove('nav-hidden');lastScroll=Math.max(0,currentScroll)},{passive:!0});initModalDrag(document.getElementById('modalCard'),'modalOverlay');initModalDrag(document.getElementById('statsCard'),'statsOverlay');initModalDrag(document.getElementById('aboutCard'),'aboutOverlay');initModalDrag(document.getElementById('adminCard'),'adminOverlay');initModalDrag(document.getElementById('feedbackCard'),'feedbackOverlay');initModalDrag(document.getElementById('faqCard'),'faqOverlay');initModalDrag(document.getElementById('profileCard'),'profileOverlay');initModalDrag(document.getElementById('dutyCard'),'dutyOverlay');initModalDrag(document.getElementById('dutyExportCard'),'dutyExportOverlay');initModalDrag(document.getElementById('themeCustomizerCard'),'themeCustomizerOverlay');initDesktopScroll()}
 
 window.applyGlobalSettings = function() {
   const body = document.body;
@@ -2638,8 +2642,9 @@ window.switchLanguage=function(lang, skipSync=false){
                 if(document.getElementById('aDayBtn_'+d)) document.getElementById('aDayBtn_'+d).innerText = sD[i];
             });
 
-            if(document.getElementById('dsBtnModern')) document.getElementById('dsBtnModern').innerHTML = `${txt.shareModern || "Share Modern Card"} <span class='material-icons-round cm-icon'>view_carousel</span>`;
-            if(document.getElementById('dsBtnA4')) document.getElementById('dsBtnA4').innerHTML = `${txt.shareA4 || "Share A4 Print List"} <span class='material-icons-round cm-icon'>print</span>`;
+            if(document.getElementById('dsBtnModern')) document.getElementById('dsBtnModern').innerText = txt.shareModern || "Share Modern Card";
+            if(document.getElementById('dsBtnA4')) document.getElementById('dsBtnA4').innerText = txt.shareA4 || "Share A4 Print List";
+            if(document.getElementById('dsHeader')) document.getElementById('dsHeader').innerText = "Export Duty Roster"; // Just in case, keeping it clean
             if(document.getElementById("lblProfClearFav")) setTextAndAnimateWidth(document.getElementById("lblProfClearFav"), txt.lblProfClearFav);
             if(document.getElementById("lblProfClearHist")) setTextAndAnimateWidth(document.getElementById("lblProfClearHist"), txt.lblProfClearHist);
             if(document.getElementById("lblProfReduceLag")) setTextAndAnimateWidth(document.getElementById("lblProfReduceLag"), txt.lblProfReduceLag);
@@ -3226,11 +3231,11 @@ window.closeDutyRoster = function() {
 
 window.openDutyShareMenu = function() {
     triggerHaptic();
-    document.getElementById('dutyShareBackdrop').classList.add('active');
+    setTimeout(() => document.getElementById('dutyExportOverlay').classList.add('open'), 10);
 };
 
 window.closeDutyShareMenu = function() {
-    document.getElementById('dutyShareBackdrop').classList.remove('active');
+    document.getElementById('dutyExportOverlay').classList.remove('open');
 };
 
 window.downloadDutyRoster = async function(type) {
@@ -3316,24 +3321,24 @@ window.downloadDutyRoster = async function(type) {
             daysKeys.forEach((dKey, i) => {
                 const duty = rawDuty[dKey] || emptyDay;
                 const renderA4List = (ids) => {
-                    if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic;">-</div>`;
+                    if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic; font-size:50px; text-align:center;">-</div>`;
                     return ids.map(id => {
                         const stu = window.smkData.find(s => s.id === id);
                         let nameHtml = stu ? stu.name : id;
                         if(stu && stu.cn && stu.cn !== "-") {
-                            nameHtml += `<div style="font-size:36px; font-weight:500; color:#8E8E93; margin-top:8px;">${stu.cn}</div>`;
+                            nameHtml += `<div style="font-size:45px; font-weight:700; color:#555555; margin-top:12px;">${stu.cn}</div>`;
                         }
-                        return `<div style="line-height:1.2;">${nameHtml}</div>`;
-                    }).join('<div style="margin:45px 0; border-top:2px dashed #E5E5EA;"></div>');
+                        return `<div style="line-height:1.2; text-align:center;">${nameHtml}</div>`;
+                    }).join('<div style="margin:40px 0; border-top:4px dashed #CCCCCC;"></div>');
                 };
                 
                 tableHTML += `
-                <tr style="border-bottom:4px solid #D1D1D6;">
-                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:800; font-size:48px; color:#1D1D1F; background:#F2F2F7;">${currentDays[i]}</td>
-                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.wipe)}</td>
-                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.sweep)}</td>
-                    <td style="padding:60px 40px; border-right:4px solid #D1D1D6; font-weight:700; font-size:44px;">${renderA4List(duty.arrange)}</td>
-                    <td style="padding:60px 40px; font-weight:700; font-size:44px;">${renderA4List(duty.trash)}</td>
+                <tr style="border-bottom:8px solid #000000;">
+                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:900; font-size:75px; color:#000000; background:#F2F2F7; text-align:center;">${currentDays[i]}</td>
+                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.wipe)}</td>
+                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.sweep)}</td>
+                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.arrange)}</td>
+                    <td style="padding:40px 20px; font-weight:800; font-size:60px;">${renderA4List(duty.trash)}</td>
                 </tr>`;
             });
             document.getElementById('a4TableBody').innerHTML = tableHTML;
