@@ -894,8 +894,8 @@ window.hexToRgba = function(hex, alpha) {
     
     <div style="width:100%; flex:1; background:#FFFFFF; border:8px solid #D1D1D6; border-radius:40px; box-shadow:0 30px 100px rgba(0,0,0,0.05); display:flex; flex-direction:column; overflow:hidden; margin-bottom:30px;">
         <!-- Header Row -->
-        <div style="display:flex; width:100%; background:#F2F2F7; border-bottom:8px solid #D1D1D6;">
-            <div style="width:15%; padding:30px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-size:60px; font-weight:800; color:#8E8E93; text-transform:uppercase; letter-spacing:4px;">Day</div>
+        <div style="display:flex; width:100%; background:#F2F2F7; border-bottom:8px solid #D1D1D6; border-top-left-radius:32px; border-top-right-radius:32px;">
+            <div style="width:15%; padding:30px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-size:60px; font-weight:800; color:#8E8E93; text-transform:uppercase; letter-spacing:4px; border-top-left-radius:32px;">Day</div>
             <div style="flex:1; padding:30px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#007AFF;">
                 <span class="material-icons-round" style="font-size:80px;">border_color</span>
                 <span id="a4Wipe" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Wipe Whiteboard</span>
@@ -908,7 +908,7 @@ window.hexToRgba = function(hex, alpha) {
                 <span class="material-icons-round" style="font-size:80px;">desk</span>
                 <span id="a4Arrange" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Arrange Desks</span>
             </div>
-            <div style="flex:1; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#FF3B30;">
+            <div style="flex:1; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#FF3B30; border-top-right-radius:32px;">
                 <span class="material-icons-round" style="font-size:80px;">delete</span>
                 <span id="a4Trash" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Empty Trash</span>
             </div>
@@ -3145,13 +3145,16 @@ window.downloadDutyRoster = async function() {
                 }).join('<div style="width:40%; height:4px; background:#D1D1D6; margin:0 auto; border-radius:4px; flex-shrink:0;"></div>') + '</div>';
             };
             
+            const blRadius = isLast ? "border-bottom-left-radius:32px;" : "";
+            const brRadius = isLast ? "border-bottom-right-radius:32px;" : "";
+            
             tableHTML += `
             <div style="display:flex; flex:1; min-height:0; ${rowBorder}">
-                <div style="width:15%; padding:20px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:60px; color:#1D1D1F; background:#FAFAFC;">${currentDays[i]}</div>
+                <div style="width:15%; padding:20px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:60px; color:#1D1D1F; background:#FAFAFC; ${blRadius}">${currentDays[i]}</div>
                 <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.wipe)}</div>
                 <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.sweep)}</div>
                 <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.arrange)}</div>
-                <div style="flex:1; padding:20px 15px;">${renderA4List(duty.trash)}</div>
+                <div style="flex:1; padding:20px 15px; ${brRadius}">${renderA4List(duty.trash)}</div>
             </div>`;
         });
         document.getElementById('a4TableBody').innerHTML = tableHTML;
