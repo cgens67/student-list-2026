@@ -605,7 +605,7 @@ body.bg-beta.coach-active .action-row {
     max-width: 0 !important;
     opacity: 0 !important;
     margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-right: -10px !important;
     padding: 0 !important;
     border-width: 0 !important;
     transform: scale(0.5);
@@ -998,23 +998,49 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 </div>
 
-<!-- INVISIBLE DUTY A4 PRINT TEMPLATE (ULTRA LARGE) -->
-<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#FFFFFF; display:flex; flex-direction:column; align-items:center; padding:80px 100px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
-    <div style="font-size:120px; font-weight:900; color:#000000; text-transform:uppercase; margin-bottom:10px; letter-spacing:2px;" id="a4Title">2 HIJAU CLEANING DUTY ROSTER</div>
-    <div style="font-size:45px; font-weight:700; color:#666666; margin-bottom:60px;">Student Allocation 2026</div>
-    <table style="width:100%; border-collapse:collapse; text-align:left; color:#000000; border: 8px solid #000000;">
-        <thead>
-            <tr style="border-bottom:8px solid #000000;">
-                <th style="padding:40px 30px; border-right:8px solid #000000; width:12%; font-size:64px; font-weight:900; background:#F2F2F7; text-align:center;">Day</th>
-                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#007AFF; text-align:center;" id="a4Wipe">Wipe Whiteboard</th>
-                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#34C759; text-align:center;" id="a4Sweep">Sweep Floor</th>
-                <th style="padding:40px 30px; border-right:8px solid #000000; font-size:60px; font-weight:900; color:#FF9500; text-align:center;" id="a4Arrange">Arrange Desks</th>
-                <th style="padding:40px 30px; font-size:60px; font-weight:900; color:#FF3B30; text-align:center;" id="a4Trash">Empty Trash</th>
-            </tr>
-        </thead>
-        <tbody id="a4TableBody">
-        </tbody>
-    </table>
+<!-- INVISIBLE DUTY A4 PRINT TEMPLATE (APPLE DESIGN) -->
+<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#F2F2F7; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:100px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10;">
+    <div style="background:#007AFF; width:160px; height:160px; border-radius:40px; display:flex; align-items:center; justify-content:center; box-shadow:0 30px 80px rgba(0,122,255,0.4); margin-bottom:40px;">
+        <span class="material-icons-round" style="font-size:90px; color:#fff;">cleaning_services</span>
+    </div>
+    <div style="font-size:120px; font-weight:800; color:#1D1D1F; letter-spacing:-0.03em; margin-bottom:20px;" id="a4Title">Cleaning Duty Roster</div>
+    <div style="font-size:50px; font-weight:600; color:#8E8E93; margin-bottom:100px;">2 Hijau &bull; Student Allocation 2026</div>
+    
+    <div style="width:100%; border-radius:64px; overflow:hidden; border:4px solid #E5E5EA; box-shadow:0 40px 120px rgba(0,0,0,0.06); background:#FFFFFF;">
+        <table style="width:100%; border-collapse:collapse; text-align:center;">
+            <thead>
+                <tr style="background:#FAFAFC;">
+                    <th style="padding:60px 40px; border-bottom:4px solid #E5E5EA; border-right:4px solid #E5E5EA; width:15%; font-size:56px; font-weight:700; color:#8E8E93; text-transform:uppercase; letter-spacing:4px;">Day</th>
+                    <th style="padding:60px 40px; border-bottom:4px solid #E5E5EA; border-right:4px solid #E5E5EA; width:21.25%;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:20px; color:#007AFF;">
+                            <span class="material-icons-round" style="font-size:72px;">border_color</span>
+                            <span id="a4Wipe" style="font-size:54px; font-weight:800; letter-spacing:-0.02em;">Wipe Whiteboard</span>
+                        </div>
+                    </th>
+                    <th style="padding:60px 40px; border-bottom:4px solid #E5E5EA; border-right:4px solid #E5E5EA; width:21.25%;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:20px; color:#34C759;">
+                            <span class="material-icons-round" style="font-size:72px;">brush</span>
+                            <span id="a4Sweep" style="font-size:54px; font-weight:800; letter-spacing:-0.02em;">Sweep Floor</span>
+                        </div>
+                    </th>
+                    <th style="padding:60px 40px; border-bottom:4px solid #E5E5EA; border-right:4px solid #E5E5EA; width:21.25%;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:20px; color:#FF9500;">
+                            <span class="material-icons-round" style="font-size:72px;">desk</span>
+                            <span id="a4Arrange" style="font-size:54px; font-weight:800; letter-spacing:-0.02em;">Arrange Desks</span>
+                        </div>
+                    </th>
+                    <th style="padding:60px 40px; border-bottom:4px solid #E5E5EA; width:21.25%;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:20px; color:#FF3B30;">
+                            <span class="material-icons-round" style="font-size:72px;">delete</span>
+                            <span id="a4Trash" style="font-size:54px; font-weight:800; letter-spacing:-0.02em;">Empty Trash</span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="a4TableBody">
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- NEW FEEDBACK SECTION -->
@@ -3311,34 +3337,37 @@ window.downloadDutyRoster = async function(type) {
             container = document.getElementById('dutyA4Container');
             fileName = `2_Hijau_Duty_Weekly_A4.png`;
             
-            document.getElementById('a4Title').innerText = (txt.dutyTitle || "Cleaning Duty Roster").toUpperCase() + " (2 HIJAU)";
-            document.getElementById('a4Wipe').innerText = (txt.dutyWipe || "Wipe Whiteboard") + " (擦白板)";
-            document.getElementById('a4Sweep').innerText = (txt.dutySweep || "Sweep Floor") + " (扫地)";
-            document.getElementById('a4Arrange').innerText = (txt.dutyArrange || "Arrange Desks") + " (排桌椅)";
-            document.getElementById('a4Trash').innerText = (txt.dutyTrash || "Empty Trash") + " (丢垃圾)";
+            document.getElementById('a4Title').innerText = txt.dutyTitle || "Cleaning Duty Roster";
+            document.getElementById('a4Wipe').innerHTML = (txt.dutyWipe || "Wipe Whiteboard") + "<br><span style='font-size:36px; font-weight:700; opacity:0.7;'>(擦白板)</span>";
+            document.getElementById('a4Sweep').innerHTML = (txt.dutySweep || "Sweep Floor") + "<br><span style='font-size:36px; font-weight:700; opacity:0.7;'>(扫地)</span>";
+            document.getElementById('a4Arrange').innerHTML = (txt.dutyArrange || "Arrange Desks") + "<br><span style='font-size:36px; font-weight:700; opacity:0.7;'>(排桌椅)</span>";
+            document.getElementById('a4Trash').innerHTML = (txt.dutyTrash || "Empty Trash") + "<br><span style='font-size:36px; font-weight:700; opacity:0.7;'>(丢垃圾)</span>";
 
             let tableHTML = "";
             daysKeys.forEach((dKey, i) => {
                 const duty = rawDuty[dKey] || emptyDay;
+                const isLast = i === daysKeys.length - 1;
+                const rowBorder = isLast ? "" : "border-bottom:4px solid #E5E5EA;";
+                
                 const renderA4List = (ids) => {
-                    if(!ids || ids.length === 0) return `<div style="color:#8E8E93; font-style:italic; font-size:50px; text-align:center;">-</div>`;
+                    if(!ids || ids.length === 0) return `<div style="color:#C7C7CC; font-weight:600; font-size:64px; padding:60px 0;">-</div>`;
                     return ids.map(id => {
                         const stu = window.smkData.find(s => s.id === id);
                         let nameHtml = stu ? stu.name : id;
                         if(stu && stu.cn && stu.cn !== "-") {
-                            nameHtml += `<div style="font-size:45px; font-weight:700; color:#555555; margin-top:12px;">${stu.cn}</div>`;
+                            nameHtml += `<div style="font-size:42px; font-weight:600; color:#8E8E93; margin-top:16px;">${stu.cn}</div>`;
                         }
-                        return `<div style="line-height:1.2; text-align:center;">${nameHtml}</div>`;
-                    }).join('<div style="margin:40px 0; border-top:4px dashed #CCCCCC;"></div>');
+                        return `<div style="padding:45px 0;"><div style="font-size:56px; font-weight:800; color:#1D1D1F; line-height:1.2; letter-spacing:-0.02em;">${nameHtml}</div></div>`;
+                    }).join('<div style="width:40%; height:4px; background:#E5E5EA; margin:0 auto; border-radius:4px;"></div>');
                 };
                 
                 tableHTML += `
-                <tr style="border-bottom:8px solid #000000;">
-                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:900; font-size:75px; color:#000000; background:#F2F2F7; text-align:center;">${currentDays[i]}</td>
-                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.wipe)}</td>
-                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.sweep)}</td>
-                    <td style="padding:40px 20px; border-right:8px solid #000000; font-weight:800; font-size:60px;">${renderA4List(duty.arrange)}</td>
-                    <td style="padding:40px 20px; font-weight:800; font-size:60px;">${renderA4List(duty.trash)}</td>
+                <tr style="${rowBorder}">
+                    <td style="padding:60px 40px; border-right:4px solid #E5E5EA; font-weight:800; font-size:64px; color:#1D1D1F; background:#FAFAFC;">${currentDays[i]}</td>
+                    <td style="padding:20px 40px; border-right:4px solid #E5E5EA; vertical-align:middle;">${renderA4List(duty.wipe)}</td>
+                    <td style="padding:20px 40px; border-right:4px solid #E5E5EA; vertical-align:middle;">${renderA4List(duty.sweep)}</td>
+                    <td style="padding:20px 40px; border-right:4px solid #E5E5EA; vertical-align:middle;">${renderA4List(duty.arrange)}</td>
+                    <td style="padding:20px 40px; vertical-align:middle;">${renderA4List(duty.trash)}</td>
                 </tr>`;
             });
             document.getElementById('a4TableBody').innerHTML = tableHTML;
