@@ -918,7 +918,7 @@ window.hexToRgba = function(hex, alpha) {
         </div>
     </div>
     
-    <div id="a4FooterNote" style="font-size:50px; font-weight:700; color:#FF3B30; text-align:center; width:100%;">If any problems, find -</div>
+    <div id="a4FooterNote" style="font-size:50px; font-weight:700; color:#FF3B30; text-align:right; width:100%;">If any problems, find -</div>
 </div>
 
 <!-- NEW FEEDBACK SECTION -->
@@ -1388,7 +1388,15 @@ window.hexToRgba = function(hex, alpha) {
                    </div>
                    
                    <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); display:block; margin-bottom:6px;">Unit Kebersihan</label>
-                   <input type="text" id="adminUnitKebersihan" placeholder="Name of Unit Kebersihan..." class="admin-input" style="margin-bottom:16px;">
+                   <div class="custom-select-container" style="margin-bottom:16px;">
+                       <div class="custom-select-header" id="adminUkHeader" onclick="window.toggleCustomSelect('adminUkDropdown')">
+                           <span>Select Student...</span><span class="material-icons-round">expand_more</span>
+                       </div>
+                       <div class="custom-select-dropdown" id="adminUkDropdown" data-value="-">
+                           <input type="text" class="admin-input" placeholder="Search..." onkeyup="window.filterAdminUk(this)" style="margin-bottom:8px;">
+                           <div id="adminUkList" style="max-height:150px; overflow-y:auto;"></div>
+                       </div>
+                   </div>
                    
                    <div class="seg-control" style="margin-bottom:12px; overflow-x:auto; white-space:nowrap; scrollbar-width:none;">
                        <button class="seg-btn active anim-text-change" id="aDayBtn_Monday" onclick="window.switchAdminDutyDay('Monday')">Mon</button>
@@ -3148,7 +3156,15 @@ window.downloadDutyRoster = async function() {
         });
         document.getElementById('a4TableBody').innerHTML = tableHTML;
         
-        const ukName = rawDuty.unitKebersihan || "-";
+        const ukId = rawDuty.unitKebersihan || "-";
+        let ukName = "-";
+        if (ukId !== "-") {
+            const stu = window.adminTempStudents.find(s => s.id === ukId);
+            if (stu) {
+                ukName = stu.name;
+                if (stu.cn && stu.cn !== "-") ukName += ` (${stu.cn})`;
+            }
+        }
         document.getElementById('a4FooterNote').innerText = (txt.dutyFooter || "If any problems, find ") + ukName;
 
         await new Promise(r => setTimeout(r, 100));
@@ -3867,6 +3883,22 @@ window.renderAdminDutyDropdowns = () => {
         });
         document.getElementById('adminDutyList_' + cat).innerHTML = html;
     });
+
+    // Populate Unit Kebersihan dropdown
+    let ukHtml = `<div class="custom-option uk-opt" onclick="window.selectOption('adminUkDropdown', '-', '- None -', 'adminUkHeader')">- None -</div>`;
+    hijauStudents.forEach(s => {
+        const cnText = (s.cn && s.cn !== "-") ? ` (${s.cn})` : "";
+        ukHtml += `<div class="custom-option uk-opt" onclick="window.selectOption('adminUkDropdown', '${s.id}', '${s.name.replace(/'/g, "\\'")}', 'adminUkHeader')">${s.name}${cnText}</div>`;
+    });
+    document.getElementById('adminUkList').innerHTML = ukHtml;
+};
+
+window.filterAdminUk = (input) => {
+    const query = input.value.toLowerCase();
+    document.querySelectorAll('.uk-opt').forEach(el => {
+        if(el.innerText.toLowerCase().includes(query)) el.style.display = 'block';
+        else el.style.display = 'none';
+    });
 };
 
 window.filterDutyStudents = (input, cat) => {
@@ -3921,8 +3953,16 @@ window.loadAdminTeacherForm = () => {
   if (cls === 'Hijau') {
       document.getElementById('adminDutySection').style.display = 'block';
       const dData = window.adminTempDuty['Hijau'] || {};
-      document.getElementById('adminUnitKebersihan').value = dData.unitKebersihan || "";
       window.renderAdminDutyDropdowns();
+      
+      const ukId = dData.unitKebersihan || "-";
+      let ukName = "- None -";
+      if (ukId !== "-") {
+          const stu = window.adminTempStudents.find(s => s.id === ukId);
+          if (stu) ukName = stu.name;
+      }
+      window.selectOption('adminUkDropdown', ukId, ukName, 'adminUkHeader');
+      
       window.renderAdminDutyChips();
   } else {
       document.getElementById('adminDutySection').style.display = 'none';
@@ -3967,7 +4007,8 @@ window.adminApplyTeacher = () => {
   
   if (cls === 'Hijau') {
       if(!window.adminTempDuty['Hijau']) window.adminTempDuty['Hijau'] = { wipe: [], sweep: [], arrange: [], trash: [] };
-      window.adminTempDuty['Hijau'].unitKebersihan = document.getElementById('adminUnitKebersihan').value.trim();
+      const ukDrop = document.getElementById('adminUkDropdown');
+      window.adminTempDuty['Hijau'].unitKebersihan = ukDrop ? ukDrop.getAttribute('data-value') : "-";
   }
   
   let noticeColor = document.getElementById('adminNoticeColorDropdown').getAttribute('data-value');
