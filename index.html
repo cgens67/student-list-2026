@@ -881,10 +881,10 @@ window.hexToRgba = function(hex, alpha) {
 </div>
 
 <!-- INVISIBLE DUTY A4 PRINT TEMPLATE (EXACT 3580x2480 - FLEXBOX OVERHAUL) -->
-<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#F8F8F9; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:120px 150px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10; box-sizing:border-box;">
-    <div style="display:flex; align-items:center; gap:50px; margin-bottom:80px; width:100%; justify-content:center;">
-        <div style="background:#007AFF; width:180px; height:180px; border-radius:40px; display:flex; align-items:center; justify-content:center; box-shadow:0 20px 50px rgba(0,122,255,0.3);">
-            <span class="material-icons-round" style="font-size:100px; color:#fff;">cleaning_services</span>
+<div id="dutyA4Container" style="position:fixed; top:-9999px; left:-9999px; width:3580px; height:2480px; background:#F8F8F9; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:90px 120px; font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif; z-index:-10; box-sizing:border-box;">
+    <div style="display:flex; align-items:center; gap:50px; margin-bottom:50px; width:100%; justify-content:center;">
+        <div style="background:#007AFF; width:160px; height:160px; border-radius:40px; display:flex; align-items:center; justify-content:center; box-shadow:0 20px 50px rgba(0,122,255,0.3);">
+            <span class="material-icons-round" style="font-size:90px; color:#fff;">cleaning_services</span>
         </div>
         <div style="display:flex; flex-direction:column; justify-content:center;">
             <div style="font-size:130px; font-weight:900; color:#1D1D1F; letter-spacing:-0.03em; margin-bottom:10px; line-height:1;" id="a4Title">Cleaning Duty Roster</div>
@@ -895,26 +895,26 @@ window.hexToRgba = function(hex, alpha) {
     <div style="width:100%; flex:1; background:#FFFFFF; border:8px solid #D1D1D6; border-radius:40px; box-shadow:0 30px 100px rgba(0,0,0,0.05); display:flex; flex-direction:column; overflow:hidden;">
         <!-- Header Row -->
         <div style="display:flex; width:100%; background:#F2F2F7; border-bottom:8px solid #D1D1D6;">
-            <div style="width:15%; padding:40px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-size:60px; font-weight:800; color:#8E8E93; text-transform:uppercase; letter-spacing:4px;">Day</div>
-            <div style="flex:1; padding:40px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#007AFF;">
+            <div style="width:15%; padding:30px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-size:60px; font-weight:800; color:#8E8E93; text-transform:uppercase; letter-spacing:4px;">Day</div>
+            <div style="flex:1; padding:30px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#007AFF;">
                 <span class="material-icons-round" style="font-size:80px;">border_color</span>
-                <span id="a4Wipe" style="font-size:50px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Wipe Whiteboard</span>
+                <span id="a4Wipe" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Wipe Whiteboard</span>
             </div>
-            <div style="flex:1; padding:40px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#34C759;">
+            <div style="flex:1; padding:30px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#34C759;">
                 <span class="material-icons-round" style="font-size:80px;">brush</span>
-                <span id="a4Sweep" style="font-size:50px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Sweep Floor</span>
+                <span id="a4Sweep" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Sweep Floor</span>
             </div>
-            <div style="flex:1; padding:40px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#FF9500;">
+            <div style="flex:1; padding:30px; border-right:8px solid #D1D1D6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#FF9500;">
                 <span class="material-icons-round" style="font-size:80px;">desk</span>
-                <span id="a4Arrange" style="font-size:50px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Arrange Desks</span>
+                <span id="a4Arrange" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Arrange Desks</span>
             </div>
-            <div style="flex:1; padding:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#FF3B30;">
+            <div style="flex:1; padding:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:#FF3B30;">
                 <span class="material-icons-round" style="font-size:80px;">delete</span>
-                <span id="a4Trash" style="font-size:50px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Empty Trash</span>
+                <span id="a4Trash" style="font-size:46px; font-weight:800; letter-spacing:-0.02em; text-align:center;">Empty Trash</span>
             </div>
         </div>
         <!-- Body Rows -->
-        <div id="a4TableBody" style="display:flex; flex-direction:column; flex:1;">
+        <div id="a4TableBody" style="display:flex; flex-direction:column; flex:1; min-height:0;">
         </div>
     </div>
 </div>
@@ -3122,23 +3122,23 @@ window.downloadDutyRoster = async function() {
             
             const renderA4List = (ids) => {
                 if(!ids || ids.length === 0) return `<div style="color:#C7C7CC; font-weight:600; font-size:60px; display:flex; height:100%; align-items:center; justify-content:center;">-</div>`;
-                return '<div style="display:flex; flex-direction:column; justify-content:center; height:100%; gap:40px;">' + ids.map(id => {
+                return '<div style="display:flex; flex-direction:column; justify-content:center; height:100%; gap:20px;">' + ids.map(id => {
                     const stu = window.adminTempStudents.find(s => s.id === id);
                     let nameHtml = stu ? stu.name : id;
                     if(stu && stu.cn && stu.cn !== "-") {
-                        nameHtml += `<div style="font-size:45px; font-weight:600; color:#8E8E93; margin-top:12px;">${stu.cn}</div>`;
+                        nameHtml += `<div style="font-size:38px; font-weight:600; color:#8E8E93; margin-top:6px;">${stu.cn}</div>`;
                     }
-                    return `<div style="text-align:center;"><div style="font-size:50px; font-weight:800; color:#1D1D1F; line-height:1.2; letter-spacing:-0.02em;">${nameHtml}</div></div>`;
-                }).join('<div style="width:50%; height:4px; background:#D1D1D6; margin:0 auto; border-radius:4px; flex-shrink:0;"></div>') + '</div>';
+                    return `<div style="text-align:center;"><div style="font-size:46px; font-weight:800; color:#1D1D1F; line-height:1.2; letter-spacing:-0.02em;">${nameHtml}</div></div>`;
+                }).join('<div style="width:40%; height:4px; background:#D1D1D6; margin:0 auto; border-radius:4px; flex-shrink:0;"></div>') + '</div>';
             };
             
             tableHTML += `
-            <div style="display:flex; flex:1; ${rowBorder}">
-                <div style="width:15%; padding:30px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:65px; color:#1D1D1F; background:#FAFAFC;">${currentDays[i]}</div>
-                <div style="flex:1; padding:30px 20px; border-right:8px solid #D1D1D6;">${renderA4List(duty.wipe)}</div>
-                <div style="flex:1; padding:30px 20px; border-right:8px solid #D1D1D6;">${renderA4List(duty.sweep)}</div>
-                <div style="flex:1; padding:30px 20px; border-right:8px solid #D1D1D6;">${renderA4List(duty.arrange)}</div>
-                <div style="flex:1; padding:30px 20px;">${renderA4List(duty.trash)}</div>
+            <div style="display:flex; flex:1; min-height:0; ${rowBorder}">
+                <div style="width:15%; padding:20px; border-right:8px solid #D1D1D6; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:60px; color:#1D1D1F; background:#FAFAFC;">${currentDays[i]}</div>
+                <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.wipe)}</div>
+                <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.sweep)}</div>
+                <div style="flex:1; padding:20px 15px; border-right:8px solid #D1D1D6;">${renderA4List(duty.arrange)}</div>
+                <div style="flex:1; padding:20px 15px;">${renderA4List(duty.trash)}</div>
             </div>`;
         });
         document.getElementById('a4TableBody').innerHTML = tableHTML;
