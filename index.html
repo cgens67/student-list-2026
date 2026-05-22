@@ -1109,7 +1109,7 @@ window.hexToRgba = function(hex, alpha) {
   </header>
 
   <div id='ios-container'>
-    <div class='action-row' style='position:relative; z-index:1500;'>
+    <div class='action-row' style='position:relative; z-index:900;'>
       <div class='search-box' style='position:relative;'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/><div id='searchAutocomplete' class='autocomplete-dropdown'></div></div>
       <button class='btn-icon-only' id='btnFavToggle' onclick='window.toggleFavMode()'><span class='material-icons-round' style='font-size:22px'>favorite</span></button>
       <button class='btn-icon-only' id='btnStatsToggle' onclick='window.openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
@@ -4107,8 +4107,11 @@ window.getClosestMatch = function(query) {
         return matrix[a.length][b.length];
     };
     
-    // Dynamic Threshold: Allows up to 40% error margin (scales nicely with long names)
-    const allowedDist = Math.max(3, Math.floor(qLower.length * 0.4));
+    // Smarter Threshold: Scales strictly based on word length
+    let allowedDist = 0;
+    if (qLower.length >= 3) allowedDist = 1;
+    if (qLower.length >= 6) allowedDist = 2;
+    if (qLower.length >= 10) allowedDist = 3;
     
     window.smkData.forEach(s => {
         const nLower = s.name ? s.name.toLowerCase().trim().replace(/\s+/g, ' ') : "";
@@ -4117,10 +4120,14 @@ window.getClosestMatch = function(query) {
         const nameDist = nLower ? levenshtein(qLower, nLower) : Infinity;
         const cnDist = cLower ? levenshtein(qLower, cLower) : Infinity;
         
-        const dist = Math.min(nameDist, cnDist);
-        if (dist < bestDist && dist <= allowedDist) {
-            bestDist = dist;
-            bestMatch = dist === nameDist ? s.name : s.cn;
+        // Failsafe: Prevent 100% wrong matches (e.g. comparing "fk" against a 2-char Chinese name)
+        if (nameDist <= allowedDist && nameDist < bestDist && nameDist < qLower.length) {
+            bestDist = nameDist;
+            bestMatch = s.name;
+        }
+        if (cnDist <= allowedDist && cnDist < bestDist && cnDist < qLower.length) {
+            bestDist = cnDist;
+            bestMatch = s.cn;
         }
     });
     return bestMatch;
