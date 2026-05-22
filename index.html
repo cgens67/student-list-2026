@@ -492,7 +492,7 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
 /* AUTOCOMPLETE DROPDOWN */
-.autocomplete-dropdown { position:absolute; top:48px; left:0; right:0; background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:0 12px 32px rgba(0,0,0,0.15); border-radius:18px; padding:6px; display:flex; flex-direction:column; max-height:260px; overflow-y:auto; overflow-x:hidden; z-index:2000; visibility:hidden; opacity:0; transform:translateY(-10px) scale(0.98); transform-origin:top center; transition:all 0.4s var(--ease-spring); pointer-events:none; }
+.autocomplete-dropdown { position:absolute; top:48px; left:0; min-width:100%; width:max-content; max-width:calc(100vw - 32px); background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:0 12px 32px rgba(0,0,0,0.15); border-radius:18px; padding:6px; display:flex; flex-direction:column; max-height:300px; overflow-y:auto; overflow-x:hidden; z-index:2000; visibility:hidden; opacity:0; transform:translateY(-10px) scale(0.98); transform-origin:top left; transition:all 0.4s var(--ease-spring); pointer-events:none; }
 .autocomplete-dropdown.show { visibility:visible; opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
 .autocomplete-item { padding:12px; font-size:15px; font-weight:500; color:var(--ios-text); cursor:pointer; display:flex; align-items:center; gap:12px; border-radius:12px; transition:background 0.2s, transform 0.1s; }
 .autocomplete-item:active { background:rgba(0,0,0,0.06); transform:scale(0.98); }
@@ -1846,10 +1846,32 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
     const box = document.getElementById('searchAutocomplete');
     if(!box) return;
     if(query.length < 1) { box.classList.remove('show'); return; }
+    
     const qLower = query.toLowerCase();
     let matches = window.smkData.filter(s => (s.name && s.name.toLowerCase().includes(qLower)) || (s.cn && s.cn.toLowerCase().includes(qLower)) || (s.id && s.id.includes(qLower))).slice(0, 5);
+    
+    // Live Highlighter Helper
+    const highlight = (text) => {
+        if(!text) return "";
+        return text.replace(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'), '<span style="color:var(--ios-blue); font-weight:800;">$1</span>');
+    };
+
     if(matches.length > 0) {
-        box.innerHTML = matches.map(m => `<div class="autocomplete-item" onclick="window.applySearch('${m.name.replace(/'/g, "\\'")}')"><span class="material-icons-round" style="font-size:18px; color:var(--ios-text-sec);">search</span> <div style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.name} <span style="opacity:0.5; font-size:12px;">(${m.newClass.split(" ")[1]||""})</span></div></div>`).join('');
+        box.innerHTML = matches.map((m, i) => {
+            const rawClass = m.newClass.split(" ")[1] || "Biru";
+            const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
+            const delay = i * 0.04; // Cascading animation delay
+            const subRight = (m.cn && m.cn !== "-") ? m.cn : m.id;
+            
+            return `<div class="autocomplete-item" style="animation: fadeUp 0.4s var(--ease-spring) forwards; opacity:0; animation-delay: ${delay}s;" onclick="window.applySearch('${m.name.replace(/'/g, "\\'")}')">
+                <div class="avatar av-${cssClass}" style="width:34px; height:34px; font-size:14px; margin:0; box-shadow:0 2px 8px rgba(0,0,0,0.1); flex-shrink:0;">${m.name.charAt(0)}</div>
+                <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; gap:2px; margin-left:4px;">
+                    <div style="font-weight:600; font-size:14px; color:var(--ios-text); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${highlight(m.name)}</div>
+                    <div style="font-size:11px; font-weight:500; color:var(--ios-text-sec); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${m.newClass} &bull; ${highlight(subRight)}</div>
+                </div>
+                <span class="material-icons-round" style="font-size:18px; color:var(--ios-text-sec); opacity:0.4;">north_west</span>
+            </div>`;
+        }).join('');
         box.classList.add('show');
     } else {
         box.classList.remove('show');
