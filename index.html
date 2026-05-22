@@ -491,6 +491,13 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 .custom-option:last-child { border-bottom:none; }
 .custom-option:active { background:rgba(0,0,0,0.05); }
 
+/* AUTOCOMPLETE DROPDOWN */
+.autocomplete-dropdown { position:absolute; top:48px; left:0; right:0; background:var(--ios-modal); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:0 12px 32px rgba(0,0,0,0.15); border-radius:18px; padding:6px; display:flex; flex-direction:column; max-height:260px; overflow-y:auto; overflow-x:hidden; z-index:2000; visibility:hidden; opacity:0; transform:translateY(-10px) scale(0.98); transform-origin:top center; transition:all 0.4s var(--ease-spring); pointer-events:none; }
+.autocomplete-dropdown.show { visibility:visible; opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.autocomplete-item { padding:12px; font-size:15px; font-weight:500; color:var(--ios-text); cursor:pointer; display:flex; align-items:center; gap:12px; border-radius:12px; transition:background 0.2s, transform 0.1s; }
+.autocomplete-item:active { background:rgba(0,0,0,0.06); transform:scale(0.98); }
+[data-theme="dark"] .autocomplete-item:active { background:rgba(255,255,255,0.1); }
+
 /* MAIN MENU BOTTOM SHEET */
 .main-menu-sheet {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
@@ -1102,8 +1109,8 @@ window.hexToRgba = function(hex, alpha) {
   </header>
 
   <div id='ios-container'>
-    <div class='action-row' style='position:relative; z-index:3000;'>
-      <div class='search-box' style='position:relative;'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/><div id='searchAutocomplete' class='custom-select-dropdown' style='top:45px; z-index:2000; box-shadow:var(--shadow-lg); max-height:200px; padding:6px; overflow-x:hidden;'></div></div>
+    <div class='action-row' style='position:relative; z-index:1500;'>
+      <div class='search-box' style='position:relative;'><span class='material-icons-round search-icon'>search</span><input autocapitalize='off' autocomplete='off' autocorrect='off' class='ios-search-field' id='searchInput' placeholder='Search...' spellcheck='false' type='text'/><div id='searchAutocomplete' class='autocomplete-dropdown'></div></div>
       <button class='btn-icon-only' id='btnFavToggle' onclick='window.toggleFavMode()'><span class='material-icons-round' style='font-size:22px'>favorite</span></button>
       <button class='btn-icon-only' id='btnStatsToggle' onclick='window.openStats()'><span class='material-icons-round' style='font-size:22px'>bar_chart</span></button>
       <button class='btn-filter' id='btnFilter' onclick='window.toggleFilters()'><span class='material-icons-round' style='font-size:20px'>tune</span><span class='anim-text-change' id='txtFilter' style='display:inline-block'>Filter</span></button>
@@ -1842,7 +1849,7 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
     const qLower = query.toLowerCase();
     let matches = window.smkData.filter(s => (s.name && s.name.toLowerCase().includes(qLower)) || (s.cn && s.cn.toLowerCase().includes(qLower)) || (s.id && s.id.includes(qLower))).slice(0, 5);
     if(matches.length > 0) {
-        box.innerHTML = matches.map(m => `<div class="custom-option" style="display:flex; align-items:center; gap:8px;" onclick="window.applySearch('${m.name.replace(/'/g, "\\'")}')"><span class="material-icons-round" style="font-size:16px; color:var(--ios-text-sec)">search</span> <span>${m.name} <span style="opacity:0.5; font-size:12px;">(${m.newClass.split(" ")[1]||""})</span></span></div>`).join('');
+        box.innerHTML = matches.map(m => `<div class="autocomplete-item" onclick="window.applySearch('${m.name.replace(/'/g, "\\'")}')"><span class="material-icons-round" style="font-size:18px; color:var(--ios-text-sec);">search</span> <div style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.name} <span style="opacity:0.5; font-size:12px;">(${m.newClass.split(" ")[1]||""})</span></div></div>`).join('');
         box.classList.add('show');
     } else {
         box.classList.remove('show');
