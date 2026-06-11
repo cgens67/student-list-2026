@@ -3869,9 +3869,19 @@ window.loadAdminStudentForm = () => {
 
 window.adminApplyStudent = () => {
   const oldId = window.adminSelectedStudentId;
-  const newId = document.getElementById('adminStId').value.trim();
+  
+  let rawId = document.getElementById('adminStId').value.trim();
+  // If blank, assign "-" and pad with invisible characters to keep internal IDs unique
+  if (!rawId || rawId.replace(/\u200B/g, '') === "-") {
+    rawId = "-";
+    while(window.adminTempStudents.some(s => s.id === rawId && s.id !== oldId)) {
+      rawId += "\u200B"; 
+    }
+  }
+  const newId = rawId;
+  
   const name = document.getElementById('adminStName').value.trim().toUpperCase();
-  if(!newId || !name) { if(window.showToast) window.showToast("ID and Name are required", "error_outline"); return; }
+  if(!name) { if(window.showToast) window.showToast("Name is required", "error_outline"); return; }
   
   if (oldId !== newId && window.adminTempStudents.some(s => s.id === newId)) {
     if(window.showToast) window.showToast("This ID already exists!", "error_outline"); return;
