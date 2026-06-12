@@ -2758,6 +2758,9 @@ window.switchLanguage=function(lang, skipSync=false){
             
             if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
 
+            // Re-render grid to update dynamic empty-state texts and trigger smooth height resize
+            if(window.filterData) window.filterData();
+
             if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
             if(searchInput)searchInput.classList.remove("anim-placeholder");
             if(authEmail)authEmail.classList.remove("anim-placeholder");
