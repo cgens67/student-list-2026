@@ -4280,19 +4280,26 @@ function filterData(){
     
     const grid=document.getElementById("studentGrid");
     if(grid){
-        grid.innerHTML="";
+        const startHeight = grid.offsetHeight; // Capture current height for smooth FLIP animation
+        
         if(filtered.length===0){
-            let emptyHtml = "";
-            let hasSuggestion = false;
+            let emptyHtml = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px 20px; text-align:center; animation: fadeUp .5s forwards; opacity:0; width:100%;">`;
             if(query.length > 1) {
                 const suggestion = window.getClosestMatch(query);
                 if (suggestion) {
-                    hasSuggestion = true;
                     const didYouMeanTxt = curLang === 'bm' ? "Maksud anda" : (curLang === 'cn' ? "您是想搜" : "Did you mean");
-                    emptyHtml += `<div style="text-align:center; padding: 30px 20px 0; font-size:15px; color:var(--ios-text-sec); animation: fadeUp .5s forwards; opacity:0;">${didYouMeanTxt} <br><a href="javascript:void(0)" onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" style="color:var(--ios-blue); font-weight:700; text-decoration:none; padding:8px 16px; background:var(--ios-blue-light); border-radius:12px; display:inline-block; margin-top:12px; font-size:16px;">${suggestion}</a></div>`;
+                    emptyHtml += `<div style="margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--ios-sep); width: 100%; max-width: 300px;">
+                        <div style="font-size:14px; font-weight:600; color:var(--ios-text-sec); margin-bottom:10px;">${didYouMeanTxt}</div>
+                        <a href="javascript:void(0)" onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" style="color:var(--ios-blue); font-weight:800; text-decoration:none; padding:10px 24px; background:var(--ios-blue-light); border-radius:100px; display:inline-flex; align-items:center; gap:8px; font-size:16px; box-shadow: 0 4px 12px rgba(0,122,255,0.15); transition: transform 0.2s;"><span class="material-icons-round" style="font-size:18px;">search</span> ${suggestion}</a>
+                    </div>`;
                 }
             }
-            emptyHtml += `<div class="empty-msg" ${hasSuggestion ? 'style="padding-top:20px;"' : ''}>${uiText[curLang].empty}</div>`;
+            emptyHtml += `<div style="background:var(--ios-input); width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow), inset 0 1px 1px rgba(255,255,255,0.2);">
+                    <span class="material-icons-round" style="font-size:36px; color:var(--ios-text-sec);">person_search</span>
+                </div>
+                <div class="empty-msg" style="padding:0; opacity:1; animation:none; font-size:18px; font-weight:700; color:var(--ios-text); margin-bottom:8px; letter-spacing:-0.01em;">${uiText[curLang].empty}</div>
+                <div class="stats-empty-sub" style="font-size:14px; color:var(--ios-text-sec); max-width:250px; line-height:1.4;">${uiText[curLang].emptySub}</div>
+            </div>`;
             grid.innerHTML = emptyHtml;
         }
         else{
@@ -4306,7 +4313,17 @@ function filterData(){
                 const subRight = (student.cn && student.cn !== "-") ? student.cn : student.newClass;
                 return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${student.id} &bull; ${subRight}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
             }).join('');
-            grid.innerHTML=html
+            grid.innerHTML=html;
+        }
+
+        const targetHeight = grid.offsetHeight; // Capture new height
+        if(startHeight > 0 && startHeight !== targetHeight && typeof grid.animate === 'function') {
+            grid.style.overflow = 'hidden'; // Hide scrollbars dynamically during animation bounds
+            const anim = grid.animate([
+                { height: startHeight + 'px' },
+                { height: targetHeight + 'px' }
+            ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            anim.onfinish = () => { grid.style.overflow = ''; grid.style.height = 'auto'; };
         }
     }
 }
