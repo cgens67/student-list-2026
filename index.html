@@ -2514,6 +2514,9 @@ window.switchLanguage=function(lang, skipSync=false){
     
     const tCard=document.getElementById('classInfoCard');
     const startHeight=tCard?tCard.offsetHeight:0;
+    const sGrid=document.getElementById('studentGrid');
+    const sGridStartHeight=sGrid?sGrid.offsetHeight:0;
+    if(sGrid){ sGrid.style.height = sGridStartHeight + 'px'; sGrid.style.overflow = 'hidden'; }
     
     setTimeout(()=>{
         try {
@@ -2758,9 +2761,6 @@ window.switchLanguage=function(lang, skipSync=false){
             
             if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
 
-            // Re-render grid to update dynamic empty-state texts and trigger smooth height resize
-            if(window.filterData) window.filterData();
-
             if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
             if(searchInput)searchInput.classList.remove("anim-placeholder");
             if(authEmail)authEmail.classList.remove("anim-placeholder");
@@ -2774,6 +2774,20 @@ window.switchLanguage=function(lang, skipSync=false){
                 tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
                 tCard.style.height=newHeight+'px';
                 setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
+            }
+            if(sGrid){
+                sGrid.style.height='auto';
+                const sGridNewHeight=sGrid.offsetHeight;
+                if(sGridStartHeight > 0 && sGridStartHeight !== sGridNewHeight) {
+                    sGrid.style.height=sGridStartHeight+'px';
+                    void sGrid.offsetHeight;
+                    sGrid.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                    sGrid.style.height=sGridNewHeight+'px';
+                    setTimeout(()=>{sGrid.style.height='auto';sGrid.style.overflow='';sGrid.style.transition=''},400);
+                } else {
+                    sGrid.style.height='auto';
+                    sGrid.style.overflow='';
+                }
             }
         } catch(err) {
             console.error("Language translation error:", err);
@@ -4283,7 +4297,9 @@ function filterData(){
     
     const grid=document.getElementById("studentGrid");
     if(grid){
-        const startHeight = grid.offsetHeight; // Capture current height for smooth FLIP animation
+        const startHeight = grid.offsetHeight;
+        grid.style.height = startHeight + 'px';
+        grid.style.overflow = 'hidden';
         
         if(filtered.length===0){
             let emptyHtml = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px 20px; text-align:center; animation: fadeUp .5s forwards; opacity:0; width:100%;">`;
@@ -4319,14 +4335,24 @@ function filterData(){
             grid.innerHTML=html;
         }
 
-        const targetHeight = grid.offsetHeight; // Capture new height
-        if(startHeight > 0 && startHeight !== targetHeight && typeof grid.animate === 'function') {
-            grid.style.overflow = 'hidden'; // Hide scrollbars dynamically during animation bounds
-            const anim = grid.animate([
-                { height: startHeight + 'px' },
-                { height: targetHeight + 'px' }
-            ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-            anim.onfinish = () => { grid.style.overflow = ''; grid.style.height = 'auto'; };
+        grid.style.height = 'auto';
+        const targetHeight = grid.offsetHeight;
+        
+        if(startHeight > 0 && startHeight !== targetHeight) {
+            grid.style.height = startHeight + 'px';
+            void grid.offsetHeight; // Force reflow
+            grid.style.transition = 'height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+            grid.style.height = targetHeight + 'px';
+            
+            setTimeout(() => {
+                grid.style.transition = '';
+                grid.style.height = 'auto';
+                grid.style.overflow = '';
+            }, 400);
+        } else {
+            grid.style.transition = '';
+            grid.style.height = 'auto';
+            grid.style.overflow = '';
         }
     }
 }
