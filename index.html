@@ -4103,6 +4103,13 @@ window.getClosestMatch = function(query) {
     // Normalize spaces to prevent space-bar typos from ruining the distance calculation
     const qLower = query.toLowerCase().trim().replace(/\s+/g, ' ');
     
+    // QWERTY Keyboard adjacency map for advanced typo detection
+    const qwertyAdj = {
+        'q': 'wase', 'w': 'qeasd', 'e': 'wrsdf', 'r': 'etdfg', 't': 'ryfgh', 'y': 'tughj', 'u': 'yihjk', 'i': 'uojkl', 'o': 'ipkl', 'p': 'ol',
+        'a': 'qwsz', 's': 'awedxz', 'd': 'serfxc', 'f': 'drtgcv', 'g': 'ftyhvb', 'h': 'gyujbn', 'j': 'huiknm', 'k': 'jiolm', 'l': 'kop',
+        'z': 'asx', 'x': 'zsdc', 'c': 'xdfv', 'v': 'cfgb', 'b': 'vghn', 'n': 'bhjm', 'm': 'njk'
+    };
+    
     const levenshtein = (a, b) => {
         if(!a || !b) return Infinity;
         const matrix = Array.from({length: a.length + 1}, () => new Array(b.length + 1).fill(0));
@@ -4110,18 +4117,26 @@ window.getClosestMatch = function(query) {
         for(let j=0; j<=b.length; j++) matrix[0][j] = j;
         for(let i=1; i<=a.length; i++) {
             for(let j=1; j<=b.length; j++) {
-                const cost = a[i-1] === b[j-1] ? 0 : 1;
+                let cost = 1;
+                const charA = a[i-1];
+                const charB = b[j-1];
+                if (charA === charB) {
+                    cost = 0;
+                } else if (qwertyAdj[charA] && qwertyAdj[charA].includes(charB)) {
+                    cost = 0.3; // Much lower penalty for hitting adjacent QWERTY keys
+                } else if (charA === ' ' || charB === ' ') {
+                    cost = 0.5; // Lower penalty for space bar typos
+                }
                 matrix[i][j] = Math.min(matrix[i-1][j]+1, matrix[i][j-1]+1, matrix[i-1][j-1]+cost);
             }
         }
         return matrix[a.length][b.length];
     };
     
-    // Smarter Threshold: Scales strictly based on word length
-    let allowedDist = 0;
-    if (qLower.length >= 3) allowedDist = 1;
-    if (qLower.length >= 6) allowedDist = 2;
-    if (qLower.length >= 10) allowedDist = 3;
+    // Smarter Threshold: Scales based on word length to allow heavy QWERTY shifts
+    let allowedDist = 1;
+    if (qLower.length >= 4) allowedDist = 2;
+    if (qLower.length >= 8) allowedDist = qLower.length * 0.4;
     
     window.smkData.forEach(s => {
         const nLower = s.name ? s.name.toLowerCase().trim().replace(/\s+/g, ' ') : "";
@@ -4130,12 +4145,12 @@ window.getClosestMatch = function(query) {
         const nameDist = nLower ? levenshtein(qLower, nLower) : Infinity;
         const cnDist = cLower ? levenshtein(qLower, cLower) : Infinity;
         
-        // Failsafe: Prevent 100% wrong matches (e.g. comparing "fk" against a 2-char Chinese name)
-        if (nameDist <= allowedDist && nameDist < bestDist && nameDist < qLower.length) {
+        // Failsafe: Prevent 100% wrong matches
+        if (nameDist <= allowedDist && nameDist < bestDist && nameDist < qLower.length * 0.9) {
             bestDist = nameDist;
             bestMatch = s.name;
         }
-        if (cnDist <= allowedDist && cnDist < bestDist && cnDist < qLower.length) {
+        if (cnDist <= allowedDist && cnDist < bestDist && cnDist < qLower.length * 0.9) {
             bestDist = cnDist;
             bestMatch = s.cn;
         }
@@ -4267,27 +4282,17 @@ function filterData(){
     if(grid){
         grid.innerHTML="";
         if(filtered.length===0){
-            let emptyHtml = `<div class="empty-msg">${uiText[curLang].empty}</div>`;
+            let emptyHtml = "";
+            let hasSuggestion = false;
             if(query.length > 1) {
                 const suggestion = window.getClosestMatch(query);
                 if (suggestion) {
+                    hasSuggestion = true;
                     const didYouMeanTxt = curLang === 'bm' ? "Maksud anda" : (curLang === 'cn' ? "您是想搜" : "Did you mean");
-                    emptyHtml += `
-                    <div style="display:flex; flex-direction:column; align-items:center; margin-top:8px; padding-bottom:24px; animation: fadeUp 0.6s var(--ease-spring) forwards; opacity:0;">
-                        <span style="font-size:12px; color:var(--ios-text-sec); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">${didYouMeanTxt}?</span>
-                        <button onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" 
-                                style="background:var(--ios-card); border:1px solid var(--glass-border); box-shadow:0 8px 24px rgba(0,122,255,0.15); border-radius:100px; padding:12px 24px; display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--ios-blue); font-weight:700; font-size:16px; transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);" 
-                                onmousedown="this.style.transform='scale(0.92)'" 
-                                onmouseup="this.style.transform='scale(1)'" 
-                                onmouseleave="this.style.transform='scale(1)'"
-                                ontouchstart="this.style.transform='scale(0.92)'" 
-                                ontouchend="this.style.transform='scale(1)'">
-                            <span class="material-icons-round" style="font-size:20px;">auto_fix_high</span> 
-                            ${suggestion}
-                        </button>
-                    </div>`;
+                    emptyHtml += `<div style="text-align:center; padding: 30px 20px 0; font-size:15px; color:var(--ios-text-sec); animation: fadeUp .5s forwards; opacity:0;">${didYouMeanTxt} <br><a href="javascript:void(0)" onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" style="color:var(--ios-blue); font-weight:700; text-decoration:none; padding:8px 16px; background:var(--ios-blue-light); border-radius:12px; display:inline-block; margin-top:12px; font-size:16px;">${suggestion}</a></div>`;
                 }
             }
+            emptyHtml += `<div class="empty-msg" ${hasSuggestion ? 'style="padding-top:20px;"' : ''}>${uiText[curLang].empty}</div>`;
             grid.innerHTML = emptyHtml;
         }
         else{
