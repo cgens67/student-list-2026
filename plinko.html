@@ -10,11 +10,11 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
 /* ROOT VARS */
-:root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-text:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-border:#D1D1D6;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif}
+:root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--chip-border:#D1D1D6;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif}
 body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
 body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
 body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}
-[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.15);}
 body[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
 body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#180924}
 body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
@@ -23,21 +23,20 @@ body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;overflow:hidden;width:100vw;height:100vh;}
 
-/* PLINKO UI */
 #gameCanvas { position: fixed; top: 0; left: 50%; transform: translateX(-50%); touch-action: none; z-index: 1; }
 .ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; }
-.btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); box-shadow: var(--glass-highlight), var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); transition: transform 0.2s; text-decoration: none; }
+.btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); box-shadow: var(--glass-highlight), var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: transform 0.2s; text-decoration: none; }
 .btn-icon-only:active { transform: scale(0.9); }
 
 .code-overlay { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 90%; max-width: 400px; pointer-events: none; }
 @supports (padding-top:env(safe-area-inset-top)){ .code-overlay { top: calc(80px + env(safe-area-inset-top)); } }
 
-.target-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-md), var(--glass-highlight); border-radius: 20px; padding: 12px 24px; text-align: center; width: 100%; pointer-events: auto; }
+.target-card { background: var(--ios-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-md), var(--glass-highlight); border-radius: 20px; padding: 12px 24px; text-align: center; width: 100%; pointer-events: auto; }
 .target-label { font-size: 11px; font-weight: 700; color: var(--ios-text-sec); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
 .target-code { font-size: 24px; font-weight: 800; letter-spacing: 0.3em; color: var(--ios-text); display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 
 .input-slots { display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap; }
-.slot { flex: 1; aspect-ratio: 0.8; min-width: 35px; max-width: 50px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); backdrop-filter: var(--glass-blur); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--ios-text); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s; }
+.slot { flex: 1; aspect-ratio: 0.8; min-width: 35px; max-width: 50px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--ios-text); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s; }
 .slot.correct { background: rgba(52, 199, 89, 0.15); border-color: #34C759; color: #34C759; box-shadow: 0 0 12px rgba(52, 199, 89, 0.2); }
 .slot.active-hover { border-color: var(--ios-blue); box-shadow: 0 0 0 2px var(--ios-blue-light); }
 
@@ -45,25 +44,22 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 .submit-btn.ready { opacity: 1; cursor: pointer; box-shadow: 0 8px 24px var(--ios-blue-light); }
 .submit-btn.ready:active { transform: scale(0.96); }
 
-/* Draggable Handles */
 .rail-handle { position: fixed; z-index: 50; width: 12px; height: 40px; background: var(--ios-text-sec); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; touch-action: none; cursor: grab; transition: opacity 0.3s;}
 .rail-handle.left { border-radius: 0 8px 8px 0; }
 .rail-handle.right { border-radius: 8px 0 0 8px; }
 .rail-handle span { width: 4px; height: 4px; border-radius: 50%; background: var(--ios-bg); }
 
-/* Mobile Touch Fire Bar */
 .fire-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; padding: 10px 16px; display: none; gap: 8px; z-index: 100; pointer-events: none; }
 .fire-bar.show { display: flex; pointer-events: auto; }
 @supports (padding-bottom:env(safe-area-inset-bottom)){ .fire-bar.show { padding-bottom: calc(10px + env(safe-area-inset-bottom)); height: calc(80px + env(safe-area-inset-bottom)); } }
-.nudge-btn { width: 60px; border-radius: 14px; background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); font-weight: bold; cursor: pointer; }
-.fire-btn { flex: 1; border-radius: 14px; background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); color: var(--ios-text); font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; opacity:0.5;}
+.nudge-btn { width: 60px; border-radius: 14px; background: var(--ios-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); font-weight: bold; cursor: pointer; }
+.fire-btn { flex: 1; border-radius: 14px; background: var(--ios-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); color: var(--ios-text); font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; opacity:0.5;}
 .fire-btn.ready { opacity:1; color: var(--ios-blue); box-shadow: var(--shadow-sm); }
 .fire-btn.ready:active, .nudge-btn:active { transform: scale(0.95); background: var(--ios-input); }
 
-/* Modal Result */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 2000; pointer-events: none; transition: background 0.4s; display: flex; align-items: center; justify-content: center; }
 .modal-bg.open { background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: auto; }
-.modal-card { width: 90%; max-width: 340px; background: var(--ios-modal); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s var(--ease-spring); }
+.modal-card { width: 90%; max-width: 340px; background: var(--ios-modal); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s var(--ease-spring); }
 .modal-bg.open .modal-card { transform: scale(1); opacity: 1; }
 
 .result-icon { font-size: 64px; margin-bottom: 16px; display: inline-block; }
@@ -74,7 +70,6 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 .btn-done { width: 100%; height: 50px; background: var(--ios-blue); color: #FFF; border-radius: 14px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 16px var(--ios-blue-light); }
 .btn-done:active { transform: scale(0.96); }
 
-/* Auth Overlay */
 #loadingOverlay { position: fixed; inset: 0; background: var(--ios-bg); background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 .spin-anim { animation: spin 1s linear infinite; }
@@ -82,7 +77,6 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 </head>
 <body>
 
-<!-- Dynamic Background Inherit -->
 <script>
     const savedTheme = localStorage.getItem('theme');
     const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -99,6 +93,15 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         else if(hour>=11 && hour<18) document.body.classList.add('bg-afternoon');
         else document.body.classList.add('bg-night');
     }
+    
+    // Localization
+    const curLang = localStorage.getItem('language') || 'en';
+    const dict = {
+        en: { head: "Plinko Input", target: "Target Name", modeH: "HARD", modeE: "EASY", modeR: "RAGEBAIT", fire: "FIRE", win: "Access Granted", winSub: "You successfully bypassed the Plinko firewall.", lose: "Access Denied", play: "Play Again" },
+        bm: { head: "Input Plinko", target: "Nama Sasaran", modeH: "SUSAH", modeE: "MUDAH", modeR: "EKSTREM", fire: "TEMBAK", win: "Akses Dibenarkan", winSub: "Tembusan Plinko firewall berjaya.", lose: "Akses Ditolak", play: "Main Semula" },
+        cn: { head: "Plinko 游戏", target: "目标姓名", modeH: "困难", modeE: "简单", modeR: "极限", fire: "发射", win: "访问授权", winSub: "您已成功解锁 Plinko 防火墙。", lose: "访问被拒", play: "再玩一次" }
+    };
+    window.tTxt = dict[curLang] || dict.en;
 </script>
 
 <div id="loadingOverlay">
@@ -107,7 +110,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 
 <header class="ios-header">
     <a href="index.html" class="btn-icon-only"><span class="material-icons-round">arrow_back</span></a>
-    <div style="font-weight:800; font-size:18px; color:var(--ios-text); letter-spacing:-0.02em;">Plinko Input</div>
+    <div style="font-weight:800; font-size:18px; color:var(--ios-text); letter-spacing:-0.02em;" id="headTxt">Plinko Input</div>
     <div style="display:flex; gap:8px;">
         <div class="btn-icon-only" id="modeToggleBtn" onclick="toggleMode()" style="width:auto; padding:0 14px; font-weight:800; font-size:12px; background:var(--ios-card); color:#FF3B30; border-color:#FF3B30;">HARD</div>
         <div class="btn-icon-only" onclick="resetGame()" style="background:transparent; border:none; box-shadow:none;"><span class="material-icons-round">refresh</span></div>
@@ -124,12 +127,8 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         <div class="target-label" id="targetLbl">Target Name</div>
         <div class="target-code" id="targetDisplay"></div>
     </div>
-    <div class="input-slots" id="slotsDisplay">
-        <!-- populated by JS -->
-    </div>
-    <button class="submit-btn" id="btnSubmit" onclick="submitCode()">
-        <span class="material-icons-round">arrow_forward</span>
-    </button>
+    <div class="input-slots" id="slotsDisplay"></div>
+    <button class="submit-btn" id="btnSubmit" onclick="submitCode()"><span class="material-icons-round">arrow_forward</span></button>
 </div>
 
 <div class="fire-bar" id="fireBar">
@@ -143,11 +142,10 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         <span class="material-icons-round result-icon" id="resIcon">check_circle</span>
         <div class="res-title" id="resTitle">Access Granted</div>
         <div class="res-sub" id="resSub">You reproduced the code successfully.</div>
-        <button class="btn-done" onclick="resetGame()">Play Again</button>
+        <button class="btn-done" id="resPlayBtn" onclick="resetGame()">Play Again</button>
     </div>
 </div>
 
-<!-- FIREBASE AUTH & GAME ENGINE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
@@ -164,15 +162,17 @@ onAuthStateChanged(auth, async (user) => {
     } else {
         try {
             const snap = await getDoc(doc(db, "appData", "schoolInfo"));
-            if (snap.exists()) {
-                window.smkData = snap.data().students || [];
-            }
-        } catch(e) {
-            console.error("Failed to fetch students for Plinko mode:", e);
-        }
-        const overlay = document.getElementById('loadingOverlay');
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.style.display = 'none', 300);
+            if (snap.exists()) { window.smkData = snap.data().students || []; }
+        } catch(e) { console.error(e); }
+        document.getElementById('loadingOverlay').style.opacity = '0';
+        setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 300);
+        
+        document.getElementById('headTxt').innerText = window.tTxt.head;
+        document.getElementById('targetLbl').innerText = window.tTxt.target;
+        document.getElementById('modeToggleBtn').innerText = window.tTxt.modeH;
+        document.getElementById('btnFireTouch').innerText = window.tTxt.fire;
+        document.getElementById('resPlayBtn').innerText = window.tTxt.play;
+        
         window.startGameEngine();
     }
 });
@@ -182,11 +182,8 @@ onAuthStateChanged(auth, async (user) => {
 /* ========================================================================
    PLINKO PHYSICS ENGINE & GAME LOGIC
 ======================================================================== */
-
-// Global User Settings
 const userReduceLag = localStorage.getItem('userReduceLag') === 'true';
 
-// 1. Vector Math
 const v = (x, y) => ({ x, y });
 const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y });
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
@@ -195,14 +192,12 @@ const dot = (a, b) => a.x * b.x + a.y * b.y;
 const len = (a) => Math.hypot(a.x, a.y);
 const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val));
 
-// 2. Constants
 const GRAVITY = 2200; 
 const RESTITUTION = 0.7; 
 const TANGENT_KEEP = 0.98; 
 const MAX_SUBSTEPS = userReduceLag ? 8 : 16; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
-const MAX_BALLS = 150;
 const REST_RADIUS = 4, REST_TIME = 0.18, REST_MARGIN = 4, REST_FLATNESS = 0.7;
 const SLOT_WIDTH = 24, RAIL_HEIGHT = 48, LETTER_DROP = 12;
 const CANNON_BASE_RATIO = 0.5, CANNON_LENGTH_RATIO = 0.7, CANNON_WIDTH_RATIO = 0.34, MAX_AIM = Math.PI / 4, LAUNCH_SPEED = 720;
@@ -210,18 +205,10 @@ const STAGE_MAX_WIDTH = 2560;
 
 const getThemeColor = () => {
     const isDk = document.body.getAttribute('data-theme') === 'dark';
-    return {
-        dome: isDk ? '#333' : '#FFF',
-        text: isDk ? '#FFF' : '#1D1D1F',
-        ball: isDk ? '#A1C4FD' : '#007AFF', 
-        glow: '74, 222, 128',
-        guideline: '255, 70, 70',
-        pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'
-    };
+    return { dome: isDk ? '#333' : '#FFF', text: isDk ? '#FFF' : '#1D1D1F', ball: isDk ? '#A1C4FD' : '#007AFF', glow: '74, 222, 128', guideline: '255, 70, 70', pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' };
 };
 
-// 3. State & Mode Toggle
-let modeState = 'HARD'; // 'EASY', 'HARD', 'RAGEBAIT'
+let modeState = 'HARD'; 
 let isHardMode = true; 
 let isRagebait = false;
 let activeChars = "TEST";
@@ -236,15 +223,15 @@ window.toggleMode = () => {
     const btn = document.getElementById('modeToggleBtn');
     
     if (modeState === 'EASY') {
-        btn.innerText = "EASY";
+        btn.innerText = window.tTxt.modeE;
         btn.style.color = "#34C759"; btn.style.borderColor = "#34C759";
         isHardMode = false; isRagebait = false;
     } else if (modeState === 'HARD') {
-        btn.innerText = "HARD";
+        btn.innerText = window.tTxt.modeH;
         btn.style.color = "#FF3B30"; btn.style.borderColor = "#FF3B30";
         isHardMode = true; isRagebait = false;
     } else {
-        btn.innerText = "RAGEBAIT";
+        btn.innerText = window.tTxt.modeR;
         btn.style.color = "#AF52DE"; btn.style.borderColor = "#AF52DE";
         isHardMode = true; isRagebait = true;
     }
@@ -264,134 +251,30 @@ let slotOf = new Map();
 let freedSlots = [];
 let placedCount = 0;
 let world = null;
-let apparatus = { x: 0, angle: 0, panning: false };
+let apparatus = { x: 0, angle: 0 };
 let pegs = { y: 0, min: 0, max: 0, dragging: false };
-let hoverSlot = -1;
+let predCache = { key: '', idx: null, path: [] };
 
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 const FIRE_BAR_HEIGHT = isTouch ? 80 : 0;
 if(isTouch) document.getElementById('fireBar').classList.add('show');
 
-// 4. Collision & Physics
-const closestOnSegment = (p, s) => {
-    const ab = sub(s.b, s.a);
-    const denom = dot(ab, ab);
-    const t = denom === 0 ? 0 : clamp(dot(sub(p, s.a), ab) / denom, 0, 1);
-    return add(s.a, scale(ab, t));
-};
-const hitSegment = (ball, s) => {
-    const offset = sub(ball.pos, closestOnSegment(ball.pos, s));
-    const dist = len(offset);
-    if (dist === 0 || dist > ball.radius) return null;
-    return { normal: scale(offset, 1 / dist), depth: ball.radius - dist };
-};
-const hitDome = (ball, dome) => {
-    if (ball.pos.y > dome.center.y) return null;
-    const offset = sub(ball.pos, dome.center);
-    const dist = len(offset);
-    const reach = dome.radius + ball.radius;
-    if (dist === 0 || dist > reach) return null;
-    return { normal: scale(offset, 1 / dist), depth: reach - dist };
-};
-const hitObstacle = (ball, o) => {
-    const offset = sub(ball.pos, o.center);
-    const dist = len(offset);
-    const reach = o.radius + ball.radius;
-    if (dist === 0 || dist > reach) return null;
-    return { normal: scale(offset, 1 / dist), depth: reach - dist };
-};
-const resolveHit = (ball, hit) => {
-    ball.pos = add(ball.pos, scale(hit.normal, hit.depth));
-    const into = dot(ball.vel, hit.normal);
-    if (into >= 0) return;
-    const normal = scale(hit.normal, into);
-    const tangent = sub(ball.vel, normal);
-    ball.vel = sub(scale(tangent, TANGENT_KEEP), scale(normal, RESTITUTION));
-};
-
-const collide = (ball, w) => {
-    for (const s of w.segments) { const hit = hitSegment(ball, s); if (hit) resolveHit(ball, hit); }
-    for (const d of w.domes) { const hit = hitDome(ball, d); if (hit) resolveHit(ball, hit); }
-};
-const collideObstacles = (ball, w, obsVel) => {
-    for (const o of w.obstacles) {
-        const hit = hitObstacle(ball, o);
-        if (!hit) continue;
-        ball.pos = add(ball.pos, scale(hit.normal, hit.depth));
-        const rel = sub(ball.vel, obsVel);
-        const into = dot(rel, hit.normal);
-        if (into >= 0) continue;
-        const normalComp = scale(hit.normal, into);
-        const tangent = sub(rel, normalComp);
-        const bounced = sub(scale(tangent, TANGENT_KEEP), scale(normalComp, RESTITUTION));
-        ball.vel = add(bounced, obsVel);
-    }
-};
-const collidePair = (a, b) => {
-    if (a.resting && b.resting) return;
-    const delta = sub(b.pos, a.pos);
-    const dist = len(delta);
-    const minDist = a.radius + b.radius;
-    if (dist === 0 || dist >= minDist) return;
-    const normal = scale(delta, 1 / dist);
-    const overlap = minDist - dist;
-    if (a.resting) { resolveHit(b, { normal, depth: overlap }); } 
-    else if (b.resting) { resolveHit(a, { normal: scale(normal, -1), depth: overlap }); } 
-    else {
-        const shift = scale(normal, overlap / 2);
-        a.pos = sub(a.pos, shift); b.pos = add(b.pos, shift);
-        const approach = dot(sub(a.vel, b.vel), normal);
-        if (approach > 0) {
-            const impulse = scale(normal, ((1 + RESTITUTION) / 2) * approach);
-            a.vel = sub(a.vel, impulse); b.vel = add(b.vel, impulse);
-        }
-    }
-};
-
-const onFlatSupport = (ball, w, blockers) => {
-    const reach = ball.radius + REST_MARGIN;
-    const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS;
-    for (const s of w.segments) {
-        const offset = sub(ball.pos, closestOnSegment(ball.pos, s));
-        const dist = len(offset);
-        if (dist <= reach && upward(offset, dist)) return true;
-    }
-    for (const other of balls) {
-        if (other === ball || !other.resting) continue;
-        const offset = sub(ball.pos, other.pos);
-        const dist = len(offset);
-        if (dist - other.radius <= reach && upward(offset, dist)) return true;
-    }
-    for (const o of blockers) {
-        const offset = sub(ball.pos, o.center);
-        const dist = len(offset);
-        if (dist - o.radius <= reach && upward(offset, dist)) return true;
-    }
-    return false;
-};
-
-const tryRest = (ball, w, dt, blockers) => {
-    if (len(sub(ball.pos, ball.anchor)) > REST_RADIUS) {
-        ball.anchor = ball.pos; ball.stillTime = 0;
-    } else {
-        ball.stillTime += dt;
-        if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) {
-            ball.resting = true; ball.vel = v(0, 0);
-        }
-    }
-};
-
-const integrate = (ball, dt) => {
-    ball.vel = add(ball.vel, v(0, GRAVITY * dt));
-    ball.pos = add(ball.pos, scale(ball.vel, dt));
-};
+const closestOnSegment = (p, s) => { const ab = sub(s.b, s.a); const denom = dot(ab, ab); const t = denom === 0 ? 0 : clamp(dot(sub(p, s.a), ab) / denom, 0, 1); return add(s.a, scale(ab, t)); };
+const hitSegment = (ball, s) => { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist === 0 || dist > ball.radius) return null; return { normal: scale(offset, 1 / dist), depth: ball.radius - dist }; };
+const hitDome = (ball, dome) => { if (ball.pos.y > dome.center.y) return null; const offset = sub(ball.pos, dome.center); const dist = len(offset); const reach = dome.radius + ball.radius; if (dist === 0 || dist > reach) return null; return { normal: scale(offset, 1 / dist), depth: reach - dist }; };
+const hitObstacle = (ball, o) => { const offset = sub(ball.pos, o.center); const dist = len(offset); const reach = o.radius + ball.radius; if (dist === 0 || dist > reach) return null; return { normal: scale(offset, 1 / dist), depth: reach - dist }; };
+const resolveHit = (ball, hit) => { ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const into = dot(ball.vel, hit.normal); if (into >= 0) return; const normal = scale(hit.normal, into); const tangent = sub(ball.vel, normal); ball.vel = sub(scale(tangent, TANGENT_KEEP), scale(normal, RESTITUTION)); };
+const collide = (ball, w) => { for (const s of w.segments) { const hit = hitSegment(ball, s); if (hit) resolveHit(ball, hit); } for (const d of w.domes) { const hit = hitDome(ball, d); if (hit) resolveHit(ball, hit); } };
+const collideObstacles = (ball, w, obsVel) => { for (const o of w.obstacles) { const hit = hitObstacle(ball, o); if (!hit) continue; ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const rel = sub(ball.vel, obsVel); const into = dot(rel, hit.normal); if (into >= 0) continue; const normalComp = scale(hit.normal, into); const tangent = sub(rel, normalComp); const bounced = sub(scale(tangent, TANGENT_KEEP), scale(normalComp, RESTITUTION)); ball.vel = add(bounced, obsVel); } };
+const collidePair = (a, b) => { if (a.resting && b.resting) return; const delta = sub(b.pos, a.pos); const dist = len(delta); const minDist = a.radius + b.radius; if (dist === 0 || dist >= minDist) return; const normal = scale(delta, 1 / dist); const overlap = minDist - dist; if (a.resting) { resolveHit(b, { normal, depth: overlap }); } else if (b.resting) { resolveHit(a, { normal: scale(normal, -1), depth: overlap }); } else { const shift = scale(normal, overlap / 2); a.pos = sub(a.pos, shift); b.pos = add(b.pos, shift); const approach = dot(sub(a.vel, b.vel), normal); if (approach > 0) { const impulse = scale(normal, ((1 + RESTITUTION) / 2) * approach); a.vel = sub(a.vel, impulse); b.vel = add(b.vel, impulse); } } };
+const onFlatSupport = (ball, w, blockers) => { const reach = ball.radius + REST_MARGIN; const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS; for (const s of w.segments) { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist <= reach && upward(offset, dist)) return true; } for (const other of balls) { if (other === ball || !other.resting) continue; const offset = sub(ball.pos, other.pos); const dist = len(offset); if (dist - other.radius <= reach && upward(offset, dist)) return true; } for (const o of blockers) { const offset = sub(ball.pos, o.center); const dist = len(offset); if (dist - o.radius <= reach && upward(offset, dist)) return true; } return false; };
+const tryRest = (ball, w, dt, blockers) => { if (len(sub(ball.pos, ball.anchor)) > REST_RADIUS) { ball.anchor = ball.pos; ball.stillTime = 0; } else { ball.stillTime += dt; if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) { ball.resting = true; ball.vel = v(0, 0); } } };
+const integrate = (ball, dt) => { ball.vel = add(ball.vel, v(0, GRAVITY * dt)); ball.pos = add(ball.pos, scale(ball.vel, dt)); };
 
 const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []) => {
     if (dt === 0) return;
-    let maxSpeed = 0;
-    for (const b of simBalls) { if (!b.resting) maxSpeed = Math.max(maxSpeed, len(b.vel)); }
-    const maxTravel = Math.max(maxSpeed * dt, Math.abs(pegToY - pegFromY));
-    const substeps = clamp(Math.ceil(maxTravel / (BALL_RADIUS * 0.5)), 1, MAX_SUBSTEPS);
+    // Hardcoded MAX_SUBSTEPS fixes physics prediction variance by forcing identical timesteps
+    const substeps = MAX_SUBSTEPS;
     const h = dt / substeps;
     const obsVel = v(0, (pegToY - pegFromY) / dt);
 
@@ -405,22 +288,12 @@ const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []
             collideObstacles(b, w, obsVel);
             for (const o of blockers) { const hit = hitObstacle(b, o); if (hit) resolveHit(b, hit); }
         }
-        for (let j = 0; j < simBalls.length; j++) {
-            for (let k = j + 1; k < simBalls.length; k++) { collidePair(simBalls[j], simBalls[k]); }
-        }
+        for (let j = 0; j < simBalls.length; j++) { for (let k = j + 1; k < simBalls.length; k++) { collidePair(simBalls[j], simBalls[k]); } }
     }
-    if (settle) {
-        for (const b of simBalls) { if (!b.resting) tryRest(b, w, dt, blockers); }
-    }
+    if (settle) { for (const b of simBalls) { if (!b.resting) tryRest(b, w, dt, blockers); } }
 };
 
-// 5. Prediction
-const touchingAnything = (ball, w) => {
-    for (const s of w.segments) if (hitSegment(ball, s)) return true;
-    for (const d of w.domes) if (hitDome(ball, d)) return true;
-    for (const o of w.obstacles) if (hitObstacle(ball, o)) return true;
-    return false;
-};
+const touchingAnything = (ball, w) => { for (const s of w.segments) if (hitSegment(ball, s)) return true; for (const d of w.domes) if (hitDome(ball, d)) return true; for (const o of w.obstacles) if (hitObstacle(ball, o)) return true; return false; };
 const predictPath = (w, x, y, vx, vy, maxBounces, blockers) => {
     const ball = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false };
     const cw = blockers.length ? { ...w, obstacles: [...w.obstacles, ...blockers] } : w;
@@ -429,7 +302,7 @@ const predictPath = (w, x, y, vx, vy, maxBounces, blockers) => {
     let bounces = 0, inContact = false;
 
     for (let step = 0; step < 240 && bounces < maxBounces; step++) {
-        const substeps = clamp(Math.ceil((len(ball.vel) * dt) / (BALL_RADIUS * 0.5)), 1, MAX_SUBSTEPS);
+        const substeps = MAX_SUBSTEPS;
         const h = dt / substeps;
         for (let i = 0; i < substeps && bounces < maxBounces; i++) {
             integrate(ball, h);
@@ -455,12 +328,8 @@ const predictLanding = (w, x, y, vx, vy, blockers) => {
     return null;
 };
 
-// Trajectory Prediction Cache to fix lag
-let predCache = { key: '', idx: null, path: [] };
-
-// 6. World Generation & Cannon
 const initGame = () => {
-    const names = (window.smkData && window.smkData.length) ? window.smkData.map(s => s.name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '')) : ["PLAY", "PLINKO", "HACKER"];
+    const names = (window.smkData && window.smkData.length) ? window.smkData.map(s => s.name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '')) : ["PLAY", "PLINKO", "SYSTEM"];
     
     let minL = 4, maxL = 4;
     if(modeState === 'EASY') { minL = 4; maxL = 5; OBSTACLE_RADIUS_RATIO = 0; }
@@ -473,13 +342,8 @@ const initGame = () => {
     CODE_LENGTH = picked.length;
     game.target = picked;
     
-    // In all modes we scramble the letters so dropping isn't just sequential visually
-    if (modeState === 'RAGEBAIT') {
-        activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
-    } else {
-        // Less chaotic shuffle for Easy/Hard, or fully shuffled? Let's shuffle all for fun.
-        activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
-    }
+    // Always scramble cups slightly so it isn't completely obvious
+    activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
 
     game.entered = Array(CODE_LENGTH).fill("");
     game.dropped = 0;
@@ -524,7 +388,6 @@ const muzzlePos = (pxBase, cupW, ang) => {
 };
 const launchVel = (ang) => v(Math.sin(ang) * LAUNCH_SPEED, Math.cos(ang) * LAUNCH_SPEED);
 
-// 7. Interaction Logic
 const nextSlot = () => freedSlots.length ? freedSlots[freedSlots.length - 1] : (placedCount < CODE_LENGTH ? placedCount : null);
 const addBall = (b) => {
     const slot = nextSlot();
@@ -551,8 +414,7 @@ const fireCannon = () => {
     addBall({ pos: v(m.x, m.y), vel: v(vel.x, vel.y), radius: BALL_RADIUS, resting: false, anchor: v(m.x, m.y), stillTime: 0 });
 };
 
-// Controls
-let isAiming = false, isPanning = false, stageOffsetPx = 0, stageWidth = 0;
+let isAiming = false, stageOffsetPx = 0, stageWidth = 0;
 const cvs = document.getElementById('gameCanvas');
 const ctx = cvs.getContext('2d');
 
@@ -612,8 +474,8 @@ cvs.addEventListener('pointerdown', e => {
     const sx = stX(e.clientX);
     const slop = e.pointerType === 'touch' ? 16 : 2;
     const hit = getHitBall(sx, e.clientY, slop);
-    if (hit) { removeBall(hit); hoverSlot = -1; return; }
-    isAiming = true; hoverSlot = -1;
+    if (hit) { removeBall(hit); return; }
+    isAiming = true;
     apparatus.angle = aimAngleCalc(sx, e.clientY, apparatus.x);
 });
 window.addEventListener('pointermove', e => {
@@ -628,7 +490,6 @@ window.addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse') return;
     if (game.status === 'playing') {
         const hit = getHitBall(sx, e.clientY);
-        hoverSlot = hit ? slotOf.get(hit) : -1;
         cvs.style.cursor = hit ? 'pointer' : '';
     }
     const margin = world.cupWidth * CANNON_BASE_RATIO;
@@ -691,8 +552,8 @@ window.submitCode = () => {
     const m = document.getElementById('resultModal');
     document.getElementById('resIcon').innerText = won ? "verified" : "gpp_bad";
     document.getElementById('resIcon').className = won ? "material-icons-round result-icon res-win" : "material-icons-round result-icon res-fail";
-    document.getElementById('resTitle').innerText = won ? "Access Granted" : "Access Denied";
-    document.getElementById('resSub').innerText = won ? "You reproduced the name successfully." : `You entered ${game.entered.join('')} — the target was ${game.target}.`;
+    document.getElementById('resTitle').innerText = won ? window.tTxt.win : window.tTxt.lose;
+    document.getElementById('resSub').innerText = won ? window.tTxt.winSub : `You entered ${game.entered.join('')} — the target was ${game.target}.`;
     m.classList.add('open');
 };
 
