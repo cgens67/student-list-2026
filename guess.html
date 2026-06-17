@@ -21,7 +21,7 @@ body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:
 body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
-body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;min-height:100vh; overflow-x:hidden;}
+body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;min-height:100vh;}
 
 /* HEADER */
 .ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
@@ -32,7 +32,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 .container { padding-top: 100px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; width: 100%; padding-left: 16px; padding-right: 16px; }
 @supports (padding-top:env(safe-area-inset-top)){ .container { padding-top: calc(80px + env(safe-area-inset-top)); } }
 
-.guess-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), inset 0 1px 1px var(--glass-border); border-radius: 36px; padding: 30px 24px; text-align: center; width: 100%; max-width: 440px; position: relative; overflow: hidden; }
+.guess-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), inset 0 1px 1px var(--glass-border); border-radius: 36px; padding: 30px 24px; text-align: center; width: 100%; max-width: 440px; position: relative; }
 
 /* AVATAR & LIVES */
 .avatar-wrap { position: relative; margin: 0 auto 20px; width: 110px; height: 110px; }
@@ -53,7 +53,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 .clue-value { font-size: 15px; font-weight: 700; color: var(--ios-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* INPUT & AUTOCOMPLETE */
-.search-box-cont { position: relative; width: 100%; }
+.search-box-cont { position: relative; width: 100%; z-index: 10; }
 .ios-search-field { width: 100%; height: 54px; padding: 0 16px 0 48px; border-radius: 16px; border: 1px solid var(--chip-border); background: var(--ios-input); font-size: 16px; font-weight: 600; color: var(--ios-text); outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 .ios-search-field:focus { box-shadow: 0 0 0 2px var(--ios-blue); background: var(--ios-card); }
 .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ios-text-sec); font-size: 24px; pointer-events: none; transition: 0.3s; }
@@ -111,9 +111,9 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
     // Auto load language
     const curLang = localStorage.getItem('language') || 'en';
     const txtDict = {
-        en: { title: "Guess Who?", clue1: "Primary School", clue2: "Was NOT in", clue3: "Current Class", win: "You got it!", lose: "Game Over", reveal: "The student was:", ph: "Search by Name...", play: "Play Again", outOf: "Out of lives!" },
-        bm: { title: "Teka Siapa?", clue1: "Sekolah Rendah", clue2: "BUKAN dari", clue3: "Kelas Semasa", win: "Tepat Sekali!", lose: "Tamat Permainan", reveal: "Murid tersebut ialah:", ph: "Cari nama...", play: "Main Semula", outOf: "Kehabisan nyawa!" },
-        cn: { title: "猜猜是谁？", clue1: "毕业小学", clue2: "2025年不在", clue3: "目前班级", win: "回答正确！", lose: "游戏结束", reveal: "该学生是：", ph: "搜索姓名...", play: "再玩一次", outOf: "没有机会了！" }
+        en: { title: "Guess Who?", clue1: "Primary School", clue2: "Was NOT in", clue3: "Current Class", clue4: "First Letter", clue5: "ID Prefix", win: "You got it!", lose: "Game Over", reveal: "The student was:", ph: "Search by Name...", play: "Play Again", outOf: "Out of lives!" },
+        bm: { title: "Teka Siapa?", clue1: "Sekolah Rendah", clue2: "BUKAN dari", clue3: "Kelas Semasa", clue4: "Huruf Pertama", clue5: "Awal ID", win: "Tepat Sekali!", lose: "Tamat Permainan", reveal: "Murid tersebut ialah:", ph: "Cari nama...", play: "Main Semula", outOf: "Kehabisan nyawa!" },
+        cn: { title: "猜猜是谁？", clue1: "毕业小学", clue2: "2025年不在", clue3: "目前班级", clue4: "姓氏首字母", clue5: "学号前缀", win: "回答正确！", lose: "游戏结束", reveal: "该学生是：", ph: "搜索姓名...", play: "再玩一次", outOf: "没有机会了！" }
     };
     window.tTxt = txtDict[curLang] || txtDict.en;
 </script>
@@ -149,17 +149,31 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
                 </div>
             </div>
             <div class="clue-item">
-                <div class="clue-icon"><span class="material-icons-round" style="color: #FF3B30;">history</span></div>
+                <div class="clue-icon" style="color: #FF3B30;"><span class="material-icons-round">history</span></div>
                 <div class="clue-text">
                     <div class="clue-title" id="clue2Lbl">Was NOT in</div>
                     <div class="clue-value" id="clue2Val">...</div>
                 </div>
             </div>
             <div class="clue-item">
-                <div class="clue-icon"><span class="material-icons-round" style="color: #34C759;">meeting_room</span></div>
+                <div class="clue-icon" style="color: #34C759;"><span class="material-icons-round">meeting_room</span></div>
                 <div class="clue-text">
                     <div class="clue-title" id="clue3Lbl">Current Class</div>
                     <div class="clue-value" id="clue3Val">...</div>
+                </div>
+            </div>
+            <div class="clue-item">
+                <div class="clue-icon" style="color: #AF52DE;"><span class="material-icons-round">sort_by_alpha</span></div>
+                <div class="clue-text">
+                    <div class="clue-title" id="clue4Lbl">First Letter</div>
+                    <div class="clue-value" id="clue4Val">...</div>
+                </div>
+            </div>
+            <div class="clue-item">
+                <div class="clue-icon" style="color: #8E8E93;"><span class="material-icons-round">badge</span></div>
+                <div class="clue-text">
+                    <div class="clue-title" id="clue5Lbl">ID Prefix</div>
+                    <div class="clue-value" id="clue5Val">...</div>
                 </div>
             </div>
         </div>
@@ -219,7 +233,7 @@ window.startGame = () => {
     targetStudent = window.smkData[Math.floor(Math.random() * window.smkData.length)];
     lives = 3;
     
-    // Make sure 'wrongOld' logic doesn't pick their actual old class
+    // Pick a wrong 2025 class intelligently
     const oldClasses = ["1 BIRU", "1 HIJAU", "1 KUNING", "1 MERAH", "1 PERANG", "1 UNGU", "PB"];
     let wrong = oldClasses[Math.floor(Math.random() * oldClasses.length)];
     let safety = 0;
@@ -263,6 +277,12 @@ window.updateUI = () => {
         
         document.getElementById('clue3Lbl').innerText = t.clue3;
         document.getElementById('clue3Val').innerText = targetStudent.newClass + " (2026)";
+
+        document.getElementById('clue4Lbl').innerText = t.clue4;
+        document.getElementById('clue4Val').innerText = targetStudent.name.charAt(0).toUpperCase();
+
+        document.getElementById('clue5Lbl').innerText = t.clue5;
+        document.getElementById('clue5Val').innerText = (targetStudent.id && targetStudent.id !== "-") ? targetStudent.id.substring(0, 6) + "******" : "Unknown";
     }
 };
 
