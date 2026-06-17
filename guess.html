@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Do You Know Your Students?</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<style>
+/* ROOT VARS */
+:root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-border:#D1D1D6;--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif}
+body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
+body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
+body.bg-night:not([data-theme="dark"]){--grad-1:#cfd9df;--grad-2:#e2ebf0;--grad-3:#a1c4fd}
+[data-theme="dark"]{--ios-bg:#000000;--ios-card:rgba(30,30,30,0.85);--ios-modal:rgba(40,40,40,0.85);--ios-text:#FFFFFF;--ios-text-sec:rgba(255,255,255,0.6);--ios-sep:rgba(255,255,255,0.1);--ios-input:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.12);--glass-shadow:0 4px 16px rgba(0,0,0,0.4);--shadow-lg:0 16px 48px rgba(0,0,0,0.6)}
+body[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
+body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#180924}
+body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
+body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
+body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;min-height:100vh; overflow-x:hidden;}
+
+/* HEADER */
+.ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; background: var(--ios-card); backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
+.btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; transition: transform 0.2s; text-decoration: none; flex-shrink: 0; }
+.btn-icon-only:active { transform: scale(0.9); }
+.lang-switch{height:42px;box-sizing:border-box;background:var(--ios-input);border-radius:12px;padding:2px;display:flex;align-items:center;border:1px solid var(--chip-border); flex-shrink:0; }.lang-btn{height:100%;display:flex;align-items:center;justify-content:center;background:0 0;border:1px solid transparent;padding:0 10px;border-radius:10px;font-size:12px;font-weight:600;color:var(--ios-text);cursor:pointer;opacity:.5;transition:.2s;}.lang-btn.active{background:var(--ios-card);opacity:1;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:1px solid var(--glass-border)}
+
+/* MAIN CONTAINER */
+.container { padding-top: 100px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; width: 100%; px: 16px; }
+@supports (padding-top:env(safe-area-inset-top)){ .container { padding-top: calc(80px + env(safe-area-inset-top)); } }
+
+.clue-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; width: 90%; max-width: 400px; }
+.heart-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
+.heart { font-size: 32px; transition: color 0.3s var(--ease-spring), transform 0.3s; }
+.clue-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; background: var(--ios-input); padding: 16px; border-radius: 16px; border: 1px solid var(--chip-border); text-align: left; }
+.clue-lbl { font-size: 11px; font-weight: 700; color: var(--ios-blue); text-transform: uppercase; letter-spacing: 0.05em; }
+.clue-val { font-size: 16px; font-weight: 800; color: var(--ios-text); }
+
+/* INPUT & AUTOCOMPLETE */
+.search-box-cont { position: relative; width: 100%; margin-top: 24px; }
+.ios-search-field { width: 100%; height: 50px; padding: 0 16px 0 44px; border-radius: 14px; border: 1px solid var(--chip-border); background: var(--ios-input); font-size: 16px; color: var(--ios-text); outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+.ios-search-field:focus { box-shadow: 0 0 0 2px var(--ios-blue); background: var(--ios-card); }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ios-text-sec); font-size: 22px; pointer-events: none; }
+
+.autocomplete-dropdown { position: absolute; top: 55px; left: 0; right: 0; background: var(--ios-modal); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 18px; padding: 6px; display: none; flex-direction: column; max-height: 250px; overflow-y: auto; z-index: 2000; text-align: left; }
+.autocomplete-dropdown.show { display: flex; animation: fadeUp 0.3s forwards; }
+.autocomplete-item { padding: 14px; font-size: 15px; font-weight: 600; color: var(--ios-text); cursor: pointer; border-radius: 12px; transition: background 0.2s; }
+.autocomplete-item:active { background: rgba(0,0,0,0.06); }
+[data-theme="dark"] .autocomplete-item:active { background: rgba(255,255,255,0.1); }
+
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.shake { animation: shake 0.4s; }
+
+/* Modal Result */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 3000; pointer-events: none; transition: background 0.4s; display: flex; align-items: center; justify-content: center; }
+.modal-bg.open { background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: auto; }
+.modal-card { width: 90%; max-width: 340px; background: var(--ios-modal); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s var(--ease-spring); }
+.modal-bg.open .modal-card { transform: scale(1); opacity: 1; }
+
+.result-icon { font-size: 64px; margin-bottom: 16px; display: inline-block; }
+.res-win { color: #34C759; filter: drop-shadow(0 4px 12px rgba(52,199,89,0.3)); }
+.res-fail { color: #FF3B30; filter: drop-shadow(0 4px 12px rgba(255,59,48,0.3)); }
+.res-title { font-size: 24px; font-weight: 800; color: var(--ios-text); margin-bottom: 8px; }
+.res-sub { font-size: 14px; color: var(--ios-text-sec); margin-bottom: 24px; line-height: 1.4; }
+.btn-done { width: 100%; height: 50px; background: var(--ios-blue); color: #FFF; border-radius: 14px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 16px var(--ios-blue-light); }
+.btn-done:active { transform: scale(0.96); }
+
+#loadingOverlay { position: fixed; inset: 0; background: var(--ios-bg); background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.spin-anim { animation: spin 1s linear infinite; }
+</style>
+</head>
+<body>
+
+<script>
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if(isDark) document.body.setAttribute('data-theme', 'dark');
+
+    const gSettings = JSON.parse(localStorage.getItem('userThemeObj'));
+    if(gSettings && gSettings.type === 'custom') {
+        document.body.style.setProperty('--grad-1', gSettings.c1);
+        document.body.style.setProperty('--grad-2', gSettings.c2);
+        document.body.style.setProperty('--grad-3', gSettings.c3);
+    } else {
+        const hour = new Date().getHours();
+        if(hour>=7 && hour<11) document.body.classList.add('bg-morning');
+        else if(hour>=11 && hour<18) document.body.classList.add('bg-afternoon');
+        else document.body.classList.add('bg-night');
+    }
+</script>
+
+<div id="loadingOverlay">
+    <span class="material-icons-round spin-anim" style="font-size: 48px; color: var(--ios-blue);">autorenew</span>
+</div>
+
+<header class="ios-header">
+    <a href="index.html" class="btn-icon-only"><span class="material-icons-round">arrow_back</span></a>
+    <div style="font-weight:800; font-size:18px; color:var(--ios-text); letter-spacing:-0.02em;" id="gameTitle">Guess Who?</div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btnLangEN" onclick="window.switchLang('en')">EN</button>
+        <button class="lang-btn" id="btnLangBM" onclick="window.switchLang('bm')">BM</button>
+        <button class="lang-btn" id="btnLangCN" onclick="window.switchLang('cn')">CN</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="clue-card">
+        <div class="heart-row">
+            <span class="material-icons-round heart" id="heart1">favorite</span>
+            <span class="material-icons-round heart" id="heart2">favorite</span>
+            <span class="material-icons-round heart" id="heart3">favorite</span>
+        </div>
+        
+        <div class="clue-row">
+            <div class="clue-lbl" id="clue1Lbl">Primary School</div>
+            <div class="clue-val" id="clue1Val">...</div>
+        </div>
+        <div class="clue-row">
+            <div class="clue-lbl" id="clue2Lbl">Was NOT in</div>
+            <div class="clue-val" id="clue2Val">...</div>
+        </div>
+        <div class="clue-row">
+            <div class="clue-lbl" id="clue3Lbl">Current Class</div>
+            <div class="clue-val" id="clue3Val">...</div>
+        </div>
+        
+        <div class="search-box-cont" id="searchBoxCont">
+            <span class="material-icons-round search-icon">search</span>
+            <input type="text" class="ios-search-field" id="searchInput" placeholder="Search name..." oninput="window.showAutocomplete(this.value)" autocomplete="off">
+            <div id="searchAutocomplete" class="autocomplete-dropdown"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-bg" id="resultModal">
+    <div class="modal-card">
+        <span class="material-icons-round result-icon" id="resIcon">celebration</span>
+        <div class="res-title" id="resTitle">You got it!</div>
+        <div class="res-sub" id="resSub">The student was: XXX</div>
+        <button class="btn-done" id="resBtn" onclick="window.startGame()">Play Again</button>
+    </div>
+</div>
+
+<!-- FIREBASE AUTH & GAME LOGIC -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const firebaseConfig = { apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI", authDomain:"studentlist2026.firebaseapp.com", projectId:"studentlist2026", storageBucket:"studentlist2026.firebasestorage.app", messagingSenderId:"867205730183", appId:"1:867205730183:web:534666800bc7b2513fcd22" };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.replace("index.html");
+    } else {
+        try {
+            const snap = await getDoc(doc(db, "appData", "schoolInfo"));
+            if (snap.exists()) {
+                window.smkData = snap.data().students || [];
+                window.startGame();
+            }
+        } catch(e) { console.error(e); }
+        document.getElementById('loadingOverlay').style.opacity = '0';
+        setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 300);
+    }
+});
+</script>
+
+<script>
+let curLang = 'en';
+let targetStudent = null;
+let lives = 3;
+
+const txt = {
+    en: { title: "Guess Who?", clue1: "Primary School", clue2: "Was NOT in", clue3: "Current Class", win: "You got it!", lose: "Game Over", reveal: "The student was:", ph: "Search name...", play: "Play Again" },
+    bm: { title: "Teka Siapa?", clue1: "Sekolah Rendah", clue2: "BUKAN dari kelas", clue3: "Kelas Semasa", win: "Tepat Sekali!", lose: "Tamat Permainan", reveal: "Murid tersebut ialah:", ph: "Cari nama...", play: "Main Semula" },
+    cn: { title: "猜猜是谁？", clue1: "毕业小学", clue2: "2025年不在", clue3: "目前班级", win: "回答正确！", lose: "游戏结束", reveal: "该学生是：", ph: "搜索姓名...", play: "再玩一次" }
+};
+
+window.switchLang = (l) => {
+    curLang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btnLang' + l.toUpperCase()).classList.add('active');
+    updateUI();
+};
+
+window.startGame = () => {
+    if(!window.smkData || window.smkData.length === 0) return;
+    targetStudent = window.smkData[Math.floor(Math.random() * window.smkData.length)];
+    lives = 3;
+    
+    const oldClasses = ["1 BIRU", "1 HIJAU", "1 KUNING", "1 MERAH", "1 PERANG", "1 UNGU", "PB"];
+    let wrong = oldClasses[Math.floor(Math.random() * oldClasses.length)];
+    let safety = 0;
+    while((wrong === targetStudent.oldClass || wrong === "PB") && safety < 20) {
+        wrong = oldClasses[Math.floor(Math.random() * oldClasses.length)];
+        safety++;
+    }
+    targetStudent.wrongOld = wrong;
+
+    document.getElementById('heart1').style.color = '#FF2D55';
+    document.getElementById('heart2').style.color = '#FF2D55';
+    document.getElementById('heart3').style.color = '#FF2D55';
+    
+    document.getElementById('resultModal').classList.remove('open');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchAutocomplete').classList.remove('show');
+    
+    updateUI();
+};
+
+const updateUI = () => {
+    const t = txt[curLang];
+    document.getElementById('gameTitle').innerText = t.title;
+    document.getElementById('searchInput').placeholder = t.ph;
+    
+    if(targetStudent) {
+        document.getElementById('clue1Lbl').innerText = t.clue1;
+        document.getElementById('clue1Val').innerText = targetStudent.sch || "-";
+        
+        document.getElementById('clue2Lbl').innerText = t.clue2;
+        document.getElementById('clue2Val').innerText = targetStudent.wrongOld + " (2025)";
+        
+        document.getElementById('clue3Lbl').innerText = t.clue3;
+        document.getElementById('clue3Val').innerText = targetStudent.newClass + " (2026)";
+    }
+};
+
+window.showAutocomplete = function(query) {
+    const box = document.getElementById('searchAutocomplete');
+    if(query.length < 1) { box.classList.remove('show'); return; }
+    
+    const qLower = query.toLowerCase();
+    let matches = window.smkData.filter(s => (s.name && s.name.toLowerCase().includes(qLower)) || (s.cn && s.cn.toLowerCase().includes(qLower))).slice(0, 5);
+    
+    if(matches.length > 0) {
+        box.innerHTML = matches.map(m => {
+            const highlight = m.name.replace(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'), '<span style="color:var(--ios-blue);">$1</span>');
+            return `<div class="autocomplete-item" onclick="window.makeGuess('${m.id}')">
+                <div>${highlight}</div>
+            </div>`;
+        }).join('');
+        box.classList.add('show');
+    } else {
+        box.classList.remove('show');
+    }
+};
+
+window.makeGuess = function(id) {
+    document.getElementById('searchAutocomplete').classList.remove('show');
+    document.getElementById('searchInput').value = '';
+    
+    if(id === targetStudent.id) {
+        endGame(true);
+    } else {
+        lives--;
+        document.getElementById('heart' + (lives + 1)).style.color = 'var(--ios-sep)';
+        document.getElementById('heart' + (lives + 1)).style.transform = 'scale(0.8)';
+        
+        const cont = document.getElementById('searchBoxCont');
+        cont.classList.add('shake');
+        setTimeout(() => cont.classList.remove('shake'), 400);
+        
+        if(lives <= 0) setTimeout(() => endGame(false), 400);
+    }
+};
+
+const endGame = (won) => {
+    const t = txt[curLang];
+    const m = document.getElementById('resultModal');
+    document.getElementById('resIcon').innerText = won ? "celebration" : "sentiment_very_dissatisfied";
+    document.getElementById('resIcon').className = won ? "material-icons-round result-icon res-win" : "material-icons-round result-icon res-fail";
+    document.getElementById('resTitle').innerText = won ? t.win : t.lose;
+    
+    const cnName = targetStudent.cn !== "-" ? ` (${targetStudent.cn})` : "";
+    document.getElementById('resSub').innerHTML = `${t.reveal}<br><b>${targetStudent.name}${cnName}</b>`;
+    document.getElementById('resBtn').innerText = t.play;
+    m.classList.add('open');
+};
+
+document.addEventListener('click', (e) => {
+    const drop = document.getElementById('searchAutocomplete');
+    if(drop.classList.contains('show') && !document.getElementById('searchBoxCont').contains(e.target)){ 
+        drop.classList.remove('show'); 
+    }
+});
+</script>
+
+</body>
+</html>
