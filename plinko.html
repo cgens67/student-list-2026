@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
+/* ROOT VARS */
 :root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--chip-border:#D1D1D6;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif}
 body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
 body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
@@ -58,7 +59,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 2000; pointer-events: none; transition: background 0.4s; display: flex; align-items: center; justify-content: center; }
 .modal-bg.open { background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: auto; }
-.modal-card { width: 90%; max-width: 340px; background: var(--ios-modal); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+.modal-card { width: 90%; max-width: 340px; background: var(--ios-modal); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s var(--ease-spring); }
 .modal-bg.open .modal-card { transform: scale(1); opacity: 1; }
 
 .result-icon { font-size: 64px; margin-bottom: 16px; display: inline-block; }
@@ -181,6 +182,8 @@ onAuthStateChanged(auth, async (user) => {
 /* ========================================================================
    PLINKO PHYSICS ENGINE & GAME LOGIC
 ======================================================================== */
+const userReduceLag = localStorage.getItem('userReduceLag') === 'true';
+
 const v = (x, y) => ({ x, y });
 const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y });
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
@@ -192,7 +195,7 @@ const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val));
 const GRAVITY = 2200; 
 const RESTITUTION = 0.7; 
 const TANGENT_KEEP = 0.98; 
-const MAX_SUBSTEPS = 16; // HARDCODED for deterministic trajectory
+const MAX_SUBSTEPS = userReduceLag ? 8 : 16; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
 const REST_RADIUS = 4, REST_TIME = 0.18, REST_MARGIN = 4, REST_FLATNESS = 0.7;
@@ -263,18 +266,20 @@ const hitObstacle = (ball, o) => { const offset = sub(ball.pos, o.center); const
 const resolveHit = (ball, hit) => { ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const into = dot(ball.vel, hit.normal); if (into >= 0) return; const normal = scale(hit.normal, into); const tangent = sub(ball.vel, normal); ball.vel = sub(scale(tangent, TANGENT_KEEP), scale(normal, RESTITUTION)); };
 const collide = (ball, w) => { for (const s of w.segments) { const hit = hitSegment(ball, s); if (hit) resolveHit(ball, hit); } for (const d of w.domes) { const hit = hitDome(ball, d); if (hit) resolveHit(ball, hit); } };
 const collideObstacles = (ball, w, obsVel) => { for (const o of w.obstacles) { const hit = hitObstacle(ball, o); if (!hit) continue; ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const rel = sub(ball.vel, obsVel); const into = dot(rel, hit.normal); if (into >= 0) continue; const normalComp = scale(hit.normal, into); const tangent = sub(rel, normalComp); const bounced = sub(scale(tangent, TANGENT_KEEP), scale(normalComp, RESTITUTION)); ball.vel = add(bounced, obsVel); } };
-
-const onFlatSupport = (ball, w, blockers) => { const reach = ball.radius + REST_MARGIN; const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS; for (const s of w.segments) { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist <= reach && upward(offset, dist)) return true; } for (const o of blockers) { const offset = sub(ball.pos, o.center); const dist = len(offset); if (dist - o.radius <= reach && upward(offset, dist)) return true; } return false; };
+const collidePair = (a, b) => { if (a.resting && b.resting) return; const delta = sub(b.pos, a.pos); const dist = len(delta); const minDist = a.radius + b.radius; if (dist === 0 || dist >= minDist) return; const normal = scale(delta, 1 / dist); const overlap = minDist - dist; if (a.resting) { resolveHit(b, { normal, depth: overlap }); } else if (b.resting) { resolveHit(a, { normal: scale(normal, -1), depth: overlap }); } else { const shift = scale(normal, overlap / 2); a.pos = sub(a.pos, shift); b.pos = add(b.pos, shift); const approach = dot(sub(a.vel, b.vel), normal); if (approach > 0) { const impulse = scale(normal, ((1 + RESTITUTION) / 2) * approach); a.vel = sub(a.vel, impulse); b.vel = add(b.vel, impulse); } } };
+const onFlatSupport = (ball, w, blockers) => { const reach = ball.radius + REST_MARGIN; const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS; for (const s of w.segments) { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist <= reach && upward(offset, dist)) return true; } for (const other of balls) { if (other === ball || !other.resting) continue; const offset = sub(ball.pos, other.pos); const dist = len(offset); if (dist - other.radius <= reach && upward(offset, dist)) return true; } for (const o of blockers) { const offset = sub(ball.pos, o.center); const dist = len(offset); if (dist - o.radius <= reach && upward(offset, dist)) return true; } return false; };
 const tryRest = (ball, w, dt, blockers) => { if (len(sub(ball.pos, ball.anchor)) > REST_RADIUS) { ball.anchor = ball.pos; ball.stillTime = 0; } else { ball.stillTime += dt; if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) { ball.resting = true; ball.vel = v(0, 0); } } };
 const integrate = (ball, dt) => { ball.vel = add(ball.vel, v(0, GRAVITY * dt)); ball.pos = add(ball.pos, scale(ball.vel, dt)); };
 
 const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []) => {
     if (dt === 0) return;
-    const h = dt / MAX_SUBSTEPS;
+    // Hardcoded MAX_SUBSTEPS fixes physics prediction variance by forcing identical timesteps
+    const substeps = MAX_SUBSTEPS;
+    const h = dt / substeps;
     const obsVel = v(0, (pegToY - pegFromY) / dt);
 
-    for (let i = 0; i < MAX_SUBSTEPS; i++) {
-        const pegY = pegFromY + (pegToY - pegFromY) * ((i + 1) / MAX_SUBSTEPS);
+    for (let i = 0; i < substeps; i++) {
+        const pegY = pegFromY + (pegToY - pegFromY) * ((i + 1) / substeps);
         for (const o of w.obstacles) o.center.y = pegY;
         for (const b of simBalls) {
             if (b.resting) continue;
@@ -283,27 +288,44 @@ const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []
             collideObstacles(b, w, obsVel);
             for (const o of blockers) { const hit = hitObstacle(b, o); if (hit) resolveHit(b, hit); }
         }
+        for (let j = 0; j < simBalls.length; j++) { for (let k = j + 1; k < simBalls.length; k++) { collidePair(simBalls[j], simBalls[k]); } }
     }
     if (settle) { for (const b of simBalls) { if (!b.resting) tryRest(b, w, dt, blockers); } }
 };
 
-const simulateThrow = (w, x, y, vx, vy, blockers) => {
+const touchingAnything = (ball, w) => { for (const s of w.segments) if (hitSegment(ball, s)) return true; for (const d of w.domes) if (hitDome(ball, d)) return true; for (const o of w.obstacles) if (hitObstacle(ball, o)) return true; return false; };
+const predictPath = (w, x, y, vx, vy, maxBounces, blockers) => {
+    const ball = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false };
+    const cw = blockers.length ? { ...w, obstacles: [...w.obstacles, ...blockers] } : w;
+    const path = [v(x, y)];
+    const dt = FIXED_DT;
+    let bounces = 0, inContact = false;
+
+    for (let step = 0; step < 240 && bounces < maxBounces; step++) {
+        const substeps = MAX_SUBSTEPS;
+        const h = dt / substeps;
+        for (let i = 0; i < substeps && bounces < maxBounces; i++) {
+            integrate(ball, h);
+            const contact = touchingAnything(ball, cw);
+            if (contact && !inContact) bounces += 1;
+            inContact = contact;
+            collide(ball, cw);
+            collideObstacles(ball, cw, v(0, 0));
+            path.push(v(ball.pos.x, ball.pos.y));
+        }
+        if (ball.pos.y > cw.height || ball.pos.x < 0 || ball.pos.x > cw.width) break;
+    }
+    return path;
+};
+const predictLanding = (w, x, y, vx, vy, blockers) => {
     const ghost = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false, anchor: v(x,y), stillTime: 0 };
     const ghosts = [ghost];
     const pegY = w.obstacles.length ? w.obstacles[0].center.y : 0;
-    const fullPath = [v(x, y)];
-    let hitSlot = null;
-
     for (let step = 0; step < 600; step++) {
         stepAll(ghosts, w, FIXED_DT, pegY, pegY, true, blockers);
-        fullPath.push(v(ghost.pos.x, ghost.pos.y));
-        if (ghost.resting) {
-            hitSlot = clamp(Math.floor(ghost.pos.x / w.cupWidth), 0, w.cups.length - 1);
-            break;
-        }
-        if (ghost.pos.y > w.height || ghost.pos.x < 0 || ghost.pos.x > w.width) break;
+        if (ghost.resting) return clamp(Math.floor(ghost.pos.x / w.cupWidth), 0, w.cups.length - 1);
     }
-    return { path: fullPath, slot: hitSlot };
+    return null;
 };
 
 const initGame = () => {
@@ -320,6 +342,7 @@ const initGame = () => {
     CODE_LENGTH = picked.length;
     game.target = picked;
     
+    // Always scramble cups slightly so it isn't completely obvious
     activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
 
     game.entered = Array(CODE_LENGTH).fill("");
@@ -388,19 +411,7 @@ const fireCannon = () => {
     if (game.status !== 'playing') return;
     const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
     const vel = launchVel(apparatus.angle);
-    const blockers = balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius}));
-    
-    // Completely pre-calculate trajectory to fix lag & inaccuracy
-    const sim = simulateThrow(world, m.x, m.y, vel.x, vel.y, blockers);
-    
-    addBall({
-        pos: v(m.x, m.y),
-        radius: BALL_RADIUS,
-        resting: false,
-        bakedPath: sim.path,
-        bakedIdx: 0,
-        finalSlot: sim.slot
-    });
+    addBall({ pos: v(m.x, m.y), vel: v(vel.x, vel.y), radius: BALL_RADIUS, resting: false, anchor: v(m.x, m.y), stillTime: 0 });
 };
 
 let isAiming = false, stageOffsetPx = 0, stageWidth = 0;
@@ -409,16 +420,26 @@ const ctx = cvs.getContext('2d');
 
 window.resizeApp = () => {
     const iw = window.innerWidth;
+    const oldW = stageWidth;
     stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
     stageOffsetPx = (iw - stageWidth) / 2;
     const h = window.innerHeight - FIRE_BAR_HEIGHT;
+    const oldH = cvs.height / (window.devicePixelRatio || 1); 
     
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = userReduceLag ? 1 : (window.devicePixelRatio || 1);
     cvs.width = stageWidth * dpr; cvs.height = h * dpr;
     cvs.style.width = `${stageWidth}px`; cvs.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     world = createWorld(stageWidth, h);
+    
+    if (oldW > 0 && oldH > 0) {
+        for (const b of balls) {
+            b.pos.x = (b.pos.x / oldW) * stageWidth;
+            b.pos.y = (b.pos.y / oldH) * h;
+            b.vel = v(0, 0); 
+        }
+    }
 
     const margin = world.cupWidth * CANNON_BASE_RATIO;
     apparatus.x = apparatus.x === 0 ? stageWidth / 2 : clamp(apparatus.x, margin, stageWidth - margin);
@@ -431,6 +452,12 @@ window.resizeApp = () => {
     const lH = document.getElementById('handleL'), rH = document.getElementById('handleR');
     lH.style.left = `${stageOffsetPx}px`; lH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
     rH.style.left = `${stageOffsetPx + stageWidth - 12}px`; rH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
+
+    for (const b of balls) {
+        b.pos.x = clamp(b.pos.x, b.radius, stageWidth - b.radius);
+        b.pos.y = clamp(b.pos.y, b.radius, h - b.radius);
+        b.resting = false;
+    }
 };
 
 const stX = (cx) => cx - stageOffsetPx;
@@ -535,37 +562,29 @@ window.resetGame = () => {
     initGame();
 };
 
-let lastT = 0;
+let lastT = 0, acc = 0;
 const loop = (t) => {
-    // Determine number of simulation frames to advance based on real time
     const dt = lastT ? Math.min((t - lastT)/1000, 1/30) : 0;
     lastT = t;
-    const framesToAdvance = Math.round(dt / FIXED_DT) || 1;
-
     const playing = game.status === 'playing';
 
     if (playing) {
-        let changed = false;
-        
+        acc += dt;
+        while (acc >= FIXED_DT) {
+            const py = world.obstacles.length ? world.obstacles[0].center.y : pegs.y;
+            stepAll(balls, world, FIXED_DT, py, pegs.y, true, []);
+            acc -= FIXED_DT;
+        }
+
+        const newEnt = Array(CODE_LENGTH).fill("");
         for (const b of balls) {
-            if (!b.resting) {
-                b.bakedIdx += framesToAdvance;
-                if (b.bakedIdx >= b.bakedPath.length - 1) {
-                    // Reached the end of baked trajectory
-                    b.bakedIdx = b.bakedPath.length - 1;
-                    b.pos = b.bakedPath[b.bakedIdx];
-                    b.resting = true;
-                    if (b.finalSlot !== null && b.finalSlot >= 0 && b.finalSlot < world.cups.length) {
-                        const ltr = world.cups[b.finalSlot].letter;
-                        game.entered[slotOf.get(b)] = ltr;
-                        changed = true;
-                    }
-                } else {
-                    b.pos = b.bakedPath[b.bakedIdx];
-                }
+            if (b.resting) {
+                const idx = clamp(Math.floor(b.pos.x / world.cupWidth), 0, world.cups.length - 1);
+                newEnt[slotOf.get(b)] = world.cups[idx].letter;
             }
         }
-        
+        let changed = false;
+        for (let i = 0; i < CODE_LENGTH; i++) { if (game.entered[i] !== newEnt[i]) { game.entered[i] = newEnt[i]; changed = true; } }
         const nSlot = nextSlot() ?? CODE_LENGTH;
         if (game.dropped !== nSlot) { game.dropped = nSlot; changed = true; }
         if (changed) updateUI();
@@ -583,10 +602,8 @@ const loop = (t) => {
         if (predCache.key !== cacheKey) {
             const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
             const vel = launchVel(apparatus.angle);
-            const sim = simulateThrow(world, m.x, m.y, vel.x, vel.y, blockers);
-            predCache.idx = sim.slot;
-            // Shorten prediction path slightly for visual cleanliness
-            predCache.path = sim.path.filter((_, i) => i % Math.max(1, Math.floor(sim.path.length/100)) === 0);
+            predCache.idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
+            predCache.path = predictPath(world, m.x, m.y, vel.x, vel.y, 5, blockers);
             predCache.key = cacheKey;
         }
         
@@ -595,12 +612,17 @@ const loop = (t) => {
 
         if (!isRagebait && idx !== null && world.cups[idx].letter === game.target[game.dropped]) {
             glowX = world.cups[idx].centerX;
-            const pulse = 0.16 + 0.06 * Math.sin(t/350);
-            const grad = ctx.createRadialGradient(glowX, world.height, 0, glowX, world.height, world.domeRadius * 1.3);
-            grad.addColorStop(0, `rgba(${theme.glow}, ${pulse})`);
-            grad.addColorStop(1, `rgba(${theme.glow}, 0)`);
-            ctx.fillStyle = grad;
-            ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.3, 0, Math.PI * 2); ctx.fill();
+            if (userReduceLag) {
+                ctx.fillStyle = `rgba(${theme.glow}, 0.3)`;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.1, 0, Math.PI * 2); ctx.fill();
+            } else {
+                const pulse = 0.16 + 0.06 * Math.sin(t/350);
+                const grad = ctx.createRadialGradient(glowX, world.height, 0, glowX, world.height, world.domeRadius * 1.3);
+                grad.addColorStop(0, `rgba(${theme.glow}, ${pulse})`);
+                grad.addColorStop(1, `rgba(${theme.glow}, 0)`);
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.3, 0, Math.PI * 2); ctx.fill();
+            }
         }
     }
 
@@ -609,13 +631,15 @@ const loop = (t) => {
         ctx.beginPath(); ctx.arc(d.center.x, d.center.y, d.radius, Math.PI, 0, false); ctx.fill();
     }
 
-    if (playing && isHardMode) {
-        ctx.strokeStyle = theme.pegLine; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.setLineDash([0, 8]);
-        ctx.beginPath(); ctx.moveTo(0, pegs.y); ctx.lineTo(world.width, pegs.y); ctx.stroke();
-        ctx.setLineDash([]); ctx.lineCap = "butt";
-        ctx.fillStyle = theme.dome;
-        for (const o of world.obstacles) {
-            ctx.beginPath(); ctx.arc(o.center.x, o.center.y, o.radius, 0, Math.PI * 2); ctx.fill();
+    if (playing) {
+        if(isHardMode) {
+            ctx.strokeStyle = theme.pegLine; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.setLineDash([0, 8]);
+            ctx.beginPath(); ctx.moveTo(0, pegs.y); ctx.lineTo(world.width, pegs.y); ctx.stroke();
+            ctx.setLineDash([]); ctx.lineCap = "butt";
+            ctx.fillStyle = theme.dome;
+            for (const o of world.obstacles) {
+                ctx.beginPath(); ctx.arc(o.center.x, o.center.y, o.radius, 0, Math.PI * 2); ctx.fill();
+            }
         }
     }
 
@@ -650,6 +674,7 @@ const loop = (t) => {
     ctx.fillStyle = theme.ball;
     for (const b of balls) {
         ctx.beginPath(); ctx.arc(b.pos.x, b.pos.y, b.radius, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
     }
 
     const baseRad = world.cupWidth * CANNON_BASE_RATIO;
