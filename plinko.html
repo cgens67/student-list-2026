@@ -121,7 +121,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 
 <div class="code-overlay">
     <div class="target-card">
-        <div class="target-label">Target Code</div>
+        <div class="target-label" id="targetLbl">Target Name</div>
         <div class="target-code" id="targetDisplay"></div>
     </div>
     <div class="input-slots" id="slotsDisplay">
@@ -224,9 +224,8 @@ const getThemeColor = () => {
 let modeState = 'HARD'; // 'EASY', 'HARD', 'RAGEBAIT'
 let isHardMode = true; 
 let isRagebait = false;
-let ragebaitTarget = null;
-let activeChars = "012345";
-let CODE_LENGTH = 6;
+let activeChars = "TEST";
+let CODE_LENGTH = 4;
 let OBSTACLE_RADIUS_RATIO = 0.15;
 
 window.toggleMode = () => {
@@ -240,30 +239,14 @@ window.toggleMode = () => {
         btn.innerText = "EASY";
         btn.style.color = "#34C759"; btn.style.borderColor = "#34C759";
         isHardMode = false; isRagebait = false;
-        activeChars = "0123"; OBSTACLE_RADIUS_RATIO = 0;
-        CODE_LENGTH = 4;
-        ragebaitTarget = null;
     } else if (modeState === 'HARD') {
         btn.innerText = "HARD";
         btn.style.color = "#FF3B30"; btn.style.borderColor = "#FF3B30";
         isHardMode = true; isRagebait = false;
-        activeChars = "012345"; OBSTACLE_RADIUS_RATIO = 0.15;
-        CODE_LENGTH = 6;
-        ragebaitTarget = null;
     } else {
         btn.innerText = "RAGEBAIT";
         btn.style.color = "#AF52DE"; btn.style.borderColor = "#AF52DE";
         isHardMode = true; isRagebait = true;
-        
-        // Pick a random short name
-        const names = (window.smkData && window.smkData.length) ? window.smkData.map(s => s.name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '')) : ["PLINKO", "HACKER", "SYSTEM", "SECURE"];
-        const validNames = names.filter(n => n.length >= 4 && n.length <= 7);
-        ragebaitTarget = validNames[Math.floor(Math.random() * validNames.length)] || "PLINKO";
-        
-        // Scramble letters for cups
-        activeChars = ragebaitTarget.split('').sort(() => 0.5 - Math.random()).join(''); 
-        OBSTACLE_RADIUS_RATIO = 0.20; // Extra bounce challenge
-        CODE_LENGTH = activeChars.length;
     }
     
     const hL = document.getElementById('handleL'), hR = document.getElementById('handleR');
@@ -476,10 +459,28 @@ const predictLanding = (w, x, y, vx, vy, blockers) => {
 let predCache = { key: '', idx: null, path: [] };
 
 // 6. World Generation & Cannon
-const randomCode = () => Array.from({length: CODE_LENGTH}, () => activeChars[Math.floor(Math.random() * CODE_LENGTH)]).join('');
-
 const initGame = () => {
-    game.target = isRagebait ? ragebaitTarget : randomCode();
+    const names = (window.smkData && window.smkData.length) ? window.smkData.map(s => s.name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '')) : ["PLAY", "PLINKO", "HACKER"];
+    
+    let minL = 4, maxL = 4;
+    if(modeState === 'EASY') { minL = 4; maxL = 5; OBSTACLE_RADIUS_RATIO = 0; }
+    else if (modeState === 'HARD') { minL = 5; maxL = 6; OBSTACLE_RADIUS_RATIO = 0.15; }
+    else { minL = 5; maxL = 7; OBSTACLE_RADIUS_RATIO = 0.20; }
+    
+    const valid = names.filter(n => n.length >= minL && n.length <= maxL);
+    const picked = valid.length > 0 ? valid[Math.floor(Math.random() * valid.length)] : "TEST";
+    
+    CODE_LENGTH = picked.length;
+    game.target = picked;
+    
+    // In all modes we scramble the letters so dropping isn't just sequential visually
+    if (modeState === 'RAGEBAIT') {
+        activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
+    } else {
+        // Less chaotic shuffle for Easy/Hard, or fully shuffled? Let's shuffle all for fun.
+        activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
+    }
+
     game.entered = Array(CODE_LENGTH).fill("");
     game.dropped = 0;
     game.status = 'playing';
@@ -487,7 +488,7 @@ const initGame = () => {
     slotOf.clear();
     freedSlots = [];
     placedCount = 0;
-    predCache = { key: '', idx: null, path: [] }; // reset cache
+    predCache = { key: '', idx: null, path: [] }; 
     if(window.resizeApp) window.resizeApp();
     updateUI();
 };
@@ -561,7 +562,7 @@ window.resizeApp = () => {
     stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
     stageOffsetPx = (iw - stageWidth) / 2;
     const h = window.innerHeight - FIRE_BAR_HEIGHT;
-    const oldH = cvs.height / (window.devicePixelRatio || 1); // approximate previous height
+    const oldH = cvs.height / (window.devicePixelRatio || 1); 
     
     const dpr = userReduceLag ? 1 : (window.devicePixelRatio || 1);
     cvs.width = stageWidth * dpr; cvs.height = h * dpr;
@@ -570,12 +571,11 @@ window.resizeApp = () => {
 
     world = createWorld(stageWidth, h);
     
-    // Proportional resize adjustment for balls
     if (oldW > 0 && oldH > 0) {
         for (const b of balls) {
             b.pos.x = (b.pos.x / oldW) * stageWidth;
             b.pos.y = (b.pos.y / oldH) * h;
-            b.vel = v(0, 0); // prevent clipping on layout shift
+            b.vel = v(0, 0); 
         }
     }
 
@@ -587,7 +587,6 @@ window.resizeApp = () => {
     pegs.max = Math.min(reach + world.domeRadius + LETTER_DROP * 2, pegs.min);
     if (pegs.y === 0 || pegs.y > pegs.min) pegs.y = pegs.min;
     
-    // Position drag handles
     const lH = document.getElementById('handleL'), rH = document.getElementById('handleR');
     lH.style.left = `${stageOffsetPx}px`; lH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
     rH.style.left = `${stageOffsetPx + stageWidth - 12}px`; rH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
@@ -608,7 +607,6 @@ const getHitBall = (x, y, slop = 2) => {
     return null;
 };
 
-// Cannon & Peg Interaction
 cvs.addEventListener('pointerdown', e => {
     if (game.status !== 'playing') return;
     const sx = stX(e.clientX);
@@ -641,18 +639,16 @@ window.addEventListener('pointerup', e => {
     if (pegs.dragging) { pegs.dragging = false; return; }
     if (!isAiming) return;
     isAiming = false;
-    if (isTouch) return; // Touch fires via button
+    if (isTouch) return;
     apparatus.angle = aimAngleCalc(stX(e.clientX), e.clientY, apparatus.x);
     fireCannon();
     apparatus.angle = 0;
 });
 
-// Setup Rail Handles
 const handleDown = (e) => { if(isHardMode){ e.preventDefault(); pegs.dragging = true; }};
 document.getElementById('handleL').addEventListener('pointerdown', handleDown);
 document.getElementById('handleR').addEventListener('pointerdown', handleDown);
 
-// Touch Controls
 let holdT = null, repT = null;
 window.startNudge = (e, dir) => {
     e.preventDefault();
@@ -668,7 +664,6 @@ window.startNudge = (e, dir) => {
 };
 window.stopNudge = () => { clearTimeout(holdT); clearInterval(repT); };
 
-// DOM UI
 const updateUI = () => {
     document.getElementById('targetDisplay').innerHTML = game.target.split('').map(c=>`<span>${c}</span>`).join('');
     const sCont = document.getElementById('slotsDisplay');
@@ -697,7 +692,7 @@ window.submitCode = () => {
     document.getElementById('resIcon').innerText = won ? "verified" : "gpp_bad";
     document.getElementById('resIcon').className = won ? "material-icons-round result-icon res-win" : "material-icons-round result-icon res-fail";
     document.getElementById('resTitle').innerText = won ? "Access Granted" : "Access Denied";
-    document.getElementById('resSub').innerText = won ? "You successfully bypassed the Plinko firewall." : `You entered ${game.entered.join('')} — the code was ${game.target}.`;
+    document.getElementById('resSub').innerText = won ? "You reproduced the name successfully." : `You entered ${game.entered.join('')} — the target was ${game.target}.`;
     m.classList.add('open');
 };
 
@@ -706,7 +701,6 @@ window.resetGame = () => {
     initGame();
 };
 
-// 8. Main Loop
 let lastT = 0, acc = 0;
 const loop = (t) => {
     const dt = lastT ? Math.min((t - lastT)/1000, 1/30) : 0;
@@ -721,7 +715,6 @@ const loop = (t) => {
             acc -= FIXED_DT;
         }
 
-        // Project slots
         const newEnt = Array(CODE_LENGTH).fill("");
         for (const b of balls) {
             if (b.resting) {
@@ -736,11 +729,9 @@ const loop = (t) => {
         if (changed) updateUI();
     }
 
-    // Render
     const theme = getThemeColor();
     ctx.clearRect(0, 0, world.width, world.height);
 
-    // Glow Prediction
     let glowX = null;
     let path = [];
     const blockers = playing ? balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius})) : [];
@@ -774,7 +765,6 @@ const loop = (t) => {
         }
     }
 
-    // Domes
     ctx.fillStyle = theme.dome;
     for (const d of world.domes) {
         ctx.beginPath(); ctx.arc(d.center.x, d.center.y, d.radius, Math.PI, 0, false); ctx.fill();
@@ -782,11 +772,9 @@ const loop = (t) => {
 
     if (playing) {
         if(isHardMode) {
-            // Rail Line
             ctx.strokeStyle = theme.pegLine; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.setLineDash([0, 8]);
             ctx.beginPath(); ctx.moveTo(0, pegs.y); ctx.lineTo(world.width, pegs.y); ctx.stroke();
             ctx.setLineDash([]); ctx.lineCap = "butt";
-            // Pegs
             ctx.fillStyle = theme.dome;
             for (const o of world.obstacles) {
                 ctx.beginPath(); ctx.arc(o.center.x, o.center.y, o.radius, 0, Math.PI * 2); ctx.fill();
@@ -794,13 +782,12 @@ const loop = (t) => {
         }
     }
 
-    // Guideline
     if (playing && path.length >= 2) {
         let dists = [0];
         for (let i = 1; i < path.length; i++) dists[i] = dists[i-1] + len(sub(path[i], path[i-1]));
         const total = dists[path.length - 1];
         if (total > 0) {
-            const fadeStart = isRagebait ? total * 0.3 : total * 0.75; // Shorter line in Ragebait mode
+            const fadeStart = isRagebait ? total * 0.3 : total * 0.75; 
             const march = (t / 1000) * 12;
             ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
             const rgb = glowX !== null ? theme.glow : theme.guideline;
@@ -815,7 +802,6 @@ const loop = (t) => {
         }
     }
 
-    // Letters
     if (playing) {
         ctx.font = "bold 16px Inter, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
         for (const c of world.cups) {
@@ -824,24 +810,20 @@ const loop = (t) => {
         }
     }
 
-    // Balls
     ctx.fillStyle = theme.ball;
     for (const b of balls) {
         ctx.beginPath(); ctx.arc(b.pos.x, b.pos.y, b.radius, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
     }
 
-    // Draw Cannon (over everything)
     const baseRad = world.cupWidth * CANNON_BASE_RATIO;
     const bLen = cannonLength(world.cupWidth);
     const bWid = world.cupWidth * CANNON_WIDTH_RATIO;
     ctx.save();
     ctx.translate(apparatus.x, 0);
-    // Base
     ctx.fillStyle = theme.dome;
     ctx.beginPath(); ctx.arc(0, 0, baseRad, 0, Math.PI); ctx.fill();
-    // Barrel
-    ctx.rotate(-apparatus.angle); // Negative sign aligns the visual barrel perfectly with trajectory
+    ctx.rotate(-apparatus.angle); 
     ctx.fillStyle = theme.dome;
     ctx.beginPath();
     ctx.moveTo(-bWid/2, 0); ctx.lineTo(bWid/2, 0); ctx.lineTo(bWid/2, bLen - bWid*0.4);
@@ -852,7 +834,6 @@ const loop = (t) => {
     requestAnimationFrame(loop);
 };
 
-// Start Engine
 window.startGameEngine = () => {
     window.addEventListener('resize', window.resizeApp);
     initGame();
