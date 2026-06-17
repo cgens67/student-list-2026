@@ -34,10 +34,10 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 
 .target-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-md), var(--glass-highlight); border-radius: 20px; padding: 12px 24px; text-align: center; width: 100%; pointer-events: auto; }
 .target-label { font-size: 11px; font-weight: 700; color: var(--ios-text-sec); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
-.target-code { font-size: 24px; font-weight: 800; letter-spacing: 0.3em; color: var(--ios-text); display: flex; justify-content: center; gap: 8px; }
+.target-code { font-size: 24px; font-weight: 800; letter-spacing: 0.3em; color: var(--ios-text); display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 
-.input-slots { display: flex; gap: 8px; justify-content: center; width: 100%; }
-.slot { flex: 1; aspect-ratio: 0.8; max-width: 50px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); backdrop-filter: var(--glass-blur); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--ios-text); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s; }
+.input-slots { display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap; }
+.slot { flex: 1; aspect-ratio: 0.8; min-width: 35px; max-width: 50px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); backdrop-filter: var(--glass-blur); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--ios-text); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s; }
 .slot.correct { background: rgba(52, 199, 89, 0.15); border-color: #34C759; color: #34C759; box-shadow: 0 0 12px rgba(52, 199, 89, 0.2); }
 .slot.active-hover { border-color: var(--ios-blue); box-shadow: 0 0 0 2px var(--ios-blue-light); }
 
@@ -151,15 +151,25 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = { apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI", authDomain:"studentlist2026.firebaseapp.com", projectId:"studentlist2026", storageBucket:"studentlist2026.firebasestorage.app", messagingSenderId:"867205730183", appId:"1:867205730183:web:534666800bc7b2513fcd22" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     if (!user) {
         window.location.replace("index.html");
     } else {
+        try {
+            const snap = await getDoc(doc(db, "appData", "schoolInfo"));
+            if (snap.exists()) {
+                window.smkData = snap.data().students || [];
+            }
+        } catch(e) {
+            console.error("Failed to fetch students for Plinko mode:", e);
+        }
         const overlay = document.getElementById('loadingOverlay');
         overlay.style.opacity = '0';
         setTimeout(() => overlay.style.display = 'none', 300);
@@ -172,6 +182,9 @@ onAuthStateChanged(auth, (user) => {
 /* ========================================================================
    PLINKO PHYSICS ENGINE & GAME LOGIC
 ======================================================================== */
+
+// Global User Settings
+const userReduceLag = localStorage.getItem('userReduceLag') === 'true';
 
 // 1. Vector Math
 const v = (x, y) => ({ x, y });
@@ -186,7 +199,7 @@ const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val));
 const GRAVITY = 2200; 
 const RESTITUTION = 0.7; 
 const TANGENT_KEEP = 0.98; 
-const MAX_SUBSTEPS = 16; 
+const MAX_SUBSTEPS = userReduceLag ? 8 : 16; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
 const MAX_BALLS = 150;
@@ -208,22 +221,50 @@ const getThemeColor = () => {
 };
 
 // 3. State & Mode Toggle
+let modeState = 'HARD'; // 'EASY', 'HARD', 'RAGEBAIT'
 let isHardMode = true; 
+let isRagebait = false;
+let ragebaitTarget = null;
 let activeChars = "012345";
 let CODE_LENGTH = 6;
 let OBSTACLE_RADIUS_RATIO = 0.15;
 
 window.toggleMode = () => {
-    isHardMode = !isHardMode;
-    const btn = document.getElementById('modeToggleBtn');
-    btn.innerText = isHardMode ? "HARD" : "EASY";
-    btn.style.color = isHardMode ? "#FF3B30" : "#34C759";
-    btn.style.borderColor = isHardMode ? "#FF3B30" : "#34C759";
+    if (modeState === 'HARD') modeState = 'RAGEBAIT';
+    else if (modeState === 'RAGEBAIT') modeState = 'EASY';
+    else modeState = 'HARD';
     
-    // Easy mode: 4 target cups, no pegs. Hard mode: 6 cups, with pegs.
-    activeChars = isHardMode ? "012345" : "0123";
-    CODE_LENGTH = activeChars.length;
-    OBSTACLE_RADIUS_RATIO = isHardMode ? 0.15 : 0;
+    const btn = document.getElementById('modeToggleBtn');
+    
+    if (modeState === 'EASY') {
+        btn.innerText = "EASY";
+        btn.style.color = "#34C759"; btn.style.borderColor = "#34C759";
+        isHardMode = false; isRagebait = false;
+        activeChars = "0123"; OBSTACLE_RADIUS_RATIO = 0;
+        CODE_LENGTH = 4;
+        ragebaitTarget = null;
+    } else if (modeState === 'HARD') {
+        btn.innerText = "HARD";
+        btn.style.color = "#FF3B30"; btn.style.borderColor = "#FF3B30";
+        isHardMode = true; isRagebait = false;
+        activeChars = "012345"; OBSTACLE_RADIUS_RATIO = 0.15;
+        CODE_LENGTH = 6;
+        ragebaitTarget = null;
+    } else {
+        btn.innerText = "RAGEBAIT";
+        btn.style.color = "#AF52DE"; btn.style.borderColor = "#AF52DE";
+        isHardMode = true; isRagebait = true;
+        
+        // Pick a random short name
+        const names = (window.smkData && window.smkData.length) ? window.smkData.map(s => s.name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '')) : ["PLINKO", "HACKER", "SYSTEM", "SECURE"];
+        const validNames = names.filter(n => n.length >= 4 && n.length <= 7);
+        ragebaitTarget = validNames[Math.floor(Math.random() * validNames.length)] || "PLINKO";
+        
+        // Scramble letters for cups
+        activeChars = ragebaitTarget.split('').sort(() => 0.5 - Math.random()).join(''); 
+        OBSTACLE_RADIUS_RATIO = 0.20; // Extra bounce challenge
+        CODE_LENGTH = activeChars.length;
+    }
     
     const hL = document.getElementById('handleL'), hR = document.getElementById('handleR');
     hL.style.opacity = isHardMode ? "1" : "0";
@@ -431,11 +472,14 @@ const predictLanding = (w, x, y, vx, vy, blockers) => {
     return null;
 };
 
+// Trajectory Prediction Cache to fix lag
+let predCache = { key: '', idx: null, path: [] };
+
 // 6. World Generation & Cannon
 const randomCode = () => Array.from({length: CODE_LENGTH}, () => activeChars[Math.floor(Math.random() * CODE_LENGTH)]).join('');
 
 const initGame = () => {
-    game.target = randomCode();
+    game.target = isRagebait ? ragebaitTarget : randomCode();
     game.entered = Array(CODE_LENGTH).fill("");
     game.dropped = 0;
     game.status = 'playing';
@@ -443,6 +487,7 @@ const initGame = () => {
     slotOf.clear();
     freedSlots = [];
     placedCount = 0;
+    predCache = { key: '', idx: null, path: [] }; // reset cache
     if(window.resizeApp) window.resizeApp();
     updateUI();
 };
@@ -512,15 +557,28 @@ const ctx = cvs.getContext('2d');
 
 window.resizeApp = () => {
     const iw = window.innerWidth;
+    const oldW = stageWidth;
     stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
     stageOffsetPx = (iw - stageWidth) / 2;
     const h = window.innerHeight - FIRE_BAR_HEIGHT;
-    const dpr = window.devicePixelRatio || 1;
+    const oldH = cvs.height / (window.devicePixelRatio || 1); // approximate previous height
+    
+    const dpr = userReduceLag ? 1 : (window.devicePixelRatio || 1);
     cvs.width = stageWidth * dpr; cvs.height = h * dpr;
     cvs.style.width = `${stageWidth}px`; cvs.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     world = createWorld(stageWidth, h);
+    
+    // Proportional resize adjustment for balls
+    if (oldW > 0 && oldH > 0) {
+        for (const b of balls) {
+            b.pos.x = (b.pos.x / oldW) * stageWidth;
+            b.pos.y = (b.pos.y / oldH) * h;
+            b.vel = v(0, 0); // prevent clipping on layout shift
+        }
+    }
+
     const margin = world.cupWidth * CANNON_BASE_RATIO;
     apparatus.x = apparatus.x === 0 ? stageWidth / 2 : clamp(apparatus.x, margin, stageWidth - margin);
 
@@ -684,19 +742,35 @@ const loop = (t) => {
 
     // Glow Prediction
     let glowX = null;
+    let path = [];
     const blockers = playing ? balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius})) : [];
+    
     if (playing && game.dropped < CODE_LENGTH) {
-        const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
-        const vel = launchVel(apparatus.angle);
-        const idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
-        if (idx !== null && world.cups[idx].letter === game.target[game.dropped]) {
+        const cacheKey = `${apparatus.angle.toFixed(3)}_${apparatus.x.toFixed(1)}_${pegs.y.toFixed(1)}_${blockers.length}`;
+        if (predCache.key !== cacheKey) {
+            const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
+            const vel = launchVel(apparatus.angle);
+            predCache.idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
+            predCache.path = predictPath(world, m.x, m.y, vel.x, vel.y, 5, blockers);
+            predCache.key = cacheKey;
+        }
+        
+        const idx = predCache.idx;
+        path = predCache.path;
+
+        if (!isRagebait && idx !== null && world.cups[idx].letter === game.target[game.dropped]) {
             glowX = world.cups[idx].centerX;
-            const pulse = 0.16 + 0.06 * Math.sin(t/350);
-            const grad = ctx.createRadialGradient(glowX, world.height, 0, glowX, world.height, world.domeRadius * 1.3);
-            grad.addColorStop(0, `rgba(${theme.glow}, ${pulse})`);
-            grad.addColorStop(1, `rgba(${theme.glow}, 0)`);
-            ctx.fillStyle = grad;
-            ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.3, 0, Math.PI * 2); ctx.fill();
+            if (userReduceLag) {
+                ctx.fillStyle = `rgba(${theme.glow}, 0.3)`;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.1, 0, Math.PI * 2); ctx.fill();
+            } else {
+                const pulse = 0.16 + 0.06 * Math.sin(t/350);
+                const grad = ctx.createRadialGradient(glowX, world.height, 0, glowX, world.height, world.domeRadius * 1.3);
+                grad.addColorStop(0, `rgba(${theme.glow}, ${pulse})`);
+                grad.addColorStop(1, `rgba(${theme.glow}, 0)`);
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.3, 0, Math.PI * 2); ctx.fill();
+            }
         }
     }
 
@@ -721,28 +795,23 @@ const loop = (t) => {
     }
 
     // Guideline
-    if (playing) {
-        const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
-        const vel = launchVel(apparatus.angle);
-        const path = predictPath(world, m.x, m.y, vel.x, vel.y, 5, blockers);
-        if (path.length >= 2) {
-            let dists = [0];
-            for (let i = 1; i < path.length; i++) dists[i] = dists[i-1] + len(sub(path[i], path[i-1]));
-            const total = dists[path.length - 1];
-            if (total > 0) {
-                const fadeStart = total * 0.75;
-                const march = (t / 1000) * 12;
-                ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
-                const rgb = glowX !== null ? theme.glow : theme.guideline;
-                for (let i = 1; i < path.length; i++) {
-                    const mid = (dists[i-1] + dists[i]) / 2;
-                    const fade = mid <= fadeStart ? 1 : Math.max(0, 1 - (mid - fadeStart)/(total - fadeStart));
-                    ctx.strokeStyle = `rgba(${rgb}, ${0.55 * fade})`;
-                    ctx.lineDashOffset = dists[i-1] - march;
-                    ctx.beginPath(); ctx.moveTo(path[i-1].x, path[i-1].y); ctx.lineTo(path[i].x, path[i].y); ctx.stroke();
-                }
-                ctx.setLineDash([]);
+    if (playing && path.length >= 2) {
+        let dists = [0];
+        for (let i = 1; i < path.length; i++) dists[i] = dists[i-1] + len(sub(path[i], path[i-1]));
+        const total = dists[path.length - 1];
+        if (total > 0) {
+            const fadeStart = isRagebait ? total * 0.3 : total * 0.75; // Shorter line in Ragebait mode
+            const march = (t / 1000) * 12;
+            ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+            const rgb = glowX !== null ? theme.glow : theme.guideline;
+            for (let i = 1; i < path.length; i++) {
+                const mid = (dists[i-1] + dists[i]) / 2;
+                const fade = mid <= fadeStart ? 1 : Math.max(0, 1 - (mid - fadeStart)/(total - fadeStart));
+                ctx.strokeStyle = `rgba(${rgb}, ${0.55 * fade})`;
+                ctx.lineDashOffset = dists[i-1] - march;
+                ctx.beginPath(); ctx.moveTo(path[i-1].x, path[i-1].y); ctx.lineTo(path[i].x, path[i].y); ctx.stroke();
             }
+            ctx.setLineDash([]);
         }
     }
 
@@ -772,7 +841,7 @@ const loop = (t) => {
     ctx.fillStyle = theme.dome;
     ctx.beginPath(); ctx.arc(0, 0, baseRad, 0, Math.PI); ctx.fill();
     // Barrel
-    ctx.rotate(apparatus.angle);
+    ctx.rotate(-apparatus.angle); // Negative sign aligns the visual barrel perfectly with trajectory
     ctx.fillStyle = theme.dome;
     ctx.beginPath();
     ctx.moveTo(-bWid/2, 0); ctx.lineTo(bWid/2, 0); ctx.lineTo(bWid/2, bLen - bWid*0.4);
