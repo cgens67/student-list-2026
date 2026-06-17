@@ -20,19 +20,13 @@ body.bg-morning[data-theme="dark"]{--grad-1:#2c1b3d;--grad-2:#142838;--grad-3:#1
 body.bg-afternoon[data-theme="dark"]{--grad-1:#0f2027;--grad-2:#203a43;--grad-3:#2c5364}
 body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1118}
 
-/* REDUCE LAG SUPPORT */
-body.no-glass { --glass-blur: none; --ios-card: #FFFFFF; --ios-modal: #FFFFFF; --glass-border: rgba(0,0,0,0.1); }
-body.no-glass[data-theme="dark"] { --ios-card: #1C1C1E; --ios-modal: #1C1C1E; --glass-border: rgba(255,255,255,0.1); }
-body.no-glass * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-body.no-glass .nudge-btn, body.no-glass .fire-btn { background: var(--ios-bg); box-shadow: none; border: 1px solid var(--chip-border); }
-
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:0;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;overflow:hidden;width:100vw;height:100vh;}
 
 /* PLINKO UI */
-#gameCanvas { position: fixed; top: 0; left: 50%; transform: translateX(-50%); touch-action: none; z-index: 1; transform-origin: top left; }
+#gameCanvas { position: fixed; top: 0; left: 50%; transform: translateX(-50%); touch-action: none; z-index: 1; }
 .ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; }
-.btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); box-shadow: var(--glass-highlight), var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; backdrop-filter: var(--glass-blur); transition: transform 0.2s; text-decoration: none; }
+.btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); box-shadow: var(--glass-highlight), var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); transition: transform 0.2s; text-decoration: none; }
 .btn-icon-only:active { transform: scale(0.9); }
 
 .code-overlay { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 90%; max-width: 400px; pointer-events: none; }
@@ -88,8 +82,8 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 </head>
 <body>
 
+<!-- Dynamic Background Inherit -->
 <script>
-    // Visual settings inheriting
     const savedTheme = localStorage.getItem('theme');
     const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if(isDark) document.body.setAttribute('data-theme', 'dark');
@@ -105,19 +99,6 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         else if(hour>=11 && hour<18) document.body.classList.add('bg-afternoon');
         else document.body.classList.add('bg-night');
     }
-
-    if(localStorage.getItem('userReduceLag') === 'true') {
-        document.body.classList.add('no-glass');
-    }
-
-    // Locale System
-    const curLang = localStorage.getItem('language') || 'en';
-    const uiDictionary = {
-        en: { target: "Target Code", granted: "Access Granted", denied: "Access Denied", successSub: "You successfully bypassed the Plinko firewall.", failSub: "You entered {e} — the code was {t}.", again: "Play Again", fire: "FIRE" },
-        bm: { target: "Kod Sasaran", granted: "Akses Dibenarkan", denied: "Akses Ditolak", successSub: "Anda berjaya melepasi tembok api Plinko.", failSub: "Anda memasukkan {e} — kodnya ialah {t}.", again: "Main Semula", fire: "TEMBAK" },
-        cn: { target: "目标代码", granted: "访问允许", denied: "访问拒绝", successSub: "您成功绕过了 Plinko 防火墙。", failSub: "您输入了 {e} — 正确代码为 {t}。", again: "再玩一次", fire: "发射" }
-    };
-    const tLang = uiDictionary[curLang] || uiDictionary.en;
 </script>
 
 <div id="loadingOverlay">
@@ -140,7 +121,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 
 <div class="code-overlay">
     <div class="target-card">
-        <div class="target-label" id="targetLabel">Target Code</div>
+        <div class="target-label">Target Code</div>
         <div class="target-code" id="targetDisplay"></div>
     </div>
     <div class="input-slots" id="slotsDisplay">
@@ -162,7 +143,7 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         <span class="material-icons-round result-icon" id="resIcon">check_circle</span>
         <div class="res-title" id="resTitle">Access Granted</div>
         <div class="res-sub" id="resSub">You reproduced the code successfully.</div>
-        <button class="btn-done" id="btnAgain" onclick="resetGame()">Play Again</button>
+        <button class="btn-done" onclick="resetGame()">Play Again</button>
     </div>
 </div>
 
@@ -170,27 +151,19 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = { apiKey:"AIzaSyBz0OfcaW50Ug7omcs-U_WSIo0BjdVKZdI", authDomain:"studentlist2026.firebaseapp.com", projectId:"studentlist2026", storageBucket:"studentlist2026.firebasestorage.app", messagingSenderId:"867205730183", appId:"1:867205730183:web:534666800bc7b2513fcd22" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-
-window.smkData = [];
 
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         window.location.replace("index.html");
     } else {
-        getDoc(doc(db, "appData", "schoolInfo")).then(snap => {
-            if(snap.exists()) window.smkData = snap.data().students || [];
-            
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.style.display = 'none', 300);
-            window.startGameEngine();
-        });
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.style.display = 'none', 300);
+        window.startGameEngine();
     }
 });
 </script>
@@ -216,6 +189,7 @@ const TANGENT_KEEP = 0.98;
 const MAX_SUBSTEPS = 16; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
+const MAX_BALLS = 150;
 const REST_RADIUS = 4, REST_TIME = 0.18, REST_MARGIN = 4, REST_FLATNESS = 0.7;
 const SLOT_WIDTH = 24, RAIL_HEIGHT = 48, LETTER_DROP = 12;
 const CANNON_BASE_RATIO = 0.5, CANNON_LENGTH_RATIO = 0.7, CANNON_WIDTH_RATIO = 0.34, MAX_AIM = Math.PI / 4, LAUNCH_SPEED = 720;
@@ -233,45 +207,30 @@ const getThemeColor = () => {
     };
 };
 
-// Apply Loaded Language
-document.getElementById('targetLabel').innerText = tLang.target;
-document.getElementById('btnAgain').innerText = tLang.again;
-document.getElementById('btnFireTouch').innerText = tLang.fire;
-
 // 3. State & Mode Toggle
-let currentMode = 'HARD'; // HARD -> EASY -> RAGEBAIT
+let isHardMode = true; 
 let activeChars = "012345";
 let CODE_LENGTH = 6;
 let OBSTACLE_RADIUS_RATIO = 0.15;
 
 window.toggleMode = () => {
-    if(currentMode === 'HARD') currentMode = 'EASY';
-    else if(currentMode === 'EASY') currentMode = 'RAGEBAIT';
-    else currentMode = 'HARD';
-
+    isHardMode = !isHardMode;
     const btn = document.getElementById('modeToggleBtn');
-    btn.innerText = currentMode;
+    btn.innerText = isHardMode ? "HARD" : "EASY";
+    btn.style.color = isHardMode ? "#FF3B30" : "#34C759";
+    btn.style.borderColor = isHardMode ? "#FF3B30" : "#34C759";
     
-    if(currentMode === 'HARD') {
-        btn.style.color = "#FF3B30"; btn.style.borderColor = "#FF3B30";
-        CODE_LENGTH = 6; activeChars = "012345"; OBSTACLE_RADIUS_RATIO = 0.15;
-        document.getElementById('handleL').style.opacity = "1"; document.getElementById('handleR').style.opacity = "1";
-        document.getElementById('handleL').style.pointerEvents = "auto"; document.getElementById('handleR').style.pointerEvents = "auto";
-    } else if(currentMode === 'EASY') {
-        btn.style.color = "#34C759"; btn.style.borderColor = "#34C759";
-        CODE_LENGTH = 4; activeChars = "0123"; OBSTACLE_RADIUS_RATIO = 0;
-        document.getElementById('handleL').style.opacity = "0"; document.getElementById('handleR').style.opacity = "0";
-        document.getElementById('handleL').style.pointerEvents = "none"; document.getElementById('handleR').style.pointerEvents = "none";
-    } else if(currentMode === 'RAGEBAIT') {
-        btn.style.color = "#AF52DE"; btn.style.borderColor = "#AF52DE";
-        CODE_LENGTH = 6; OBSTACLE_RADIUS_RATIO = 0.15;
-        document.getElementById('handleL').style.opacity = "1"; document.getElementById('handleR').style.opacity = "1";
-        document.getElementById('handleL').style.pointerEvents = "auto"; document.getElementById('handleR').style.pointerEvents = "auto";
-    }
+    // Easy mode: 4 target cups, no pegs. Hard mode: 6 cups, with pegs.
+    activeChars = isHardMode ? "012345" : "0123";
+    CODE_LENGTH = activeChars.length;
+    OBSTACLE_RADIUS_RATIO = isHardMode ? 0.15 : 0;
     
-    // Force recreation of logic resolution
-    world = null; 
-    window.resizeApp();
+    const hL = document.getElementById('handleL'), hR = document.getElementById('handleR');
+    hL.style.opacity = isHardMode ? "1" : "0";
+    hR.style.opacity = isHardMode ? "1" : "0";
+    hL.style.pointerEvents = isHardMode ? "auto" : "none";
+    hR.style.pointerEvents = isHardMode ? "auto" : "none";
+
     window.resetGame();
 };
 
@@ -473,29 +432,7 @@ const predictLanding = (w, x, y, vx, vy, blockers) => {
 };
 
 // 6. World Generation & Cannon
-const generateRagebait = () => {
-    let name = "RAGEBAIT";
-    if(window.smkData && window.smkData.length > 0) {
-        const student = window.smkData[Math.floor(Math.random() * window.smkData.length)];
-        name = student.name.split(' ')[0].replace(/[^A-Z]/gi, '').toUpperCase();
-    }
-    while(name.length < 6) { name += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)]; }
-    
-    const targetStr = name.substring(0, 6);
-    let uniq = Array.from(new Set(targetStr.split('')));
-    while(uniq.length < 6) {
-        const rc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
-        if(!uniq.includes(rc)) uniq.push(rc);
-    }
-    uniq.sort();
-    activeChars = uniq.join('');
-    return targetStr;
-}
-
-const randomCode = () => {
-    if(currentMode === 'RAGEBAIT') return generateRagebait();
-    return Array.from({length: CODE_LENGTH}, () => activeChars[Math.floor(Math.random() * activeChars.length)]).join('');
-};
+const randomCode = () => Array.from({length: CODE_LENGTH}, () => activeChars[Math.floor(Math.random() * CODE_LENGTH)]).join('');
 
 const initGame = () => {
     game.target = randomCode();
@@ -506,6 +443,7 @@ const initGame = () => {
     slotOf.clear();
     freedSlots = [];
     placedCount = 0;
+    if(window.resizeApp) window.resizeApp();
     updateUI();
 };
 
@@ -567,59 +505,43 @@ const fireCannon = () => {
     addBall({ pos: v(m.x, m.y), vel: v(vel.x, vel.y), radius: BALL_RADIUS, resting: false, anchor: v(m.x, m.y), stillTime: 0 });
 };
 
-// Logical Resolution to Fix Phone Rotation
-let isAiming = false, LOGICAL_W = 0, LOGICAL_H = 0, scaleFactor = 1, stageOffsetX = 0;
+// Controls
+let isAiming = false, isPanning = false, stageOffsetPx = 0, stageWidth = 0;
 const cvs = document.getElementById('gameCanvas');
 const ctx = cvs.getContext('2d');
 
 window.resizeApp = () => {
     const iw = window.innerWidth;
-    const ih = window.innerHeight - FIRE_BAR_HEIGHT;
+    stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
+    stageOffsetPx = (iw - stageWidth) / 2;
+    const h = window.innerHeight - FIRE_BAR_HEIGHT;
     const dpr = window.devicePixelRatio || 1;
+    cvs.width = stageWidth * dpr; cvs.height = h * dpr;
+    cvs.style.width = `${stageWidth}px`; cvs.style.height = `${h}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Only recreate world entirely if missing.
-    // This locks the aspect ratio preventing rotation from scrambling the physics!
-    if (!world) {
-        LOGICAL_W = Math.min(iw, STAGE_MAX_WIDTH);
-        LOGICAL_H = Math.max(ih, 500); // safety
-        cvs.width = LOGICAL_W * dpr; 
-        cvs.height = LOGICAL_H * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        world = createWorld(LOGICAL_W, LOGICAL_H);
-        
-        const margin = world.cupWidth * CANNON_BASE_RATIO;
-        apparatus.x = LOGICAL_W / 2;
+    world = createWorld(stageWidth, h);
+    const margin = world.cupWidth * CANNON_BASE_RATIO;
+    apparatus.x = apparatus.x === 0 ? stageWidth / 2 : clamp(apparatus.x, margin, stageWidth - margin);
 
-        const reach = cannonLength(world.cupWidth);
-        pegs.min = world.letterY - world.domeRadius;
-        pegs.max = Math.min(reach + world.domeRadius + LETTER_DROP * 2, pegs.min);
-        pegs.y = pegs.min;
-    }
-
-    // CSS scaling to prevent physics destruction on phone rotation
-    const scaleX = iw / LOGICAL_W;
-    const scaleY = ih / LOGICAL_H;
-    scaleFactor = Math.min(scaleX, scaleY);
+    const reach = cannonLength(world.cupWidth);
+    pegs.min = world.letterY - world.domeRadius;
+    pegs.max = Math.min(reach + world.domeRadius + LETTER_DROP * 2, pegs.min);
+    if (pegs.y === 0 || pegs.y > pegs.min) pegs.y = pegs.min;
     
-    cvs.style.width = `${LOGICAL_W * scaleFactor}px`;
-    cvs.style.height = `${LOGICAL_H * scaleFactor}px`;
-    
-    stageOffsetX = (iw - LOGICAL_W * scaleFactor) / 2;
-    cvs.style.left = `${stageOffsetX}px`;
-
+    // Position drag handles
     const lH = document.getElementById('handleL'), rH = document.getElementById('handleR');
-    lH.style.left = `${stageOffsetX}px`; 
-    rH.style.left = `${stageOffsetX + LOGICAL_W * scaleFactor - 12}px`;
-    
-    const visualPegY = pegs.y * scaleFactor;
-    lH.style.top = `${visualPegY + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
-    rH.style.top = `${visualPegY + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
+    lH.style.left = `${stageOffsetPx}px`; lH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
+    rH.style.left = `${stageOffsetPx + stageWidth - 12}px`; rH.style.top = `${pegs.y + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
+
+    for (const b of balls) {
+        b.pos.x = clamp(b.pos.x, b.radius, stageWidth - b.radius);
+        b.pos.y = clamp(b.pos.y, b.radius, h - b.radius);
+        b.resting = false;
+    }
 };
 
-// Transforms mouse/touch position into internal physics coordinates
-const stX = (cx) => (cx - stageOffsetX) / scaleFactor;
-const stY = (cy) => cy / scaleFactor;
-
+const stX = (cx) => cx - stageOffsetPx;
 const getHitBall = (x, y, slop = 2) => {
     for (let k = balls.length - 1; k >= 0; k--) {
         const b = balls[k];
@@ -632,34 +554,29 @@ const getHitBall = (x, y, slop = 2) => {
 cvs.addEventListener('pointerdown', e => {
     if (game.status !== 'playing') return;
     const sx = stX(e.clientX);
-    const sy = stY(e.clientY);
     const slop = e.pointerType === 'touch' ? 16 : 2;
-    const hit = getHitBall(sx, sy, slop);
+    const hit = getHitBall(sx, e.clientY, slop);
     if (hit) { removeBall(hit); hoverSlot = -1; return; }
     isAiming = true; hoverSlot = -1;
-    apparatus.angle = aimAngleCalc(sx, sy, apparatus.x);
+    apparatus.angle = aimAngleCalc(sx, e.clientY, apparatus.x);
 });
 window.addEventListener('pointermove', e => {
-    if (pegs.dragging && (currentMode === 'HARD' || currentMode === 'RAGEBAIT')) {
-        pegs.y = clamp(stY(e.clientY), pegs.max, pegs.min);
-        
-        const visualPegY = pegs.y * scaleFactor;
+    if (pegs.dragging && isHardMode) {
+        pegs.y = clamp(e.clientY, pegs.max, pegs.min);
         const lH = document.getElementById('handleL'), rH = document.getElementById('handleR');
-        lH.style.top = `${visualPegY + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`; 
-        rH.style.top = `${visualPegY + (FIRE_BAR_HEIGHT===0?0:FIRE_BAR_HEIGHT/2)}px`;
+        lH.style.top = `${pegs.y}px`; rH.style.top = `${pegs.y}px`;
         return;
     }
     const sx = stX(e.clientX);
-    const sy = stY(e.clientY);
-    if (isAiming) { apparatus.angle = aimAngleCalc(sx, sy, apparatus.x); return; }
+    if (isAiming) { apparatus.angle = aimAngleCalc(sx, e.clientY, apparatus.x); return; }
     if (e.pointerType !== 'mouse') return;
     if (game.status === 'playing') {
-        const hit = getHitBall(sx, sy);
+        const hit = getHitBall(sx, e.clientY);
         hoverSlot = hit ? slotOf.get(hit) : -1;
         cvs.style.cursor = hit ? 'pointer' : '';
     }
     const margin = world.cupWidth * CANNON_BASE_RATIO;
-    apparatus.x = clamp(sx, margin, LOGICAL_W - margin);
+    apparatus.x = clamp(sx, margin, stageWidth - margin);
     apparatus.angle = 0;
 });
 window.addEventListener('pointerup', e => {
@@ -667,13 +584,13 @@ window.addEventListener('pointerup', e => {
     if (!isAiming) return;
     isAiming = false;
     if (isTouch) return; // Touch fires via button
-    apparatus.angle = aimAngleCalc(stX(e.clientX), stY(e.clientY), apparatus.x);
+    apparatus.angle = aimAngleCalc(stX(e.clientX), e.clientY, apparatus.x);
     fireCannon();
     apparatus.angle = 0;
 });
 
 // Setup Rail Handles
-const handleDown = (e) => { if(currentMode === 'HARD' || currentMode === 'RAGEBAIT'){ e.preventDefault(); pegs.dragging = true; }};
+const handleDown = (e) => { if(isHardMode){ e.preventDefault(); pegs.dragging = true; }};
 document.getElementById('handleL').addEventListener('pointerdown', handleDown);
 document.getElementById('handleR').addEventListener('pointerdown', handleDown);
 
@@ -721,8 +638,8 @@ window.submitCode = () => {
     const m = document.getElementById('resultModal');
     document.getElementById('resIcon').innerText = won ? "verified" : "gpp_bad";
     document.getElementById('resIcon').className = won ? "material-icons-round result-icon res-win" : "material-icons-round result-icon res-fail";
-    document.getElementById('resTitle').innerText = won ? tLang.granted : tLang.denied;
-    document.getElementById('resSub').innerText = won ? tLang.successSub : tLang.failSub.replace("{e}", game.entered.join('')).replace("{t}", game.target);
+    document.getElementById('resTitle').innerText = won ? "Access Granted" : "Access Denied";
+    document.getElementById('resSub').innerText = won ? "You successfully bypassed the Plinko firewall." : `You entered ${game.entered.join('')} — the code was ${game.target}.`;
     m.classList.add('open');
 };
 
@@ -768,9 +685,7 @@ const loop = (t) => {
     // Glow Prediction
     let glowX = null;
     const blockers = playing ? balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius})) : [];
-    
-    // Disable glowing target in RAGEBAIT mode
-    if (playing && game.dropped < CODE_LENGTH && currentMode !== 'RAGEBAIT') {
+    if (playing && game.dropped < CODE_LENGTH) {
         const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
         const vel = launchVel(apparatus.angle);
         const idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
@@ -792,7 +707,7 @@ const loop = (t) => {
     }
 
     if (playing) {
-        if(currentMode === 'HARD' || currentMode === 'RAGEBAIT') {
+        if(isHardMode) {
             // Rail Line
             ctx.strokeStyle = theme.pegLine; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.setLineDash([0, 8]);
             ctx.beginPath(); ctx.moveTo(0, pegs.y); ctx.lineTo(world.width, pegs.y); ctx.stroke();
@@ -818,8 +733,7 @@ const loop = (t) => {
                 const fadeStart = total * 0.75;
                 const march = (t / 1000) * 12;
                 ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
-                // Forces red path (no green glow) in Ragebait mode
-                const rgb = (glowX !== null && currentMode !== 'RAGEBAIT') ? theme.glow : theme.guideline;
+                const rgb = glowX !== null ? theme.glow : theme.guideline;
                 for (let i = 1; i < path.length; i++) {
                     const mid = (dists[i-1] + dists[i]) / 2;
                     const fade = mid <= fadeStart ? 1 : Math.max(0, 1 - (mid - fadeStart)/(total - fadeStart));
@@ -858,8 +772,7 @@ const loop = (t) => {
     ctx.fillStyle = theme.dome;
     ctx.beginPath(); ctx.arc(0, 0, baseRad, 0, Math.PI); ctx.fill();
     // Barrel
-    // FIX: Negative apparatus.angle so the visual cannon matches the launch trajectory mathematically
-    ctx.rotate(-apparatus.angle);
+    ctx.rotate(apparatus.angle);
     ctx.fillStyle = theme.dome;
     ctx.beginPath();
     ctx.moveTo(-bWid/2, 0); ctx.lineTo(bWid/2, 0); ctx.lineTo(bWid/2, bLen - bWid*0.4);
@@ -873,10 +786,8 @@ const loop = (t) => {
 // Start Engine
 window.startGameEngine = () => {
     window.addEventListener('resize', window.resizeApp);
-    // Use reset to jumpstart everything cleanly
-    window.toggleMode();
-    window.toggleMode();
-    window.toggleMode(); // Ensure it syncs back to HARD default, correctly generating the world
+    initGame();
+    window.resizeApp();
     requestAnimationFrame(loop);
 };
 </script>
