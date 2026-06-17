@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
-<title>Do You Know Your Students?</title>
+<title>Guess Who? Minigame</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -24,36 +24,50 @@ body.bg-night[data-theme="dark"]{--grad-1:#050505;--grad-2:#111111;--grad-3:#0a1
 body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);background-color:var(--ios-bg);background-image:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 50%,var(--grad-3) 100%);background-attachment:fixed;background-size:cover;min-height:100vh; overflow-x:hidden;}
 
 /* HEADER */
-.ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; background: var(--ios-card); backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
+.ios-header { position: fixed; top: 0; left: 0; right: 0; padding: max(env(safe-area-inset-top), 16px) 16px 12px; display: flex; align-items: center; justify-content: space-between; z-index: 1000; background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
 .btn-icon-only { width: 42px; height: 42px; border-radius: 12px; background: var(--ios-input); border: 1px solid var(--chip-border); display: flex; align-items: center; justify-content: center; color: var(--ios-text); cursor: pointer; transition: transform 0.2s; text-decoration: none; flex-shrink: 0; }
 .btn-icon-only:active { transform: scale(0.9); }
-.lang-switch{height:42px;box-sizing:border-box;background:var(--ios-input);border-radius:12px;padding:2px;display:flex;align-items:center;border:1px solid var(--chip-border); flex-shrink:0; }.lang-btn{height:100%;display:flex;align-items:center;justify-content:center;background:0 0;border:1px solid transparent;padding:0 10px;border-radius:10px;font-size:12px;font-weight:600;color:var(--ios-text);cursor:pointer;opacity:.5;transition:.2s;}.lang-btn.active{background:var(--ios-card);opacity:1;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:1px solid var(--glass-border)}
 
 /* MAIN CONTAINER */
-.container { padding-top: 100px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; width: 100%; px: 16px; }
+.container { padding-top: 100px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; width: 100%; padding-left: 16px; padding-right: 16px; }
 @supports (padding-top:env(safe-area-inset-top)){ .container { padding-top: calc(80px + env(safe-area-inset-top)); } }
 
-.clue-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 28px; padding: 30px 24px; text-align: center; width: 90%; max-width: 400px; }
-.heart-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
-.heart { font-size: 32px; transition: color 0.3s var(--ease-spring), transform 0.3s; }
-.clue-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; background: var(--ios-input); padding: 16px; border-radius: 16px; border: 1px solid var(--chip-border); text-align: left; }
-.clue-lbl { font-size: 11px; font-weight: 700; color: var(--ios-blue); text-transform: uppercase; letter-spacing: 0.05em; }
-.clue-val { font-size: 16px; font-weight: 800; color: var(--ios-text); }
+.guess-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg), inset 0 1px 1px var(--glass-border); border-radius: 36px; padding: 30px 24px; text-align: center; width: 100%; max-width: 440px; position: relative; overflow: hidden; }
+
+/* AVATAR & LIVES */
+.avatar-wrap { position: relative; margin: 0 auto 20px; width: 110px; height: 110px; }
+.avatar-mystery { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, rgba(0,122,255,0.2), rgba(175,82,222,0.2)); border: 2px solid var(--glass-border); box-shadow: 0 12px 32px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 800; color: var(--ios-blue); transition: all 0.5s var(--ease-spring); position: relative; z-index: 2; overflow: hidden;}
+.avatar-mystery.fail { background: #FF3B30; color: #fff; transform: scale(1.1); box-shadow: 0 12px 32px rgba(255,59,48,0.4); border-color: transparent;}
+.avatar-mystery.win { background: #34C759; color: #fff; transform: scale(1.1) rotate(360deg); box-shadow: 0 12px 32px rgba(52,199,89,0.4); border-color: transparent;}
+
+.heart-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.heart { font-size: 28px; color: #FF2D55; transition: all 0.4s var(--ease-spring); }
+.heart.broken { color: var(--ios-sep); transform: scale(0.8); }
+
+/* CLUES UI */
+.clue-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.clue-item { background: var(--ios-input); border: 1px solid var(--chip-border); border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; text-align: left; }
+.clue-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--ios-card); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ios-blue); font-size: 20px; flex-shrink: 0;}
+.clue-text { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow: hidden; }
+.clue-title { font-size: 11px; font-weight: 700; color: var(--ios-text-sec); text-transform: uppercase; letter-spacing: 0.05em; }
+.clue-value { font-size: 15px; font-weight: 700; color: var(--ios-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* INPUT & AUTOCOMPLETE */
-.search-box-cont { position: relative; width: 100%; margin-top: 24px; }
-.ios-search-field { width: 100%; height: 50px; padding: 0 16px 0 44px; border-radius: 14px; border: 1px solid var(--chip-border); background: var(--ios-input); font-size: 16px; color: var(--ios-text); outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+.search-box-cont { position: relative; width: 100%; }
+.ios-search-field { width: 100%; height: 54px; padding: 0 16px 0 48px; border-radius: 16px; border: 1px solid var(--chip-border); background: var(--ios-input); font-size: 16px; font-weight: 600; color: var(--ios-text); outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 .ios-search-field:focus { box-shadow: 0 0 0 2px var(--ios-blue); background: var(--ios-card); }
-.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ios-text-sec); font-size: 22px; pointer-events: none; }
+.search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ios-text-sec); font-size: 24px; pointer-events: none; transition: 0.3s; }
+.ios-search-field:focus + .search-icon { color: var(--ios-blue); }
 
-.autocomplete-dropdown { position: absolute; top: 55px; left: 0; right: 0; background: var(--ios-modal); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 18px; padding: 6px; display: none; flex-direction: column; max-height: 250px; overflow-y: auto; z-index: 2000; text-align: left; }
-.autocomplete-dropdown.show { display: flex; animation: fadeUp 0.3s forwards; }
-.autocomplete-item { padding: 14px; font-size: 15px; font-weight: 600; color: var(--ios-text); cursor: pointer; border-radius: 12px; transition: background 0.2s; }
-.autocomplete-item:active { background: rgba(0,0,0,0.06); }
+.autocomplete-dropdown { position: absolute; top: 60px; left: 0; right: 0; background: var(--ios-modal); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lg); border-radius: 20px; padding: 8px; display: none; flex-direction: column; max-height: 250px; overflow-y: auto; z-index: 2000; text-align: left; }
+.autocomplete-dropdown.show { display: flex; animation: fadeUp 0.3s var(--ease-spring) forwards; }
+.autocomplete-item { padding: 14px 16px; font-size: 15px; font-weight: 600; color: var(--ios-text); cursor: pointer; border-radius: 12px; transition: background 0.2s; display: flex; align-items: center; gap: 12px; }
+.autocomplete-item:active { background: rgba(0,0,0,0.06); transform: scale(0.98); }
 [data-theme="dark"] .autocomplete-item:active { background: rgba(255,255,255,0.1); }
+.ac-av { width: 32px; height: 32px; border-radius: 50%; background: var(--ios-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
 
-@keyframes fadeUp { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(-10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
 .shake { animation: shake 0.4s; }
 
 /* Modal Result */
@@ -65,9 +79,9 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 .result-icon { font-size: 64px; margin-bottom: 16px; display: inline-block; }
 .res-win { color: #34C759; filter: drop-shadow(0 4px 12px rgba(52,199,89,0.3)); }
 .res-fail { color: #FF3B30; filter: drop-shadow(0 4px 12px rgba(255,59,48,0.3)); }
-.res-title { font-size: 24px; font-weight: 800; color: var(--ios-text); margin-bottom: 8px; }
+.res-title { font-size: 24px; font-weight: 800; color: var(--ios-text); margin-bottom: 8px; letter-spacing: -0.02em; }
 .res-sub { font-size: 14px; color: var(--ios-text-sec); margin-bottom: 24px; line-height: 1.4; }
-.btn-done { width: 100%; height: 50px; background: var(--ios-blue); color: #FFF; border-radius: 14px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 16px var(--ios-blue-light); }
+.btn-done { width: 100%; height: 50px; background: var(--ios-blue); color: #FFF; border-radius: 14px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 8px 24px var(--ios-blue-light); }
 .btn-done:active { transform: scale(0.96); }
 
 #loadingOverlay { position: fixed; inset: 0; background: var(--ios-bg); background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s; }
@@ -93,6 +107,15 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
         else if(hour>=11 && hour<18) document.body.classList.add('bg-afternoon');
         else document.body.classList.add('bg-night');
     }
+    
+    // Auto load language
+    const curLang = localStorage.getItem('language') || 'en';
+    const txtDict = {
+        en: { title: "Guess Who?", clue1: "Primary School", clue2: "Was NOT in", clue3: "Current Class", win: "You got it!", lose: "Game Over", reveal: "The student was:", ph: "Search by Name...", play: "Play Again", outOf: "Out of lives!" },
+        bm: { title: "Teka Siapa?", clue1: "Sekolah Rendah", clue2: "BUKAN dari", clue3: "Kelas Semasa", win: "Tepat Sekali!", lose: "Tamat Permainan", reveal: "Murid tersebut ialah:", ph: "Cari nama...", play: "Main Semula", outOf: "Kehabisan nyawa!" },
+        cn: { title: "猜猜是谁？", clue1: "毕业小学", clue2: "2025年不在", clue3: "目前班级", win: "回答正确！", lose: "游戏结束", reveal: "该学生是：", ph: "搜索姓名...", play: "再玩一次", outOf: "没有机会了！" }
+    };
+    window.tTxt = txtDict[curLang] || txtDict.en;
 </script>
 
 <div id="loadingOverlay">
@@ -102,37 +125,48 @@ body{margin:0;padding:0;font-family:var(--font-stack);color:var(--ios-text);back
 <header class="ios-header">
     <a href="index.html" class="btn-icon-only"><span class="material-icons-round">arrow_back</span></a>
     <div style="font-weight:800; font-size:18px; color:var(--ios-text); letter-spacing:-0.02em;" id="gameTitle">Guess Who?</div>
-    <div class="lang-switch">
-        <button class="lang-btn active" id="btnLangEN" onclick="window.switchLang('en')">EN</button>
-        <button class="lang-btn" id="btnLangBM" onclick="window.switchLang('bm')">BM</button>
-        <button class="lang-btn" id="btnLangCN" onclick="window.switchLang('cn')">CN</button>
-    </div>
+    <div style="width: 42px;"></div> <!-- spacer -->
 </header>
 
 <div class="container">
-    <div class="clue-card">
-        <div class="heart-row">
+    <div class="guess-card">
+        <div class="avatar-wrap">
+            <div class="avatar-mystery" id="avMystery">?</div>
+        </div>
+        
+        <div class="heart-row" id="heartRow">
             <span class="material-icons-round heart" id="heart1">favorite</span>
             <span class="material-icons-round heart" id="heart2">favorite</span>
             <span class="material-icons-round heart" id="heart3">favorite</span>
         </div>
         
-        <div class="clue-row">
-            <div class="clue-lbl" id="clue1Lbl">Primary School</div>
-            <div class="clue-val" id="clue1Val">...</div>
-        </div>
-        <div class="clue-row">
-            <div class="clue-lbl" id="clue2Lbl">Was NOT in</div>
-            <div class="clue-val" id="clue2Val">...</div>
-        </div>
-        <div class="clue-row">
-            <div class="clue-lbl" id="clue3Lbl">Current Class</div>
-            <div class="clue-val" id="clue3Val">...</div>
+        <div class="clue-list">
+            <div class="clue-item">
+                <div class="clue-icon"><span class="material-icons-round">school</span></div>
+                <div class="clue-text">
+                    <div class="clue-title" id="clue1Lbl">Primary School</div>
+                    <div class="clue-value" id="clue1Val">...</div>
+                </div>
+            </div>
+            <div class="clue-item">
+                <div class="clue-icon"><span class="material-icons-round" style="color: #FF3B30;">history</span></div>
+                <div class="clue-text">
+                    <div class="clue-title" id="clue2Lbl">Was NOT in</div>
+                    <div class="clue-value" id="clue2Val">...</div>
+                </div>
+            </div>
+            <div class="clue-item">
+                <div class="clue-icon"><span class="material-icons-round" style="color: #34C759;">meeting_room</span></div>
+                <div class="clue-text">
+                    <div class="clue-title" id="clue3Lbl">Current Class</div>
+                    <div class="clue-value" id="clue3Val">...</div>
+                </div>
+            </div>
         </div>
         
         <div class="search-box-cont" id="searchBoxCont">
+            <input type="text" class="ios-search-field" id="searchInput" placeholder="Search by Name..." oninput="window.showAutocomplete(this.value)" autocomplete="off">
             <span class="material-icons-round search-icon">search</span>
-            <input type="text" class="ios-search-field" id="searchInput" placeholder="Search name..." oninput="window.showAutocomplete(this.value)" autocomplete="off">
             <div id="searchAutocomplete" class="autocomplete-dropdown"></div>
         </div>
     </div>
@@ -166,6 +200,7 @@ onAuthStateChanged(auth, async (user) => {
             const snap = await getDoc(doc(db, "appData", "schoolInfo"));
             if (snap.exists()) {
                 window.smkData = snap.data().students || [];
+                window.updateUI();
                 window.startGame();
             }
         } catch(e) { console.error(e); }
@@ -176,28 +211,15 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 
 <script>
-let curLang = 'en';
 let targetStudent = null;
 let lives = 3;
-
-const txt = {
-    en: { title: "Guess Who?", clue1: "Primary School", clue2: "Was NOT in", clue3: "Current Class", win: "You got it!", lose: "Game Over", reveal: "The student was:", ph: "Search name...", play: "Play Again" },
-    bm: { title: "Teka Siapa?", clue1: "Sekolah Rendah", clue2: "BUKAN dari kelas", clue3: "Kelas Semasa", win: "Tepat Sekali!", lose: "Tamat Permainan", reveal: "Murid tersebut ialah:", ph: "Cari nama...", play: "Main Semula" },
-    cn: { title: "猜猜是谁？", clue1: "毕业小学", clue2: "2025年不在", clue3: "目前班级", win: "回答正确！", lose: "游戏结束", reveal: "该学生是：", ph: "搜索姓名...", play: "再玩一次" }
-};
-
-window.switchLang = (l) => {
-    curLang = l;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btnLang' + l.toUpperCase()).classList.add('active');
-    updateUI();
-};
 
 window.startGame = () => {
     if(!window.smkData || window.smkData.length === 0) return;
     targetStudent = window.smkData[Math.floor(Math.random() * window.smkData.length)];
     lives = 3;
     
+    // Make sure 'wrongOld' logic doesn't pick their actual old class
     const oldClasses = ["1 BIRU", "1 HIJAU", "1 KUNING", "1 MERAH", "1 PERANG", "1 UNGU", "PB"];
     let wrong = oldClasses[Math.floor(Math.random() * oldClasses.length)];
     let safety = 0;
@@ -207,19 +229,28 @@ window.startGame = () => {
     }
     targetStudent.wrongOld = wrong;
 
-    document.getElementById('heart1').style.color = '#FF2D55';
-    document.getElementById('heart2').style.color = '#FF2D55';
-    document.getElementById('heart3').style.color = '#FF2D55';
+    // Reset Hearts
+    [1,2,3].forEach(i => {
+        const h = document.getElementById('heart' + i);
+        h.innerText = 'favorite';
+        h.classList.remove('broken');
+    });
+    
+    // Reset Avatar
+    const av = document.getElementById('avMystery');
+    av.innerText = '?';
+    av.className = 'avatar-mystery';
     
     document.getElementById('resultModal').classList.remove('open');
     document.getElementById('searchInput').value = '';
+    document.getElementById('searchInput').disabled = false;
     document.getElementById('searchAutocomplete').classList.remove('show');
     
     updateUI();
 };
 
-const updateUI = () => {
-    const t = txt[curLang];
+window.updateUI = () => {
+    const t = window.tTxt;
     document.getElementById('gameTitle').innerText = t.title;
     document.getElementById('searchInput').placeholder = t.ph;
     
@@ -244,9 +275,10 @@ window.showAutocomplete = function(query) {
     
     if(matches.length > 0) {
         box.innerHTML = matches.map(m => {
-            const highlight = m.name.replace(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'), '<span style="color:var(--ios-blue);">$1</span>');
+            const highlight = m.name.replace(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'), '<span style="color:var(--ios-blue); font-weight:800;">$1</span>');
             return `<div class="autocomplete-item" onclick="window.makeGuess('${m.id}')">
-                <div>${highlight}</div>
+                <div class="ac-av">${m.name.charAt(0)}</div>
+                <div style="flex:1;">${highlight}</div>
             </div>`;
         }).join('');
         box.classList.add('show');
@@ -260,36 +292,45 @@ window.makeGuess = function(id) {
     document.getElementById('searchInput').value = '';
     
     if(id === targetStudent.id) {
-        endGame(true);
+        document.getElementById('searchInput').disabled = true;
+        document.getElementById('avMystery').innerText = targetStudent.name.charAt(0);
+        document.getElementById('avMystery').classList.add('win');
+        setTimeout(() => endGame(true), 800);
     } else {
         lives--;
-        document.getElementById('heart' + (lives + 1)).style.color = 'var(--ios-sep)';
-        document.getElementById('heart' + (lives + 1)).style.transform = 'scale(0.8)';
+        const h = document.getElementById('heart' + (lives + 1));
+        h.innerText = 'favorite_border';
+        h.classList.add('broken');
         
         const cont = document.getElementById('searchBoxCont');
         cont.classList.add('shake');
         setTimeout(() => cont.classList.remove('shake'), 400);
         
-        if(lives <= 0) setTimeout(() => endGame(false), 400);
+        if(lives <= 0) {
+            document.getElementById('searchInput').disabled = true;
+            document.getElementById('avMystery').innerText = targetStudent.name.charAt(0);
+            document.getElementById('avMystery').classList.add('fail');
+            setTimeout(() => endGame(false), 800);
+        }
     }
 };
 
 const endGame = (won) => {
-    const t = txt[curLang];
+    const t = window.tTxt;
     const m = document.getElementById('resultModal');
     document.getElementById('resIcon').innerText = won ? "celebration" : "sentiment_very_dissatisfied";
     document.getElementById('resIcon').className = won ? "material-icons-round result-icon res-win" : "material-icons-round result-icon res-fail";
-    document.getElementById('resTitle').innerText = won ? t.win : t.lose;
+    document.getElementById('resTitle').innerText = won ? t.win : t.outOf;
     
     const cnName = targetStudent.cn !== "-" ? ` (${targetStudent.cn})` : "";
-    document.getElementById('resSub').innerHTML = `${t.reveal}<br><b>${targetStudent.name}${cnName}</b>`;
+    document.getElementById('resSub').innerHTML = `${t.reveal}<br><br><b style="font-size:18px; color:var(--ios-text);">${targetStudent.name}${cnName}</b>`;
     document.getElementById('resBtn').innerText = t.play;
     m.classList.add('open');
 };
 
 document.addEventListener('click', (e) => {
     const drop = document.getElementById('searchAutocomplete');
-    if(drop.classList.contains('show') && !document.getElementById('searchBoxCont').contains(e.target)){ 
+    if(drop && drop.classList.contains('show') && !document.getElementById('searchBoxCont').contains(e.target)){ 
         drop.classList.remove('show'); 
     }
 });
