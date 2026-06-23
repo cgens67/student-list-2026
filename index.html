@@ -1284,7 +1284,24 @@ window.hexToRgba = function(hex, alpha) {
             
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; border:1px solid var(--chip-border);">
               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Export Student Data</label>
-              <label style="font-size:13px; color:var(--ios-text); display:flex; align-items:center; gap:6px; margin-bottom:10px;"><input type="checkbox" id="adminExportExcludeIds" style="width:16px; height:16px; accent-color:var(--ios-blue);"> <span id="lblAdminExportExcludeIds" class="anim-text-change">Exclude IDs from export</span></label>
+              
+              <div class="custom-select-container" style="margin-bottom:12px;">
+                <div class="custom-select-header" id="adminExportClassHeader" onclick="window.toggleCustomSelect('adminExportClassDropdown')">
+                   <span id="lblAdminExportAll">All Classes</span><span class="material-icons-round">expand_more</span>
+                </div>
+                <div class="custom-select-dropdown" id="adminExportClassDropdown" data-value="All">
+                   <div class="custom-option" id="optExportAll" onclick="window.selectOption('adminExportClassDropdown', 'All', uiText[curLang].allClasses || 'All Classes', 'adminExportClassHeader')">All Classes</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 BIRU', '2 BIRU', 'adminExportClassHeader')">2 BIRU</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 HIJAU', '2 HIJAU', 'adminExportClassHeader')">2 HIJAU</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 KUNING', '2 KUNING', 'adminExportClassHeader')">2 KUNING</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 MERAH', '2 MERAH', 'adminExportClassHeader')">2 MERAH</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 PERANG', '2 PERANG', 'adminExportClassHeader')">2 PERANG</div>
+                   <div class="custom-option" onclick="window.selectOption('adminExportClassDropdown', '2 UNGU', '2 UNGU', 'adminExportClassHeader')">2 UNGU</div>
+                </div>
+              </div>
+
+              <label style="font-size:13px; color:var(--ios-text); display:flex; align-items:center; gap:6px; margin-bottom:12px;"><input type="checkbox" id="adminExportExcludeIds" style="width:16px; height:16px; accent-color:var(--ios-blue);"> <span id="lblAdminExportExcludeIds" class="anim-text-change">Exclude IDs from export</span></label>
+              
               <div style="display:flex; gap:8px;">
                 <button onclick="window.exportStudents('json')" style="flex:1; background:var(--ios-card); color:var(--ios-blue); border:1px solid var(--chip-border); padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:var(--glass-shadow);"><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom; margin-right:4px;">data_object</span> JSON</button>
                 <button onclick="window.exportStudents('txt')" style="flex:1; background:var(--ios-card); color:var(--ios-text); border:1px solid var(--chip-border); padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:var(--glass-shadow);"><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom; margin-right:4px;">description</span> TXT</button>
@@ -2810,6 +2827,8 @@ window.switchLanguage=function(lang, skipSync=false){
 
             if (window.renderUpdateStep) window.renderUpdateStep();
             if (document.getElementById('lblAllClasses')) setTextAndAnimateWidth(document.getElementById('lblAllClasses'), txt.allClasses || "All Classes");
+            if (document.getElementById('lblAdminExportAll')) document.getElementById('lblAdminExportAll').innerText = txt.allClasses || "All Classes";
+            if (document.getElementById('optExportAll')) document.getElementById('optExportAll').innerText = txt.allClasses || "All Classes";
             
             if(document.getElementById('adminOverlay').classList.contains('open')){
                 window.openAdminPanel();
@@ -4006,26 +4025,42 @@ window.exportStudents = (format) => {
     }
 
     const excludeIds = document.getElementById('adminExportExcludeIds') ? document.getElementById('adminExportExcludeIds').checked : false;
+    const classDrop = document.getElementById('adminExportClassDropdown');
+    const selectedClass = classDrop ? classDrop.getAttribute('data-value') : 'All';
+
+    let exportData = window.adminTempStudents;
+    if (selectedClass !== 'All') {
+        exportData = exportData.filter(s => s.newClass && s.newClass.toUpperCase() === selectedClass);
+    }
+
+    if (exportData.length === 0) {
+        if(window.showToast) window.showToast("No students found for this class.", "error_outline");
+        return;
+    }
 
     let content = "";
     let mimeType = "";
-    let filename = "student_list_2026_" + new Date().toISOString().split('T')[0];
+    let filenameSuffix = selectedClass === 'All' ? 'All_Classes' : selectedClass.replace(' ', '_');
+    let filename = "student_list_2026_" + filenameSuffix + "_" + new Date().toISOString().split('T')[0];
 
     if (format === 'json') {
-        let exportData = window.adminTempStudents;
+        let jsonData = exportData;
         if (excludeIds) {
-            exportData = exportData.map(s => {
+            jsonData = jsonData.map(s => {
                 const { id, ...rest } = s;
                 return rest;
             });
         }
-        content = JSON.stringify(exportData, null, 2);
+        content = JSON.stringify(jsonData, null, 2);
         mimeType = "application/json";
         filename += ".json";
     } else if (format === 'txt') {
-        content = "Student Allocation List 2026\n============================\n\n";
+        content = "Student Allocation List 2026\n";
+        content += "Class: " + (selectedClass === 'All' ? "All Classes" : selectedClass) + "\n";
+        content += "============================\n\n";
+        
         // Sorts students by Class first, then alphabetically by name
-        const sorted = [...window.adminTempStudents].sort((a,b) => {
+        const sorted = [...exportData].sort((a,b) => {
             if(a.newClass === b.newClass) return a.name.localeCompare(b.name);
             return (a.newClass || "").localeCompare(b.newClass || "");
         });
