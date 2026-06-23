@@ -1281,6 +1281,15 @@ window.hexToRgba = function(hex, alpha) {
                 <button id="adminBtnDelete" onclick="window.adminDeleteStudent()" style="flex:1; background:#FF3B30; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Delete</button>
               </div>
             </div>
+            
+            <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; border:1px solid var(--chip-border);">
+              <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Export Student Data</label>
+              <div style="display:flex; gap:8px;">
+                <button onclick="window.exportStudents('json')" style="flex:1; background:var(--ios-card); color:var(--ios-blue); border:1px solid var(--chip-border); padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:var(--glass-shadow);"><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom; margin-right:4px;">data_object</span> JSON</button>
+                <button onclick="window.exportStudents('txt')" style="flex:1; background:var(--ios-card); color:var(--ios-text); border:1px solid var(--chip-border); padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:var(--glass-shadow);"><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom; margin-right:4px;">description</span> TXT</button>
+              </div>
+            </div>
+
           </div>
 
           <!-- TAB 2: CLASSES & TEACHERS -->
@@ -3955,6 +3964,48 @@ window.adminDeleteStudent = () => {
       "Delete",
       "#FF3B30"
   );
+};
+
+window.exportStudents = (format) => {
+    if (!window.adminTempStudents || window.adminTempStudents.length === 0) {
+        if(window.showToast) window.showToast("No students to export.", "error_outline");
+        return;
+    }
+
+    let content = "";
+    let mimeType = "";
+    let filename = "student_list_2026_" + new Date().toISOString().split('T')[0];
+
+    if (format === 'json') {
+        content = JSON.stringify(window.adminTempStudents, null, 2);
+        mimeType = "application/json";
+        filename += ".json";
+    } else if (format === 'txt') {
+        content = "Student Allocation List 2026\n============================\n\n";
+        // Sorts students by Class first, then alphabetically by name
+        const sorted = [...window.adminTempStudents].sort((a,b) => {
+            if(a.newClass === b.newClass) return a.name.localeCompare(b.name);
+            return (a.newClass || "").localeCompare(b.newClass || "");
+        });
+        
+        sorted.forEach(s => {
+            content += `Name: ${s.name}\nChinese Name: ${s.cn || "-"}\nID: ${s.id}\nCurrent Class: ${s.newClass}\nOld Class: ${s.oldClass || "-"}\nPrimary School: ${s.sch || "-"}\n----------------------------\n`;
+        });
+        mimeType = "text/plain";
+        filename += ".txt";
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    if(window.showToast) window.showToast("Exported " + format.toUpperCase(), "download_done");
 };
 
 window.adminCurrentDutyDay = 'Monday';
