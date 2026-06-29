@@ -1259,6 +1259,7 @@ window.hexToRgba = function(hex, alpha) {
               <input type="text" id="adminStName" placeholder="Full Name" class="admin-input">
               <input type="text" id="adminStCn" placeholder="Chinese Name (or -)" class="admin-input">
               <input type="text" id="adminStOld" placeholder="Old Class (e.g. 1B)" class="admin-input">
+              <input type="text" id="adminStMoe" placeholder="MOE Email (e.g. m-12345678@moe-dl.edu.my)" class="admin-input">
               
               <div class="custom-select-container">
                   <div class="custom-select-header" id="adminClassSelectHeader" onclick="window.toggleCustomSelect('adminClassDropdown')">
@@ -1282,6 +1283,12 @@ window.hexToRgba = function(hex, alpha) {
               </div>
             </div>
             
+            <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; border:1px solid var(--chip-border);">
+              <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Import JSON Student Data</label>
+              <input type="file" id="adminImportFile" accept=".json" style="display:none;" onchange="window.importStudents(event)">
+              <button onclick="document.getElementById('adminImportFile').click()" style="width:100%; background:var(--ios-card); color:var(--ios-blue); border:1px solid var(--chip-border); padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:var(--glass-shadow);"><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom; margin-right:4px;">upload_file</span> Select JSON File to Import</button>
+            </div>
+
             <div style="background:var(--ios-input); border-radius:12px; padding:12px; margin-top:10px; border:1px solid var(--chip-border);">
               <label style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Export Student Data</label>
               
@@ -1783,6 +1790,7 @@ window.hexToRgba = function(hex, alpha) {
       <button class='cm-item' onclick='window.ctxAction("copy")'><span id='ctxBtnCopy'>Copy Name</span><span class='material-icons-round cm-icon'>content_copy</span></button>
       <button class='cm-item' onclick='window.ctxAction("copy_cn")'><span id='ctxBtnCopyCn'>Copy Chinese Name</span><span class='material-icons-round cm-icon'>g_translate</span></button>
       <button class='cm-item' onclick='window.ctxAction("copy_id")'><span id='ctxBtnCopyId'>Copy Student ID</span><span class='material-icons-round cm-icon'>badge</span></button>
+      <button class='cm-item' onclick='window.ctxAction("copy_moe")'><span id='ctxBtnCopyMoe'>Copy MOE Email</span><span class='material-icons-round cm-icon'>email</span></button>
       <button class='cm-item' onclick='window.ctxAction("fav")'><span id='ctxFavText'>Favorite</span><span class='material-icons-round cm-icon' id='ctxFavIcon'>star_border</span></button>
     </div>
   </div>
@@ -3438,7 +3446,7 @@ window.handleTouchMove=function(){clearTimeout(longPressTimer)}
 window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;window.showContextMenu(id)}
 window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=window.favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxBtnCopyId').innerText=uiText[curLang].ctxCopyIdBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
 window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
-window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
+window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}else if(action==='copy_moe'){if(student.moe&&student.moe!=="-"){navigator.clipboard.writeText(student.moe).then(()=>{window.showToast("MOE Email Copied","email")})}else{window.showToast("No MOE Email","error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 
@@ -3958,6 +3966,7 @@ window.loadAdminStudentForm = () => {
     document.getElementById('adminStId').value = ''; 
     document.getElementById('adminStName').value = ''; document.getElementById('adminStCn').value = '';
     document.getElementById('adminStOld').value = ''; 
+    document.getElementById('adminStMoe').value = ''; 
     window.selectOption('adminClassDropdown', '2 BIRU', '2 BIRU', 'adminClassSelectHeader');
     document.getElementById('adminStSch').value = '';
   } else {
@@ -3966,6 +3975,7 @@ window.loadAdminStudentForm = () => {
       document.getElementById('adminStId').value = student.id; 
       document.getElementById('adminStName').value = student.name; document.getElementById('adminStCn').value = student.cn || "-";
       document.getElementById('adminStOld').value = student.oldClass || "-"; 
+      document.getElementById('adminStMoe').value = student.moe || "-"; 
       window.selectOption('adminClassDropdown', student.newClass || '2 BIRU', student.newClass || '2 BIRU', 'adminClassSelectHeader');
       document.getElementById('adminStSch').value = student.sch || "-";
     }
@@ -3993,7 +4003,7 @@ window.adminApplyStudent = () => {
   }
 
   const existingIndex = window.adminTempStudents.findIndex(s => s.id === oldId);
-  const newObj = { id: newId, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminClassDropdown').getAttribute('data-value'), sch: document.getElementById('adminStSch').value.trim() || "-" };
+  const newObj = { id: newId, name: name, cn: document.getElementById('adminStCn').value.trim() || "-", oldClass: document.getElementById('adminStOld').value.trim() || "-", newClass: document.getElementById('adminClassDropdown').getAttribute('data-value'), sch: document.getElementById('adminStSch').value.trim() || "-", moe: document.getElementById('adminStMoe').value.trim() || "-" };
 
   if (existingIndex >= 0) { window.adminTempStudents[existingIndex] = newObj; if(window.showToast) window.showToast("Student Updated in Queue", "list_alt"); } 
   else { window.adminTempStudents.push(newObj); if(window.showToast) window.showToast("New Student Added to Queue", "person_add"); }
@@ -4016,6 +4026,29 @@ window.adminDeleteStudent = () => {
       "Delete",
       "#FF3B30"
   );
+};
+
+window.importStudents = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if(Array.isArray(data)) {
+                window.adminTempStudents = data;
+                window.refreshAdminStudentDropdown("NEW");
+                if(window.showToast) window.showToast("Students Imported to Queue!", "check_circle");
+            } else {
+                alert("Invalid JSON format. Expected an array.");
+            }
+        } catch(err) {
+            alert("Error parsing JSON file.");
+            console.error(err);
+        }
+        event.target.value = ''; // Reset input
+    };
+    reader.readAsText(file);
 };
 
 window.exportStudents = (format) => {
