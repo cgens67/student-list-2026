@@ -4760,7 +4760,7 @@ window.loadAdminAnalytics = async () => {
             html += `
             <div class="audit-item">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <div class="audit-user" style="margin-bottom:0;"><span class="material-icons-round" style="font-size:14px; vertical-align:middle; color:var(--ios-blue);">account_circle</span> UID: ${item.id.substring(0,8)}...</div>
+                    <div class="audit-user" style="margin-bottom:0;"><span class="material-icons-round" style="font-size:14px; vertical-align:middle; color:var(--ios-blue);">account_circle</span> ${item.email ? item.email : 'UID: ' + item.id.substring(0,8) + '...'}</div>
                 </div>
                 <div class="audit-detail">
                     <span class="audit-badge"><span class="material-icons-round" style="font-size:11px; margin-right:2px;">star</span> ${favCount} Favs</span>
@@ -4889,6 +4889,7 @@ window.cloudSyncUserData=async function(){
     if(!window.cloudUser) return;
     try {
         await setDoc(doc(db,"users",window.cloudUser.uid), {
+            email: window.cloudUser.email,
             favorites: window.favorites || [],
             searchHistory: window.searchHistory || [],
             theme: isDark ? 'dark' : 'light',
