@@ -195,8 +195,7 @@ const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val));
 const GRAVITY = 2200; 
 const RESTITUTION = 0.7; 
 const TANGENT_KEEP = 0.98; 
-const MAX_SUBSTEPS = userReduceLag ? 4 : 8; 
-const PRED_SUBSTEPS = userReduceLag ? 2 : 4;
+const MAX_SUBSTEPS = userReduceLag ? 6 : 12; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
 const REST_RADIUS = 4, REST_TIME = 0.18, REST_MARGIN = 4, REST_FLATNESS = 0.7;
@@ -204,9 +203,16 @@ const SLOT_WIDTH = 24, RAIL_HEIGHT = 48, LETTER_DROP = 12;
 const CANNON_BASE_RATIO = 0.5, CANNON_LENGTH_RATIO = 0.7, CANNON_WIDTH_RATIO = 0.34, MAX_AIM = Math.PI / 4, LAUNCH_SPEED = 720;
 const STAGE_MAX_WIDTH = 2560;
 
-const getThemeColor = () => {
-    const isDk = document.body.getAttribute('data-theme') === 'dark';
-    return { dome: isDk ? '#333' : '#FFF', text: isDk ? '#FFF' : '#1D1D1F', ball: isDk ? '#A1C4FD' : '#007AFF', glow: '74, 222, 128', guideline: '255, 70, 70', pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' };
+// Theme caching to avoid DOM calls every frame
+let cachedTheme = null;
+let lastThemeCheck = 0;
+const getThemeColor = (now = 0) => {
+    if (!cachedTheme || now - lastThemeCheck > 500) {
+        lastThemeCheck = now;
+        const isDk = document.body.getAttribute('data-theme') === 'dark';
+        cachedTheme = { dome: isDk ? '#333' : '#FFF', text: isDk ? '#FFF' : '#1D1D1F', ball: isDk ? '#A1C4FD' : '#007AFF', glow: '74, 222, 128', guideline: '255, 70, 70', pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' };
+    }
+    return cachedTheme;
 };
 
 let modeState = 'HARD'; 
@@ -270,11 +276,11 @@ const collideObstacles = (ball, w, obsVel) => { for (const o of w.obstacles) { c
 const collidePair = (a, b) => { if (a.resting && b.resting) return; const delta = sub(b.pos, a.pos); const dist = len(delta); const minDist = a.radius + b.radius; if (dist === 0 || dist >= minDist) return; const normal = scale(delta, 1 / dist); const overlap = minDist - dist; if (a.resting) { resolveHit(b, { normal, depth: overlap }); } else if (b.resting) { resolveHit(a, { normal: scale(normal, -1), depth: overlap }); } else { const shift = scale(normal, overlap / 2); a.pos = sub(a.pos, shift); b.pos = add(b.pos, shift); const approach = dot(sub(a.vel, b.vel), normal); if (approach > 0) { const impulse = scale(normal, ((1 + RESTITUTION) / 2) * approach); a.vel = sub(a.vel, impulse); b.vel = add(b.vel, impulse); } } };
 const onFlatSupport = (ball, w, blockers) => { const reach = ball.radius + REST_MARGIN; const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS; for (const s of w.segments) { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist <= reach && upward(offset, dist)) return true; } for (const other of balls) { if (other === ball || !other.resting) continue; const offset = sub(ball.pos, other.pos); const dist = len(offset); if (dist - other.radius <= reach && upward(offset, dist)) return true; } for (const o of blockers) { const offset = sub(ball.pos, o.center); const dist = len(offset); if (dist - o.radius <= reach && upward(offset, dist)) return true; } return false; };
 const tryRest = (ball, w, dt, blockers) => { if (len(sub(ball.pos, ball.anchor)) > REST_RADIUS) { ball.anchor = ball.pos; ball.stillTime = 0; } else { ball.stillTime += dt; if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) { ball.resting = true; ball.vel = v(0, 0); } } };
-const integrate = (ball, dt) => { ball.vel.y += GRAVITY * dt; ball.pos.x += ball.vel.x * dt; ball.pos.y += ball.vel.y * dt; };
+const integrate = (ball, dt) => { ball.vel = add(ball.vel, v(0, GRAVITY * dt)); ball.pos = add(ball.pos, scale(ball.vel, dt)); };
 
-const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = [], isPrediction = false) => {
+const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []) => {
     if (dt === 0) return;
-    const substeps = isPrediction ? PRED_SUBSTEPS : MAX_SUBSTEPS;
+    const substeps = MAX_SUBSTEPS;
     const h = dt / substeps;
     const obsVel = v(0, (pegToY - pegFromY) / dt);
 
@@ -295,40 +301,42 @@ const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []
 
 const touchingAnything = (ball, w) => { for (const s of w.segments) if (hitSegment(ball, s)) return true; for (const d of w.domes) if (hitDome(ball, d)) return true; for (const o of w.obstacles) if (hitObstacle(ball, o)) return true; return false; };
 
-const predictPath = (w, x, y, vx, vy, maxBounces, blockers) => {
-    const ball = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false };
+// High-Performance Unified Prediction Pass (Fast & Ultra Smooth)
+const predictPathAndLanding = (w, x, y, vx, vy, maxBounces, blockers) => {
+    const ball = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false, anchor: v(x, y), stillTime: 0 };
     const cw = blockers.length ? { ...w, obstacles: [...w.obstacles, ...blockers] } : w;
     const path = [v(x, y)];
     const dt = FIXED_DT;
     let bounces = 0, inContact = false;
-    const substeps = PRED_SUBSTEPS;
-    const h = dt / substeps;
+    let landingIdx = null;
 
-    for (let step = 0; step < 120 && bounces < maxBounces; step++) {
-        for (let i = 0; i < substeps && bounces < maxBounces; i++) {
+    const predSubsteps = userReduceLag ? 2 : 4;
+    const maxSteps = userReduceLag ? 250 : 450;
+
+    for (let step = 0; step < maxSteps; step++) {
+        const h = dt / predSubsteps;
+        for (let i = 0; i < predSubsteps; i++) {
             integrate(ball, h);
             const contact = touchingAnything(ball, cw);
-            if (contact && !inContact) bounces += 1;
+            if (contact && !inContact) bounces++;
             inContact = contact;
             collide(ball, cw);
             collideObstacles(ball, cw, v(0, 0));
         }
-        path.push(v(ball.pos.x, ball.pos.y));
-        if (ball.pos.y > cw.height || ball.pos.x < 0 || ball.pos.x > cw.width) break;
-    }
-    return path;
-};
 
-const predictLanding = (w, x, y, vx, vy, blockers) => {
-    const ghost = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false, anchor: v(x,y), stillTime: 0 };
-    const ghosts = [ghost];
-    const pegY = w.obstacles.length ? w.obstacles[0].center.y : 0;
-    for (let step = 0; step < 200; step++) {
-        stepAll(ghosts, w, FIXED_DT, pegY, pegY, true, blockers, true);
-        if (ghost.resting) return clamp(Math.floor(ghost.pos.x / w.cupWidth), 0, w.cups.length - 1);
-        if (ghost.pos.y > w.height + 50) break;
+        if (bounces <= maxBounces && ball.pos.y <= cw.height) {
+            path.push(v(ball.pos.x, ball.pos.y));
+        }
+
+        tryRest(ball, cw, dt, blockers);
+        if (ball.resting) {
+            landingIdx = clamp(Math.floor(ball.pos.x / cw.cupWidth), 0, cw.cups.length - 1);
+            break;
+        }
+
+        if (ball.pos.y > cw.height + 40 || ball.pos.x < -40 || ball.pos.x > cw.width + 40) break;
     }
-    return null;
+    return { path, landingIdx };
 };
 
 const initGame = () => {
@@ -421,6 +429,7 @@ const cvs = document.getElementById('gameCanvas');
 const ctx = cvs.getContext('2d');
 
 window.resizeApp = () => {
+    cachedTheme = null; // Reset theme cache on resize
     const iw = window.innerWidth;
     const oldW = stageWidth;
     stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
@@ -428,8 +437,10 @@ window.resizeApp = () => {
     const h = window.innerHeight - FIRE_BAR_HEIGHT;
     const oldH = cvs.height / (window.devicePixelRatio || 1); 
     
-    // Clamp DPR to max 2 (or 1 for lag reduction) for smooth canvas rendering on high-DPI screens
-    const dpr = userReduceLag ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    // Scale canvas Resolution based on reduceLag setting (Cap at 2x max to prevent 4K overhead lag)
+    const rawDpr = window.devicePixelRatio || 1;
+    const dpr = userReduceLag ? 1 : Math.min(rawDpr, 2);
+    
     cvs.width = stageWidth * dpr; cvs.height = h * dpr;
     cvs.style.width = `${stageWidth}px`; cvs.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -593,7 +604,7 @@ const loop = (t) => {
         if (changed) updateUI();
     }
 
-    const theme = getThemeColor();
+    const theme = getThemeColor(t);
     ctx.clearRect(0, 0, world.width, world.height);
 
     let glowX = null;
@@ -601,29 +612,37 @@ const loop = (t) => {
     const blockers = playing ? balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius})) : [];
     
     if (playing && game.dropped < CODE_LENGTH) {
-        // Quantize position key to prevent touch jitter cache busting
-        const cacheKey = `${apparatus.angle.toFixed(2)}_${Math.round(apparatus.x)}_${Math.round(pegs.y)}_${blockers.length}`;
+        const cacheKey = `${apparatus.angle.toFixed(3)}_${apparatus.x.toFixed(1)}_${pegs.y.toFixed(1)}_${blockers.length}`;
         if (predCache.key !== cacheKey) {
             const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
             const vel = launchVel(apparatus.angle);
-            predCache.idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
-            predCache.path = predictPath(world, m.x, m.y, vel.x, vel.y, 4, blockers);
+            
+            // Fast combined pass (subsampled & batchable)
+            const result = predictPathAndLanding(world, m.x, m.y, vel.x, vel.y, 5, blockers);
+            predCache.idx = result.landingIdx;
+            predCache.path = result.path;
             predCache.key = cacheKey;
         }
         
         const idx = predCache.idx;
         path = predCache.path;
 
-        if (!isRagebait && idx !== null && world.cups[idx] && world.cups[idx].letter === game.target[game.dropped]) {
+        if (!isRagebait && idx !== null && world.cups[idx].letter === game.target[game.dropped]) {
             glowX = world.cups[idx].centerX;
-            ctx.fillStyle = `rgba(${theme.glow}, 0.25)`;
-            ctx.beginPath(); 
-            ctx.arc(glowX, world.height, world.domeRadius * 1.2, 0, Math.PI * 2); 
-            ctx.fill();
+            if (userReduceLag) {
+                ctx.fillStyle = `rgba(${theme.glow}, 0.3)`;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.1, 0, Math.PI * 2); ctx.fill();
+            } else {
+                const pulse = 0.16 + 0.06 * Math.sin(t/350);
+                const grad = ctx.createRadialGradient(glowX, world.height, 0, glowX, world.height, world.domeRadius * 1.3);
+                grad.addColorStop(0, `rgba(${theme.glow}, ${pulse})`);
+                grad.addColorStop(1, `rgba(${theme.glow}, 0)`);
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(glowX, world.height, world.domeRadius * 1.3, 0, Math.PI * 2); ctx.fill();
+            }
         }
     }
 
-    // Render Domes
     ctx.fillStyle = theme.dome;
     for (const d of world.domes) {
         ctx.beginPath(); ctx.arc(d.center.x, d.center.y, d.radius, Math.PI, 0, false); ctx.fill();
@@ -641,33 +660,55 @@ const loop = (t) => {
         }
     }
 
-    // High-performance batched dashed path rendering (only 2 draw calls max instead of 100+)
+    // High Performance Batched Path Rendering
     if (playing && path.length >= 2) {
         ctx.lineWidth = 2;
         ctx.setLineDash([6, 6]);
-        ctx.lineDashOffset = -(t / 1000) * 12;
         const rgb = glowX !== null ? theme.glow : theme.guideline;
-        
-        const fadeIdx = Math.floor(path.length * (isRagebait ? 0.3 : 0.75));
-        
-        // Solid preview segment
-        ctx.strokeStyle = `rgba(${rgb}, 0.55)`;
-        ctx.beginPath();
-        ctx.moveTo(path[0].x, path[0].y);
-        for (let i = 1; i <= fadeIdx && i < path.length; i++) {
-            ctx.lineTo(path[i].x, path[i].y);
-        }
-        ctx.stroke();
+        const march = (t / 1000) * 12;
+        ctx.lineDashOffset = -march;
 
-        // Faded preview tail
-        if (fadeIdx < path.length - 1) {
-            ctx.strokeStyle = `rgba(${rgb}, 0.2)`;
+        if (userReduceLag) {
+            ctx.strokeStyle = `rgba(${rgb}, 0.5)`;
             ctx.beginPath();
-            ctx.moveTo(path[fadeIdx].x, path[fadeIdx].y);
-            for (let i = fadeIdx + 1; i < path.length; i++) {
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
                 ctx.lineTo(path[i].x, path[i].y);
             }
             ctx.stroke();
+        } else {
+            const totalPts = path.length;
+            const fadeCutoff = isRagebait ? Math.floor(totalPts * 0.3) : Math.floor(totalPts * 0.75);
+            
+            // 1. Solid Section (Batch 1)
+            ctx.strokeStyle = `rgba(${rgb}, 0.55)`;
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            const solidEnd = Math.min(fadeCutoff, totalPts - 1);
+            for (let i = 1; i <= solidEnd; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.stroke();
+
+            // 2. Fading Section (Batched into 3 simple alpha bands)
+            const fadeCount = totalPts - 1 - solidEnd;
+            if (fadeCount > 0) {
+                const chunkSize = Math.ceil(fadeCount / 3);
+                for (let c = 0; c < 3; c++) {
+                    const startIdx = solidEnd + c * chunkSize;
+                    const endIdx = Math.min(startIdx + chunkSize, totalPts - 1);
+                    if (startIdx >= totalPts - 1) break;
+
+                    const alphaRatio = (1 - (c + 0.5) / 3) * 0.55;
+                    ctx.strokeStyle = `rgba(${rgb}, ${alphaRatio.toFixed(2)})`;
+                    ctx.beginPath();
+                    ctx.moveTo(path[startIdx].x, path[startIdx].y);
+                    for (let i = startIdx + 1; i <= endIdx; i++) {
+                        ctx.lineTo(path[i].x, path[i].y);
+                    }
+                    ctx.stroke();
+                }
+            }
         }
         ctx.setLineDash([]);
     }
@@ -680,13 +721,12 @@ const loop = (t) => {
         }
     }
 
-    // Render Balls
     ctx.fillStyle = theme.ball;
     for (const b of balls) {
         ctx.beginPath(); ctx.arc(b.pos.x, b.pos.y, b.radius, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
     }
 
-    // Render Cannon
     const baseRad = world.cupWidth * CANNON_BASE_RATIO;
     const bLen = cannonLength(world.cupWidth);
     const bWid = world.cupWidth * CANNON_WIDTH_RATIO;
