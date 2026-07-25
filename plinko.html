@@ -180,22 +180,18 @@ onAuthStateChanged(auth, async (user) => {
 
 <script>
 /* ========================================================================
-   PLINKO PHYSICS ENGINE & GAME LOGIC (HIGH PERFORMANCE OPTIMIZED)
+   PLINKO PHYSICS ENGINE & GAME LOGIC (PERFORMANCE OPTIMIZED)
 ======================================================================== */
 const userReduceLag = localStorage.getItem('userReduceLag') === 'true';
 
+// Helper constructors for initialization, replaced with scalar logic in hot loops
 const v = (x, y) => ({ x, y });
-const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y });
-const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
-const scale = (a, s) => ({ x: a.x * s, y: a.y * s });
-const dot = (a, b) => a.x * b.x + a.y * b.y;
-const len = (a) => Math.hypot(a.x, a.y);
 const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val));
 
 const GRAVITY = 2200; 
 const RESTITUTION = 0.7; 
 const TANGENT_KEEP = 0.98; 
-const MAX_SUBSTEPS = userReduceLag ? 6 : 12; 
+const MAX_SUBSTEPS = userReduceLag ? 8 : 16; 
 const FIXED_DT = 1 / 60;
 const BALL_RADIUS = 10;
 const REST_RADIUS = 4, REST_TIME = 0.18, REST_MARGIN = 4, REST_FLATNESS = 0.7;
@@ -203,16 +199,23 @@ const SLOT_WIDTH = 24, RAIL_HEIGHT = 48, LETTER_DROP = 12;
 const CANNON_BASE_RATIO = 0.5, CANNON_LENGTH_RATIO = 0.7, CANNON_WIDTH_RATIO = 0.34, MAX_AIM = Math.PI / 4, LAUNCH_SPEED = 720;
 const STAGE_MAX_WIDTH = 2560;
 
-// Theme caching to avoid DOM calls every frame
-let cachedTheme = null;
-let lastThemeCheck = 0;
-const getThemeColor = (now = 0) => {
-    if (!cachedTheme || now - lastThemeCheck > 500) {
-        lastThemeCheck = now;
-        const isDk = document.body.getAttribute('data-theme') === 'dark';
-        cachedTheme = { dome: isDk ? '#333' : '#FFF', text: isDk ? '#FFF' : '#1D1D1F', ball: isDk ? '#A1C4FD' : '#007AFF', glow: '74, 222, 128', guideline: '255, 70, 70', pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' };
+let currentThemeAttr = null;
+let cachedThemeColors = null;
+const getThemeColor = () => {
+    const isDkAttr = document.body.getAttribute('data-theme');
+    if (currentThemeAttr !== isDkAttr || !cachedThemeColors) {
+        currentThemeAttr = isDkAttr;
+        const isDk = isDkAttr === 'dark';
+        cachedThemeColors = { 
+            dome: isDk ? '#333' : '#FFF', 
+            text: isDk ? '#FFF' : '#1D1D1F', 
+            ball: isDk ? '#A1C4FD' : '#007AFF', 
+            glow: '74, 222, 128', 
+            guideline: '255, 70, 70', 
+            pegLine: isDk ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' 
+        };
     }
-    return cachedTheme;
+    return cachedThemeColors;
 };
 
 let modeState = 'HARD'; 
@@ -266,77 +269,253 @@ const isTouch = window.matchMedia("(pointer: coarse)").matches;
 const FIRE_BAR_HEIGHT = isTouch ? 80 : 0;
 if(isTouch) document.getElementById('fireBar').classList.add('show');
 
-const closestOnSegment = (p, s) => { const ab = sub(s.b, s.a); const denom = dot(ab, ab); const t = denom === 0 ? 0 : clamp(dot(sub(p, s.a), ab) / denom, 0, 1); return add(s.a, scale(ab, t)); };
-const hitSegment = (ball, s) => { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist === 0 || dist > ball.radius) return null; return { normal: scale(offset, 1 / dist), depth: ball.radius - dist }; };
-const hitDome = (ball, dome) => { if (ball.pos.y > dome.center.y) return null; const offset = sub(ball.pos, dome.center); const dist = len(offset); const reach = dome.radius + ball.radius; if (dist === 0 || dist > reach) return null; return { normal: scale(offset, 1 / dist), depth: reach - dist }; };
-const hitObstacle = (ball, o) => { const offset = sub(ball.pos, o.center); const dist = len(offset); const reach = o.radius + ball.radius; if (dist === 0 || dist > reach) return null; return { normal: scale(offset, 1 / dist), depth: reach - dist }; };
-const resolveHit = (ball, hit) => { ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const into = dot(ball.vel, hit.normal); if (into >= 0) return; const normal = scale(hit.normal, into); const tangent = sub(ball.vel, normal); ball.vel = sub(scale(tangent, TANGENT_KEEP), scale(normal, RESTITUTION)); };
-const collide = (ball, w) => { for (const s of w.segments) { const hit = hitSegment(ball, s); if (hit) resolveHit(ball, hit); } for (const d of w.domes) { const hit = hitDome(ball, d); if (hit) resolveHit(ball, hit); } };
-const collideObstacles = (ball, w, obsVel) => { for (const o of w.obstacles) { const hit = hitObstacle(ball, o); if (!hit) continue; ball.pos = add(ball.pos, scale(hit.normal, hit.depth)); const rel = sub(ball.vel, obsVel); const into = dot(rel, hit.normal); if (into >= 0) continue; const normalComp = scale(hit.normal, into); const tangent = sub(rel, normalComp); const bounced = sub(scale(tangent, TANGENT_KEEP), scale(normalComp, RESTITUTION)); ball.vel = add(bounced, obsVel); } };
-const collidePair = (a, b) => { if (a.resting && b.resting) return; const delta = sub(b.pos, a.pos); const dist = len(delta); const minDist = a.radius + b.radius; if (dist === 0 || dist >= minDist) return; const normal = scale(delta, 1 / dist); const overlap = minDist - dist; if (a.resting) { resolveHit(b, { normal, depth: overlap }); } else if (b.resting) { resolveHit(a, { normal: scale(normal, -1), depth: overlap }); } else { const shift = scale(normal, overlap / 2); a.pos = sub(a.pos, shift); b.pos = add(b.pos, shift); const approach = dot(sub(a.vel, b.vel), normal); if (approach > 0) { const impulse = scale(normal, ((1 + RESTITUTION) / 2) * approach); a.vel = sub(a.vel, impulse); b.vel = add(b.vel, impulse); } } };
-const onFlatSupport = (ball, w, blockers) => { const reach = ball.radius + REST_MARGIN; const upward = (offset, dist) => dist > 0 && -offset.y / dist >= REST_FLATNESS; for (const s of w.segments) { const offset = sub(ball.pos, closestOnSegment(ball.pos, s)); const dist = len(offset); if (dist <= reach && upward(offset, dist)) return true; } for (const other of balls) { if (other === ball || !other.resting) continue; const offset = sub(ball.pos, other.pos); const dist = len(offset); if (dist - other.radius <= reach && upward(offset, dist)) return true; } for (const o of blockers) { const offset = sub(ball.pos, o.center); const dist = len(offset); if (dist - o.radius <= reach && upward(offset, dist)) return true; } return false; };
-const tryRest = (ball, w, dt, blockers) => { if (len(sub(ball.pos, ball.anchor)) > REST_RADIUS) { ball.anchor = ball.pos; ball.stillTime = 0; } else { ball.stillTime += dt; if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) { ball.resting = true; ball.vel = v(0, 0); } } };
-const integrate = (ball, dt) => { ball.vel = add(ball.vel, v(0, GRAVITY * dt)); ball.pos = add(ball.pos, scale(ball.vel, dt)); };
+/* Unrolled scalar physics functions for zero-allocation performance */
+const closestOnSegment = (p, s) => { 
+    const abx = s.b.x - s.a.x; 
+    const aby = s.b.y - s.a.y; 
+    const denom = abx * abx + aby * aby; 
+    const t = denom === 0 ? 0 : clamp(((p.x - s.a.x) * abx + (p.y - s.a.y) * aby) / denom, 0, 1); 
+    return { x: s.a.x + abx * t, y: s.a.y + aby * t }; 
+};
+
+const hitSegment = (ball, s) => { 
+    const closest = closestOnSegment(ball.pos, s);
+    const dx = ball.pos.x - closest.x;
+    const dy = ball.pos.y - closest.y;
+    const dist = Math.hypot(dx, dy); 
+    if (dist === 0 || dist > ball.radius) return null; 
+    const invDist = 1 / dist;
+    return { normal: { x: dx * invDist, y: dy * invDist }, depth: ball.radius - dist }; 
+};
+
+const hitDome = (ball, dome) => { 
+    if (ball.pos.y > dome.center.y) return null; 
+    const dx = ball.pos.x - dome.center.x;
+    const dy = ball.pos.y - dome.center.y;
+    const dist = Math.hypot(dx, dy);
+    const reach = dome.radius + ball.radius; 
+    if (dist === 0 || dist > reach) return null; 
+    const invDist = 1 / dist;
+    return { normal: { x: dx * invDist, y: dy * invDist }, depth: reach - dist }; 
+};
+
+const hitObstacle = (ball, o) => { 
+    const dx = ball.pos.x - o.center.x;
+    const dy = ball.pos.y - o.center.y;
+    const dist = Math.hypot(dx, dy); 
+    const reach = o.radius + ball.radius; 
+    if (dist === 0 || dist > reach) return null; 
+    const invDist = 1 / dist;
+    return { normal: { x: dx * invDist, y: dy * invDist }, depth: reach - dist }; 
+};
+
+const resolveHit = (ball, hit) => { 
+    ball.pos.x += hit.normal.x * hit.depth;
+    ball.pos.y += hit.normal.y * hit.depth;
+    const into = ball.vel.x * hit.normal.x + ball.vel.y * hit.normal.y; 
+    if (into >= 0) return; 
+    const normalX = hit.normal.x * into;
+    const normalY = hit.normal.y * into;
+    const tangentX = ball.vel.x - normalX;
+    const tangentY = ball.vel.y - normalY;
+    ball.vel.x = tangentX * TANGENT_KEEP - normalX * RESTITUTION;
+    ball.vel.y = tangentY * TANGENT_KEEP - normalY * RESTITUTION;
+};
+
+const collide = (ball, w) => { 
+    for (let i = 0; i < w.segments.length; i++) { 
+        const hit = hitSegment(ball, w.segments[i]); 
+        if (hit) resolveHit(ball, hit); 
+    } 
+    for (let i = 0; i < w.domes.length; i++) { 
+        const hit = hitDome(ball, w.domes[i]); 
+        if (hit) resolveHit(ball, hit); 
+    } 
+};
+
+const collideObstacles = (ball, w, obsVelX, obsVelY) => { 
+    for (let i = 0; i < w.obstacles.length; i++) {
+        const o = w.obstacles[i];
+        const hit = hitObstacle(ball, o); 
+        if (!hit) continue; 
+        ball.pos.x += hit.normal.x * hit.depth;
+        ball.pos.y += hit.normal.y * hit.depth;
+        const relX = ball.vel.x - obsVelX;
+        const relY = ball.vel.y - obsVelY;
+        const into = relX * hit.normal.x + relY * hit.normal.y; 
+        if (into >= 0) continue; 
+        const normalCompX = hit.normal.x * into;
+        const normalCompY = hit.normal.y * into;
+        const tangentX = relX - normalCompX;
+        const tangentY = relY - normalCompY;
+        const bouncedX = tangentX * TANGENT_KEEP - normalCompX * RESTITUTION;
+        const bouncedY = tangentY * TANGENT_KEEP - normalCompY * RESTITUTION;
+        ball.vel.x = bouncedX + obsVelX;
+        ball.vel.y = bouncedY + obsVelY;
+    } 
+};
+
+const collidePair = (a, b) => { 
+    if (a.resting && b.resting) return; 
+    const dx = b.pos.x - a.pos.x;
+    const dy = b.pos.y - a.pos.y;
+    const dist = Math.hypot(dx, dy); 
+    const minDist = a.radius + b.radius; 
+    if (dist === 0 || dist >= minDist) return; 
+    const invDist = 1 / dist;
+    const normalX = dx * invDist;
+    const normalY = dy * invDist;
+    const overlap = minDist - dist; 
+    if (a.resting) { 
+        resolveHit(b, { normal: { x: normalX, y: normalY }, depth: overlap }); 
+    } else if (b.resting) { 
+        resolveHit(a, { normal: { x: -normalX, y: -normalY }, depth: overlap }); 
+    } else { 
+        const shiftX = normalX * (overlap / 2);
+        const shiftY = normalY * (overlap / 2);
+        a.pos.x -= shiftX;
+        a.pos.y -= shiftY;
+        b.pos.x += shiftX;
+        b.pos.y += shiftY;
+        const approach = (a.vel.x - b.vel.x) * normalX + (a.vel.y - b.vel.y) * normalY; 
+        if (approach > 0) { 
+            const impulseMag = ((1 + RESTITUTION) / 2) * approach;
+            const impulseX = normalX * impulseMag;
+            const impulseY = normalY * impulseMag;
+            a.vel.x -= impulseX;
+            a.vel.y -= impulseY;
+            b.vel.x += impulseX;
+            b.vel.y += impulseY;
+        } 
+    } 
+};
+
+const onFlatSupport = (ball, w, blockers) => { 
+    const reach = ball.radius + REST_MARGIN; 
+    const upward = (ox, oy, dist) => dist > 0 && -oy / dist >= REST_FLATNESS; 
+    for (let i = 0; i < w.segments.length; i++) { 
+        const s = w.segments[i];
+        const closest = closestOnSegment(ball.pos, s);
+        const ox = ball.pos.x - closest.x;
+        const oy = ball.pos.y - closest.y;
+        const dist = Math.hypot(ox, oy); 
+        if (dist <= reach && upward(ox, oy, dist)) return true; 
+    } 
+    for (let i = 0; i < balls.length; i++) { 
+        const other = balls[i];
+        if (other === ball || !other.resting) continue; 
+        const ox = ball.pos.x - other.pos.x;
+        const oy = ball.pos.y - other.pos.y;
+        const dist = Math.hypot(ox, oy); 
+        if (dist - other.radius <= reach && upward(ox, oy, dist)) return true; 
+    } 
+    for (let i = 0; i < blockers.length; i++) { 
+        const o = blockers[i];
+        const ox = ball.pos.x - o.center.x;
+        const oy = ball.pos.y - o.center.y;
+        const dist = Math.hypot(ox, oy); 
+        if (dist - o.radius <= reach && upward(ox, oy, dist)) return true; 
+    } 
+    return false; 
+};
+
+const tryRest = (ball, w, dt, blockers) => { 
+    const dx = ball.pos.x - ball.anchor.x;
+    const dy = ball.pos.y - ball.anchor.y;
+    if (Math.hypot(dx, dy) > REST_RADIUS) { 
+        ball.anchor.x = ball.pos.x; 
+        ball.anchor.y = ball.pos.y; 
+        ball.stillTime = 0; 
+    } else { 
+        ball.stillTime += dt; 
+        if (ball.stillTime >= REST_TIME && onFlatSupport(ball, w, blockers)) { 
+            ball.resting = true; 
+            ball.vel.x = 0; 
+            ball.vel.y = 0; 
+        } 
+    } 
+};
+
+const integrate = (ball, dt) => { 
+    ball.vel.y += GRAVITY * dt; 
+    ball.pos.x += ball.vel.x * dt;
+    ball.pos.y += ball.vel.y * dt;
+};
 
 const stepAll = (simBalls, w, dt, pegFromY, pegToY, settle = true, blockers = []) => {
     if (dt === 0) return;
     const substeps = MAX_SUBSTEPS;
     const h = dt / substeps;
-    const obsVel = v(0, (pegToY - pegFromY) / dt);
+    const obsVelY = (pegToY - pegFromY) / dt;
 
     for (let i = 0; i < substeps; i++) {
         const pegY = pegFromY + (pegToY - pegFromY) * ((i + 1) / substeps);
-        for (const o of w.obstacles) o.center.y = pegY;
-        for (const b of simBalls) {
-            if (b.resting) continue;
-            integrate(b, h);
-            collide(b, w);
-            collideObstacles(b, w, obsVel);
-            for (const o of blockers) { const hit = hitObstacle(b, o); if (hit) resolveHit(b, hit); }
+        for (let o = 0; o < w.obstacles.length; o++) w.obstacles[o].center.y = pegY;
+        
+        for (let b = 0; b < simBalls.length; b++) {
+            const ball = simBalls[b];
+            if (ball.resting) continue;
+            integrate(ball, h);
+            collide(ball, w);
+            collideObstacles(ball, w, 0, obsVelY);
+            for (let k = 0; k < blockers.length; k++) { 
+                const hit = hitObstacle(ball, blockers[k]); 
+                if (hit) resolveHit(ball, hit); 
+            }
         }
-        for (let j = 0; j < simBalls.length; j++) { for (let k = j + 1; k < simBalls.length; k++) { collidePair(simBalls[j], simBalls[k]); } }
+        for (let j = 0; j < simBalls.length; j++) { 
+            for (let k = j + 1; k < simBalls.length; k++) { 
+                collidePair(simBalls[j], simBalls[k]); 
+            } 
+        }
     }
-    if (settle) { for (const b of simBalls) { if (!b.resting) tryRest(b, w, dt, blockers); } }
+    if (settle) { 
+        for (let b = 0; b < simBalls.length; b++) { 
+            if (!simBalls[b].resting) tryRest(simBalls[b], w, dt, blockers); 
+        } 
+    }
 };
 
-const touchingAnything = (ball, w) => { for (const s of w.segments) if (hitSegment(ball, s)) return true; for (const d of w.domes) if (hitDome(ball, d)) return true; for (const o of w.obstacles) if (hitObstacle(ball, o)) return true; return false; };
+const touchingAnything = (ball, w) => { 
+    for (let i = 0; i < w.segments.length; i++) if (hitSegment(ball, w.segments[i])) return true; 
+    for (let i = 0; i < w.domes.length; i++) if (hitDome(ball, w.domes[i])) return true; 
+    for (let i = 0; i < w.obstacles.length; i++) if (hitObstacle(ball, w.obstacles[i])) return true; 
+    return false; 
+};
 
-// High-Performance Unified Prediction Pass (Fast & Ultra Smooth)
-const predictPathAndLanding = (w, x, y, vx, vy, maxBounces, blockers) => {
-    const ball = { pos: v(x, y), vel: v(vx, vy), radius: BALL_RADIUS, resting: false, anchor: v(x, y), stillTime: 0 };
+const predictPath = (w, x, y, vx, vy, maxBounces, blockers) => {
+    const ball = { pos: {x,y}, vel: {x:vx, y:vy}, radius: BALL_RADIUS, resting: false };
     const cw = blockers.length ? { ...w, obstacles: [...w.obstacles, ...blockers] } : w;
-    const path = [v(x, y)];
+    const path = [{x,y}];
     const dt = FIXED_DT;
     let bounces = 0, inContact = false;
-    let landingIdx = null;
 
-    const predSubsteps = userReduceLag ? 2 : 4;
-    const maxSteps = userReduceLag ? 250 : 450;
-
-    for (let step = 0; step < maxSteps; step++) {
-        const h = dt / predSubsteps;
-        for (let i = 0; i < predSubsteps; i++) {
+    for (let step = 0; step < 240 && bounces < maxBounces; step++) {
+        const substeps = MAX_SUBSTEPS;
+        const h = dt / substeps;
+        for (let i = 0; i < substeps && bounces < maxBounces; i++) {
             integrate(ball, h);
             const contact = touchingAnything(ball, cw);
-            if (contact && !inContact) bounces++;
+            if (contact && !inContact) bounces += 1;
             inContact = contact;
             collide(ball, cw);
-            collideObstacles(ball, cw, v(0, 0));
+            collideObstacles(ball, cw, 0, 0);
+            path.push({x: ball.pos.x, y: ball.pos.y});
         }
-
-        if (bounces <= maxBounces && ball.pos.y <= cw.height) {
-            path.push(v(ball.pos.x, ball.pos.y));
-        }
-
-        tryRest(ball, cw, dt, blockers);
-        if (ball.resting) {
-            landingIdx = clamp(Math.floor(ball.pos.x / cw.cupWidth), 0, cw.cups.length - 1);
-            break;
-        }
-
-        if (ball.pos.y > cw.height + 40 || ball.pos.x < -40 || ball.pos.x > cw.width + 40) break;
+        if (ball.pos.y > cw.height || ball.pos.x < 0 || ball.pos.x > cw.width) break;
     }
-    return { path, landingIdx };
+    return path;
+};
+
+const predictLanding = (w, x, y, vx, vy, blockers) => {
+    const ghost = { pos: {x,y}, vel: {x:vx, y:vy}, radius: BALL_RADIUS, resting: false, anchor: {x,y}, stillTime: 0 };
+    const ghosts = [ghost];
+    const pegY = w.obstacles.length ? w.obstacles[0].center.y : 0;
+    for (let step = 0; step < 600; step++) {
+        stepAll(ghosts, w, FIXED_DT, pegY, pegY, true, blockers);
+        if (ghost.resting) return clamp(Math.floor(ghost.pos.x / w.cupWidth), 0, w.cups.length - 1);
+    }
+    return null;
 };
 
 const initGame = () => {
@@ -353,6 +532,7 @@ const initGame = () => {
     CODE_LENGTH = picked.length;
     game.target = picked;
     
+    // Always scramble cups slightly so it isn't completely obvious
     activeChars = picked.split('').sort(() => 0.5 - Math.random()).join('');
 
     game.entered = Array(CODE_LENGTH).fill("");
@@ -429,7 +609,6 @@ const cvs = document.getElementById('gameCanvas');
 const ctx = cvs.getContext('2d');
 
 window.resizeApp = () => {
-    cachedTheme = null; // Reset theme cache on resize
     const iw = window.innerWidth;
     const oldW = stageWidth;
     stageWidth = Math.min(iw, STAGE_MAX_WIDTH);
@@ -437,10 +616,7 @@ window.resizeApp = () => {
     const h = window.innerHeight - FIRE_BAR_HEIGHT;
     const oldH = cvs.height / (window.devicePixelRatio || 1); 
     
-    // Scale canvas Resolution based on reduceLag setting (Cap at 2x max to prevent 4K overhead lag)
-    const rawDpr = window.devicePixelRatio || 1;
-    const dpr = userReduceLag ? 1 : Math.min(rawDpr, 2);
-    
+    const dpr = userReduceLag ? 1 : (window.devicePixelRatio || 1);
     cvs.width = stageWidth * dpr; cvs.height = h * dpr;
     cvs.style.width = `${stageWidth}px`; cvs.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -451,7 +627,7 @@ window.resizeApp = () => {
         for (const b of balls) {
             b.pos.x = (b.pos.x / oldW) * stageWidth;
             b.pos.y = (b.pos.y / oldH) * h;
-            b.vel = v(0, 0); 
+            b.vel.x = 0; b.vel.y = 0;
         }
     }
 
@@ -582,6 +758,16 @@ const loop = (t) => {
     lastT = t;
     const playing = game.status === 'playing';
 
+    // Optimization: Avoid allocation inside loop
+    const blockers = [];
+    if (playing) {
+        for (let i = 0; i < balls.length; i++) {
+            if (balls[i].resting) {
+                blockers.push({ center: { x: balls[i].pos.x, y: balls[i].pos.y }, radius: balls[i].radius });
+            }
+        }
+    }
+
     if (playing) {
         acc += dt;
         while (acc >= FIXED_DT) {
@@ -591,7 +777,8 @@ const loop = (t) => {
         }
 
         const newEnt = Array(CODE_LENGTH).fill("");
-        for (const b of balls) {
+        for (let i = 0; i < balls.length; i++) {
+            const b = balls[i];
             if (b.resting) {
                 const idx = clamp(Math.floor(b.pos.x / world.cupWidth), 0, world.cups.length - 1);
                 newEnt[slotOf.get(b)] = world.cups[idx].letter;
@@ -604,23 +791,22 @@ const loop = (t) => {
         if (changed) updateUI();
     }
 
-    const theme = getThemeColor(t);
+    const theme = getThemeColor();
     ctx.clearRect(0, 0, world.width, world.height);
 
     let glowX = null;
     let path = [];
-    const blockers = playing ? balls.filter(b=>b.resting).map(b=>({center: v(b.pos.x, b.pos.y), radius: b.radius})) : [];
     
     if (playing && game.dropped < CODE_LENGTH) {
-        const cacheKey = `${apparatus.angle.toFixed(3)}_${apparatus.x.toFixed(1)}_${pegs.y.toFixed(1)}_${blockers.length}`;
+        // Lower precision cache keys on low-end devices to reduce re-prediction CPU spikes
+        const angPrec = userReduceLag ? 2 : 3;
+        const xPrec = userReduceLag ? 0 : 1;
+        const cacheKey = `${apparatus.angle.toFixed(angPrec)}_${apparatus.x.toFixed(xPrec)}_${pegs.y.toFixed(xPrec)}_${blockers.length}`;
         if (predCache.key !== cacheKey) {
             const m = muzzlePos(apparatus.x, world.cupWidth, apparatus.angle);
             const vel = launchVel(apparatus.angle);
-            
-            // Fast combined pass (subsampled & batchable)
-            const result = predictPathAndLanding(world, m.x, m.y, vel.x, vel.y, 5, blockers);
-            predCache.idx = result.landingIdx;
-            predCache.path = result.path;
+            predCache.idx = predictLanding(world, m.x, m.y, vel.x, vel.y, blockers);
+            predCache.path = predictPath(world, m.x, m.y, vel.x, vel.y, 5, blockers);
             predCache.key = cacheKey;
         }
         
@@ -643,89 +829,75 @@ const loop = (t) => {
         }
     }
 
+    // Render Domes
     ctx.fillStyle = theme.dome;
-    for (const d of world.domes) {
-        ctx.beginPath(); ctx.arc(d.center.x, d.center.y, d.radius, Math.PI, 0, false); ctx.fill();
+    ctx.beginPath();
+    for (let i = 0; i < world.domes.length; i++) {
+        const d = world.domes[i];
+        ctx.moveTo(d.center.x - d.radius, d.center.y);
+        ctx.arc(d.center.x, d.center.y, d.radius, Math.PI, 0, false);
     }
+    ctx.fill();
 
     if (playing) {
         if(isHardMode) {
             ctx.strokeStyle = theme.pegLine; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.setLineDash([0, 8]);
             ctx.beginPath(); ctx.moveTo(0, pegs.y); ctx.lineTo(world.width, pegs.y); ctx.stroke();
             ctx.setLineDash([]); ctx.lineCap = "butt";
+            
+            // Render Obstacles
             ctx.fillStyle = theme.dome;
-            for (const o of world.obstacles) {
-                ctx.beginPath(); ctx.arc(o.center.x, o.center.y, o.radius, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath();
+            for (let i = 0; i < world.obstacles.length; i++) {
+                const o = world.obstacles[i];
+                ctx.moveTo(o.center.x + o.radius, o.center.y);
+                ctx.arc(o.center.x, o.center.y, o.radius, 0, Math.PI * 2);
             }
+            ctx.fill();
         }
     }
 
-    // High Performance Batched Path Rendering
     if (playing && path.length >= 2) {
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 6]);
-        const rgb = glowX !== null ? theme.glow : theme.guideline;
-        const march = (t / 1000) * 12;
-        ctx.lineDashOffset = -march;
-
-        if (userReduceLag) {
-            ctx.strokeStyle = `rgba(${rgb}, 0.5)`;
+        let dists = [0];
+        for (let i = 1; i < path.length; i++) dists[i] = dists[i-1] + Math.hypot(path[i].x - path[i-1].x, path[i].y - path[i-1].y);
+        const total = dists[path.length - 1];
+        if (total > 0) {
+            const fadeStart = isRagebait ? total * 0.3 : total * 0.75; 
+            const march = (t / 1000) * 12;
+            ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+            const rgb = glowX !== null ? theme.glow : theme.guideline;
             ctx.beginPath();
-            ctx.moveTo(path[0].x, path[0].y);
             for (let i = 1; i < path.length; i++) {
-                ctx.lineTo(path[i].x, path[i].y);
+                const mid = (dists[i-1] + dists[i]) / 2;
+                const fade = mid <= fadeStart ? 1 : Math.max(0, 1 - (mid - fadeStart)/(total - fadeStart));
+                ctx.strokeStyle = `rgba(${rgb}, ${0.55 * fade})`;
+                ctx.lineDashOffset = dists[i-1] - march;
+                ctx.moveTo(path[i-1].x, path[i-1].y); ctx.lineTo(path[i].x, path[i].y);
+                ctx.stroke(); // Must stroke inside loop due to changing alpha and lineDashOffset
+                ctx.beginPath();
             }
-            ctx.stroke();
-        } else {
-            const totalPts = path.length;
-            const fadeCutoff = isRagebait ? Math.floor(totalPts * 0.3) : Math.floor(totalPts * 0.75);
-            
-            // 1. Solid Section (Batch 1)
-            ctx.strokeStyle = `rgba(${rgb}, 0.55)`;
-            ctx.beginPath();
-            ctx.moveTo(path[0].x, path[0].y);
-            const solidEnd = Math.min(fadeCutoff, totalPts - 1);
-            for (let i = 1; i <= solidEnd; i++) {
-                ctx.lineTo(path[i].x, path[i].y);
-            }
-            ctx.stroke();
-
-            // 2. Fading Section (Batched into 3 simple alpha bands)
-            const fadeCount = totalPts - 1 - solidEnd;
-            if (fadeCount > 0) {
-                const chunkSize = Math.ceil(fadeCount / 3);
-                for (let c = 0; c < 3; c++) {
-                    const startIdx = solidEnd + c * chunkSize;
-                    const endIdx = Math.min(startIdx + chunkSize, totalPts - 1);
-                    if (startIdx >= totalPts - 1) break;
-
-                    const alphaRatio = (1 - (c + 0.5) / 3) * 0.55;
-                    ctx.strokeStyle = `rgba(${rgb}, ${alphaRatio.toFixed(2)})`;
-                    ctx.beginPath();
-                    ctx.moveTo(path[startIdx].x, path[startIdx].y);
-                    for (let i = startIdx + 1; i <= endIdx; i++) {
-                        ctx.lineTo(path[i].x, path[i].y);
-                    }
-                    ctx.stroke();
-                }
-            }
+            ctx.setLineDash([]);
         }
-        ctx.setLineDash([]);
     }
 
     if (playing) {
         ctx.font = "bold 16px Inter, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        for (const c of world.cups) {
+        for (let i = 0; i < world.cups.length; i++) {
+            const c = world.cups[i];
             ctx.fillStyle = c.centerX === glowX ? `rgb(${theme.glow})` : theme.text;
             ctx.fillText(c.letter, c.centerX, world.letterY);
         }
     }
 
+    // Render Balls
     ctx.fillStyle = theme.ball;
-    for (const b of balls) {
-        ctx.beginPath(); ctx.arc(b.pos.x, b.pos.y, b.radius, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
+    ctx.beginPath();
+    for (let i = 0; i < balls.length; i++) {
+        const b = balls[i];
+        ctx.moveTo(b.pos.x + b.radius, b.pos.y);
+        ctx.arc(b.pos.x, b.pos.y, b.radius, 0, Math.PI * 2);
     }
+    ctx.fill();
 
     const baseRad = world.cupWidth * CANNON_BASE_RATIO;
     const bLen = cannonLength(world.cupWidth);
