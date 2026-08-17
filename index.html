@@ -3150,7 +3150,64 @@ window.fetchLiveEHadir = async (cls) => {
                         <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
                         <div>
                             <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
-                            <div s
+                            <div style="font-size:11px; color:var(--ios-text-sec);">${st.time}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat (${st.lateCount})</span>` : ''}
+                        <span class="ehadir-pill ehadir-hadir">Hadir</span>
+                    </div>
+                </div>`;
+            });
+        }
+
+        if (absentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:14px 0 4px 4px;">Belum Hadir (${absentStudents.length})</div>`;
+            absentStudents.forEach((st, index) => {
+                const delay = Math.min((presentStudents.length + index) * 0.02, 0.4);
+                html += `
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.2); margin-bottom:6px; animation: fadeUp 0.35s var(--ease-spring) forwards; opacity:0; animation-delay:${delay}s;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
+                        <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
+                    </div>
+                    <span class="ehadir-pill ehadir-tidak">Belum Hadir</span>
+                </div>`;
+            });
+        }
+
+        listContainer.innerHTML = html;
+
+        // Smooth Height Morph Animation
+        if (card && preUpdateHeight > 0 && typeof card.animate === 'function') {
+            const targetHeight = card.offsetHeight;
+            if (preUpdateHeight !== targetHeight) {
+                card.animate([
+                    { height: preUpdateHeight + 'px' },
+                    { height: targetHeight + 'px' }
+                ], { duration: 380, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            }
+        }
+
+    } catch (err) {
+        console.error("E-Datang fetch error:", err);
+        const preErrHeight = card ? card.offsetHeight : 0;
+        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
+        listContainer.innerHTML = `
+            <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
+                <div style="margin-bottom:12px;">Could not connect to API. Tap <b>Portal</b> below to view directly.</div>
+            </div>`;
+        if (card && preErrHeight > 0 && typeof card.animate === 'function') {
+            const targetHeight = card.offsetHeight;
+            if (preErrHeight !== targetHeight) {
+                card.animate([
+                    { height: preErrHeight + 'px' },
+                    { height: targetHeight + 'px' }
+                ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            }
+        }
+    }
+};
     const classLetter = cls.charAt(0).toUpperCase(); // e.g. "H"
     const targetClass = `2${classLetter}`; // e.g. "2H", "2B", "2K", "2M", "2P", "2U"
     const badge = document.getElementById('ehadirSummaryBadge');
