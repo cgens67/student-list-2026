@@ -3231,7 +3231,7 @@ window.fetchLiveEHadir = async (cls) => {
             html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
                 const isLate = st.lateCount > 0;
-                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.15; margin-top:2px;">${st.cn}</div>` : '';
+                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;">${st.cn}</div>` : '';
 
                 html += `
                 <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); margin-bottom:8px;">
@@ -3240,7 +3240,7 @@ window.fetchLiveEHadir = async (cls) => {
                         <div style="display:flex; flex-direction:column; gap:0;">
                             <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2;">${st.name}</div>
                             ${cnHtml}
-                            <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:4px;"><span class="material-icons-round" style="font-size:10px; vertical-align:middle;">schedule</span> ${st.time}</div>
+                            <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;"><span class="material-icons-round" style="font-size:10px; vertical-align:middle;">schedule</span> ${st.time}</div>
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0;">
