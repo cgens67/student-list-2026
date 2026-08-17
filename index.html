@@ -1161,6 +1161,7 @@ window.hexToRgba = function(hex, alpha) {
       </div>
       <div class='header-controls'>
         <button class='theme-toggle' id='adminControlBtn' onclick='window.openAdminPanel()' style='display:none; color:var(--ios-text);' title="Admin Panel"><span class='material-icons-round' style='font-size:20px'>admin_panel_settings</span></button>
+        <button class='theme-toggle' id='btnEHadirHeader' onclick='window.openEHadirModal()' title="E-Datang Live Attendance"><span class='material-icons-round' style='font-size:18px'>how_to_reg</span></button>
         <div class='lang-switch'>
           <button class='lang-btn active' onclick='window.switchLanguage(&apos;en&apos;)'>EN</button>
           <button class='lang-btn' onclick='window.switchLanguage(&apos;bm&apos;)'>BM</button>
@@ -1218,17 +1219,8 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 
     <div class='teacher-card' id='classInfoCard'>
-      <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
-          <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
-        </div>
-        <button id="btnEHadir" onclick="window.openEHadirModal()" style="background:var(--ios-blue-light); color:var(--ios-blue); border:1px solid var(--glass-border); border-radius:14px; padding:10px 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-weight:700; font-size:12px; cursor:pointer; transition:transform 0.2s; flex-shrink:0; min-width:80px;">
-          <span class="material-icons-round" style="font-size:22px;">how_to_reg</span>
-          <span>E-Hadir</span>
-          <span id="ehadirSummaryBadge" style="font-size:10px; opacity:0.8; font-weight:600;">Tap to view</span>
-        </button>
-      </div>
+      <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
+      <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
     </div>
 
     <div class='student-grid' id='studentGrid'></div>
