@@ -3056,60 +3056,57 @@ window.closeEHadirModal = () => {
 };
 
 window.fetchLiveEHadir = async (cls) => {
-    const code = window.getClassCode(cls); // e.g. "2h"
-    const targetClass = `2${cls.charAt(0).toUpperCase()}`; // e.g. "2H", "2B", "2K"
+    const classLetter = cls.charAt(0).toUpperCase(); // e.g. "H"
+    const targetClass = `2${classLetter}`; // e.g. "2H", "2B", "2K", "2M", "2P", "2U"
     const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
 
     listContainer.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
             <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
-            <div>Connecting to live CHS database...</div>
+            <div>Fetching E-Datang records...</div>
         </div>`;
 
     try {
-        const response = await fetch(`/api/ehadir?classCode=${code}&t=${Date.now()}`);
-        if (!response.ok) throw new Error("Could not reach API endpoint");
-        
+        const response = await fetch(`/api/ehadir?t=${Date.now()}`);
+        if (!response.ok) throw new Error("API failed");
+
         const data = await response.json();
         const allStudents = data.students || [];
-        const attendanceList = data.attendance || [];
+        const allAttendance = data.attendance || [];
         const dateStr = data.date || new Date().toISOString().split('T')[0];
 
-        // 1. Filter students belonging to this class (e.g. "2H")
+        // 1. Get all students enrolled in this class from CHS database
         const classRoster = allStudents.filter(s => {
             if (!s.class) return false;
-            const cClean = s.class.replace(/\s+/g, '').toUpperCase();
-            return cClean === targetClass || cClean === `2${cls.toUpperCase()}`;
+            return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
         }).sort((a, b) => a.name.localeCompare(b.name));
 
-        // 2. Build attendance map by Student ID
+        // 2. Map attendance records for this class
         const attMap = new Map();
-        attendanceList.forEach(att => {
-            const sid = att.id || att.student_id || att.studentId;
-            if (sid) attMap.set(String(sid), att);
+        allAttendance.forEach(att => {
+            if (att.id) attMap.set(String(att.id), att);
+            else if (att.name) attMap.set(String(att.name).toUpperCase(), att);
         });
 
         let presentStudents = [];
         let absentStudents = [];
 
-        classRoster.forEach((student, index) => {
-            const att = attMap.get(String(student.id));
-            if (att) {
-                const timeStr = att.time || att.waktu || att.waktu_hadir || att.created_at || "Present";
-                const isLate = /lewat/i.test(timeStr) || att.isLate || att.late || Boolean(att.lewat);
+        classRoster.forEach((st, idx) => {
+            const att = attMap.get(String(st.id)) || attMap.get(String(st.name).toUpperCase());
+            if (att && att.attendance_time) {
                 presentStudents.push({
-                    no: index + 1,
-                    id: student.id,
-                    name: student.name,
-                    time: timeStr,
-                    isLate
+                    no: idx + 1,
+                    id: st.id,
+                    name: st.name,
+                    time: att.attendance_time,
+                    lateCount: att.late_count || 0
                 });
             } else {
                 absentStudents.push({
-                    no: index + 1,
-                    id: student.id,
-                    name: student.name
+                    no: idx + 1,
+                    id: st.id,
+                    name: st.name
                 });
             }
         });
@@ -3119,20 +3116,21 @@ window.fetchLiveEHadir = async (cls) => {
         const absentCount = totalCount - presentCount;
         const rate = totalCount > 0 ? ((presentCount / totalCount) * 100).toFixed(1) : "0";
 
-        // Update Statistics Cards
+        // Update Header and Summary Cards
         document.getElementById('ehadirCountPresent').innerText = presentCount;
         document.getElementById('ehadirCountAbsent').innerText = absentCount;
         document.getElementById('ehadirRate').innerText = `${rate}%`;
         document.getElementById('ehadirModalSub').innerText = `Tarikh: ${dateStr} • Kelas: ${targetClass}`;
         if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
 
-        // Render HTML Lists
+        // Render List HTML
         let html = '';
 
         // Present Section
         if (presentStudents.length > 0) {
             html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 4px 4px;">Hadir (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
+                const isLate = st.lateCount > 0;
                 html += `
                 <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border); margin-bottom:6px;">
                     <div style="display:flex; align-items:center; gap:10px;">
@@ -3142,15 +3140,15 @@ window.fetchLiveEHadir = async (cls) => {
                             <div style="font-size:11px; color:var(--ios-text-sec);">${st.time}</div>
                         </div>
                     </div>
-                    <div>
-                        ${st.isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat</span>` : ''}
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat (${st.lateCount})</span>` : ''}
                         <span class="ehadir-pill ehadir-hadir">Hadir</span>
                     </div>
                 </div>`;
             });
         }
 
-        // Absent / Not Scanned Section
+        // Absent Section
         if (absentStudents.length > 0) {
             html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:14px 0 4px 4px;">Belum Hadir (${absentStudents.length})</div>`;
             absentStudents.forEach(st => {
@@ -3168,11 +3166,11 @@ window.fetchLiveEHadir = async (cls) => {
         listContainer.innerHTML = html;
 
     } catch (err) {
-        console.error("E-Datang API Error:", err);
+        console.error("E-Datang fetch error:", err);
         document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
         listContainer.innerHTML = `
             <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
-                <div style="margin-bottom:12px;">Data connection busy. Tap <b>Portal</b> to view the official site directly.</div>
+                <div style="margin-bottom:12px;">Could not connect to API. Tap <b>Portal</b> below to view directly.</div>
             </div>`;
     }
 };
