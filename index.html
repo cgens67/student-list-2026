@@ -11,6 +11,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
+/* E-HADIR STYLING */
+.ehadir-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+.ehadir-hadir { background: rgba(52, 199, 89, 0.15); color: #34C759; border: 1px solid rgba(52, 199, 89, 0.3); }
+.ehadir-tidak { background: rgba(255, 59, 48, 0.15); color: #FF3B30; border: 1px solid rgba(255, 59, 48, 0.3); }
+.ehadir-stats-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.ehadir-stat-card {
+    background: var(--ios-input);
+    border: 1px solid var(--chip-border);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+}
 @font-face {
     font-family: 'SF Pro Display';
     src: url('fonts/SF-Pro-Display-Regular.otf') format('opentype');
@@ -1191,8 +1218,17 @@ window.hexToRgba = function(hex, alpha) {
     </div>
 
     <div class='teacher-card' id='classInfoCard'>
-      <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
-      <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class='teacher-row'><span class='t-label anim-text-change' id='lblGuruTitle'>Guru Kelas</span><span class='t-name anim-text-change' id='lblGuru'>-</span></div>
+          <div class='teacher-row'><span class='t-label anim-text-change' id='lblPenolongTitle'>Penolong</span><span class='t-name anim-text-change' id='lblPenolong'>-</span></div>
+        </div>
+        <button id="btnEHadir" onclick="window.openEHadirModal()" style="background:var(--ios-blue-light); color:var(--ios-blue); border:1px solid var(--glass-border); border-radius:14px; padding:10px 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-weight:700; font-size:12px; cursor:pointer; transition:transform 0.2s; flex-shrink:0; min-width:80px;">
+          <span class="material-icons-round" style="font-size:22px;">how_to_reg</span>
+          <span>E-Hadir</span>
+          <span id="ehadirSummaryBadge" style="font-size:10px; opacity:0.8; font-weight:600;">Tap to view</span>
+        </button>
+      </div>
     </div>
 
     <div class='student-grid' id='studentGrid'></div>
@@ -1891,7 +1927,43 @@ window.hexToRgba = function(hex, alpha) {
       </div>
   </div>
 
-  <div id='toastContainer'></div>
+  <!-- E-HADIR LIVE MODAL -->
+  <div class='modal-bg' id='ehadirOverlay' onclick='window.closeEHadirModal()' style="z-index:10002;">
+    <div class='modal-card' id='ehadirCard' onclick='event.stopPropagation()'>
+      <div class='m-head'>
+        <div class='handle'></div>
+        <div class='stats-title' id='ehadirModalTitle'>E-Hadir Live Attendance</div>
+        <div class='stats-sub' id='ehadirModalSub'>Fetching latest attendance data...</div>
+      </div>
+      <div class='m-body' style="padding-top:10px;">
+        <div class="ehadir-stats-box">
+          <div class="ehadir-stat-card">
+            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Present</div>
+            <div id="ehadirCountPresent" style="font-size:20px; font-weight:800; color:#34C759; margin-top:2px;">-</div>
+          </div>
+          <div class="ehadir-stat-card">
+            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Absent</div>
+            <div id="ehadirCountAbsent" style="font-size:20px; font-weight:800; color:#FF3B30; margin-top:2px;">-</div>
+          </div>
+          <div class="ehadir-stat-card">
+            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Rate</div>
+            <div id="ehadirRate" style="font-size:20px; font-weight:800; color:var(--ios-blue); margin-top:2px;">-%</div>
+          </div>
+        </div>
+
+        <div id="ehadirListContainer" style="display:flex; flex-direction:column; gap:8px;">
+          <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
+            <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
+            <div>Loading live attendance data...</div>
+          </div>
+        </div>
+      </div>
+      <div class='m-foot' style="display:flex; gap:10px; border-top:1px solid var(--glass-border);">
+        <button class='btn-done' style="background:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.openOfficialEHadir()'><span class="material-icons-round" style="font-size:16px; vertical-align:middle; margin-right:4px;">open_in_new</span> Portal</button>
+        <button class='btn-done' style="flex:1.5;" onclick='window.closeEHadirModal()'>Done</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2955,6 +3027,124 @@ window.switchLanguage=function(lang, skipSync=false){
         }
     },250);
 }
+
+window.ehadirCache = {};
+
+window.getClassCode = (cls) => {
+    const map = { 'Biru': '2b', 'Hijau': '2h', 'Kuning': '2k', 'Merah': '2m', 'Perang': '2p', 'Ungu': '2u' };
+    return map[cls] || cls.toLowerCase();
+};
+
+window.openOfficialEHadir = () => {
+    const code = window.getClassCode(currentClass);
+    window.open(`https://parents.chsmelaka.com/${code}`, '_blank');
+};
+
+window.openEHadirModal = async () => {
+    triggerHaptic();
+    const overlay = document.getElementById('ehadirOverlay');
+    overlay.classList.add('open');
+    
+    document.getElementById('ehadirModalTitle').innerText = `E-Hadir (2 ${currentClass})`;
+    document.getElementById('ehadirModalSub').innerText = "Fetching latest attendance data...";
+    
+    await window.fetchLiveEHadir(currentClass);
+};
+
+window.closeEHadirModal = () => {
+    document.getElementById('ehadirOverlay').classList.remove('open');
+};
+
+window.fetchLiveEHadir = async (cls) => {
+    const code = window.getClassCode(cls);
+    const badge = document.getElementById('ehadirSummaryBadge');
+    
+    try {
+        // Try local serverless endpoint first, fallback to CORS proxy
+        let response;
+        try {
+            response = await fetch(`/api/ehadir?classCode=${code}`);
+        } catch (e) {
+            response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://parents.chsmelaka.com/${code}`)}`);
+        }
+        
+        let htmlText = "";
+        if (response.headers.get("content-type")?.includes("application/json")) {
+            const data = await response.json();
+            htmlText = data.html || "";
+        } else {
+            htmlText = await response.text();
+        }
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+
+        // Parse Table Rows or List from School Page
+        const rows = Array.from(doc.querySelectorAll("table tr, .student-row, .list-group-item, li"));
+        let records = [];
+
+        rows.forEach(row => {
+            const text = row.innerText.trim();
+            if (!text || text.includes("Nama") || text.includes("Student Name")) return;
+
+            // Check if status is present/absent
+            const isAbsent = /tidak hadir|absent|tiada/i.test(text);
+            const isPresent = /hadir|present/i.test(text);
+
+            if (isPresent || isAbsent) {
+                records.push({
+                    rawText: text,
+                    status: isAbsent ? "absent" : "present"
+                });
+            }
+        });
+
+        // Fallback: If no structured table, parse text by lines
+        if (records.length === 0) {
+            const lines = htmlText.replace(/<[^>]*>/g, "\n").split("\n").map(l => l.trim()).filter(Boolean);
+            lines.forEach(l => {
+                if (/tidak hadir|absent/i.test(l)) records.push({ rawText: l, status: "absent" });
+                else if (/hadir|present/i.test(l)) records.push({ rawText: l, status: "present" });
+            });
+        }
+
+        const presentCount = records.filter(r => r.status === "present").length;
+        const absentCount = records.filter(r => r.status === "absent").length;
+        const total = presentCount + absentCount;
+        const rate = total > 0 ? ((presentCount / total) * 100).toFixed(1) : "0";
+
+        document.getElementById('ehadirCountPresent').innerText = presentCount || "-";
+        document.getElementById('ehadirCountAbsent').innerText = absentCount || "0";
+        document.getElementById('ehadirRate').innerText = `${rate}%`;
+        document.getElementById('ehadirModalSub').innerText = `Last checked: Just now (${total} students)`;
+        if (badge) badge.innerText = `${presentCount}/${total} (${rate}%)`;
+
+        const listContainer = document.getElementById('ehadirListContainer');
+        if (records.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align:center; padding:20px; color:var(--ios-text-sec); font-size:13px;">
+                    Portal loaded. Tap below to view full details on the school site.
+                </div>`;
+        } else {
+            listContainer.innerHTML = records.map(r => `
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border);">
+                    <span style="font-size:13px; font-weight:600; color:var(--ios-text);">${r.rawText.substring(0, 35)}</span>
+                    <span class="ehadir-pill ${r.status === 'present' ? 'ehadir-hadir' : 'ehadir-tidak'}">
+                        ${r.status === 'present' ? 'Hadir' : 'Tidak Hadir'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+    } catch (err) {
+        console.error("E-Hadir fetch error:", err);
+        document.getElementById('ehadirModalSub').innerText = "Unable to parse portal automatically.";
+        document.getElementById('ehadirListContainer').innerHTML = `
+            <div style="text-align:center; padding:20px; color:var(--ios-text-sec); font-size:13px;">
+                Direct connection blocked by browser policy. Use the portal button below.
+            </div>`;
+    }
+};
 
 window.switchClass=function(cls){
     if(currentClass===cls)return;
