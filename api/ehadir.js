@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { classCode } = req.query;
   if (!classCode) {
-    return res.status(400).json({ error: "Missing classCode parameter" });
+    return res.status(400).json({ error: "Missing classCode" });
   }
 
   const url = `https://parents.chsmelaka.com/${encodeURIComponent(classCode.toLowerCase())}`;
@@ -15,15 +15,13 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: "Failed to fetch from school portal" });
+      return res.status(response.status).json({ error: "Portal not reachable" });
     }
 
     const html = await response.text();
-    
-    // Set caching headers so repeated requests within 1 minute load instantly
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    return res.status(200).json({ html, url });
+    return res.status(200).json({ html });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
