@@ -3054,12 +3054,29 @@ window.fetchLiveEHadir = async (cls) => {
     const targetClass = `2${classLetter}`; // e.g. "2H", "2B", "2K", "2M", "2P", "2U"
     const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
+    const card = document.getElementById('ehadirCard');
 
-    listContainer.innerHTML = `
+    // Smooth animation helper
+    const updateContainer = (newHtml) => {
+        const startHeight = card ? card.offsetHeight : 0;
+        listContainer.innerHTML = newHtml;
+        if (card && typeof card.animate === 'function' && startHeight > 0) {
+            const targetHeight = card.offsetHeight;
+            if (startHeight !== targetHeight) {
+                card.animate([
+                    { height: startHeight + 'px' },
+                    { height: targetHeight + 'px' }
+                ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            }
+        }
+    };
+
+    updateContainer(`
         <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
             <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
             <div>Fetching E-Datang records...</div>
-        </div>`;
+        </div>
+    `);
 
     try {
         const response = await fetch(`/api/ehadir?t=${Date.now()}`);
@@ -3157,15 +3174,16 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
-        listContainer.innerHTML = html;
+        updateContainer(html);
 
     } catch (err) {
         console.error("E-Datang fetch error:", err);
         document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
-        listContainer.innerHTML = `
+        updateContainer(`
             <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
                 <div style="margin-bottom:12px;">Could not connect to API. Tap <b>Portal</b> below to view directly.</div>
-            </div>`;
+            </div>
+        `);
     }
 };
 
