@@ -3034,13 +3034,25 @@ window.getClassCode = (cls) => {
     return map[cls] || cls.toLowerCase();
 };
 
+window.ehadirAbortController = null;
+
 window.openOfficialEHadir = () => {
+    triggerHaptic();
+    if (currentClass === 'All') {
+        window.open('https://parents.chsmelaka.com', '_blank');
+        return;
+    }
     const code = window.getClassCode(currentClass);
     window.open(`https://parents.chsmelaka.com/${code}`, '_blank');
 };
 
 window.openEHadirModal = async () => {
     triggerHaptic();
+    if (currentClass === 'All') {
+        window.showToast("Please select a specific class first", "error_outline");
+        return;
+    }
+
     const txt = uiText[curLang] || uiText.en;
     const overlay = document.getElementById('ehadirOverlay');
     overlay.classList.add('open');
@@ -3051,13 +3063,23 @@ window.openEHadirModal = async () => {
     await window.fetchLiveEHadir(currentClass);
 };
 
+window.closeEHadirModal = () => {
+    triggerHaptic();
+    if (window.ehadirAbortController) {
+        window.ehadirAbortController.abort(); // Cancel the loading immediately if user closes
+    }
+    const modal = document.getElementById("ehadirCard");
+    if (modal) modal.style.transform = '';
+    document.getElementById('ehadirOverlay').classList.remove('open');
+};
+
 window.fetchLiveEHadir = async (cls) => {
-    const classLetter = cls.charAt(0).toUpperCase(); // e.g. "H"
-    const targetClass = `2${classLetter}`; // e.g. "2H"
+    const classLetter = cls.charAt(0).toUpperCase(); 
+    const targetClass = `2${classLetter}`; 
     const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
     const card = document.getElementById('ehadirCard');
-    const txt = uiText[curLang] || uiText.en; // Localization
+    const txt = uiText[curLang] || uiText.en; 
 
     // Smooth animation helper
     const updateContainer = (newHtml) => {
@@ -3077,12 +3099,25 @@ window.fetchLiveEHadir = async (cls) => {
     updateContainer(`
         <div style="text-align:center; padding:40px 20px; color:var(--ios-text-sec); font-size:14px;">
             <span class="material-icons-round spin-anim" style="font-size:42px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
-            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading}</div>
+            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Fetching data..."}</div>
         </div>
     `);
 
+    // Reset UI Stats before loading
+    document.getElementById('ehadirCountPresent').innerText = "-";
+    document.getElementById('ehadirCountAbsent').innerText = "-";
+    document.getElementById('ehadirRate').innerText = "-%";
+    document.getElementById('ehadirProgressBar').style.width = "0%";
+
+    // Add 8-second Timeout
+    window.ehadirAbortController = new AbortController();
+    const timeoutId = setTimeout(() => window.ehadirAbortController.abort(), 8000); 
+
     try {
-        const response = await fetch(`/api/ehadir?t=${Date.now()}`);
+        const response = await fetch(`/api/ehadir?t=${Date.now()}`, {
+            signal: window.ehadirAbortController.signal
+        });
+        clearTimeout(timeoutId);
         if (!response.ok) throw new Error("API failed");
 
         const data = await response.json();
@@ -3136,7 +3171,7 @@ window.fetchLiveEHadir = async (cls) => {
         document.getElementById('ehadirCountAbsent').innerText = absentCount;
         document.getElementById('ehadirRate').innerText = `${Math.round(rateRaw)}%`;
         document.getElementById('ehadirProgressBar').style.width = `${rateRaw}%`;
-        document.getElementById('ehadirModalSub').innerText = `${txt.ehadirDate}: ${dateStr} • ${txt.ehadirClass}: ${targetClass}`;
+        document.getElementById('ehadirModalSub').innerText = `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`;
         
         if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
 
@@ -3145,7 +3180,7 @@ window.fetchLiveEHadir = async (cls) => {
 
         // Present Section
         if (presentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent} (${presentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
                 const isLate = st.lateCount > 0;
                 html += `
@@ -3158,8 +3193,8 @@ window.fetchLiveEHadir = async (cls) => {
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3); margin:0;">${txt.ehadirLate} (${st.lateCount})</span>` : ''}
-                        <span class="ehadir-pill ehadir-hadir" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">check_circle</span> ${txt.ehadirPresent}</span>
+                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3); margin:0;">${txt.ehadirLate || "Late"} (${st.lateCount})</span>` : ''}
+                        <span class="ehadir-pill ehadir-hadir" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">check_circle</span> ${txt.ehadirPresent || "Present"}</span>
                     </div>
                 </div>`;
             });
@@ -3167,7 +3202,7 @@ window.fetchLiveEHadir = async (cls) => {
 
         // Absent Section
         if (absentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent} (${absentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
             absentStudents.forEach(st => {
                 html += `
                 <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.15); box-shadow:var(--shadow-sm); margin-bottom:8px;">
@@ -3175,7 +3210,7 @@ window.fetchLiveEHadir = async (cls) => {
                         <div style="width:30px; height:30px; border-radius:10px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.2); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#FF3B30;">${st.no}</div>
                         <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em;">${st.name}</div>
                     </div>
-                    <span class="ehadir-pill ehadir-tidak" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">cancel</span> ${txt.ehadirAbsent}</span>
+                    <span class="ehadir-pill ehadir-tidak" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">cancel</span> ${txt.ehadirAbsent || "Absent"}</span>
                 </div>`;
             });
         }
@@ -3184,11 +3219,14 @@ window.fetchLiveEHadir = async (cls) => {
 
     } catch (err) {
         console.error("E-Datang fetch error:", err);
+        const isTimeout = err.name === 'AbortError';
+        const errorMsg = isTimeout ? "Connection timed out. Server is busy." : (txt.ehadirError || "Could not connect to API.");
+        
         document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
         updateContainer(`
             <div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">
                 <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">cloud_off</span>
-                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${txt.ehadirError}</div>
+                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${errorMsg}</div>
             </div>
         `);
     }
