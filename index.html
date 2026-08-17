@@ -8,10 +8,46 @@
 <title>Student Allocation List 2026</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <style>
-:root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-text:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-bg:#FFFFFF;--chip-border:#D1D1D6;--chip-shadow:0 1px 3px rgba(0,0,0,0.06);--chip-txt:#1D1D1F;--chip-act-bg:var(--ios-blue);--chip-act-border:var(--ios-blue);--chip-act-txt:#FFFFFF;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-ios:cubic-bezier(0.25,1,0.5,1);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans SC",sans-serif}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SF-Pro-Display-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SF-Pro-Display-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SF-Pro-Display-Medium.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SF-Pro-Display-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SF-Pro-Display-Bold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root{--ios-bg:#E8F0FE;--ios-card:rgba(255,255,255,0.85);--ios-modal:rgba(255,255,255,0.85);--ios-text:#1D1D1F;--ios-text-sec:rgba(29,29,31,0.6);--ios-sep:rgba(0,0,0,0.08);--ios-blue:#007AFF;--ios-blue-text:#007AFF;--ios-blue-light:rgba(0,122,255,0.15);--ios-input:rgba(255,255,255,0.7);--grad-1:#e0c3fc;--grad-2:#8ec5fc;--grad-3:#4facfe;--glass-border:rgba(255,255,255,0.8);--glass-highlight:inset 0 1px 1px rgba(255,255,255,0.8);--glass-shadow:0 4px 16px rgba(31,38,135,0.05);--glass-blur:blur(16px) saturate(180%);--chip-bg:#FFFFFF;--chip-border:#D1D1D6;--chip-shadow:0 1px 3px rgba(0,0,0,0.06);--chip-txt:#1D1D1F;--chip-act-bg:var(--ios-blue);--chip-act-border:var(--ios-blue);--chip-act-txt:#FFFFFF;--shadow-sm:0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 8px 24px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.15);--ease-ios:cubic-bezier(0.25,1,0.5,1);--ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);--font-stack:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Inter","Noto Sans SC",sans-serif}
 /* LIGHT MODE DYNAMIC THEMES */
 body.bg-morning:not([data-theme="dark"]){--grad-1:#ffecd2;--grad-2:#fcb69f;--grad-3:#ff9a9e}
 body.bg-afternoon:not([data-theme="dark"]){--grad-1:#a1c4fd;--grad-2:#c2e9fb;--grad-3:#e0c3fc}
