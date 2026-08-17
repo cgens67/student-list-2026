@@ -3055,22 +3055,126 @@ window.closeEHadirModal = () => {
     document.getElementById('ehadirOverlay').classList.remove('open');
 };
 
-window.openEHadirModal = () => {
-    triggerHaptic();
-    const cls = currentClass;
-    const code = window.getClassCode(cls);
-    const overlay = document.getElementById('ehadirOverlay');
-    overlay.classList.add('open');
-    
-    document.getElementById('ehadirModalTitle').innerText = `E-Datang (2 ${cls})`;
-    document.getElementById('ehadirModalSub').innerText = `Live Portal: parents.chsmelaka.com/${code}`;
-    
-    const container = document.getElementById('ehadirListContainer');
-    container.innerHTML = `
-        <div style="width:100%; height:450px; border-radius:16px; overflow:hidden; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); background:#1a1a1a;">
-            <iframe src="https://parents.chsmelaka.com/${code}" style="width:100%; height:100%; border:none;" loading="lazy"></iframe>
-        </div>
-    `;
+window.fetchLiveEHadir = async (cls) => {
+    const code = window.getClassCode(cls); // e.g. "2h"
+    const targetClass = `2${cls.charAt(0).toUpperCase()}`; // e.g. "2H", "2B", "2K"
+    const badge = document.getElementById('ehadirSummaryBadge');
+    const listContainer = document.getElementById('ehadirListContainer');
+
+    listContainer.innerHTML = `
+        <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
+            <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
+            <div>Connecting to live CHS database...</div>
+        </div>`;
+
+    try {
+        const response = await fetch(`/api/ehadir?classCode=${code}&t=${Date.now()}`);
+        if (!response.ok) throw new Error("Could not reach API endpoint");
+        
+        const data = await response.json();
+        const allStudents = data.students || [];
+        const attendanceList = data.attendance || [];
+        const dateStr = data.date || new Date().toISOString().split('T')[0];
+
+        // 1. Filter students belonging to this class (e.g. "2H")
+        const classRoster = allStudents.filter(s => {
+            if (!s.class) return false;
+            const cClean = s.class.replace(/\s+/g, '').toUpperCase();
+            return cClean === targetClass || cClean === `2${cls.toUpperCase()}`;
+        }).sort((a, b) => a.name.localeCompare(b.name));
+
+        // 2. Build attendance map by Student ID
+        const attMap = new Map();
+        attendanceList.forEach(att => {
+            const sid = att.id || att.student_id || att.studentId;
+            if (sid) attMap.set(String(sid), att);
+        });
+
+        let presentStudents = [];
+        let absentStudents = [];
+
+        classRoster.forEach((student, index) => {
+            const att = attMap.get(String(student.id));
+            if (att) {
+                const timeStr = att.time || att.waktu || att.waktu_hadir || att.created_at || "Present";
+                const isLate = /lewat/i.test(timeStr) || att.isLate || att.late || Boolean(att.lewat);
+                presentStudents.push({
+                    no: index + 1,
+                    id: student.id,
+                    name: student.name,
+                    time: timeStr,
+                    isLate
+                });
+            } else {
+                absentStudents.push({
+                    no: index + 1,
+                    id: student.id,
+                    name: student.name
+                });
+            }
+        });
+
+        const presentCount = presentStudents.length;
+        const totalCount = classRoster.length > 0 ? classRoster.length : (presentCount + absentStudents.length);
+        const absentCount = totalCount - presentCount;
+        const rate = totalCount > 0 ? ((presentCount / totalCount) * 100).toFixed(1) : "0";
+
+        // Update Statistics Cards
+        document.getElementById('ehadirCountPresent').innerText = presentCount;
+        document.getElementById('ehadirCountAbsent').innerText = absentCount;
+        document.getElementById('ehadirRate').innerText = `${rate}%`;
+        document.getElementById('ehadirModalSub').innerText = `Tarikh: ${dateStr} • Kelas: ${targetClass}`;
+        if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
+
+        // Render HTML Lists
+        let html = '';
+
+        // Present Section
+        if (presentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 4px 4px;">Hadir (${presentStudents.length})</div>`;
+            presentStudents.forEach(st => {
+                html += `
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border); margin-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
+                            <div style="font-size:11px; color:var(--ios-text-sec);">${st.time}</div>
+                        </div>
+                    </div>
+                    <div>
+                        ${st.isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat</span>` : ''}
+                        <span class="ehadir-pill ehadir-hadir">Hadir</span>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Absent / Not Scanned Section
+        if (absentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:14px 0 4px 4px;">Belum Hadir (${absentStudents.length})</div>`;
+            absentStudents.forEach(st => {
+                html += `
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.2); margin-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
+                        <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
+                    </div>
+                    <span class="ehadir-pill ehadir-tidak">Belum Hadir</span>
+                </div>`;
+            });
+        }
+
+        listContainer.innerHTML = html;
+
+    } catch (err) {
+        console.error("E-Datang API Error:", err);
+        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
+        listContainer.innerHTML = `
+            <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
+                <div style="margin-bottom:12px;">Data connection busy. Tap <b>Portal</b> to view the official site directly.</div>
+            </div>`;
+    }
 };
 
 window.switchClass=function(cls){
