@@ -3050,17 +3050,32 @@ window.closeEHadirModal = () => {
 };
 
 window.fetchLiveEHadir = async (cls) => {
-    const classLetter = cls.charAt(0).toUpperCase(); // e.g. "H"
-    const targetClass = `2${classLetter}`; // e.g. "2H", "2B", "2K", "2M", "2P", "2U"
+    const classLetter = cls.charAt(0).toUpperCase();
+    const targetClass = `2${classLetter}`;
     const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
     const card = document.getElementById('ehadirCard');
+    const isAlreadyOpen = document.getElementById('ehadirOverlay')?.classList.contains('open');
+
+    // 1. Capture height before loading state
+    const initialHeight = (isAlreadyOpen && card) ? card.offsetHeight : 0;
 
     listContainer.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
             <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
             <div>Fetching E-Datang records...</div>
         </div>`;
+
+    // Morph to loading spinner height if switching classes while open
+    if (isAlreadyOpen && card && initialHeight > 0 && typeof card.animate === 'function') {
+        const loadingHeight = card.offsetHeight;
+        if (loadingHeight !== initialHeight) {
+            card.animate([
+                { height: initialHeight + 'px' },
+                { height: loadingHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
+    }
 
     try {
         const response = await fetch(`/api/ehadir?t=${Date.now()}`);
@@ -3071,13 +3086,13 @@ window.fetchLiveEHadir = async (cls) => {
         const allAttendance = data.attendance || [];
         const dateStr = data.date || new Date().toISOString().split('T')[0];
 
-        // 1. Get all students enrolled in this class from CHS database
+        // Filter roster for selected class
         const classRoster = allStudents.filter(s => {
             if (!s.class) return false;
             return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
         }).sort((a, b) => a.name.localeCompare(b.name));
 
-        // 2. Map attendance records for this class
+        // Map attendance records
         const attMap = new Map();
         allAttendance.forEach(att => {
             if (att.id) attMap.set(String(att.id), att);
@@ -3111,10 +3126,10 @@ window.fetchLiveEHadir = async (cls) => {
         const absentCount = totalCount - presentCount;
         const rate = totalCount > 0 ? ((presentCount / totalCount) * 100).toFixed(1) : "0";
 
-        // Snapshot current height before updating DOM
-        const startHeight = card ? card.offsetHeight : 0;
+        // Pre-measure height before updating DOM
+        const preUpdateHeight = card ? card.offsetHeight : 0;
 
-        // Update Header and Summary Cards
+        // Update Header & Summary
         document.getElementById('ehadirCountPresent').innerText = presentCount;
         document.getElementById('ehadirCountAbsent').innerText = absentCount;
         document.getElementById('ehadirRate').innerText = `${rate}%`;
@@ -3124,86 +3139,18 @@ window.fetchLiveEHadir = async (cls) => {
         // Render List HTML
         let html = '';
 
-        // Present Section
         if (presentStudents.length > 0) {
             html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 4px 4px;">Hadir (${presentStudents.length})</div>`;
-            presentStudents.forEach(st => {
+            presentStudents.forEach((st, index) => {
                 const isLate = st.lateCount > 0;
+                const delay = Math.min(index * 0.02, 0.3);
                 html += `
-                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border); margin-bottom:6px; animation: fadeUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;">
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border); margin-bottom:6px; animation: fadeUp 0.35s var(--ease-spring) forwards; opacity:0; animation-delay:${delay}s;">
                     <div style="display:flex; align-items:center; gap:10px;">
                         <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
                         <div>
                             <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
-                            <div style="font-size:11px; color:var(--ios-text-sec);">${st.time}</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:4px;">
-                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat (${st.lateCount})</span>` : ''}
-                        <span class="ehadir-pill ehadir-hadir">Hadir</span>
-                    </div>
-                </div>`;
-            });
-        }
-
-        // Absent Section
-        if (absentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:14px 0 4px 4px;">Belum Hadir (${absentStudents.length})</div>`;
-            absentStudents.forEach(st => {
-                html += `
-                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.2); margin-bottom:6px; animation: fadeUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
-                        <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
-                    </div>
-                    <span class="ehadir-pill ehadir-tidak">Belum Hadir</span>
-                </div>`;
-            });
-        }
-
-        listContainer.innerHTML = html;
-
-        // Smooth Height Animation
-        if (card && typeof card.animate === 'function' && startHeight > 0) {
-            card.style.height = 'auto';
-            const targetHeight = card.offsetHeight;
-            if (startHeight !== targetHeight) {
-                card.style.height = startHeight + 'px';
-                const anim = card.animate([
-                    { height: startHeight + 'px' },
-                    { height: targetHeight + 'px' }
-                ], { duration: 380, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-                
-                anim.onfinish = () => card.style.height = 'auto';
-                anim.oncancel = () => card.style.height = 'auto';
-            } else {
-                card.style.height = 'auto';
-            }
-        }
-
-    } catch (err) {
-        console.error("E-Datang fetch error:", err);
-        const startHeight = card ? card.offsetHeight : 0;
-        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
-        listContainer.innerHTML = `
-            <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
-                <div style="margin-bottom:12px;">Could not connect to API. Tap <b>Portal</b> below to view directly.</div>
-            </div>`;
-        
-        if (card && typeof card.animate === 'function' && startHeight > 0) {
-            card.style.height = 'auto';
-            const targetHeight = card.offsetHeight;
-            if (startHeight !== targetHeight) {
-                card.style.height = startHeight + 'px';
-                const anim = card.animate([
-                    { height: startHeight + 'px' },
-                    { height: targetHeight + 'px' }
-                ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-                anim.onfinish = () => card.style.height = 'auto';
-            }
-        }
-    }
-};
+                            <div s
     const classLetter = cls.charAt(0).toUpperCase(); // e.g. "H"
     const targetClass = `2${classLetter}`; // e.g. "2H", "2B", "2K", "2M", "2P", "2U"
     const badge = document.getElementById('ehadirSummaryBadge');
