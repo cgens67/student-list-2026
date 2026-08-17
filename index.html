@@ -1924,40 +1924,45 @@ window.hexToRgba = function(hex, alpha) {
     <div class='modal-card' id='ehadirCard' onclick='event.stopPropagation()'>
       <div class='m-head'>
         <div class='handle'></div>
-        <div class='stats-title' id='ehadirModalTitle'>E-Hadir Live Attendance</div>
-        <div class='stats-sub' id='ehadirModalSub'>Fetching latest attendance data...</div>
+        <div class='stats-title anim-text-change' id='ehadirModalTitle'>E-Datang Attendance</div>
+        <div class='stats-sub anim-text-change' id='ehadirModalSub'>Fetching latest data...</div>
       </div>
-      <div class='m-body' style="padding-top:10px;">
-        <div class="ehadir-stats-box">
-          <div class="ehadir-stat-card">
-            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Present</div>
-            <div id="ehadirCountPresent" style="font-size:20px; font-weight:800; color:#34C759; margin-top:2px;">-</div>
+      <div class='m-body' style="padding-top:16px;">
+        
+        <!-- Stats Box -->
+        <div style="display:flex; gap:10px; margin-bottom:8px;">
+          <div style="flex:1; background:rgba(52,199,89,0.12); border:1px solid rgba(52,199,89,0.2); border-radius:20px; padding:16px 8px; text-align:center;">
+            <div id="ehadirCountPresentLbl" class="anim-text-change" style="font-size:11px; font-weight:800; color:#28A745; text-transform:uppercase; letter-spacing:0.5px;">Present</div>
+            <div id="ehadirCountPresent" style="font-size:32px; font-weight:800; color:#34C759; margin-top:4px; line-height:1;">-</div>
           </div>
-          <div class="ehadir-stat-card">
-            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Absent</div>
-            <div id="ehadirCountAbsent" style="font-size:20px; font-weight:800; color:#FF3B30; margin-top:2px;">-</div>
+          <div style="flex:1; background:rgba(255,59,48,0.12); border:1px solid rgba(255,59,48,0.2); border-radius:20px; padding:16px 8px; text-align:center;">
+            <div id="ehadirCountAbsentLbl" class="anim-text-change" style="font-size:11px; font-weight:800; color:#D70015; text-transform:uppercase; letter-spacing:0.5px;">Absent</div>
+            <div id="ehadirCountAbsent" style="font-size:32px; font-weight:800; color:#FF3B30; margin-top:4px; line-height:1;">-</div>
           </div>
-          <div class="ehadir-stat-card">
-            <div style="font-size:10px; font-weight:700; color:var(--ios-text-sec); text-transform:uppercase;">Rate</div>
-            <div id="ehadirRate" style="font-size:20px; font-weight:800; color:var(--ios-blue); margin-top:2px;">-%</div>
+          <div style="flex:1; background:rgba(0,122,255,0.12); border:1px solid rgba(0,122,255,0.2); border-radius:20px; padding:16px 8px; text-align:center;">
+            <div id="ehadirRateLbl" class="anim-text-change" style="font-size:11px; font-weight:800; color:#0056B3; text-transform:uppercase; letter-spacing:0.5px;">Rate</div>
+            <div id="ehadirRate" style="font-size:32px; font-weight:800; color:var(--ios-blue); margin-top:4px; line-height:1;">-%</div>
           </div>
         </div>
+        
+        <!-- Live Progress Bar -->
+        <div style="width:100%; height:8px; background:rgba(255,59,48,0.2); border-radius:4px; overflow:hidden; margin-bottom:20px; display:flex;">
+          <div id="ehadirProgressBar" style="height:100%; width:0%; background:#34C759; transition:width 0.8s ease;"></div>
+        </div>
 
-        <div id="ehadirListContainer" style="display:flex; flex-direction:column; gap:8px;">
-          <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
-            <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
-            <div>Loading live attendance data...</div>
-          </div>
+        <div id="ehadirListContainer" style="display:flex; flex-direction:column; gap:8px; min-height:120px;">
         </div>
       </div>
       <div class='m-foot' style="display:flex; gap:10px; border-top:1px solid var(--glass-border);">
-        <button class='btn-done' style="background:var(--ios-input); color:var(--ios-text); flex:1;" onclick='window.openOfficialEHadir()'><span class="material-icons-round" style="font-size:16px; vertical-align:middle; margin-right:4px;">open_in_new</span> Portal</button>
-        <button class='btn-done' style="flex:1.5;" onclick='window.closeEHadirModal()'>Done</button>
+        <button class='btn-done' style="background:var(--ios-input); color:var(--ios-blue); flex:1; border:1px solid var(--chip-border);" onclick='window.openOfficialEHadir()'>
+          <span class="material-icons-round" style="font-size:18px; vertical-align:middle; margin-right:4px;">open_in_new</span>
+          <span id="ehadirBtnPortalText" class="anim-text-change">Portal</span>
+        </button>
+        <button class='btn-done anim-text-change' style="flex:1.5;" onclick='window.closeEHadirModal()' id="ehadirBtnDoneText">Done</button>
       </div>
     </div>
   </div>
-</div>
-
+  
 <script>
 // ==========================================
 // GLOBAL DATA VARIABLES
@@ -3036,6 +3041,8 @@ window.getClassCode = (cls) => {
 
 window.ehadirAbortController = null;
 
+window.ehadirAbortController = null;
+
 window.openOfficialEHadir = () => {
     triggerHaptic();
     if (currentClass === 'All') {
@@ -3053,12 +3060,14 @@ window.openEHadirModal = async () => {
         return;
     }
 
-    const txt = uiText[curLang] || uiText.en;
+    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
     const overlay = document.getElementById('ehadirOverlay');
-    overlay.classList.add('open');
+    if (overlay) overlay.classList.add('open');
     
-    document.getElementById('ehadirModalTitleText').innerText = txt.ehadirTitle || "E-Datang Attendance";
-    document.getElementById('ehadirModalSub').innerText = txt.ehadirLoading || "Fetching latest data...";
+    const titleEl = document.getElementById('ehadirModalTitle');
+    const subEl = document.getElementById('ehadirModalSub');
+    if (titleEl) titleEl.innerText = txt.ehadirTitle || "E-Datang Attendance";
+    if (subEl) subEl.innerText = txt.ehadirLoading || "Fetching latest data...";
     
     await window.fetchLiveEHadir(currentClass);
 };
@@ -3066,23 +3075,23 @@ window.openEHadirModal = async () => {
 window.closeEHadirModal = () => {
     triggerHaptic();
     if (window.ehadirAbortController) {
-        window.ehadirAbortController.abort(); // Cancel the loading immediately if user closes
+        try { window.ehadirAbortController.abort(); } catch(e) {}
     }
     const modal = document.getElementById("ehadirCard");
     if (modal) modal.style.transform = '';
-    document.getElementById('ehadirOverlay').classList.remove('open');
+    const overlay = document.getElementById('ehadirOverlay');
+    if (overlay) overlay.classList.remove('open');
 };
 
 window.fetchLiveEHadir = async (cls) => {
-    const classLetter = cls.charAt(0).toUpperCase(); 
+    const classLetter = (cls || 'H').charAt(0).toUpperCase(); 
     const targetClass = `2${classLetter}`; 
-    const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
     const card = document.getElementById('ehadirCard');
-    const txt = uiText[curLang] || uiText.en; 
+    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
 
-    // Smooth animation helper
     const updateContainer = (newHtml) => {
+        if (!listContainer) return;
         const startHeight = card ? card.offsetHeight : 0;
         listContainer.innerHTML = newHtml;
         if (card && typeof card.animate === 'function' && startHeight > 0) {
@@ -3097,41 +3106,71 @@ window.fetchLiveEHadir = async (cls) => {
     };
 
     updateContainer(`
-        <div style="text-align:center; padding:40px 20px; color:var(--ios-text-sec); font-size:14px;">
-            <span class="material-icons-round spin-anim" style="font-size:42px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
-            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Fetching data..."}</div>
+        <div style="text-align:center; padding:35px 20px; color:var(--ios-text-sec); font-size:14px;">
+            <span class="material-icons-round spin-anim" style="font-size:38px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
+            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Connecting to live CHS database..."}</div>
         </div>
     `);
 
-    // Reset UI Stats before loading
-    document.getElementById('ehadirCountPresent').innerText = "-";
-    document.getElementById('ehadirCountAbsent').innerText = "-";
-    document.getElementById('ehadirRate').innerText = "-%";
-    document.getElementById('ehadirProgressBar').style.width = "0%";
+    const setEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = val;
+    };
 
-    // Add 8-second Timeout
-    window.ehadirAbortController = new AbortController();
-    const timeoutId = setTimeout(() => window.ehadirAbortController.abort(), 8000); 
+    setEl('ehadirCountPresent', '-');
+    setEl('ehadirCountAbsent', '-');
+    setEl('ehadirRate', '-%');
+    const pBar = document.getElementById('ehadirProgressBar');
+    if (pBar) pBar.style.width = '0%';
+
+    let allStudents = [];
+    let allAttendance = [];
+    let dateStr = new Date().toISOString().split('T')[0];
 
     try {
-        const response = await fetch(`/api/ehadir?t=${Date.now()}`, {
-            signal: window.ehadirAbortController.signal
-        });
-        clearTimeout(timeoutId);
-        if (!response.ok) throw new Error("API failed");
+        let fetchedData = null;
 
-        const data = await response.json();
-        const allStudents = data.students || [];
-        const allAttendance = data.attendance || [];
-        const dateStr = data.date || new Date().toISOString().split('T')[0];
+        // 1. Try Vercel API Route with timeout
+        try {
+            window.ehadirAbortController = new AbortController();
+            const timeout = setTimeout(() => window.ehadirAbortController.abort(), 4000);
+            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
+            clearTimeout(timeout);
+            if (res.ok) {
+                const ct = res.headers.get("content-type") || "";
+                if (ct.includes("application/json")) {
+                    fetchedData = await res.json();
+                }
+            }
+        } catch (e) {}
 
-        // 1. Get all students enrolled in this class from CHS database
+        // 2. Fallback to direct CORS Proxy if Vercel serverless is starting up
+        if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
+            const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
+            const studentsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
+            const attUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
+
+            const [sRes, aRes] = await Promise.all([
+                fetch(studentsUrl),
+                fetch(attUrl)
+            ]);
+
+            const sJson = sRes.ok ? await sRes.json() : [];
+            const aJson = aRes.ok ? await aRes.json() : [];
+            fetchedData = { date: todayStr, students: sJson, attendance: aJson };
+        }
+
+        allStudents = Array.isArray(fetchedData.students) ? fetchedData.students : [];
+        allAttendance = Array.isArray(fetchedData.attendance) ? fetchedData.attendance : [];
+        dateStr = fetchedData.date || dateStr;
+
+        // Filter students by class
         const classRoster = allStudents.filter(s => {
             if (!s.class) return false;
             return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
-        }).sort((a, b) => a.name.localeCompare(b.name));
+        }).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
-        // 2. Map attendance records for this class
+        // Match attendance
         const attMap = new Map();
         allAttendance.forEach(att => {
             if (att.id) attMap.set(String(att.id), att);
@@ -3142,7 +3181,7 @@ window.fetchLiveEHadir = async (cls) => {
         let absentStudents = [];
 
         classRoster.forEach((st, idx) => {
-            const att = attMap.get(String(st.id)) || attMap.get(String(st.name).toUpperCase());
+            const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase()) : null);
             if (att && att.attendance_time) {
                 presentStudents.push({
                     no: idx + 1,
@@ -3162,25 +3201,19 @@ window.fetchLiveEHadir = async (cls) => {
 
         const presentCount = presentStudents.length;
         const totalCount = classRoster.length > 0 ? classRoster.length : (presentCount + absentStudents.length);
-        const absentCount = totalCount - presentCount;
+        const absentCount = Math.max(0, totalCount - presentCount);
         const rateRaw = totalCount > 0 ? (presentCount / totalCount) * 100 : 0;
-        const rate = rateRaw.toFixed(1);
 
-        // Update Header and Summary Cards
-        document.getElementById('ehadirCountPresent').innerText = presentCount;
-        document.getElementById('ehadirCountAbsent').innerText = absentCount;
-        document.getElementById('ehadirRate').innerText = `${Math.round(rateRaw)}%`;
-        document.getElementById('ehadirProgressBar').style.width = `${rateRaw}%`;
-        document.getElementById('ehadirModalSub').innerText = `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`;
-        
-        if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
+        setEl('ehadirCountPresent', presentCount);
+        setEl('ehadirCountAbsent', absentCount);
+        setEl('ehadirRate', `${Math.round(rateRaw)}%`);
+        if (pBar) pBar.style.width = `${rateRaw}%`;
+        setEl('ehadirModalSub', `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`);
 
-        // Render List HTML
         let html = '';
 
-        // Present Section
         if (presentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
                 const isLate = st.lateCount > 0;
                 html += `
@@ -3200,9 +3233,8 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
-        // Absent Section
         if (absentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
             absentStudents.forEach(st => {
                 html += `
                 <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.15); box-shadow:var(--shadow-sm); margin-bottom:8px;">
@@ -3215,18 +3247,19 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
+        if (!html) {
+            html = `<div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">No students found for this class in the database.</div>`;
+        }
+
         updateContainer(html);
 
     } catch (err) {
-        console.error("E-Datang fetch error:", err);
-        const isTimeout = err.name === 'AbortError';
-        const errorMsg = isTimeout ? "Connection timed out. Server is busy." : (txt.ehadirError || "Could not connect to API.");
-        
-        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
+        console.error("E-Datang error:", err);
+        setEl('ehadirModalSub', 'Portal loaded. Tap below to view.');
         updateContainer(`
             <div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">
                 <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">cloud_off</span>
-                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${errorMsg}</div>
+                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${txt.ehadirError || "Could not connect to API."}</div>
             </div>
         `);
     }
