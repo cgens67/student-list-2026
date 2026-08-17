@@ -3180,13 +3180,26 @@ window.fetchLiveEHadir = async (cls) => {
         let presentStudents = [];
         let absentStudents = [];
 
+        // Match Chinese Name from Firebase (window.smkData)
+        const getCnName = (id, name) => {
+            const match = (window.smkData || []).find(s => {
+                if (s.id && id && String(s.id).trim() === String(id).trim()) return true;
+                if (s.name && name && s.name.trim().toUpperCase() === name.trim().toUpperCase()) return true;
+                return false;
+            });
+            return (match && match.cn && match.cn !== "-") ? match.cn : "";
+        };
+
         classRoster.forEach((st, idx) => {
             const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase()) : null);
+            const cnName = getCnName(st.id, st.name);
+
             if (att && att.attendance_time) {
                 presentStudents.push({
                     no: idx + 1,
                     id: st.id,
                     name: st.name,
+                    cn: cnName,
                     time: att.attendance_time,
                     lateCount: att.late_count || 0
                 });
@@ -3194,7 +3207,8 @@ window.fetchLiveEHadir = async (cls) => {
                 absentStudents.push({
                     no: idx + 1,
                     id: st.id,
-                    name: st.name
+                    name: st.name,
+                    cn: cnName
                 });
             }
         });
@@ -3212,16 +3226,19 @@ window.fetchLiveEHadir = async (cls) => {
 
         let html = '';
 
+        // Present Section
         if (presentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
                 const isLate = st.lateCount > 0;
+                const cnHtml = st.cn ? `<span style="font-size:13px; font-weight:600; color:var(--ios-text-sec); margin-left:4px;">(${st.cn})</span>` : '';
+
                 html += `
                 <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); margin-bottom:8px;">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div style="width:30px; height:30px; border-radius:10px; background:var(--ios-input); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:var(--ios-text-sec);">${st.no}</div>
                         <div style="display:flex; flex-direction:column; gap:2px;">
-                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em;">${st.name}</div>
+                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em;">${st.name} ${cnHtml}</div>
                             <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec);"><span class="material-icons-round" style="font-size:10px; vertical-align:middle;">schedule</span> ${st.time}</div>
                         </div>
                     </div>
@@ -3233,20 +3250,23 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
+        // Absent Section
         if (absentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
             absentStudents.forEach(st => {
+                const cnHtml = st.cn ? `<span style="font-size:13px; font-weight:600; color:rgba(255,59,48,0.7); margin-left:4px;">(${st.cn})</span>` : '';
+
                 html += `
                 <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.15); box-shadow:var(--shadow-sm); margin-bottom:8px;">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div style="width:30px; height:30px; border-radius:10px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.2); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#FF3B30;">${st.no}</div>
-                        <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em;">${st.name}</div>
+                        <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em;">${st.name} ${cnHtml}</div>
                     </div>
                     <span class="ehadir-pill ehadir-tidak" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">cancel</span> ${txt.ehadirAbsent || "Absent"}</span>
                 </div>`;
             });
         }
-
+        
         if (!html) {
             html = `<div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">No students found for this class in the database.</div>`;
         }
