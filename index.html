@@ -3059,15 +3059,11 @@ window.fetchLiveEHadir = async (cls) => {
     const code = window.getClassCode(cls);
     const badge = document.getElementById('ehadirSummaryBadge');
     const listContainer = document.getElementById('ehadirListContainer');
-    
-    // Get total student count from local database as fallback
-    const localClassStudents = (window.smkData || []).filter(s => s.newClass && s.newClass.toUpperCase().includes(cls.toUpperCase()));
-    const expectedTotal = localClassStudents.length > 0 ? localClassStudents.length : 30;
 
     listContainer.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
             <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
-            <div>Connecting to CHS E-Datang...</div>
+            <div>Fetching E-Datang records...</div>
         </div>`;
 
     try {
@@ -3076,7 +3072,6 @@ window.fetchLiveEHadir = async (cls) => {
             response = await fetch(`/api/ehadir?classCode=${code}`);
             if (!response.ok) throw new Error("API Route not deployed");
         } catch (e) {
-            // Fallback proxy
             response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://parents.chsmelaka.com/${code}?t=${Date.now()}`)}`);
         }
         
@@ -3091,16 +3086,16 @@ window.fetchLiveEHadir = async (cls) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, "text/html");
 
-        // 1. Extract Date & Count
+        // 1. Extract Date and Header info
         const fullBodyText = doc.body ? doc.body.innerText : htmlText;
         const dateMatch = fullBodyText.match(/Tarikh\s*:\s*([\d-]+)/i);
         const countMatch = fullBodyText.match(/Jumlah Hadir\s*:\s*(\d+)\s*\/\s*(\d+)/i);
         
-        const dateStr = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
+        const dateStr = dateMatch ? dateMatch[1] : "Today";
         let presentCount = countMatch ? parseInt(countMatch[1]) : 0;
-        let totalCount = countMatch ? parseInt(countMatch[2]) : expectedTotal;
+        let totalCount = countMatch ? parseInt(countMatch[2]) : 30;
 
-        // 2. Parse Table Rows
+        // 2. Parse Present Students from <table>
         const tableRows = Array.from(doc.querySelectorAll("table tr"));
         let presentStudents = [];
 
@@ -3118,38 +3113,41 @@ window.fetchLiveEHadir = async (cls) => {
             }
         });
 
-        if (presentStudents.length > 0) {
-            presentCount = presentStudents.length;
+        // 3. Parse Absent Students from <ul> <li> tags
+        let absentStudents = [];
+        const listItems = Array.from(doc.querySelectorAll("ul li, ol li"));
+        listItems.forEach(li => {
+            const txt = li.innerText.trim().toUpperCase();
+            if (txt && !txt.includes("E-DATANG") && !txt.includes("KELAS")) {
+                absentStudents.push(txt);
+            }
+        });
+
+        // Fallback for counts if regex missed
+        if (presentStudents.length > 0) presentCount = presentStudents.length;
+        if (absentStudents.length > 0 && totalCount === 30 && presentStudents.length === 0) {
+            totalCount = absentStudents.length;
         }
 
         const absentCount = Math.max(0, totalCount - presentCount);
         const rate = totalCount > 0 ? ((presentCount / totalCount) * 100).toFixed(1) : "0";
 
-        // Update UI Cards
+        // Update Summary Cards
         document.getElementById('ehadirCountPresent').innerText = presentCount;
         document.getElementById('ehadirCountAbsent').innerText = absentCount;
         document.getElementById('ehadirRate').innerText = `${rate}%`;
         document.getElementById('ehadirModalSub').innerText = `Tarikh: ${dateStr} • Kelas: ${code.toUpperCase()}`;
         if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
 
-        // Render List
+        // Render List HTML
         let html = '';
-        if (presentStudents.length === 0) {
-            const hour = new Date().getHours();
-            const msg = (hour >= 0 && hour < 6) 
-                ? "School has not started yet today. Attendance records reset at midnight."
-                : "No student attendance recorded yet for today.";
-                
-            html = `
-            <div style="text-align:center; padding:30px 16px; color:var(--ios-text-sec); font-size:13px; background:var(--ios-input); border-radius:16px; border:1px solid var(--chip-border);">
-                <span class="material-icons-round" style="font-size:36px; color:var(--ios-blue); opacity:0.6; margin-bottom:8px;">schedule</span>
-                <div style="font-weight:700; color:var(--ios-text); font-size:14px; margin-bottom:4px;">${msg}</div>
-                <div style="font-size:12px; opacity:0.7;">Check back around 6:45 AM – 7:30 AM.</div>
-            </div>`;
-        } else {
+
+        // Present Section
+        if (presentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 4px 4px;">Hadir (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
                 html += `
-                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border);">
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border); margin-bottom:6px;">
                     <div style="display:flex; align-items:center; gap:10px;">
                         <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
                         <div>
@@ -3165,17 +3163,29 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
+        // Absent Section
+        if (absentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:14px 0 4px 4px;">Belum Hadir / Tidak Hadir (${absentStudents.length})</div>`;
+            absentStudents.forEach((name, i) => {
+                html += `
+                <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.2); margin-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${i + 1}</span>
+                        <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${name}</div>
+                    </div>
+                    <span class="ehadir-pill ehadir-tidak">Belum Hadir</span>
+                </div>`;
+            });
+        }
+
         listContainer.innerHTML = html;
 
     } catch (err) {
         console.error("E-Datang fetch error:", err);
-        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below for direct view.";
-        document.getElementById('ehadirCountPresent').innerText = "-";
-        document.getElementById('ehadirCountAbsent').innerText = "-";
-        document.getElementById('ehadirRate').innerText = "-";
+        document.getElementById('ehadirModalSub').innerText = "Portal loaded. Tap below to view.";
         listContainer.innerHTML = `
             <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
-                <div style="margin-bottom:12px;">Tap <b>Portal</b> below to view the official page directly.</div>
+                <div style="margin-bottom:12px;">Tap <b>Portal</b> below to view directly.</div>
             </div>`;
     }
 };
