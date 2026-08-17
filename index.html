@@ -3058,9 +3058,15 @@ window.closeEHadirModal = () => {
 window.fetchLiveEHadir = async (cls) => {
     const code = window.getClassCode(cls);
     const badge = document.getElementById('ehadirSummaryBadge');
+    const listContainer = document.getElementById('ehadirListContainer');
     
+    listContainer.innerHTML = `
+        <div style="text-align:center; padding:30px; color:var(--ios-text-sec); font-size:14px;">
+            <span class="material-icons-round spin-anim" style="font-size:32px; color:var(--ios-blue); margin-bottom:8px;">autorenew</span>
+            <div>Loading live attendance data from CHS portal...</div>
+        </div>`;
+
     try {
-        // Try local serverless endpoint first, fallback to CORS proxy
         let response;
         try {
             response = await fetch(`/api/ehadir?classCode=${code}`);
@@ -3079,69 +3085,110 @@ window.fetchLiveEHadir = async (cls) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, "text/html");
 
-        // Parse Table Rows or List from School Page
-        const rows = Array.from(doc.querySelectorAll("table tr, .student-row, .list-group-item, li"));
-        let records = [];
+        // 1. Extract Date & Count from Text
+        const fullBodyText = doc.body ? doc.body.innerText : htmlText;
+        const dateMatch = fullBodyText.match(/Tarikh\s*:\s*([\d-]+)/i);
+        const countMatch = fullBodyText.match(/Jumlah Hadir\s*:\s*(\d+)\s*\/\s*(\d+)/i);
+        
+        const dateStr = dateMatch ? dateMatch[1] : "Today";
+        let presentCount = countMatch ? parseInt(countMatch[1]) : 0;
+        let totalCount = countMatch ? parseInt(countMatch[2]) : 0;
 
-        rows.forEach(row => {
-            const text = row.innerText.trim();
-            if (!text || text.includes("Nama") || text.includes("Student Name")) return;
+        // 2. Parse Table Rows (Present Students)
+        const tableRows = Array.from(doc.querySelectorAll("table tr"));
+        let presentStudents = [];
 
-            // Check if status is present/absent
-            const isAbsent = /tidak hadir|absent|tiada/i.test(text);
-            const isPresent = /hadir|present/i.test(text);
-
-            if (isPresent || isAbsent) {
-                records.push({
-                    rawText: text,
-                    status: isAbsent ? "absent" : "present"
-                });
+        tableRows.forEach(tr => {
+            const cells = Array.from(tr.querySelectorAll("td"));
+            if (cells.length >= 3) {
+                const no = cells[0].innerText.trim();
+                const name = cells[1].innerText.trim().toUpperCase();
+                const rawTime = cells[2].innerText.trim();
+                
+                if (name && !name.includes("NAMA")) {
+                    const isLate = /lewat/i.test(rawTime);
+                    presentStudents.push({
+                        no,
+                        name,
+                        time: rawTime,
+                        isLate
+                    });
+                }
             }
         });
 
-        // Fallback: If no structured table, parse text by lines
-        if (records.length === 0) {
-            const lines = htmlText.replace(/<[^>]*>/g, "\n").split("\n").map(l => l.trim()).filter(Boolean);
-            lines.forEach(l => {
-                if (/tidak hadir|absent/i.test(l)) records.push({ rawText: l, status: "absent" });
-                else if (/hadir|present/i.test(l)) records.push({ rawText: l, status: "present" });
-            });
+        // 3. Parse "Tidak Hadir" Section
+        let absentStudents = [];
+        const tidakHadirHeading = Array.from(doc.querySelectorAll("body, div, p, span, h1, h2, h3, h4, h5"))
+            .find(el => el.children.length === 0 && /tidak hadir\s*:/i.test(el.innerText));
+
+        if (tidakHadirHeading) {
+            let nextEl = tidakHadirHeading.nextElementSibling;
+            while (nextEl) {
+                const txt = nextEl.innerText.trim();
+                if (txt && !txt.includes("E-Datang")) {
+                    absentStudents.push(txt.toUpperCase());
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
         }
 
-        const presentCount = records.filter(r => r.status === "present").length;
-        const absentCount = records.filter(r => r.status === "absent").length;
-        const total = presentCount + absentCount;
-        const rate = total > 0 ? ((presentCount / total) * 100).toFixed(1) : "0";
+        if (presentStudents.length > 0 && presentCount === 0) {
+            presentCount = presentStudents.length;
+            totalCount = presentStudents.length + absentStudents.length;
+        }
 
-        document.getElementById('ehadirCountPresent').innerText = presentCount || "-";
-        document.getElementById('ehadirCountAbsent').innerText = absentCount || "0";
+        const rate = totalCount > 0 ? ((presentCount / totalCount) * 100).toFixed(1) : "100";
+
+        // Update Summary Cards
+        document.getElementById('ehadirCountPresent').innerText = presentCount;
+        document.getElementById('ehadirCountAbsent').innerText = totalCount - presentCount;
         document.getElementById('ehadirRate').innerText = `${rate}%`;
-        document.getElementById('ehadirModalSub').innerText = `Last checked: Just now (${total} students)`;
-        if (badge) badge.innerText = `${presentCount}/${total} (${rate}%)`;
+        document.getElementById('ehadirModalSub').innerText = `Tarikh: ${dateStr} • Kelas: ${code.toUpperCase()}`;
+        if (badge) badge.innerText = `${presentCount}/${totalCount} (${rate}%)`;
 
-        const listContainer = document.getElementById('ehadirListContainer');
-        if (records.length === 0) {
-            listContainer.innerHTML = `
-                <div style="text-align:center; padding:20px; color:var(--ios-text-sec); font-size:13px;">
-                    Portal loaded. Tap below to view full details on the school site.
-                </div>`;
-        } else {
-            listContainer.innerHTML = records.map(r => `
-                <div style="background:var(--ios-input); padding:10px 14px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border);">
-                    <span style="font-size:13px; font-weight:600; color:var(--ios-text);">${r.rawText.substring(0, 35)}</span>
-                    <span class="ehadir-pill ${r.status === 'present' ? 'ehadir-hadir' : 'ehadir-tidak'}">
-                        ${r.status === 'present' ? 'Hadir' : 'Tidak Hadir'}
-                    </span>
+        // Render List HTML
+        let html = '';
+
+        // Render Present Students
+        presentStudents.forEach(st => {
+            html += `
+            <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--chip-border);">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:12px; font-weight:800; color:var(--ios-text-sec); width:20px;">${st.no}</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:var(--ios-text);">${st.name}</div>
+                        <div style="font-size:11px; color:var(--ios-text-sec);">${st.time}</div>
+                    </div>
                 </div>
-            `).join('');
+                <div>
+                    ${st.isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3);">Lewat</span>` : ''}
+                    <span class="ehadir-pill ehadir-hadir">Hadir</span>
+                </div>
+            </div>`;
+        });
+
+        // Render Absent Students
+        absentStudents.forEach(name => {
+            html += `
+            <div style="background:var(--ios-input); padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.3);">
+                <div style="font-size:13px; font-weight:700; color:#FF3B30;">${name}</div>
+                <span class="ehadir-pill ehadir-tidak">Tidak Hadir</span>
+            </div>`;
+        });
+
+        if (html === '') {
+            html = `<div style="text-align:center; padding:20px; color:var(--ios-text-sec);">No student records found on portal for today yet.</div>`;
         }
+
+        listContainer.innerHTML = html;
 
     } catch (err) {
-        console.error("E-Hadir fetch error:", err);
-        document.getElementById('ehadirModalSub').innerText = "Unable to parse portal automatically.";
-        document.getElementById('ehadirListContainer').innerHTML = `
-            <div style="text-align:center; padding:20px; color:var(--ios-text-sec); font-size:13px;">
-                Direct connection blocked by browser policy. Use the portal button below.
+        console.error("E-Datang fetch error:", err);
+        document.getElementById('ehadirModalSub').innerText = "Unable to connect to school portal directly.";
+        listContainer.innerHTML = `
+            <div style="text-align:center; padding:24px; color:var(--ios-text-sec); font-size:13px;">
+                <div style="margin-bottom:12px;">The portal is live. Tap <b>Portal</b> below to view directly.</div>
             </div>`;
     }
 };
