@@ -4932,24 +4932,50 @@ window.renderStaffCards = (list) => {
         return;
     }
 
-    const html = list.map((st, i) => {
-        const name = st.name || st.nama || st.full_name || "Staff Member";
-        const cn = st.name_cn || st.cn || st.chinese_name || "";
-        const role = st.position || st.jawatan || st.role || st.title || "Teacher";
-        const email = st.email || st.email_moe || "";
-        const initial = name.replace(/^(EN|PN|CIK|USTAZ|USTAZAH|TN|DR|HAJI|HAJAH)\.?\s+/i, '').charAt(0) || "T";
+    const getPicUrl = (pic) => {
+        if (!pic) return null;
+        let url = String(pic).trim();
+        if (url.startsWith('//')) return 'https:' + url;
+        if (url.startsWith('http://')) return 'https://' + url.slice(7); // mixed content fix
+        if (url.startsWith('/')) return 'https://cdn.owonico.link' + url;
+        return url;
+    };
+
+    const sectionColors = {
+        'GURU': { bg: 'rgba(0,122,255,0.12)', color: 'var(--ios-blue)', border: 'rgba(0,122,255,0.25)' },
+        'AKP': { bg: 'rgba(175,82,222,0.12)', color: '#AF52DE', border: 'rgba(175,82,222,0.25)' },
+        'KBK': { bg: 'rgba(52,199,89,0.12)', color: '#34C759', border: 'rgba(52,199,89,0.25)' }
+    };
+
+    const html = list.map((st) => {
+        const id = st.id || "";
+        const name = st.name || st.nama || "Staff Member";
+        const section = (st.section || "GURU").toUpperCase();
+        const rawPic = getPicUrl(st.picture);
+        const initial = name.replace(/^(EN|PN|CIK|USTAZ|USTAZAH|TN|DR|HAJI|HAJAH)\.?\s+/i, '').charAt(0) || "S";
+        
+        const secStyle = sectionColors[section] || { bg: 'var(--ios-input)', color: 'var(--ios-text-sec)', border: 'var(--chip-border)' };
 
         return `
-        <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); gap:12px;">
+        <div style="background:var(--ios-card); padding:12px 14px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); gap:12px;">
             <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
-                <div style="width:36px; height:36px; border-radius:50%; background:var(--ios-blue-light); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:var(--ios-blue); flex-shrink:0;">${initial}</div>
-                <div style="display:flex; flex-direction:column; min-width:0; overflow:hidden;">
+                <div style="position:relative; width:44px; height:44px; flex-shrink:0;">
+                    ${rawPic ? `
+                    <img src="${rawPic}" alt="${name}" loading="lazy" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1.5px solid var(--glass-border); box-shadow:0 2px 8px rgba(0,0,0,0.1);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; width:44px; height:44px; border-radius:50%; background:var(--ios-blue-light); border:1px solid var(--chip-border); align-items:center; justify-content:center; font-size:16px; font-weight:800; color:var(--ios-blue);">${initial}</div>
+                    ` : `
+                    <div style="width:44px; height:44px; border-radius:50%; background:var(--ios-blue-light); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:var(--ios-blue);">${initial}</div>
+                    `}
+                </div>
+                <div style="display:flex; flex-direction:column; min-width:0; overflow:hidden; gap:3px;">
                     <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${name}</div>
-                    ${cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;">${cn}</div>` : ''}
-                    <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${role}</div>
+                    <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); display:flex; align-items:center; gap:4px;">
+                        <span class="material-icons-round" style="font-size:13px; color:var(--ios-text-sec); opacity:0.7;">badge</span>
+                        <span>${id || "-"}</span>
+                    </div>
                 </div>
             </div>
-            ${email ? `<a href="mailto:${email}" style="width:32px; height:32px; border-radius:50%; background:var(--ios-input); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; color:var(--ios-blue); text-decoration:none; flex-shrink:0;"><span class="material-icons-round" style="font-size:16px;">email</span></a>` : ''}
+            <span style="background:${secStyle.bg}; color:${secStyle.color}; border:1px solid ${secStyle.border}; padding:3px 8px; border-radius:8px; font-size:11px; font-weight:800; letter-spacing:0.5px; flex-shrink:0;">${section}</span>
         </div>`;
     }).join('');
 
@@ -4963,10 +4989,10 @@ window.filterStaffList = (query) => {
         return;
     }
     const filtered = window.staffDataCache.filter(st => {
-        const name = (st.name || st.nama || "").toLowerCase();
-        const cn = (st.name_cn || st.cn || "").toLowerCase();
-        const role = (st.position || st.jawatan || st.role || "").toLowerCase();
-        return name.includes(q) || cn.includes(q) || role.includes(q);
+        const name = (st.name || "").toLowerCase();
+        const id = (st.id || "").toLowerCase();
+        const section = (st.section || "").toLowerCase();
+        return name.includes(q) || id.includes(q) || section.includes(q);
     });
     window.renderStaffCards(filtered);
 };
