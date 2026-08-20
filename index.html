@@ -2868,6 +2868,27 @@ window.switchLanguage=function(lang, skipSync=false){
             if(document.getElementById('menuPlinkoText3')) document.getElementById('menuPlinkoText3').innerText = txt.menuPlinkoText || "Plinko";
             if(document.getElementById('menuGuessText3')) document.getElementById('menuGuessText3').innerText = txt.menuGuessText || "Guess Who?";
 
+            // Live Translations for Menu & Bottom Sheets
+            if(document.getElementById('menuStaffText')) setTextAndAnimateWidth(document.getElementById('menuStaffText'), txt.menuStaff || "Staff Directory");
+            
+            if(document.getElementById('ehadirModalTitle')) setTextAndAnimateWidth(document.getElementById('ehadirModalTitle'), txt.ehadirTitle || "E-Datang Attendance");
+            if(document.getElementById('ehadirCountPresentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountPresentLbl'), txt.ehadirPresent || "Present");
+            if(document.getElementById('ehadirCountAbsentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountAbsentLbl'), txt.ehadirAbsent || "Absent");
+            if(document.getElementById('ehadirRateLbl')) setTextAndAnimateWidth(document.getElementById('ehadirRateLbl'), txt.ehadirRate || "Rate");
+            if(document.getElementById('ehadirBtnPortalText')) setTextAndAnimateWidth(document.getElementById('ehadirBtnPortalText'), txt.ehadirPortal || "Portal");
+            if(document.getElementById('ehadirBtnDoneText')) setTextAndAnimateWidth(document.getElementById('ehadirBtnDoneText'), txt.btnClose || "Done");
+            
+            if(document.getElementById('staffModalTitle')) setTextAndAnimateWidth(document.getElementById('staffModalTitle'), txt.staffTitle || "Staff Directory");
+            if(document.getElementById('staffSearchInput')) document.getElementById('staffSearchInput').placeholder = txt.staffSearchPh || "Search by name, ID, or section...";
+            if(document.getElementById('staffBtnDoneText')) setTextAndAnimateWidth(document.getElementById('staffBtnDoneText'), txt.btnClose || "Done");
+            
+            if(document.getElementById('staffOverlay') && document.getElementById('staffOverlay').classList.contains('open')) {
+                if(window.staffDataCache && window.staffDataCache.length > 0) window.renderStaffCards(window.staffDataCache);
+            }
+            if(document.getElementById('ehadirOverlay') && document.getElementById('ehadirOverlay').classList.contains('open')) {
+                window.fetchLiveEHadir(currentClass);
+            }
+
             // E-Datang & Staff Directory Live Translations
             if(document.getElementById('menuStaffText')) setTextAndAnimateWidth(document.getElementById('menuStaffText'), txt.menuStaff || "Staff Directory");
             if(document.getElementById('ehadirModalTitle')) setTextAndAnimateWidth(document.getElementById('ehadirModalTitle'), txt.ehadirTitle || "E-Datang Attendance");
@@ -4801,7 +4822,7 @@ window.staffFetchReqSeq = 0;
 
 window.openStaffModal = async () => {
     triggerHaptic();
-    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : uiText.en;
+    const txt = uiText[curLang] || uiText.en;
     const overlay = document.getElementById('staffOverlay');
     if (overlay) overlay.classList.add('open');
 
@@ -4930,7 +4951,7 @@ window.fetchStaffList = async () => {
 window.renderStaffCards = (list) => {
     const listContainer = document.getElementById('staffListContainer');
     const subEl = document.getElementById('staffModalSub');
-    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : uiText.en;
+    const txt = uiText[curLang] || uiText.en;
 
     if (!listContainer) return;
 
@@ -5045,7 +5066,7 @@ window.openOfficialEHadir = () => {
 
 window.openEHadirModal = async () => {
     triggerHaptic();
-    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : uiText.en;
+    const txt = uiText[curLang] || uiText.en;
     if (currentClass === 'All') {
         window.showToast(txt.ehadirSelectClass || "Please select a specific class first", "error_outline");
         return;
