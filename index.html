@@ -1838,13 +1838,14 @@ window.hexToRgba = function(hex, alpha) {
             <span class='material-icons-round mm-icon'>info</span>
             <span class="anim-text-change" id='menuAboutText2'>About App</span>
           </button>
+          
           <button class='mm-btn' onclick='window.openStaffModal(); window.closeMainMenu();'>
             <span class='material-icons-round mm-icon'>badge</span>
             <span class="anim-text-change" id='menuStaffText'>Staff Directory</span>
           </button>
-          
-          <!-- MINIGAMES BUTTON -->
-          <button class='mm-btn' onclick='window.openMinigamesMenu(); window.closeMainMenu();' style="grid-column: span 2;">
+
+          <!-- MINIGAMES BUTTON (Placed in column 2 next to Staff Directory) -->
+          <button class='mm-btn' onclick='window.openMinigamesMenu(); window.closeMainMenu();'>
             <span class='material-icons-round mm-icon'>sports_esports</span>
             <span class="anim-text-change" id='menuMiniGamesText'>Mini-Games</span>
           </button>
@@ -4803,6 +4804,7 @@ window.openStaffModal = async () => {
 
 window.closeStaffModal = () => {
     triggerHaptic();
+    window.staffFetchReqSeq++; // Cancel active request rendering
     const modal = document.getElementById("staffCard");
     if (modal) modal.style.transform = '';
     const overlay = document.getElementById('staffOverlay');
@@ -4842,27 +4844,49 @@ window.fetchStaffList = async () => {
         </div>
     `);
 
+    const extractArray = (data) => {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data.staff)) return data.staff;
+        if (Array.isArray(data.data)) return data.data;
+        if (Array.isArray(data.result)) return data.result;
+        return [];
+    };
+
     try {
         let staffList = [];
 
-        // 1. Try serverless backend proxy
+        // 1. Try Vercel Serverless Endpoint
         try {
-            const res = await fetch(`/api/ehadir?t=${Date.now()}`);
+            const c = new AbortController();
+            const timer = setTimeout(() => c.abort(), 3500);
+            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: c.signal });
+            clearTimeout(timer);
             if (res.ok) {
                 const json = await res.json();
-                if (json && Array.isArray(json.staff) && json.staff.length > 0) {
-                    staffList = json.staff;
-                }
+                staffList = extractArray(json.staff || json);
             }
         } catch (e) {}
 
-        // 2. Direct CORS proxy fallback
+        // 2. Direct CORS Proxies Fallback
         if (staffList.length === 0) {
-            const staffUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStaff"))}`;
-            const res = await fetch(staffUrl);
-            if (res.ok) {
-                const json = await res.json();
-                staffList = Array.isArray(json) ? json : (json.data || []);
+            const urls = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStaff")}`,
+                `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://www.chsmelaka.com/api/school/getStaff"))}`
+            ];
+
+            for (const u of urls) {
+                if (staffList.length > 0) break;
+                try {
+                    const c = new AbortController();
+                    const timer = setTimeout(() => c.abort(), 3500);
+                    const res = await fetch(u, { signal: c.signal });
+                    clearTimeout(timer);
+                    if (res.ok) {
+                        const json = await res.json();
+                        staffList = extractArray(json);
+                    }
+                } catch (e) {}
             }
         }
 
@@ -4872,7 +4896,8 @@ window.fetchStaffList = async () => {
             throw new Error("No staff records found");
         }
 
-        // Sort alphabetically by name
+        // Clean & sort alphabetically
+        staffList = staffList.filter(s => s && (s.name || s.nama || s.full_name));
         staffList.sort((a, b) => String(a.name || a.nama || "").localeCompare(String(b.name || b.nama || "")));
         window.staffDataCache = staffList;
         window.renderStaffCards(staffList);
@@ -4882,7 +4907,7 @@ window.fetchStaffList = async () => {
         console.error("getStaff error:", err);
         updateContainer(`
             <div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">
-                <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">badge</span>
+                <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">cloud_off</span>
                 <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${txt.staffEmpty || "No staff found"}</div>
             </div>
         `);
