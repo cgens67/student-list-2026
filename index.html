@@ -4751,9 +4751,11 @@ function filterData(){
 }
 
 // ==========================================
-// E-DATANG (E-HADIR) LIVE INTEGRATION
+// E-DATANG (E-HADIR) LIVE INTEGRATION (BULLETPROOF)
 // ==========================================
 window.ehadirAbortController = null;
+window.ehadirReqSeq = 0;
+window.ehadirCache = { data: null, timestamp: 0 };
 
 window.getClassCode = (cls) => {
     const map = { 'Biru': '2b', 'Hijau': '2h', 'Kuning': '2k', 'Merah': '2m', 'Perang': '2p', 'Ungu': '2u' };
@@ -4791,8 +4793,10 @@ window.openEHadirModal = async () => {
 
 window.closeEHadirModal = () => {
     triggerHaptic();
+    window.ehadirReqSeq++; // Invalidate running network requests
     if (window.ehadirAbortController) {
         try { window.ehadirAbortController.abort(); } catch(e) {}
+        window.ehadirAbortController = null;
     }
     const modal = document.getElementById("ehadirCard");
     if (modal) modal.style.transform = '';
@@ -4801,15 +4805,15 @@ window.closeEHadirModal = () => {
 };
 
 window.fetchLiveEHadir = async (cls) => {
+    const seq = ++window.ehadirReqSeq;
     const classLetter = (cls || 'H').charAt(0).toUpperCase(); 
     const targetClass = `2${classLetter}`; 
     const listContainer = document.getElementById('ehadirListContainer');
     const card = document.getElementById('ehadirCard');
     const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
 
-    // Smooth height resizing animation helper
     const updateContainer = (newHtml) => {
-        if (!listContainer) return;
+        if (!listContainer || seq !== window.ehadirReqSeq) return;
         const startHeight = card ? card.offsetHeight : 0;
         listContainer.innerHTML = newHtml;
         if (card && typeof card.animate === 'function' && startHeight > 0) {
@@ -4823,100 +4827,122 @@ window.fetchLiveEHadir = async (cls) => {
         }
     };
 
-    updateContainer(`
-        <div style="text-align:center; padding:35px 20px; color:var(--ios-text-sec); font-size:14px;">
-            <span class="material-icons-round spin-anim" style="font-size:38px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
-            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Connecting to live CHS database..."}</div>
-        </div>
-    `);
-
     const setEl = (id, val) => {
+        if (seq !== window.ehadirReqSeq) return;
         const el = document.getElementById(id);
         if (el) el.innerText = val;
     };
 
-    setEl('ehadirCountPresent', '-');
-    setEl('ehadirCountAbsent', '-');
-    setEl('ehadirRate', '-%');
-    const pBar = document.getElementById('ehadirProgressBar');
-    if (pBar) pBar.style.width = '0%';
-
-    let allStudents = [];
-    let allAttendance = [];
-    let dateStr = new Date().toISOString().split('T')[0];
+    // Render loading only if no data has been cached recently
+    const isCacheValid = window.ehadirCache.data && (Date.now() - window.ehadirCache.timestamp < 45000);
+    if (!isCacheValid) {
+        updateContainer(`
+            <div style="text-align:center; padding:35px 20px; color:var(--ios-text-sec); font-size:14px;">
+                <span class="material-icons-round spin-anim" style="font-size:38px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
+                <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Connecting to live CHS database..."}</div>
+            </div>
+        `);
+        setEl('ehadirCountPresent', '-');
+        setEl('ehadirCountAbsent', '-');
+        setEl('ehadirRate', '-%');
+        const pBar = document.getElementById('ehadirProgressBar');
+        if (pBar) pBar.style.width = '0%';
+    }
 
     try {
-        let fetchedData = null;
+        let fetchedData = isCacheValid ? window.ehadirCache.data : null;
 
-        // 1. Try Vercel Serverless API Route (with timeout)
-        try {
-            window.ehadirAbortController = new AbortController();
-            const timeout = setTimeout(() => window.ehadirAbortController.abort(), 4000);
-            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
-            clearTimeout(timeout);
-            if (res.ok) {
-                const ct = res.headers.get("content-type") || "";
-                if (ct.includes("application/json")) {
-                    fetchedData = await res.json();
+        if (!fetchedData) {
+            // 1. Try Vercel Serverless Route with timeout
+            try {
+                if (window.ehadirAbortController) {
+                    try { window.ehadirAbortController.abort(); } catch(e) {}
+                }
+                window.ehadirAbortController = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    if (window.ehadirAbortController) window.ehadirAbortController.abort();
+                }, 5000);
+
+                const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const ct = res.headers.get("content-type") || "";
+                    if (ct.includes("application/json")) {
+                        const json = await res.json();
+                        if (json && Array.isArray(json.students) && json.students.length > 0) {
+                            fetchedData = json;
+                        }
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Direct CORS Proxy Fallback
+            if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
+                const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
+                const sUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
+                const aUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
+
+                const [sRes, aRes] = await Promise.allSettled([
+                    fetch(sUrl).then(r => r.ok ? r.json() : []),
+                    fetch(aUrl).then(r => r.ok ? r.json() : [])
+                ]);
+
+                const sJson = (sRes.status === 'fulfilled' && Array.isArray(sRes.value)) ? sRes.value : [];
+                const aJson = (aRes.status === 'fulfilled' && Array.isArray(aRes.value)) ? aRes.value : [];
+
+                if (sJson.length > 0) {
+                    fetchedData = { date: todayStr, students: sJson, attendance: aJson };
                 }
             }
-        } catch (e) {}
-
-        // 2. Direct CORS Proxy Fallback
-        if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
-            const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
-            const studentsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
-            const attUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
-
-            const [sRes, aRes] = await Promise.all([
-                fetch(studentsUrl),
-                fetch(attUrl)
-            ]);
-
-            const sJson = sRes.ok ? await sRes.json() : [];
-            const aJson = aRes.ok ? await aRes.json() : [];
-            fetchedData = { date: todayStr, students: sJson, attendance: aJson };
         }
 
-        allStudents = Array.isArray(fetchedData.students) ? fetchedData.students : [];
-        allAttendance = Array.isArray(fetchedData.attendance) ? fetchedData.attendance : [];
-        dateStr = fetchedData.date || dateStr;
+        // Bail out if a newer request took over or modal closed
+        if (seq !== window.ehadirReqSeq) return;
 
-        // Helper: Cross-match Chinese Name from Firebase (window.smkData)
+        if (!fetchedData || !Array.isArray(fetchedData.students) || fetchedData.students.length === 0) {
+            throw new Error("No data received from API");
+        }
+
+        // Cache the successful response
+        window.ehadirCache = { data: fetchedData, timestamp: Date.now() };
+
+        const allStudents = Array.isArray(fetchedData.students) ? fetchedData.students : [];
+        const allAttendance = Array.isArray(fetchedData.attendance) ? fetchedData.attendance : [];
+        const dateStr = fetchedData.date || new Date().toISOString().split('T')[0];
+
         const getCnName = (id, name) => {
             const match = (window.smkData || []).find(s => {
                 if (s.id && id && String(s.id).trim() === String(id).trim()) return true;
-                if (s.name && name && s.name.trim().toUpperCase() === name.trim().toUpperCase()) return true;
+                if (s.name && name && String(s.name).trim().toUpperCase() === String(name).trim().toUpperCase()) return true;
                 return false;
             });
             return (match && match.cn && match.cn !== "-") ? match.cn : "";
         };
 
-        // Filter students by class
         const classRoster = allStudents.filter(s => {
-            if (!s.class) return false;
-            return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
-        }).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            if (!s || !s.class) return false;
+            return String(s.class).replace(/\s+/g, '').toUpperCase() === targetClass;
+        }).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
 
-        // Match attendance records
         const attMap = new Map();
         allAttendance.forEach(att => {
+            if (!att) return;
             if (att.id) attMap.set(String(att.id), att);
-            else if (att.name) attMap.set(String(att.name).toUpperCase(), att);
+            if (att.name) attMap.set(String(att.name).toUpperCase().trim(), att);
         });
 
         let presentStudents = [];
         let absentStudents = [];
 
         classRoster.forEach((st, idx) => {
-            const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase()) : null);
+            const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase().trim()) : null);
             const cnName = getCnName(st.id, st.name);
 
             if (att && att.attendance_time) {
                 presentStudents.push({
                     no: idx + 1,
                     id: st.id,
-                    name: st.name,
+                    name: st.name || "-",
                     cn: cnName,
                     time: att.attendance_time,
                     lateCount: att.late_count || 0
@@ -4925,7 +4951,7 @@ window.fetchLiveEHadir = async (cls) => {
                 absentStudents.push({
                     no: idx + 1,
                     id: st.id,
-                    name: st.name,
+                    name: st.name || "-",
                     cn: cnName
                 });
             }
@@ -4939,12 +4965,12 @@ window.fetchLiveEHadir = async (cls) => {
         setEl('ehadirCountPresent', presentCount);
         setEl('ehadirCountAbsent', absentCount);
         setEl('ehadirRate', `${Math.round(rateRaw)}%`);
+        const pBar = document.getElementById('ehadirProgressBar');
         if (pBar) pBar.style.width = `${rateRaw}%`;
         setEl('ehadirModalSub', `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`);
 
         let html = '';
 
-        // Present Section
         if (presentStudents.length > 0) {
             html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
             presentStudents.forEach(st => {
@@ -4969,7 +4995,6 @@ window.fetchLiveEHadir = async (cls) => {
             });
         }
 
-        // Absent Section
         if (absentStudents.length > 0) {
             html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
             absentStudents.forEach(st => {
@@ -4996,6 +5021,13 @@ window.fetchLiveEHadir = async (cls) => {
         updateContainer(html);
 
     } catch (err) {
+        if (seq !== window.ehadirReqSeq || err.name === 'AbortError') return;
+        
+        // Never overwrite if valid data is already cached and present
+        if (window.ehadirCache.data && window.ehadirCache.data.students && window.ehadirCache.data.students.length > 0) {
+            return;
+        }
+
         console.error("E-Datang error:", err);
         setEl('ehadirModalSub', 'Portal loaded. Tap below to view.');
         updateContainer(`
