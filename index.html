@@ -1967,7 +1967,7 @@ window.hexToRgba = function(hex, alpha) {
 // ==========================================
 // GLOBAL DATA VARIABLES
 // ==========================================
-window.smkData =[];
+window.smkData = [];
 window.teacherData = {};
 window.dutyData = {};
 window.globalSettings = { 
@@ -1994,7 +1994,7 @@ window.pendingDataUpdate = null;
 window.updateDataSteps = { added: '', removed: '' };
 window.currentUpdateStep = 1;
 
-const classes =["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
+const classes = ["Biru","Hijau","Kuning","Merah","Perang","Ungu"];
 const rankOrder = {"B":1,"H":2,"K":3,"M":4,"P":5,"U":6};
 
 let currentClass="Biru",curLang=localStorage.getItem('language')||"en",filterState={year2025:"",origin:""},isFilterOpen=!1,currentSortType='name',sortAsc=!0,isDark=!1,animationFrameId=null,modalStart=0,isDraggingModal=!1,currentFilteredData=[],currentStatMode='origin',currentStatView='list',statSortCount=!0,isFavMode=!1,currentStudentId=null,isCompactMode=JSON.parse(localStorage.getItem('isCompact'))||!1,pieAnimId=null,modalCurrentIndex=-1,longPressTimer,activeContextId=null;
@@ -2002,12 +2002,11 @@ window.favorites=[];
 window.searchHistory=[];
 
 const uiText={
-  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings", tabAudit:"Audit Log", tabFeedback: "Feedback", tabAnalytics: "Analytics", adminAuditTitle: "Admin Activity Log", adminAuditDesc: "Tracks detailed changes made in the dashboard.", adminFeedbackTitle: "User Feedback", adminFeedbackDesc: "Messages and bug reports submitted by users.", adminAnalyticsTitle: "System Analytics", adminAnalyticsDesc: "Overview of user engagement and activity.", statTotalUsers: "Total Users", statTotalFavs: "Total Favorites", statRecentActivity: "Recent User Activity", menuAbout: "About App", menuHelp: "Help & Support", menuFeedback: "Submit Feedback", authEmailPh: "Email Address", authPassPh: "Password", authLoginBtn: "Log In", authSignUpBtn: "Sign Up", authTitleL: "Welcome Back", authSubL: "Log in to view student records", authTitleS: "Create Account", authSubS: "Sign up to access records", authToggleL: "Don't have an account? Sign Up", authToggleS: "Already have an account? Log In", updateTitleAdded: "Added Features", updateTitleRemoved: "Other Changes", updateNext: "Next", updateDone: "Done", fbTitle: "Feedback", fbSub: "Tell us what you think!", fbPh: "Type your feedback here...", fbBtn: "Submit Feedback", toastFb: "Feedback Submitted!", logoutTitle: "Log Out?", logoutMsg: "Are you sure you want to log out of your account?", logoutCancel: "Cancel", logoutConfirm: "Log Out", faqTitle: "Frequently Asked Questions", faqQ1: "What is the Status icon?", faqA1: "It shows if a student moved up (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), down (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), or stayed the same (-) based on class rankings from 2025 to 2026.", faqQ2: "How do I search for a student?", faqA2: "You can use the search bar to type their English Name, Chinese Name, or Student ID.", faqQ3: "How do I save a student?", faqA3: "Tap any student and click the Star icon (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) at the top right, or Long Press the student's name on the list.", faqQ4: "What is Compact View?", faqA4: "Compact view shrinks the student list and hides avatars so you can see more students at once on your screen.", faqQ5: "How do I clear my search history?", faqA5: "Tap the search bar and click the trash can icon next to your recent searches.", faqClose: "Close", menuHeaderMain: "Menu", menuThemeDark: "Dark Mode", menuThemeLight: "Light Mode", menuDensityCompact: "Compact View", menuDensityComfort: "Comfort View", adminThemeTitle: "Global Website Theme", adminThemeDesc: "Updates live background for everyone instantly.", adminMaintTitle: "System Under Maintenance", adminUpdateTitle: "Startup Update Screen", adminUpdateDesc: "Shows an overlay upon login to broadcast changes.", adminUICust: "UI Customization", adminNoGlass: "Disable Liquid Glass Design", adminHideTheme: "Hide 'Change Theme' Button", adminHideStats: "Hide 'Statistics' Button", adminHideIds: "Hide Student IDs Globally", adminExportExcludeIds: "Exclude IDs from export", adminEditAbout: "Edit 'About' Text", adminForceCoach: "Force Welcome Guide & Coach Marks", lblAdminStatusIcons: "Status Icon Variant", optStatThumbs: "Thumbs (Default)", optStatTrending: "Trending Arrows", optStatArrows: "Standard Arrows", optThemeDyn: "Dynamic (Changes by Time of Day)", optThemeMorn: "Locked to Morning Theme", optThemeAft: "Locked to Afternoon/Day Theme", optThemeNight: "Locked to Night Theme", optThemeXmas: "Locked to Festive Christmas Theme", optThemeBeta1: "New Filter Design (Beta)", optThemeBeta2: "Secondary Beta UX (Layout Change)", optMaintNo: "No", optMaintYes: "Yes (Locks out all users)", optUpdateNo: "No", optUpdateYes: "Yes", optGlassNo: "No (Keep Glassmorphism)", optGlassYes: "Yes (Solid Colors)", adminAddStudent: "Add New Student", adminSearchStudent: "Search by name...", adminIdPlaceholder: "Student ID (e.g. 120116040351)", adminNamePlaceholder: "Full Name", adminCnPlaceholder: "Chinese Name (or -)", adminOldPlaceholder: "Old Class (e.g. 1B)", adminSchPlaceholder: "Primary School", adminUpdateQueue: "Update Queue", adminDelete: "Delete", adminNoticeLabel: "Class Notice / Warning Banner", adminNoticePlaceholder: "e.g. Information may be inaccurate due to...", adminIconLabel: "Notice Icon", adminColorLabel: "Notice Color", adminStyleLabel: "Notice Style", adminGuruLabel: "Class Teacher", adminPenolongLabel: "Assistant Teacher", optTextOrig: "Original Style", optTextRedesign: "Secondary Redesigned Text Theme", menuProfileText: "Account Profile", lblProfileTitle: "Account & Settings", lblProfTheme: "Theme", lblProfDensity: "View Mode", lblProfClearFav: "Clear All Favorites", lblProfClearHist: "Clear Search History", confirmClearFav: "Are you sure you want to clear all favorites?", lblProfReduceLag: "Reduce Lag", optGlassDyn: "Dynamic (Follow User Settings)", lagDisabled: "Disabled by Admin", lagOn: "On", lagOff: "Off", toastLagAdmin: "Setting locked by Admin", allClasses: "All Classes", coachStep1: "Use the search bar to find students by name, Chinese name, or ID.", coachStep2: "Tap the heart icon to view only your saved favorite students.", coachStep3: "Check out detailed allocation statistics and charts here!", coachStep4: "Swipe and tap these tabs to quickly switch between classes.", coachStep5: "Tap a student to view details, or long-press for quick actions!", coachStep6: "Access your profile, app settings, and more from the menu.", coachContinue: "Tap anywhere to continue", lblProfBgTheme: "Background", themeCustTitle: "Background Theme", themeCustSub: "Customize your app background", themeCustLabel: "Choose Theme", themeCustDefault: "Default", themeCustCustom: "Custom Colors", themeCustCreate: "Create Your Own", themeCustTop: "Top", themeCustMid: "Middle", themeCustBot: "Bottom", themeCustSave: "Save Theme", drawOnBg: "Draw on Background", clearDoodleBtn: "Clear Doodle", clearDoodleDesc: "Are you sure you want to clear your background drawing?", doodleSaved: "Doodle Saved!", themeLockedAdmin: "Locked by Admin", btnDuty: "Duty Roster", dutyTitle: "Cleaning Duty Roster", dutyWipe: "Wipe Whiteboard", dutySweep: "Sweep Floor", dutyArrange: "Arrange Desks", dutyTrash: "Empty Trash", dutyEmpty: "No students assigned.", dutyFooter: "If any problems, find ", dutyMon: "Monday", dutyTue: "Tuesday", dutyWed: "Wednesday", dutyThu: "Thursday", dutyFri: "Friday", dutyMax: "Maximum 2 students allowed per duty!", shareModern: "Share Modern Card", shareA4: "Share A4 Print List", lblMiniGames:"Mini-Games", menuPlinkoText:"Plinko", menuGuessText:"Guess Who?", ctxCopyMoeBtn:"Copy MOE Email", ctxCopyMoeToast:"MOE Email Copied", ctxNoMoeToast:"No MOE Email", adminImportTitle:"Import JSON Student Data", adminImportBtn:"Select JSON File to Import", adminImportSuccess:"Students Imported to Queue!", adminMoePlaceholder:"MOE Email (e.g. m-12345678@moe-dl.edu.my)", adminImportDuty:"Import JSON", adminExportDuty:"Export JSON", adminExportDutyPng:"Export PNG", ehadirTitle:"E-Datang Attendance", ehadirPresent:"Present", ehadirAbsent:"Absent", ehadirRate:"Rate", ehadirLate:"Late", ehadirPortal:"Portal", ehadirLoading:"Connecting to live CHS database...", ehadirError:"Could not connect to API. Tap Portal below.", ehadirDate:"Date", ehadirClass:"Class"},
-  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke 'Barisan' secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan", tabAudit:"Log Audit", tabFeedback: "Maklum Balas", tabAnalytics: "Analitik", adminAuditTitle: "Log Aktiviti Admin", adminAuditDesc: "Menjejaki perubahan terperinci yang dibuat dalam papan pemuka.", adminFeedbackTitle: "Maklum Balas Pengguna", adminFeedbackDesc: "Mesej dan laporan pepijat daripada pengguna.", adminAnalyticsTitle: "Analitik Sistem", adminAnalyticsDesc: "Gambaran keseluruhan penglibatan dan aktiviti pengguna.", statTotalUsers: "Jumlah Pengguna", statTotalFavs: "Jumlah Kegemaran", statRecentActivity: "Aktiviti Pengguna Terkini", menuAbout: "Mengenai Aplikasi", menuHelp: "Bantuan & Sokongan", menuFeedback: "Hantar Maklum Balas", authEmailPh: "Alamat E-mel", authPassPh: "Kata Laluan", authLoginBtn: "Log Masuk", authSignUpBtn: "Daftar", authTitleL: "Selamat Kembali", authSubL: "Log masuk untuk melihat rekod murid", authTitleS: "Cipta Akaun", authSubS: "Daftar untuk mengakses rekod", authToggleL: "Tiada akaun? Daftar", authToggleS: "Sudah ada akaun? Log Masuk", updateTitleAdded: "Ciri-ciri Baharu", updateTitleRemoved: "Perubahan Lain", updateNext: "Seterusnya", updateDone: "Selesai", fbTitle: "Maklum Balas", fbSub: "Beritahu kami pendapat anda!", fbPh: "Taipkan maklum balas anda di sini...", fbBtn: "Hantar Maklum Balas", toastFb: "Maklum Balas Dihantar!", logoutTitle: "Log Keluar?", logoutMsg: "Adakah anda pasti ingin log keluar dari akaun anda?", logoutCancel: "Batal", logoutConfirm: "Log Keluar", faqTitle: "Soalan Lazim (FAQ)", faqQ1: "Apakah maksud ikon Status?", faqA1: "Ia menunjukkan sama ada murid naik (<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>), turun (<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>), atau kekal (-) berdasarkan kedudukan kelas dari 2025 ke 2026.", faqQ2: "Bagaimana cara mencari murid?", faqA2: "Anda boleh menggunakan bar carian untuk menaip Nama Inggeris, Nama Cina, atau ID Murid mereka.", faqQ3: "Bagaimana cara menyimpan murid?", faqA3: "Ketik mana-mana murid dan klik ikon Bintang (<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>) di kanan atas, atau Tekan Lama pada nama murid di senarai.", faqQ4: "Apakah itu Paparan Padat?", faqA4: "Paparan padat mengecilkan senarai murid dan menyembunyikan avatar supaya anda boleh melihat lebih ramai murid pada skrin.", faqQ5: "Bagaimana cara memadam sejarah carian?", faqA5: "Ketik bar carian dan klik ikon tong sampah di sebelah carian terkini anda.", faqClose: "Tutup", menuHeaderMain: "Menu", menuThemeDark: "Mod Gelap", menuThemeLight: "Mod Terang", menuDensityCompact: "Paparan Padat", menuDensityComfort: "Paparan Selesa", adminThemeTitle: "Tema Laman Web Global", adminThemeDesc: "Kemas kini latar belakang secara langsung untuk semua.", adminMaintTitle: "Sistem Sedang Diselenggara", adminUpdateTitle: "Skrin Kemas Kini Log Masuk", adminUpdateDesc: "Papar tetingkap untuk memaklumkan perubahan.", adminUICust: "Penyesuaian Antara Muka (UI)", adminNoGlass: "Lumpuhkan Reka Bentuk Kaca (Glassmorphism)", adminHideTheme: "Sembunyi Butang 'Tukar Tema'", adminHideStats: "Sembunyi Butang 'Statistik'", adminHideIds: "Sembunyikan ID Murid Secara Global", adminExportExcludeIds: "Kecualikan ID dari eksport", adminEditAbout: "Sunting Teks 'Mengenai Aplikasi'", adminForceCoach: "Paksa Panduan Selamat Datang & Tanda Jurulatih", lblAdminStatusIcons: "Varian Ikon Status", optStatThumbs: "Ibu Jari (Lalai)", optStatTrending: "Anak Panah Trend", optStatArrows: "Anak Panah Biasa", optThemeDyn: "Dinamik (Berubah Mengikut Waktu)", optThemeMorn: "Dikunci pada Tema Pagi", optThemeAft: "Dikunci pada Tema Petang/Siang", optThemeNight: "Dikunci pada Tema Malam", optThemeXmas: "Dikunci pada Tema Krismas", optThemeBeta1: "Reka Bentuk Tapisan Baharu (Beta)", optThemeBeta2: "UX Beta Kedua (Perubahan Susun Atur)", optMaintNo: "Tidak", optMaintYes: "Ya (Menghalang log masuk)", optUpdateNo: "Tidak", optUpdateYes: "Ya", optGlassNo: "Tidak (Kekalkan Reka Bentuk Kaca)", optGlassYes: "Ya (Warna Pepejal)", adminAddStudent: "Tambah Murid Baharu", adminSearchStudent: "Cari berdasarkan nama...", adminIdPlaceholder: "ID Murid (cth. 120116040351)", adminNamePlaceholder: "Nama Penuh", adminCnPlaceholder: "Nama Cina (atau -)", adminOldPlaceholder: "Kelas Lama (cth. 1B)", adminSchPlaceholder: "Sekolah Rendah", adminUpdateQueue: "Kemas Kini Barisan", adminDelete: "Padam", adminNoticeLabel: "Notis Kelas / Sepanduk Amaran", adminNoticePlaceholder: "cth. Maklumat mungkin tidak tepat kerana...", adminIconLabel: "Ikon Notis", adminColorLabel: "Warna Notis", adminStyleLabel: "Gaya Notis", adminGuruLabel: "Guru Kelas", adminPenolongLabel: "Penolong", optTextOrig: "Gaya Asal", optTextRedesign: "Tema Teks Reka Bentuk Kedua", menuProfileText: "Profil Akaun", lblProfileTitle: "Akaun & Tetapan", lblProfTheme: "Tema", lblProfDensity: "Mod Paparan", lblProfClearFav: "Padam Semua Kegemaran", lblProfClearHist: "Padam Sejarah Carian", confirmClearFav: "Adakah anda pasti ingin memadam semua kegemaran?", lblProfReduceLag: "Kurangkan Kelengahan (Lag)", optGlassDyn: "Dinamik (Ikut Tetapan Pengguna)", lagDisabled: "Dilumpuhkan oleh Admin", lagOn: "Hidup", lagOff: "Mati", toastLagAdmin: "Tetapan dikunci oleh Admin", allClasses: "Semua Kelas", coachStep1: "Gunakan bar carian untuk mencari murid mengikut nama, nama Cina, atau ID.", coachStep2: "Ketik ikon hati untuk melihat murid kegemaran anda yang tersimpan.", coachStep3: "Lihat statistik dan carta penempatan terperinci di sini!", coachStep4: "Sapu dan ketik tab ini untuk menukar kelas dengan pantas.", coachStep5: "Ketik murid untuk butiran, atau tekan lama untuk tindakan pantas!", coachStep6: "Akses profil anda, tetapan aplikasi, dan banyak lagi dari menu.", coachContinue: "Ketik di mana-mana untuk meneruskan", lblProfBgTheme: "Latar Belakang", themeCustTitle: "Tema Latar Belakang", themeCustSub: "Ubah suai latar belakang aplikasi anda", themeCustLabel: "Pilih Tema", themeCustDefault: "Lalai", themeCustCustom: "Warna Tersuai", themeCustCreate: "Cipta Tema Anda", themeCustTop: "Atas", themeCustMid: "Tengah", themeCustBot: "Bawah", themeCustSave: "Simpan Tema", drawOnBg: "Lukis pada Latar Belakang", clearDoodleBtn: "Padam Lukisan", clearDoodleDesc: "Adakah anda pasti ingin memadam lukisan latar belakang anda?", doodleSaved: "Lukisan Disimpan!", themeLockedAdmin: "Dikunci oleh Admin", btnDuty: "Jadual Bertugas", dutyTitle: "Jadual Kebersihan", dutyWipe: "Padam Papan Putih", dutySweep: "Sapu Sampah", dutyArrange: "Susun Meja", dutyTrash: "Buang Sampah", dutyEmpty: "Tiada murid ditugaskan.", dutyFooter: "Jika ada apa-apa masalah, cari ", dutyMon: "Isnin", dutyTue: "Selasa", dutyWed: "Rabu", dutyThu: "Khamis", dutyFri: "Jumaat", dutyMax: "Maksimum 2 murid dibenarkan!", shareModern: "Kongsi Kad Moden", shareA4: "Kongsi Senarai Cetakan A4", lblMiniGames:"Permainan Mini", menuPlinkoText:"Plinko", menuGuessText:"Teka Siapa?", ctxCopyMoeBtn:"Salin E-mel MOE", ctxCopyMoeToast:"E-mel MOE Disalin", ctxNoMoeToast:"Tiada E-mel MOE", adminImportTitle:"Import Data Murid JSON", adminImportBtn:"Pilih Fail JSON untuk Diimport", adminImportSuccess:"Murid Diimport ke Barisan!", adminMoePlaceholder:"E-mel MOE (cth. m-12345678@moe-dl.edu.my)", adminImportDuty:"Import JSON", adminExportDuty:"Eksport JSON", adminExportDutyPng:"Eksport PNG", ehadirTitle:"Kehadiran E-Datang", ehadirPresent:"Hadir", ehadirAbsent:"Belum Hadir", ehadirRate:"Kadar", ehadirLate:"Lewat", ehadirPortal:"Portal", ehadirLoading:"Menyambung ke pangkalan data CHS...", ehadirError:"Gagal menyambung ke API. Ketik Portal di bawah.", ehadirDate:"Tarikh", ehadirClass:"Kelas"},
-  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置", tabAudit:"审计日志", tabFeedback: "用户反馈", tabAnalytics: "数据分析", adminAuditTitle: "管理员活动日志", adminAuditDesc: "记录在仪表板中所做的详细更改。", adminFeedbackTitle: "用户反馈", adminFeedbackDesc: "用户提交的反馈和错误报告。", adminAnalyticsTitle: "系统分析", adminAnalyticsDesc: "用户参与度和活动概览。", statTotalUsers: "总用户数", statTotalFavs: "总收藏数", statRecentActivity: "最近用户活动", menuAbout: "关于应用", menuHelp: "帮助与支持", menuFeedback: "提交反馈", authEmailPh: "电子邮件地址", authPassPh: "密码", authLoginBtn: "登录", authSignUpBtn: "注册", authTitleL: "欢迎回来", authSubL: "登录以查看学生记录", authTitleS: "创建账户", authSubS: "注册以访问记录", authToggleL: "没有账户？注册", authToggleS: "已有账户？登录", updateTitleAdded: "新增功能", updateTitleRemoved: "其他更改", updateNext: "下一步", updateDone: "完成", fbTitle: "反馈", fbSub: "告诉我们您的想法！", fbPh: "在此输入您的反馈...", fbBtn: "提交反馈", toastFb: "反馈已提交！", logoutTitle: "登出？", logoutMsg: "您确定要登出您的账户吗？", logoutCancel: "取消", logoutConfirm: "登出", faqTitle: "常见问题 (FAQ)", faqQ1: "状态图标是什么意思？", faqA1: "它显示学生从2025年到2026年的班级排名是上升(<span class='material-icons-round' style='font-size:16px; color:#34C759; vertical-align:text-bottom;'>thumb_up</span>)、下降(<span class='material-icons-round' style='font-size:16px; color:#FF3B30; vertical-align:text-bottom;'>thumb_down</span>)还是保持不变(-)。", faqQ2: "如何搜索学生？", faqA2: "您可以使用搜索栏输入他们的英文名、中文名或学生ID。", faqQ3: "如何收藏学生？", faqA3: "点击任何学生，然后点击右上角的星形图标(<span class='material-icons-round' style='font-size:16px; color:#FF2D55; vertical-align:text-bottom;'>star</span>)，或在列表上长按学生姓名。", faqQ4: "什么是紧凑视图？", faqA4: "紧凑视图会缩小学生列表并隐藏头像，让您的屏幕一次显示更多学生。", faqQ5: "如何清除搜索历史？", faqA5: "点击搜索栏，然后点击最近搜索旁边的垃圾桶图标。", faqClose: "关闭", menuHeaderMain: "菜单", menuThemeDark: "深色模式", menuThemeLight: "浅色模式", menuDensityCompact: "紧凑视图", menuDensityComfort: "舒适视图", adminThemeTitle: "全局网站主题", adminThemeDesc: "即时为所有人更新动态背景。", adminMaintTitle: "系统维护中", adminUpdateTitle: "登录更新屏幕", adminUpdateDesc: "登录时显示弹窗以广播更改。", adminUICust: "界面 (UI) 自定义", adminNoGlass: "禁用玻璃拟态设计", adminHideTheme: "隐藏“切换主题”按钮", adminHideStats: "隐藏“数据统计”按钮", adminHideIds: "全局隐藏学生 ID", adminExportExcludeIds: "导出时排除 ID", adminEditAbout: "编辑“关于应用”文本", adminForceCoach: "强制显示欢迎指南和提示", lblAdminStatusIcons: "状态图标变体", optStatThumbs: "大拇指 (默认)", optStatTrending: "趋势箭头", optStatArrows: "标准箭头", optThemeDyn: "动态 (随时间变化)", optThemeMorn: "锁定为早晨主题", optThemeAft: "锁定为下午/白天主题", optThemeNight: "锁定为夜晚主题", optThemeXmas: "锁定为圣诞节主题", optThemeBeta1: "新筛选器设计 (测试版)", optThemeBeta2: "次要测试版UX (布局更改)", optMaintNo: "否", optMaintYes: "是 (锁定所有用户)", optUpdateNo: "否", optUpdateYes: "是", optGlassNo: "否 (保留玻璃拟态)", optGlassYes: "是 (纯色)", adminAddStudent: "添加新学生", adminSearchStudent: "按姓名搜索...", adminIdPlaceholder: "学生 ID (例: 120116040351)", adminNamePlaceholder: "全名", adminCnPlaceholder: "中文名 (或 -)", adminOldPlaceholder: "原班级 (例: 1B)", adminSchPlaceholder: "毕业小学", adminUpdateQueue: "更新队列", adminDelete: "删除", adminNoticeLabel: "班级通知 / 警告横幅", adminNoticePlaceholder: "例如：信息可能不准确，因为...", adminIconLabel: "通知图标", adminColorLabel: "通知颜色", adminStyleLabel: "通知样式", adminGuruLabel: "班主任", adminPenolongLabel: "副班主任", optTextOrig: "原始样式", optTextRedesign: "辅助重设计文本主题", menuProfileText: "账户资料", lblProfileTitle: "账户与设置", lblProfTheme: "主题", lblProfDensity: "视图模式", lblProfClearFav: "清除所有收藏", lblProfClearHist: "清除搜索历史", confirmClearFav: "确定要清除所有收藏吗？", lblProfReduceLag: "减少卡顿 (Lag)", optGlassDyn: "动态 (跟随用户设置)", lagDisabled: "被管理员禁用", lagOn: "开", lagOff: "关", toastLagAdmin: "已被管理员锁定", allClasses: "所有班级", coachStep1: "使用搜索栏通过姓名、中文名或 ID 查找学生。", coachStep2: "点击心形图标仅查看您收藏的学生。", coachStep3: "在这里查看详细的分班统计数据和图表！", coachStep4: "滑动并点击这些选项卡即可快速切换班级。", coachStep5: "点击学生查看详情，或长按使用快捷操作！", coachStep6: "从菜单访问您的个人资料、应用设置等。", coachContinue: "点击任意位置继续", lblProfBgTheme: "应用背景", themeCustTitle: "背景主题", themeCustSub: "自定义您的应用背景", themeCustLabel: "选择主题", themeCustDefault: "默认", themeCustCustom: "自定义颜色", themeCustCreate: "创建自己的主题", themeCustTop: "顶部", themeCustMid: "中间", themeCustBot: "底部", themeCustSave: "保存主题", drawOnBg: "在背景上涂鸦", clearDoodleBtn: "清除涂鸦", clearDoodleDesc: "您确定要清除您的背景涂鸦吗？", doodleSaved: "涂鸦已保存！", themeLockedAdmin: "被管理员锁定", btnDuty: "值日表", dutyTitle: "卫生值日表", dutyWipe: "擦白板", dutySweep: "扫地", dutyArrange: "排桌椅", dutyTrash: "丢垃圾", dutyEmpty: "未分配学生。", dutyFooter: "如果有任何问题，找 ", dutyMon: "星期一", dutyTue: "星期二", dutyWed: "星期三", dutyThu: "星期四", dutyFri: "星期五", dutyMax: "每项任务最多只能分配2名学生！", shareModern: "分享现代卡片", shareA4: "分享 A4 打印表", lblMiniGames:"小游戏", menuPlinkoText:"Plinko", menuGuessText:"猜猜是谁？", ctxCopyMoeBtn:"复制 MOE 邮箱", ctxCopyMoeToast:"MOE 邮箱已复制", ctxNoMoeToast:"无 MOE 邮箱", adminImportTitle:"导入 JSON 学生数据", adminImportBtn:"选择要导入的 JSON 文件", adminImportSuccess:"学生已导入到队列！", adminMoePlaceholder:"MOE 邮箱 (例: m-12345678@moe-dl.edu.my)", adminImportDuty:"导入 JSON", adminExportDuty:"导出 JSON", adminExportDutyPng:"导出 PNG", ehadirTitle:"E-Datang 实时出勤", ehadirPresent:"已出席", ehadirAbsent:"未出席", ehadirRate:"出勤率", ehadirLate:"迟到", ehadirPortal:"传送门", ehadirLoading:"正在连接 CHS 数据库...", ehadirError:"无法连接到 API。请点击下方传送门。", ehadirDate:"日期", ehadirClass:"班级"}
+  en:{title:"Student Allocation<br/>List 2026",sub:"ALLOCATION CHECK",ph:"Search...",empty:"No students found",emptySub:"Try adjusting your filters or search query",btnClose:"Done",label2025:"Previous Class (2025)",labelOrigin:"Primary School (2024)",all:"All",clear:"Reset",filter:"Filter",mLabelCur:"Current Class",mLabelOld:"Previous Class",mLabelStat:"Status",mLabelSch:"Primary School",mLabelSchPB:"Previous 2024 Class",labelSort:"Sort List By",txtName:"Name",txtClass:"Class",txtSortBday:"Birthday",labelStatsTitle:"Statistics",totalStudents:"Total Students",statTabOrigin:"Primary School",statTabOldClass:"Previous Class",analyzing:"Analyzing",toastClear:"Filters Reset",toastFavAdded:"Added to Favorites",toastFavRem:"Removed from Favorites",toastFavModeOn:"Showing Favorites Only",toastFavModeOff:"Showing All Students",ctxCopy:"Name Copied",ctxCopyCnToast:"Chinese Name Copied",ctxCopyIdBtn:"Copy Student ID",ctxCopyIdToast:"Student ID Copied",toastCompact:"Compact Mode",toastComfort:"Comfort Mode",ctxCopyBtn:"Copy Name",ctxCopyCnBtn:"Copy Chinese Name",ctxFavBtn:"Favorite",ctxUnfavBtn:"Unfavorite",tGuru:"Class Teacher",tPenolong:"Assistant Teacher",adminTitle:"Admin Dashboard",adminSub:"Changes save to 'Update Queue' locally",tabStudents:"Students",tabTeachers:"Classes",tabSettings:"Settings",tabAudit:"Audit Log",tabFeedback:"Feedback",tabAnalytics:"Analytics",adminAuditTitle:"Admin Activity Log",adminAuditDesc:"Tracks detailed changes made in the dashboard.",adminFeedbackTitle:"User Feedback",adminFeedbackDesc:"Messages and bug reports submitted by users.",adminAnalyticsTitle:"System Analytics",adminAnalyticsDesc:"Overview of user engagement and activity.",statTotalUsers:"Total Users",statTotalFavs:"Total Favorites",statRecentActivity:"Recent User Activity",menuAbout:"About App",menuHelp:"Help & Support",menuFeedback:"Submit Feedback",authEmailPh:"Email Address",authPassPh:"Password",authLoginBtn:"Log In",authSignUpBtn:"Sign Up",authTitleL:"Welcome Back",authSubL:"Log in to view student records",authTitleS:"Create Account",authSubS:"Sign up to access records",authToggleL:"Don't have an account? Sign Up",authToggleS:"Already have an account? Log In",updateTitleAdded:"Added Features",updateTitleRemoved:"Other Changes",updateNext:"Next",updateDone:"Done",fbTitle:"Feedback",fbSub:"Tell us what you think!",fbPh:"Type your feedback here...",fbBtn:"Submit Feedback",toastFb:"Feedback Submitted!",logoutTitle:"Log Out?",logoutMsg:"Are you sure you want to log out of your account?",logoutCancel:"Cancel",logoutConfirm:"Log Out",faqTitle:"Frequently Asked Questions",faqQ1:"What is the Status icon?",faqA1:"It shows if a student moved up, down, or stayed the same based on class rankings.",faqQ2:"How do I search for a student?",faqA2:"Use the search bar to type their English Name, Chinese Name, or Student ID.",faqQ3:"How do I save a student?",faqA3:"Tap any student and click the Star icon, or Long Press the student's name.",faqQ4:"What is Compact View?",faqA4:"Compact view shrinks the student list so you can see more students at once.",faqQ5:"How do I clear my search history?",faqA5:"Tap the search bar and click the trash can icon next to recent searches.",faqClose:"Close",menuHeaderMain:"Menu",menuThemeDark:"Dark Mode",menuThemeLight:"Light Mode",menuDensityCompact:"Compact View",menuDensityComfort:"Comfort View",adminThemeTitle:"Global Website Theme",adminThemeDesc:"Updates live background for everyone instantly.",adminMaintTitle:"System Under Maintenance",adminUpdateTitle:"Startup Update Screen",adminUpdateDesc:"Shows an overlay upon login to broadcast changes.",adminUICust:"UI Customization",adminNoGlass:"Disable Liquid Glass Design",adminHideTheme:"Hide 'Change Theme' Button",adminHideStats:"Hide 'Statistics' Button",adminHideIds:"Hide Student IDs Globally",adminExportExcludeIds:"Exclude IDs from export",adminEditAbout:"Edit 'About' Text",adminForceCoach:"Force Welcome Guide & Coach Marks",lblAdminStatusIcons:"Status Icon Variant",optStatThumbs:"Thumbs (Default)",optStatTrending:"Trending Arrows",optStatArrows:"Standard Arrows",optThemeDyn:"Dynamic (Changes by Time of Day)",optThemeMorn:"Locked to Morning Theme",optThemeAft:"Locked to Afternoon/Day Theme",optThemeNight:"Locked to Night Theme",optThemeXmas:"Locked to Festive Christmas Theme",optThemeBeta1:"New Filter Design (Beta)",optThemeBeta2:"Secondary Beta UX (Layout Change)",optMaintNo:"No",optMaintYes:"Yes (Locks out all users)",optUpdateNo:"No",optUpdateYes:"Yes",optGlassNo:"No (Keep Glassmorphism)",optGlassYes:"Yes (Solid Colors)",adminAddStudent:"Add New Student",adminSearchStudent:"Search by name...",adminIdPlaceholder:"Student ID (e.g. 120116040351)",adminNamePlaceholder:"Full Name",adminCnPlaceholder:"Chinese Name (or -)",adminOldPlaceholder:"Old Class (e.g. 1B)",adminSchPlaceholder:"Primary School",adminUpdateQueue:"Update Queue",adminDelete:"Delete",adminNoticeLabel:"Class Notice / Warning Banner",adminNoticePlaceholder:"e.g. Information may be inaccurate due to...",adminIconLabel:"Notice Icon",adminColorLabel:"Notice Color",adminStyleLabel:"Notice Style",adminGuruLabel:"Class Teacher",adminPenolongLabel:"Assistant Teacher",optTextOrig:"Original Style",optTextRedesign:"Secondary Redesigned Text Theme",menuProfileText:"Account Profile",lblProfileTitle:"Account & Settings",lblProfTheme:"Theme",lblProfDensity:"View Mode",lblProfClearFav:"Clear All Favorites",lblProfClearHist:"Clear Search History",confirmClearFav:"Are you sure you want to clear all favorites?",lblProfReduceLag:"Reduce Lag",optGlassDyn:"Dynamic (Follow User Settings)",lagDisabled:"Disabled by Admin",lagOn:"On",lagOff:"Off",toastLagAdmin:"Setting locked by Admin",allClasses:"All Classes",coachStep1:"Use the search bar to find students.",coachStep2:"Tap heart to view saved favorites.",coachStep3:"Check out detailed allocation statistics.",coachStep4:"Swipe and tap tabs to switch classes.",coachStep5:"Tap student for details, long-press for quick actions.",coachStep6:"Access profile and settings from menu.",coachContinue:"Tap anywhere to continue",lblProfBgTheme:"Background",themeCustTitle:"Background Theme",themeCustSub:"Customize your app background",themeCustLabel:"Choose Theme",themeCustDefault:"Default",themeCustCustom:"Custom Colors",themeCustCreate:"Create Your Own",themeCustTop:"Top",themeCustMid:"Middle",themeCustBot:"Bottom",themeCustSave:"Save Theme",drawOnBg:"Draw on Background",clearDoodleBtn:"Clear Doodle",clearDoodleDesc:"Are you sure you want to clear drawing?",doodleSaved:"Doodle Saved!",themeLockedAdmin:"Locked by Admin",btnDuty:"Duty Roster",dutyTitle:"Cleaning Duty Roster",dutyWipe:"Wipe Whiteboard",dutySweep:"Sweep Floor",dutyArrange:"Arrange Desks",dutyTrash:"Empty Trash",dutyEmpty:"No students assigned.",dutyFooter:"If any problems, find ",dutyMon:"Monday",dutyTue:"Tuesday",dutyWed:"Wednesday",dutyThu:"Thursday",dutyFri:"Friday",dutyMax:"Maximum 2 students allowed per duty!",shareModern:"Share Modern Card",shareA4:"Share A4 Print List",lblMiniGames:"Mini-Games",menuPlinkoText:"Plinko",menuGuessText:"Guess Who?",ctxCopyMoeBtn:"Copy MOE Email",ctxCopyMoeToast:"MOE Email Copied",ctxNoMoeToast:"No MOE Email",adminImportTitle:"Import JSON Student Data",adminImportBtn:"Select JSON File to Import",adminImportSuccess:"Students Imported to Queue!",adminMoePlaceholder:"MOE Email",adminImportDuty:"Import JSON",adminExportDuty:"Export JSON",adminExportDutyPng:"Export PNG",ehadirTitle:"E-Datang Attendance",ehadirPresent:"Present",ehadirAbsent:"Absent",ehadirRate:"Rate",ehadirLate:"Late",ehadirPortal:"Portal",ehadirLoading:"Connecting to live CHS database...",ehadirError:"Could not connect to API. Tap Portal below.",ehadirDate:"Date",ehadirClass:"Class"},
+  bm:{title:"Senarai Penempatan<br/>Murid 2026",sub:"SEMAKAN PENEMPATAN",ph:"Cari...",empty:"Tiada murid dijumpai",emptySub:"Cuba ubah tapisan atau carian anda",btnClose:"Selesai",label2025:"Kelas Terdahulu",labelOrigin:"Sekolah Asal",all:"Semua",clear:"Tetap Semula",filter:"Tapis",mLabelCur:"Kelas Semasa",mLabelOld:"Kelas Terdahulu",mLabelStat:"Status",mLabelSch:"Sekolah Rendah",mLabelSchPB:"Kelas 2024",labelSort:"Susunan Senarai",txtName:"Name",txtClass:"Kelas",txtSortBday:"Hari Jadi",labelStatsTitle:"Statistik",totalStudents:"Jumlah Murid",statTabOrigin:"Sekolah Asal",statTabOldClass:"Kelas Terdahulu",analyzing:"Menganalisis",toastClear:"Tapisan Dikosongkan",toastFavAdded:"Ditambah ke Kegemaran",toastFavRem:"Dibuang dari Kegemaran",toastFavModeOn:"Papar Kegemaran Sahaja",toastFavModeOff:"Papar Semua Murid",ctxCopy:"Nama Disalin",ctxCopyCnToast:"Nama Cina Disalin",ctxCopyIdBtn:"Salin ID Murid",ctxCopyIdToast:"ID Murid Disalin",toastCompact:"Mod Padat",toastComfort:"Mod Selesa",ctxCopyBtn:"Salin Nama",ctxCopyCnBtn:"Salin Nama Cina",ctxFavBtn:"Simpan",ctxUnfavBtn:"Batal Simpan",tGuru:"Guru Kelas",tPenolong:"Penolong",adminTitle:"Papan Pemuka Admin",adminSub:"Perubahan disimpan ke Barisan secara lokal",tabStudents:"Murid",tabTeachers:"Kelas",tabSettings:"Tetapan",tabAudit:"Log Audit",tabFeedback:"Maklum Balas",tabAnalytics:"Analitik",adminAuditTitle:"Log Aktiviti Admin",adminAuditDesc:"Menjejaki perubahan terperinci.",adminFeedbackTitle:"Maklum Balas Pengguna",adminFeedbackDesc:"Mesej daripada pengguna.",adminAnalyticsTitle:"Analitik Sistem",adminAnalyticsDesc:"Gambaran keseluruhan pengguna.",statTotalUsers:"Jumlah Pengguna",statTotalFavs:"Jumlah Kegemaran",statRecentActivity:"Aktiviti Pengguna Terkini",menuAbout:"Mengenai Aplikasi",menuHelp:"Bantuan & Sokongan",menuFeedback:"Hantar Maklum Balas",authEmailPh:"Alamat E-mel",authPassPh:"Kata Laluan",authLoginBtn:"Log Masuk",authSignUpBtn:"Daftar",authTitleL:"Selamat Kembali",authSubL:"Log masuk untuk melihat rekod",authTitleS:"Cipta Akaun",authSubS:"Daftar untuk mengakses rekod",authToggleL:"Tiada akaun? Daftar",authToggleS:"Sudah ada akaun? Log Masuk",updateTitleAdded:"Ciri-ciri Baharu",updateTitleRemoved:"Perubahan Lain",updateNext:"Seterusnya",updateDone:"Selesai",fbTitle:"Maklum Balas",fbSub:"Beritahu kami pendapat anda!",fbPh:"Taipkan maklum balas...",fbBtn:"Hantar Maklum Balas",toastFb:"Maklum Balas Dihantar!",logoutTitle:"Log Keluar?",logoutMsg:"Adakah anda pasti ingin log keluar?",logoutCancel:"Batal",logoutConfirm:"Log Keluar",faqTitle:"Soalan Lazim (FAQ)",faqQ1:"Apakah maksud ikon Status?",faqA1:"Menunjukkan naik, turun atau kekal.",faqQ2:"Bagaimana cara mencari murid?",faqA2:"Gunakan bar carian.",faqQ3:"Bagaimana cara menyimpan murid?",faqA3:"Ketik ikon Bintang.",faqQ4:"Apakah itu Paparan Padat?",faqA4:"Mengecilkan senarai murid.",faqQ5:"Bagaimana cara memadam sejarah carian?",faqA5:"Ketik bar carian dan klik tong sampah.",faqClose:"Tutup",menuHeaderMain:"Menu",menuThemeDark:"Mod Gelap",menuThemeLight:"Mod Terang",menuDensityCompact:"Paparan Padat",menuDensityComfort:"Paparan Selesa",adminThemeTitle:"Tema Laman Web Global",adminThemeDesc:"Kemas kini latar belakang.",adminMaintTitle:"Sistem Sedang Diselenggara",adminUpdateTitle:"Skrin Kemas Kini Log Masuk",adminUpdateDesc:"Papar tetingkap perubahan.",adminUICust:"Penyesuaian Antara Muka",adminNoGlass:"Lumpuhkan Reka Bentuk Kaca",adminHideTheme:"Sembunyi Tukar Tema",adminHideStats:"Sembunyi Statistik",adminHideIds:"Sembunyikan ID Murid",adminExportExcludeIds:"Kecualikan ID dari eksport",adminEditAbout:"Sunting Teks Mengenai",adminForceCoach:"Paksa Panduan Selamat Datang",lblAdminStatusIcons:"Varian Ikon Status",optStatThumbs:"Ibu Jari (Lalai)",optStatTrending:"Anak Panah Trend",optStatArrows:"Anak Panah Biasa",optThemeDyn:"Dinamik",optThemeMorn:"Tema Pagi",optThemeAft:"Tema Petang",optThemeNight:"Tema Malam",optThemeXmas:"Tema Krismas",optThemeBeta1:"Reka Bentuk Tapisan Baharu",optThemeBeta2:"UX Beta Kedua",optMaintNo:"Tidak",optMaintYes:"Ya",optUpdateNo:"Tidak",optUpdateYes:"Ya",optGlassNo:"Tidak",optGlassYes:"Ya",adminAddStudent:"Tambah Murid Baharu",adminSearchStudent:"Cari nama...",adminIdPlaceholder:"ID Murid",adminNamePlaceholder:"Nama Penuh",adminCnPlaceholder:"Nama Cina",adminOldPlaceholder:"Kelas Lama",adminSchPlaceholder:"Sekolah Rendah",adminUpdateQueue:"Kemas Kini Barisan",adminDelete:"Padam",adminNoticeLabel:"Notis Kelas",adminNoticePlaceholder:"Maklumat notis...",adminIconLabel:"Ikon Notis",adminColorLabel:"Warna Notis",adminStyleLabel:"Gaya Notis",adminGuruLabel:"Guru Kelas",adminPenolongLabel:"Penolong",optTextOrig:"Gaya Asal",optTextRedesign:"Tema Teks Reka Bentuk Kedua",menuProfileText:"Profil Akaun",lblProfileTitle:"Akaun & Tetapan",lblProfTheme:"Tema",lblProfDensity:"Mod Paparan",lblProfClearFav:"Padam Semua Kegemaran",lblProfClearHist:"Padam Sejarah Carian",confirmClearFav:"Adakah anda pasti?",lblProfReduceLag:"Kurangkan Kelengahan",optGlassDyn:"Dinamik",lagDisabled:"Dilumpuhkan oleh Admin",lagOn:"Hidup",lagOff:"Mati",toastLagAdmin:"Tetapan dikunci oleh Admin",allClasses:"Semua Kelas",coachStep1:"Gunakan bar carian.",coachStep2:"Ketik ikon hati.",coachStep3:"Lihat statistik.",coachStep4:"Sapu dan ketik tab.",coachStep5:"Ketik murid untuk butiran.",coachStep6:"Akses profil.",coachContinue:"Ketik di mana-mana",lblProfBgTheme:"Latar Belakang",themeCustTitle:"Tema Latar Belakang",themeCustSub:"Ubah suai latar belakang",themeCustLabel:"Pilih Tema",themeCustDefault:"Lalai",themeCustCustom:"Warna Tersuai",themeCustCreate:"Cipta Tema",themeCustTop:"Atas",themeCustMid:"Tengah",themeCustBot:"Bawah",themeCustSave:"Simpan Tema",drawOnBg:"Lukis pada Latar Belakang",clearDoodleBtn:"Padam Lukisan",clearDoodleDesc:"Padam lukisan anda?",doodleSaved:"Lukisan Disimpan!",themeLockedAdmin:"Dikunci oleh Admin",btnDuty:"Jadual Bertugas",dutyTitle:"Jadual Kebersihan",dutyWipe:"Padam Papan Putih",dutySweep:"Sapu Sampah",dutyArrange:"Susun Meja",dutyTrash:"Buang Sampah",dutyEmpty:"Tiada murid ditugaskan.",dutyFooter:"Jika ada masalah, cari ",dutyMon:"Isnin",dutyTue:"Selasa",dutyWed:"Rabu",dutyThu:"Khamis",dutyFri:"Jumaat",dutyMax:"Maksimum 2 murid dibenarkan!",shareModern:"Kongsi Kad Moden",shareA4:"Kongsi Senarai Cetakan A4",lblMiniGames:"Permainan Mini",menuPlinkoText:"Plinko",menuGuessText:"Teka Siapa?",ctxCopyMoeBtn:"Salin E-mel MOE",ctxCopyMoeToast:"E-mel MOE Disalin",ctxNoMoeToast:"Tiada E-mel MOE",adminImportTitle:"Import Data Murid JSON",adminImportBtn:"Pilih Fail JSON",adminImportSuccess:"Murid Diimport!",adminMoePlaceholder:"E-mel MOE",adminImportDuty:"Import JSON",adminExportDuty:"Eksport JSON",adminExportDutyPng:"Eksport PNG",ehadirTitle:"Kehadiran E-Datang",ehadirPresent:"Hadir",ehadirAbsent:"Belum Hadir",ehadirRate:"Kadar",ehadirLate:"Lewat",ehadirPortal:"Portal",ehadirLoading:"Menyambung ke pangkalan data CHS...",ehadirError:"Gagal menyambung ke API. Ketik Portal di bawah.",ehadirDate:"Tarikh",ehadirClass:"Kelas"},
+  cn:{title:"2026年学生<br/>分班名单",sub:"分班查询",ph:"搜索...",empty:"未找到学生",emptySub:"尝试调整您的筛选条件或搜索词",btnClose:"完成",label2025:"2025 原班级",labelOrigin:"2024 毕业小学",all:"全部",clear:"重置",filter:"筛选",mLabelCur:"分配班级",mLabelOld:"原班级",mLabelStat:"状态",mLabelSch:"毕业小学",mLabelSchPB:"2024年班级",labelSort:"排序方式",txtName:"姓名",txtClass:"班级",txtSortBday:"生日",labelStatsTitle:"数据统计",totalStudents:"总学生数",statTabOrigin:"毕业小学",statTabOldClass:"原班级",analyzing:"正在分析",toastClear:"已重置筛选",toastFavAdded:"已收藏",toastFavRem:"已取消收藏",toastFavModeOn:"仅显示收藏",toastFavModeOff:"显示所有学生",ctxCopy:"姓名已复制",ctxCopyCnToast:"中文名已复制",ctxCopyIdBtn:"复制学生 ID",ctxCopyIdToast:"学生 ID 已复制",toastCompact:"紧凑模式",toastComfort:"舒适模式",ctxCopyBtn:"复制姓名",ctxCopyCnBtn:"复制中文名",ctxFavBtn:"收藏",ctxUnfavBtn:"取消收藏",tGuru:"班主任",tPenolong:"副班主任",adminTitle:"管理员仪表板",adminSub:"更改将本地保存到更新队列",tabStudents:"学生",tabTeachers:"班级",tabSettings:"设置",tabAudit:"审计日志",tabFeedback:"用户反馈",tabAnalytics:"数据分析",adminAuditTitle:"管理员活动日志",adminAuditDesc:"记录在仪表板中所做的详细更改。",adminFeedbackTitle:"用户反馈",adminFeedbackDesc:"用户提交的反馈和错误报告。",adminAnalyticsTitle:"系统分析",adminAnalyticsDesc:"用户参与度和活动概览。",statTotalUsers:"总用户数",statTotalFavs:"总收藏数",statRecentActivity:"最近用户活动",menuAbout:"关于应用",menuHelp:"帮助与支持",menuFeedback:"提交反馈",authEmailPh:"电子邮件地址",authPassPh:"密码",authLoginBtn:"登录",authSignUpBtn:"注册",authTitleL:"欢迎回来",authSubL:"登录以查看学生记录",authTitleS:"创建账户",authSubS:"注册以访问记录",authToggleL:"没有账户？注册",authToggleS:"已有账户？登录",updateTitleAdded:"新增功能",updateTitleRemoved:"其他更改",updateNext:"下一步",updateDone:"完成",fbTitle:"反馈",fbSub:"告诉我们您的想法！",fbPh:"在此输入您的反馈...",fbBtn:"提交反馈",toastFb:"反馈已提交！",logoutTitle:"登出？",logoutMsg:"您确定要登出您的账户吗？",logoutCancel:"取消",logoutConfirm:"登出",faqTitle:"常见问题 (FAQ)",faqQ1:"状态图标是什么意思？",faqA1:"显示上升、下降或保持不变。",faqQ2:"如何搜索学生？",faqA2:"使用搜索栏输入姓名或ID。",faqQ3:"如何收藏学生？",faqA3:"点击星形图标或长按姓名。",faqQ4:"什么是紧凑视图？",faqA4:"缩小学生列表显示更多学生。",faqQ5:"如何清除搜索历史？",faqA5:"点击最近搜索旁边的垃圾桶图标。",faqClose:"关闭",menuHeaderMain:"菜单",menuThemeDark:"深色模式",menuThemeLight:"浅色模式",menuDensityCompact:"紧凑视图",menuDensityComfort:"舒适视图",adminThemeTitle:"全局网站主题",adminThemeDesc:"即时更新动态背景。",adminMaintTitle:"系统维护中",adminUpdateTitle:"登录更新屏幕",adminUpdateDesc:"登录时显示弹窗广播更改。",adminUICust:"界面自定义",adminNoGlass:"禁用玻璃拟态",adminHideTheme:"隐藏切换主题",adminHideStats:"隐藏数据统计",adminHideIds:"全局隐藏学生 ID",adminExportExcludeIds:"导出时排除 ID",adminEditAbout:"编辑关于文本",adminForceCoach:"强制显示欢迎指南",lblAdminStatusIcons:"状态图标变体",optStatThumbs:"大拇指",optStatTrending:"趋势箭头",optStatArrows:"标准箭头",optThemeDyn:"动态",optThemeMorn:"早晨主题",optThemeAft:"下午主题",optThemeNight:"夜晚主题",optThemeXmas:"圣诞主题",optThemeBeta1:"新筛选器",optThemeBeta2:"次要测试版",optMaintNo:"否",optMaintYes:"是",optUpdateNo:"否",optUpdateYes:"是",optGlassNo:"否",optGlassYes:"是",adminAddStudent:"添加新学生",adminSearchStudent:"按姓名搜索...",adminIdPlaceholder:"学生 ID",adminNamePlaceholder:"全名",adminCnPlaceholder:"中文名",adminOldPlaceholder:"原班级",adminSchPlaceholder:"毕业小学",adminUpdateQueue:"更新队列",adminDelete:"删除",adminNoticeLabel:"班级通知",adminNoticePlaceholder:"例如：信息可能不准确...",adminIconLabel:"通知图标",adminColorLabel:"通知颜色",adminStyleLabel:"通知样式",adminGuruLabel:"班主任",adminPenolongLabel:"副班主任",optTextOrig:"原始样式",optTextRedesign:"辅助重设计文本主题",menuProfileText:"账户资料",lblProfileTitle:"账户与设置",lblProfTheme:"主题",lblProfDensity:"视图模式",lblProfClearFav:"清除所有收藏",lblProfClearHist:"清除搜索历史",confirmClearFav:"确定要清除所有收藏吗？",lblProfReduceLag:"减少卡顿",optGlassDyn:"动态",lagDisabled:"被管理员禁用",lagOn:"开",lagOff:"关",toastLagAdmin:"已被管理员锁定",allClasses:"所有班级",coachStep1:"使用搜索栏查找学生。",coachStep2:"点击心形图标查看收藏。",coachStep3:"查看分班统计数据。",coachStep4:"滑动并点击选项卡切换班级。",coachStep5:"点击学生查看详情。",coachStep6:"从菜单访问个人资料。",coachContinue:"点击任意位置继续",lblProfBgTheme:"应用背景",themeCustTitle:"背景主题",themeCustSub:"自定义应用背景",themeCustLabel:"选择主题",themeCustDefault:"默认",themeCustCustom:"自定义颜色",themeCustCreate:"创建主题",themeCustTop:"顶部",themeCustMid:"中间",themeCustBot:"底部",themeCustSave:"保存主题",drawOnBg:"在背景上涂鸦",clearDoodleBtn:"清除涂鸦",clearDoodleDesc:"确定清除背景涂鸦吗？",doodleSaved:"涂鸦已保存！",themeLockedAdmin:"被管理员锁定",btnDuty:"值日表",dutyTitle:"卫生值日表",dutyWipe:"擦白板",dutySweep:"扫地",dutyArrange:"排桌椅",dutyTrash:"丢垃圾",dutyEmpty:"未分配学生。",dutyFooter:"如果有任何问题，找 ",dutyMon:"星期一",dutyTue:"星期二",dutyWed:"星期三",dutyThu:"星期四",dutyFri:"星期五",dutyMax:"每项任务最多只能分配2名学生！",shareModern:"分享现代卡片",shareA4:"分享 A4 打印表",lblMiniGames:"小游戏",menuPlinkoText:"Plinko",menuGuessText:"猜猜是谁？",ctxCopyMoeBtn:"复制 MOE 邮箱",ctxCopyMoeToast:"MOE 邮箱已复制",ctxNoMoeToast:"无 MOE 邮箱",adminImportTitle:"导入 JSON 数据",adminImportBtn:"选择 JSON 文件",adminImportSuccess:"学生已导入！",adminMoePlaceholder:"MOE 邮箱",adminImportDuty:"导入 JSON",adminExportDuty:"导出 JSON",adminExportDutyPng:"导出 PNG",ehadirTitle:"E-Datang 实时出勤",ehadirPresent:"已出席",ehadirAbsent:"未出席",ehadirRate:"出勤率",ehadirLate:"迟到",ehadirPortal:"传送门",ehadirLoading:"正在连接 CHS 数据库...",ehadirError:"无法连接到 API。请点击下方传送门。",ehadirDate:"日期",ehadirClass:"班级"}
 };
 
-// Generic UI Confirm Dialog Function
 window.showConfirmDialog = function(title, msg, onConfirm, confirmText = "Confirm", confirmColor = "#FF3B30") {
     triggerHaptic();
     document.getElementById('genericConfirmTitle').innerText = title;
@@ -2034,7 +2033,6 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
     const qLower = query.toLowerCase();
     let matches = window.smkData.filter(s => (s.name && s.name.toLowerCase().includes(qLower)) || (s.cn && s.cn.toLowerCase().includes(qLower)) || (s.id && s.id.includes(qLower))).slice(0, 5);
     
-    // Live Highlighter Helper
     const highlight = (text) => {
         if(!text) return "";
         return text.replace(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'), '<span style="color:var(--ios-blue); font-weight:800;">$1</span>');
@@ -2044,7 +2042,7 @@ function initApp(){initTheme();updateAppThemeColor(currentClass);window.applyGlo
         box.innerHTML = matches.map((m, i) => {
             const rawClass = m.newClass.split(" ")[1] || "Biru";
             const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
-            const delay = i * 0.04; // Cascading animation delay
+            const delay = i * 0.04;
             
             const hideIds = (window.globalSettings && window.globalSettings.hideIds === 'true');
             let subRight = "";
@@ -2110,7 +2108,6 @@ window.applyGlobalSettings = function() {
   if(window.globalSettings && window.globalSettings.textStyle === 'redesigned') body.classList.add('text-redesign-active');
   else body.classList.remove('text-redesign-active');
   
-  // Enforce User Custom Theme if set
   if (window.applyUserTheme) window.applyUserTheme();
   if (window.updateProfileThemeText) window.updateProfileThemeText();
   
@@ -2132,15 +2129,11 @@ window.applyGlobalSettings = function() {
   `;
 }
 function checkTimeOfDay(){ window.applyGlobalSettings(); }
-
 function initDesktopScroll(){document.querySelectorAll('.scroll-row, .history-track').forEach(cont=>{cont.addEventListener('wheel',(e)=>{if(e.deltaY!==0){e.preventDefault();cont.scrollLeft+=e.deltaY}})});}
 
-// Strict Modal Drag Logic to fix input interaction bugs
 function initModalDrag(modal,overlayId){
     if(!modal)return;
     const isFormModal = modal.id === 'adminCard' || modal.id === 'feedbackCard' || modal.id === 'authCard' || modal.id === 'aboutCard' || modal.id === 'faqCard' || modal.id === 'profileCard' || modal.id === 'themeCustomizerCard';
-    
-    // Disable dragging entirely for these modals to fix the visual glitch
     if(isFormModal) return;
     
     modal.addEventListener('touchstart',(e)=>{
@@ -2174,25 +2167,14 @@ function initModalDrag(modal,overlayId){
         if(e.changedTouches[0].clientY-modalStart>100) closeAnyModal(overlayId);
         else modal.style.transform='';
     });
-    
-    const header=modal.querySelector('.m-head');
-    if(header){
-        header.addEventListener('mousedown',(e)=>{
-            modalStart=e.clientY;
-            isDraggingModal=true;
-            modal.classList.add('is-dragging');
-        });
-    }
 }
-window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='profileCard')overlayId='profileOverlay';else if(modal.id==='ehadirCard')overlayId='ehadirOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+window.addEventListener('mousemove',(e)=>{if(!isDraggingModal)return;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;const diff=e.clientY-modalStart;if(diff<0)return;modal.style.transform=`translateY(${diff}px)`});
+window.addEventListener('mouseup',(e)=>{if(!isDraggingModal)return;isDraggingModal=!1;const modal=document.querySelector('.modal-card.is-dragging');if(!modal)return;modal.classList.remove('is-dragging');let overlayId='';if(modal.id==='modalCard')overlayId='modalOverlay';else if(modal.id==='statsCard')overlayId='statsOverlay';else if(modal.id==='aboutCard')overlayId='aboutOverlay';else if(modal.id==='adminCard')overlayId='adminOverlay';else if(modal.id==='feedbackCard')overlayId='feedbackOverlay';else if(modal.id==='faqCard')overlayId='faqOverlay';else if(modal.id==='profileCard')overlayId='profileOverlay';else if(modal.id==='ehadirCard')overlayId='ehadirOverlay';if(e.clientY-modalStart>100)closeAnyModal(overlayId);else modal.style.transform=''});
+
 function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModal();else if(overlayId==='statsOverlay')window.closeStats();else if(overlayId==='aboutOverlay')window.closeAbout();else if(overlayId==='adminOverlay')window.closeAdminPanel();else if(overlayId==='feedbackOverlay')window.closeFeedback();else if(overlayId==='faqOverlay')window.closeFaq();else if(overlayId==='profileOverlay')window.closeProfile();else if(overlayId==='themeCustomizerOverlay')window.closeThemeCustomizer(false);else if(overlayId==='ehadirOverlay')window.closeEHadirModal();}
 
-// ==========================================
-// USER THEME CUSTOMIZER & DOODLE LOGIC
-// ==========================================
 window.userThemeObj = JSON.parse(localStorage.getItem('userThemeObj')) || { type: 'default', c1: '#e0c3fc', c2: '#8ec5fc', c3: '#4facfe' };
 window.userDoodle = JSON.parse(localStorage.getItem('userDoodle')) || [];
-
 window.activeColorSlot = 1;
 
 window.selectColorSlot = function(slot) {
@@ -2229,7 +2211,6 @@ window.openThemeCustomizer = function() {
     document.getElementById('uSlot3').style.backgroundColor = window.userThemeObj.c3;
     
     document.getElementById('userCustomColorsWrapper').style.display = (t === 'custom') ? 'block' : 'none';
-    
     setTimeout(() => document.getElementById('themeCustomizerOverlay').classList.add('open'), 10);
 };
 
@@ -2306,7 +2287,7 @@ window.closeThemeCustomizer = function(save) {
         window.updateProfileThemeText();
         window.showToast("Theme Saved!", "palette");
     } else {
-        window.applyUserTheme(); // Revert preview
+        window.applyUserTheme();
     }
     setTimeout(() => window.openProfile(), 300);
 };
@@ -2320,7 +2301,6 @@ window.isThemeLocked = function() {
 window.applyUserTheme = function() {
     if(!window.userThemeObj) return;
     if(window.isThemeLocked && window.isThemeLocked()) {
-        // Remove inline gradients so the forced Admin lock takes visual control
         document.body.style.removeProperty('--grad-1');
         document.body.style.removeProperty('--grad-2');
         document.body.style.removeProperty('--grad-3');
@@ -2351,7 +2331,6 @@ window.updateProfileThemeText = function() {
     if(!profTxt) return;
     const txt = uiText[curLang] || uiText.en;
     
-    // Always keep Light/Dark mode row active
     const pThemeRow = document.querySelector('[onclick="window.toggleTheme()"]');
     if(pThemeRow) pThemeRow.style.opacity = "1";
     const profThemeTxt = document.getElementById('profThemeTxt');
@@ -2363,13 +2342,11 @@ window.updateProfileThemeText = function() {
     if (window.isThemeLocked && window.isThemeLocked()) {
         profTxt.innerText = txt.themeLockedAdmin || "Locked by Admin";
         profTxt.style.color = "var(--ios-text-sec)";
-        
         const pBgRow = document.querySelector('[onclick="window.openThemeCustomizer()"]');
         if(pBgRow) pBgRow.style.opacity = "0.4";
         return;
     }
 
-    // Restore clickable background customizer row
     const pBgRow = document.querySelector('[onclick="window.openThemeCustomizer()"]');
     if(pBgRow) pBgRow.style.opacity = "1";
     profTxt.style.color = "var(--ios-blue)";
@@ -2379,21 +2356,13 @@ window.updateProfileThemeText = function() {
     profTxt.innerText = labels[type] || 'Default';
 };
 
-// DOODLE CANVAS LOGIC
-let dIsDrawing = false;
-let dCtx = null;
-let dCurStroke = null;
-let dCurColor = '#FFFFFF';
-let dCurSize = 4;
-let dIsEraser = false;
-let dLastPt = null;
+let dIsDrawing = false, dCtx = null, dCurStroke = null, dCurColor = '#FFFFFF', dCurSize = 4, dIsEraser = false, dLastPt = null;
 
 window.initDoodle = function() {
     const c = document.getElementById('bgDoodleCanvas');
     if(!c) return;
     dCtx = c.getContext('2d', { alpha: true });
     
-    // Scale for high DPI displays
     const dpr = window.devicePixelRatio || 1;
     c.width = window.innerWidth * dpr;
     c.height = window.innerHeight * dpr;
@@ -2421,10 +2390,10 @@ function dStart(e) {
     if(!document.getElementById('bgDoodleCanvas').classList.contains('draw-mode')) return;
     dIsDrawing = true;
     dCurStroke = { c: dCurColor, w: dCurSize, e: dIsEraser, p: [] };
-    dLastPt = null; // Important fix: reset previous line connection
+    dLastPt = null;
     dPushPt(e.clientX, e.clientY);
     window.userDoodle.push(dCurStroke);
-    window.renderDoodle(); // Render dot immediately on single tap
+    window.renderDoodle();
 }
 function dMove(e) {
     if(!dIsDrawing || !dCurStroke) return;
@@ -2451,7 +2420,6 @@ window.renderDoodle = function() {
     window.userDoodle.forEach(stroke => {
         if(!stroke.p || stroke.p.length < 2) return;
         dCtx.beginPath();
-        
         if (stroke.e) {
             dCtx.globalCompositeOperation = 'destination-out';
             dCtx.strokeStyle = 'rgba(0,0,0,1)';
@@ -2460,11 +2428,8 @@ window.renderDoodle = function() {
             dCtx.strokeStyle = stroke.c;
         }
         dCtx.lineWidth = stroke.w || 4;
-        
         dCtx.moveTo(stroke.p[0] * w, stroke.p[1] * h);
-        
         if (stroke.p.length === 2) {
-            // Draw a tiny dot for single taps
             dCtx.lineTo(stroke.p[0] * w + 0.5, stroke.p[1] * h + 0.5);
         } else {
             for(let i=2; i<stroke.p.length; i+=2) {
@@ -2473,7 +2438,7 @@ window.renderDoodle = function() {
         }
         dCtx.stroke();
     });
-    dCtx.globalCompositeOperation = 'source-over'; // Reset
+    dCtx.globalCompositeOperation = 'source-over';
 };
 
 window.setDoodleColor = function(color, el) {
@@ -2483,18 +2448,13 @@ window.setDoodleColor = function(color, el) {
     document.querySelectorAll('.d-color').forEach(c => c.classList.remove('active'));
     if(el) el.classList.add('active');
 };
-
 window.setEraserMode = function(el) {
     triggerHaptic();
     dIsEraser = true;
     document.querySelectorAll('.d-color').forEach(c => c.classList.remove('active'));
     if(el) el.classList.add('active');
 };
-
-window.updateDoodleSize = function(val) {
-    dCurSize = parseInt(val);
-};
-
+window.updateDoodleSize = function(val) { dCurSize = parseInt(val); };
 window.downloadDoodle = function() {
     triggerHaptic();
     const canvas = document.getElementById('bgDoodleCanvas');
@@ -2509,13 +2469,11 @@ window.downloadDoodle = function() {
     const savedText = (uiText && uiText[curLang] && uiText[curLang].doodleSaved) ? uiText[curLang].doodleSaved : "Doodle Saved!";
     window.showToast(savedText, "download_done");
 };
-
 window.undoDoodle = function() {
     triggerHaptic();
     window.userDoodle.pop();
     window.renderDoodle();
 };
-
 window.clearDoodle = function() {
     triggerHaptic();
     window.showConfirmDialog(
@@ -2531,34 +2489,24 @@ window.clearDoodle = function() {
         "#FF3B30"
     );
 };
-
 window.startDoodleMode = function() {
     triggerHaptic();
     document.getElementById('themeCustomizerOverlay').classList.remove('open');
     document.getElementById('bgDoodleCanvas').classList.add('draw-mode');
     document.getElementById('doodleToolbar').classList.add('show');
-    
-    // Dim the main UI to focus on drawing
     const iosCont = document.getElementById('ios-container');
     const header = document.getElementById('mainHeader');
-    if(iosCont) iosCont.style.opacity = '0.15';
-    if(iosCont) iosCont.style.pointerEvents = 'none';
+    if(iosCont) { iosCont.style.opacity = '0.15'; iosCont.style.pointerEvents = 'none'; }
     if(header) header.style.opacity = '0.15';
 };
-
 window.closeDoodleMode = function() {
     triggerHaptic();
     document.getElementById('bgDoodleCanvas').classList.remove('draw-mode');
     document.getElementById('doodleToolbar').classList.remove('show');
-    
-    // Restore UI
     const iosCont = document.getElementById('ios-container');
     const header = document.getElementById('mainHeader');
-    if(iosCont) iosCont.style.opacity = '1';
-    if(iosCont) iosCont.style.pointerEvents = 'auto';
+    if(iosCont) { iosCont.style.opacity = '1'; iosCont.style.pointerEvents = 'auto'; }
     if(header) header.style.opacity = '1';
-    
-    // Save to firebase
     localStorage.setItem('userDoodle', JSON.stringify(window.userDoodle));
     if(window.cloudSyncUserData) window.cloudSyncUserData();
     setTimeout(() => window.openThemeCustomizer(), 300);
@@ -2571,20 +2519,10 @@ function enableDark(bool){
     document.body.setAttribute('data-theme',isDark?'dark':'light');
     document.getElementById('iconThemeMain').innerText=isDark?'light_mode':'dark_mode';
     document.getElementById('menuThemeTextMain').innerText=isDark?uiText[curLang].menuThemeLight:uiText[curLang].menuThemeDark;
-    
     const pTheme = document.getElementById('profThemeTxt');
     if(pTheme) pTheme.innerText = isDark ? uiText[curLang].menuThemeDark : uiText[curLang].menuThemeLight;
-    
     localStorage.setItem('theme',isDark?'dark':'light');
     updateAppThemeColor(currentClass);
-    const modal=document.querySelector('.modal-card');
-    if(modal&&document.getElementById('modalOverlay').classList.contains('open')){
-        const nameEl=document.getElementById('mName');
-        if(nameEl){
-            const student=window.smkData.find(s=>s.name===nameEl.innerText);
-            if(student)applyModalColors(student)
-        }
-    }
 }
 function initDensity(){applyDensity(isCompactMode, true)}
 window.toggleDensity=function(skipSync = false){triggerHaptic();isCompactMode=!isCompactMode;localStorage.setItem('isCompact',isCompactMode);applyDensity(isCompactMode);if(!skipSync)window.showToast(isCompactMode?uiText[curLang].toastCompact:uiText[curLang].toastComfort,"view_headline"); if(!skipSync) window.cloudSyncUserData();}
@@ -2618,37 +2556,23 @@ window.toggleReduceLag = function() {
 };
 
 window.toggleFilters=function(){triggerHaptic();isFilterOpen=!isFilterOpen;const drawer=document.getElementById("filterDrawer"),btn=document.getElementById("btnFilter");if(isFilterOpen){drawer.classList.add("open");btn.style.opacity="0.5"}else{drawer.classList.remove("open");btn.style.opacity="1"}}
-
 window.handleSort=function(type){triggerHaptic();if(currentSortType===type)sortAsc=!sortAsc;else{currentSortType=type;sortAsc=!0}updateSortUI();filterData()}
 
 function updateSortUI(){
     const btnName=document.getElementById("btnSortName"),btnClass=document.getElementById("btnSortClass"),btnBday=document.getElementById("btnSortBday");
     const arrowName=document.getElementById("arrowSortName"),arrowClass=document.getElementById("arrowSortClass"),arrowBday=document.getElementById("arrowSortBday");
-    
     if(sortAsc){arrowName.classList.remove("flip");arrowClass.classList.remove("flip");arrowBday.classList.remove("flip")}
     else{arrowName.classList.add("flip");arrowClass.classList.add("flip");arrowBday.classList.add("flip")}
     
     if(currentSortType==='name'){
-        btnName.classList.add("active");
-        btnClass.classList.remove("active");
-        btnBday.classList.remove("active");
-        arrowName.classList.remove("hidden");
-        arrowClass.classList.add("hidden");
-        arrowBday.classList.add("hidden");
+        btnName.classList.add("active"); btnClass.classList.remove("active"); btnBday.classList.remove("active");
+        arrowName.classList.remove("hidden"); arrowClass.classList.add("hidden"); arrowBday.classList.add("hidden");
     }else if(currentSortType==='class'){
-        btnName.classList.remove("active");
-        btnClass.classList.add("active");
-        btnBday.classList.remove("active");
-        arrowClass.classList.remove("hidden");
-        arrowName.classList.add("hidden");
-        arrowBday.classList.add("hidden");
+        btnName.classList.remove("active"); btnClass.classList.add("active"); btnBday.classList.remove("active");
+        arrowClass.classList.remove("hidden"); arrowName.classList.add("hidden"); arrowBday.classList.add("hidden");
     }else{
-        btnName.classList.remove("active");
-        btnClass.classList.remove("active"); 
-        btnBday.classList.add("active");
-        arrowClass.classList.add("hidden");
-        arrowName.classList.add("hidden");
-        arrowBday.classList.remove("hidden");
+        btnName.classList.remove("active"); btnClass.classList.remove("active"); btnBday.classList.add("active");
+        arrowClass.classList.add("hidden"); arrowName.classList.add("hidden"); arrowBday.classList.remove("hidden");
     }
 }
 
@@ -2661,7 +2585,6 @@ window.setFilter=function(key,val,el){triggerHaptic();filterState[key]=val;el.pa
 window.clearFilters=function(){triggerHaptic();filterState.year2025="";filterState.origin="";document.getElementById("searchInput").value="";document.querySelectorAll('.scroll-row').forEach(cont=>{cont.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(cont.querySelector('.chip'))cont.querySelector('.chip').classList.add('active')});sortAsc=!0;currentSortType='name';updateSortUI();isFavMode=!1;document.getElementById('btnFavToggle').classList.remove('active');document.getElementById('btnFavToggle').querySelector('span').innerText='favorite';renderSearchHistory();filterData();window.toggleFilters();window.showToast(uiText[curLang].toastClear,"refresh")}
 window.showToast=function(msg,iconName="check_circle"){const container=document.getElementById("toastContainer");const existing=container.querySelector('.toast');if(existing)existing.remove();const toast=document.createElement("div");toast.className="toast";toast.innerHTML=`<span class="material-icons-round" style="font-size:20px; color:var(--ios-blue)">${iconName}</span><span>${msg}</span>`;container.appendChild(toast);requestAnimationFrame(()=>toast.classList.add("show"));setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),500)},2500)}
 
-// REFINED TABS RENDERING WITH "ALL CLASSES"
 function renderTabs(){
     const tabContainer=document.getElementById("classTabs");
     const allText = uiText[curLang].allClasses || "All Classes";
@@ -2670,20 +2593,10 @@ function renderTabs(){
     tabContainer.innerHTML=html;
 }
 
-window.openMainMenu=function(){
-    triggerHaptic();
-    document.getElementById("mainMenuBackdrop").classList.add("active");
-}
-window.closeMainMenu=function(){
-    document.getElementById("mainMenuBackdrop").classList.remove("active");
-}
-window.openMinigamesMenu=function(){
-    triggerHaptic();
-    document.getElementById("minigamesBackdrop").classList.add("active");
-}
-window.closeMinigamesMenu=function(){
-    document.getElementById("minigamesBackdrop").classList.remove("active");
-}
+window.openMainMenu=function(){ triggerHaptic(); document.getElementById("mainMenuBackdrop").classList.add("active"); }
+window.closeMainMenu=function(){ document.getElementById("mainMenuBackdrop").classList.remove("active"); }
+window.openMinigamesMenu=function(){ triggerHaptic(); document.getElementById("minigamesBackdrop").classList.add("active"); }
+window.closeMinigamesMenu=function(){ document.getElementById("minigamesBackdrop").classList.remove("active"); }
 
 window.switchLanguage=function(lang, skipSync=false){
     if(lang===curLang)return;
@@ -2693,600 +2606,46 @@ window.switchLanguage=function(lang, skipSync=false){
         if (b.innerText.toLowerCase() === lang) b.classList.add('active');
     });
     
-    const fadeTargets=document.querySelectorAll('.anim-text-change');
-    const searchInput=document.getElementById("searchInput");
+    curLang=lang;
+    localStorage.setItem('language', lang);
+    const txt=uiText[lang] || uiText.en;
+    
     const titleEl=document.getElementById("labelTitle");
-    const authEmail=document.getElementById("authEmail");
-    const authPassword=document.getElementById("authPassword");
+    if(titleEl) titleEl.innerHTML=txt.title;
+    if(document.getElementById("btnClose")) document.getElementById("btnClose").innerText=txt.btnClose;
+    if(document.getElementById("aboutCloseBtn")) document.getElementById("aboutCloseBtn").innerText=txt.btnClose;
+    if(document.getElementById("faqCloseBtn")) document.getElementById("faqCloseBtn").innerText=txt.faqClose;
+    if(document.getElementById("btnProfDone")) document.getElementById("btnProfDone").innerText=txt.btnClose;
     
-    if(titleEl)titleEl.classList.add("blur-fade-out");
-    if(searchInput)searchInput.classList.add("anim-placeholder");
-    if(authEmail)authEmail.classList.add("anim-placeholder");
-    if(authPassword)authPassword.classList.add("anim-placeholder");
+    setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);
+    setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);
+    const searchInput=document.getElementById("searchInput");
+    if(searchInput) searchInput.placeholder=txt.ph;
     
-    const morphIDs=['labelSort','label2025','labelOrigin','mLabelCur','mLabelOld','mLabelStat','mLabelSch','labelStatsTitle','txtStatOrigin','txtStatOldClass','txtFilter','lblClear','labelTitle','subTitle','lblGuruTitle','lblPenolongTitle','lblAdminTitle','lblAdminSub','tabBtn-students','tabBtn-teachers','tabBtn-settings', 'tabBtn-audit', 'tabBtn-feedback', 'tabBtn-analytics', 'lblAdminAuditTitle', 'lblAdminAuditDesc', 'lblAdminFeedbackTitle', 'lblAdminFeedbackDesc', 'lblAdminAnalyticsTitle', 'lblAdminAnalyticsDesc', 'lblStatTotalUsers', 'lblStatTotalFavs', 'lblStatRecentActivity', 'lblFeedbackTitle', 'lblFeedbackSub', 'labelAboutTitle', 'labelFaqTitle', 'faqQ1', 'faqA1', 'faqQ2', 'faqA2', 'faqQ3', 'faqA3', 'faqQ4', 'faqA4', 'faqQ5', 'faqA5', 'menuHeaderMain', 'menuThemeTextMain', 'menuDensityTextMain', 'menuFaqText2', 'menuFeedbackText2', 'menuAboutText2', 'menuLogoutTextMain', 'lblNewFilterTitle', 'lblNewFilterReset', 'lblAdminNotice', 'lblAdminNoticeIcon', 'lblAdminNoticeColor', 'lblAdminNoticeStyle', 'lblAdminGuru', 'lblAdminPenolong', 'menuProfileText', 'lblProfileTitle', 'lblProfTheme', 'lblProfDensity', 'lblProfClearFav', 'lblProfClearHist', 'btnProfDone', 'profThemeTxt', 'profDensityTxt', 'lblProfReduceLag', 'menuMiniGamesText', 'minigamesHeader', 'menuPlinkoText3', 'menuGuessText3'];
-    const teacherIds=['lblGuruTitle','lblPenolongTitle','lblGuru','lblPenolong'];
+    setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);
+    setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);
+    setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);
+    setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);
+    setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);
+    setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);
+    setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);
+    setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);
+    setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);
+    setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);
+    setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);
+    setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);
+    setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);
     
-    fadeTargets.forEach(el=> el.classList.add('fade-out'));
+    if(document.getElementById('ehadirModalTitle')) setTextAndAnimateWidth(document.getElementById('ehadirModalTitle'), txt.ehadirTitle);
+    if(document.getElementById('ehadirCountPresentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountPresentLbl'), txt.ehadirPresent);
+    if(document.getElementById('ehadirCountAbsentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountAbsentLbl'), txt.ehadirAbsent);
+    if(document.getElementById('ehadirRateLbl')) setTextAndAnimateWidth(document.getElementById('ehadirRateLbl'), txt.ehadirRate);
+    if(document.getElementById('ehadirBtnPortalText')) setTextAndAnimateWidth(document.getElementById('ehadirBtnPortalText'), txt.ehadirPortal);
+    if(document.getElementById('ehadirBtnDoneText')) document.getElementById('ehadirBtnDoneText').innerText = txt.btnClose;
     
-    const tCard=document.getElementById('classInfoCard');
-    const startHeight=tCard?tCard.offsetHeight:0;
-    const sGrid=document.getElementById('studentGrid');
-    const sGridStartHeight=sGrid?sGrid.offsetHeight:0;
-    if(sGrid){ sGrid.style.height = sGridStartHeight + 'px'; sGrid.style.overflow = 'hidden'; }
-    
-    setTimeout(()=>{
-        try {
-            if(tCard&&tCard.classList.contains('show')){tCard.style.height=startHeight+'px';tCard.style.transition='none'}
-            curLang=lang;
-            localStorage.setItem('language', lang);
-            const txt=uiText[lang];
-            
-            if(titleEl)titleEl.innerHTML=txt.title;
-            if(document.getElementById("btnClose")) document.getElementById("btnClose").innerText=txt.btnClose;
-            if(document.getElementById("aboutCloseBtn")) document.getElementById("aboutCloseBtn").innerText=txt.btnClose;
-            if(document.getElementById("faqCloseBtn")) document.getElementById("faqCloseBtn").innerText=txt.faqClose;
-            if(document.getElementById("btnProfDone")) document.getElementById("btnProfDone").innerText=txt.btnClose;
-            
-            setTextAndAnimateWidth(document.getElementById("txtFilter"),txt.filter);
-            setTextAndAnimateWidth(document.getElementById("lblClear"),txt.clear);
-            if(searchInput)searchInput.placeholder=txt.ph;
-            setTextAndAnimateWidth(document.getElementById("label2025"),txt.label2025);
-            setTextAndAnimateWidth(document.getElementById("labelOrigin"),txt.labelOrigin);
-            setTextAndAnimateWidth(document.getElementById("labelSort"),txt.labelSort);
-            setTextAndAnimateWidth(document.getElementById("mLabelCur"),txt.mLabelCur);
-            setTextAndAnimateWidth(document.getElementById("mLabelOld"),txt.mLabelOld);
-            setTextAndAnimateWidth(document.getElementById("mLabelStat"),txt.mLabelStat);
-            setTextAndAnimateWidth(document.getElementById("mLabelSch"),txt.mLabelSch);
-            setTextAndAnimateWidth(document.getElementById("labelStatsTitle"),txt.labelStatsTitle);
-            setTextAndAnimateWidth(document.getElementById("lblGuruTitle"),txt.tGuru);
-            setTextAndAnimateWidth(document.getElementById("lblPenolongTitle"),txt.tPenolong);
-            setTextAndAnimateWidth(document.getElementById("txtSortName"),txt.txtName);
-            setTextAndAnimateWidth(document.getElementById("txtSortClass"),txt.txtClass);
-            setTextAndAnimateWidth(document.getElementById("txtSortBday"),txt.txtSortBday);
-            setTextAndAnimateWidth(document.getElementById("lblAdminTitle"),txt.adminTitle);
-            setTextAndAnimateWidth(document.getElementById("lblAdminSub"),txt.adminSub);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-students"),txt.tabStudents);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-teachers"),txt.tabTeachers);
-            setTextAndAnimateWidth(document.getElementById("tabBtn-settings"),txt.tabSettings);
-            if(document.getElementById("tabBtn-audit")) setTextAndAnimateWidth(document.getElementById("tabBtn-audit"), txt.tabAudit || "Audit Log");
-            if(document.getElementById("tabBtn-feedback")) setTextAndAnimateWidth(document.getElementById("tabBtn-feedback"), txt.tabFeedback || "Feedback");
-            if(document.getElementById("tabBtn-analytics")) setTextAndAnimateWidth(document.getElementById("tabBtn-analytics"), txt.tabAnalytics || "Analytics");
-            
-            if(document.getElementById("lblAdminAuditTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminAuditTitle"), txt.adminAuditTitle || "Admin Activity Log");
-            if(document.getElementById("lblAdminAuditDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminAuditDesc"), txt.adminAuditDesc || "Tracks detailed changes made in the dashboard.");
-            if(document.getElementById("lblAdminFeedbackTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminFeedbackTitle"), txt.adminFeedbackTitle || "User Feedback");
-            if(document.getElementById("lblAdminFeedbackDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminFeedbackDesc"), txt.adminFeedbackDesc || "Messages and bug reports submitted by users.");
-            
-            if(document.getElementById("lblAdminAnalyticsTitle")) setTextAndAnimateWidth(document.getElementById("lblAdminAnalyticsTitle"), txt.adminAnalyticsTitle || "System Analytics");
-            if(document.getElementById("lblAdminAnalyticsDesc")) setTextAndAnimateWidth(document.getElementById("lblAdminAnalyticsDesc"), txt.adminAnalyticsDesc || "Overview of user engagement and activity.");
-            if(document.getElementById("lblStatTotalUsers")) setTextAndAnimateWidth(document.getElementById("lblStatTotalUsers"), txt.statTotalUsers || "Total Users");
-            if(document.getElementById("lblStatTotalFavs")) setTextAndAnimateWidth(document.getElementById("lblStatTotalFavs"), txt.statTotalFavs || "Total Favorites");
-            if(document.getElementById("lblStatRecentActivity")) setTextAndAnimateWidth(document.getElementById("lblStatRecentActivity"), txt.statRecentActivity || "Recent User Activity");
-            
-            if(document.getElementById("lblNewFilterTitle")) setTextAndAnimateWidth(document.getElementById("lblNewFilterTitle"), txt.filter);
-            if(document.getElementById("lblNewFilterReset")) setTextAndAnimateWidth(document.getElementById("lblNewFilterReset"), txt.clear);
-            if(document.getElementById('ctxBtnCopyId')) document.getElementById('ctxBtnCopyId').innerText = txt.ctxCopyIdBtn;
-            if(document.getElementById('ctxBtnCopyMoe')) document.getElementById('ctxBtnCopyMoe').innerText = txt.ctxCopyMoeBtn || "Copy MOE Email";
-            
-            // Profile Translations
-            if(document.getElementById("lblProfileTitle")) setTextAndAnimateWidth(document.getElementById("lblProfileTitle"), txt.lblProfileTitle);
-            if(document.getElementById("lblProfTheme")) setTextAndAnimateWidth(document.getElementById("lblProfTheme"), txt.lblProfTheme);
-            if(document.getElementById("lblProfDensity")) setTextAndAnimateWidth(document.getElementById("lblProfDensity"), txt.lblProfDensity);
-            if(document.getElementById("lblProfBgTheme")) setTextAndAnimateWidth(document.getElementById("lblProfBgTheme"), txt.lblProfBgTheme);
-            if(document.getElementById("lblThemeCustTitle")) setTextAndAnimateWidth(document.getElementById("lblThemeCustTitle"), txt.themeCustTitle);
-            if(document.getElementById("lblThemeCustSub")) setTextAndAnimateWidth(document.getElementById("lblThemeCustSub"), txt.themeCustSub);
-            if(document.getElementById("lblThemeCustLabel")) setTextAndAnimateWidth(document.getElementById("lblThemeCustLabel"), txt.themeCustLabel);
-            if(document.getElementById("optUserThDef")) document.getElementById("optUserThDef").innerText = txt.themeCustDefault;
-            if(document.getElementById("optUserThCust")) document.getElementById("optUserThCust").innerText = txt.themeCustCustom;
-            if(document.getElementById("lblThemeCustCreate")) setTextAndAnimateWidth(document.getElementById("lblThemeCustCreate"), txt.themeCustCreate);
-            if(document.getElementById("lblThemeCustTop")) document.getElementById("lblThemeCustTop").innerText = txt.themeCustTop;
-            if(document.getElementById("lblThemeCustMid")) document.getElementById("lblThemeCustMid").innerText = txt.themeCustMid;
-            if(document.getElementById("lblThemeCustBot")) document.getElementById("lblThemeCustBot").innerText = txt.themeCustBot;
-            if(document.getElementById("lblThemeCustLabel")) setTextAndAnimateWidth(document.getElementById("lblThemeCustLabel"), txt.themeCustLabel);
-            if(document.getElementById("lblTcDefault")) document.getElementById("lblTcDefault").innerText = txt.themeCustDefault;
-            if(document.getElementById("lblTcCustom")) document.getElementById("lblTcCustom").innerText = txt.themeCustCustom;
-            if(document.getElementById("lblThemeCustCreate")) setTextAndAnimateWidth(document.getElementById("lblThemeCustCreate"), txt.themeCustCreate);
-            if(document.getElementById("btnDrawDoodle")) document.getElementById("btnDrawDoodle").innerHTML = '<span class="material-icons-round" style="font-size:18px; vertical-align:middle; margin-right:4px;">draw</span> ' + txt.drawOnBg;
-            if(document.getElementById("btnThemeCustSave")) document.getElementById("btnThemeCustSave").innerText = txt.themeCustSave;
-            if(document.getElementById("btnThemeCustCancel")) document.getElementById("btnThemeCustCancel").innerText = txt.logoutCancel;
-            
-            if(document.getElementById('ehadirModalTitleText')) setTextAndAnimateWidth(document.getElementById('ehadirModalTitleText'), txt.ehadirTitle);
-            if(document.getElementById('ehadirCountPresentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountPresentLbl'), txt.ehadirPresent);
-            if(document.getElementById('ehadirCountAbsentLbl')) setTextAndAnimateWidth(document.getElementById('ehadirCountAbsentLbl'), txt.ehadirAbsent);
-            if(document.getElementById('ehadirRateLbl')) setTextAndAnimateWidth(document.getElementById('ehadirRateLbl'), txt.ehadirRate);
-            if(document.getElementById('ehadirBtnPortalText')) setTextAndAnimateWidth(document.getElementById('ehadirBtnPortalText'), txt.ehadirPortal);
-            if(document.getElementById('ehadirBtnDoneText')) document.getElementById('ehadirBtnDoneText').innerText = txt.btnClose;
-            if(document.getElementById("lblBtnDuty")) document.getElementById("lblBtnDuty").innerText = txt.btnDuty || "Duty Roster";
-            if(document.getElementById("lblDutyTitle")) document.getElementById("lblDutyTitle").innerText = txt.dutyTitle || "Cleaning Duty Roster";
-            if(document.getElementById("lblDutyWipe")) document.getElementById("lblDutyWipe").innerHTML = (txt.dutyWipe || "Wipe Whiteboard") + "<br><span style='font-size:11px; opacity:0.8;'>(擦白板)</span>";
-            if(document.getElementById("lblDutySweep")) document.getElementById("lblDutySweep").innerHTML = (txt.dutySweep || "Sweep Floor") + "<br><span style='font-size:11px; opacity:0.8;'>(扫地)</span>";
-            if(document.getElementById("lblDutyArrange")) document.getElementById("lblDutyArrange").innerHTML = (txt.dutyArrange || "Arrange Desks") + "<br><span style='font-size:11px; opacity:0.8;'>(排桌椅)</span>";
-            if(document.getElementById("lblDutyTrash")) document.getElementById("lblDutyTrash").innerHTML = (txt.dutyTrash || "Empty Trash") + "<br><span style='font-size:11px; opacity:0.8;'>(丢垃圾)</span>";
-            
-            const shortDays = {en:['Mon','Tue','Wed','Thu','Fri'], bm:['Isn','Sel','Rab','Kha','Jum'], cn:['一','二','三','四','五']};
-            const sD = shortDays[curLang] || shortDays.en;
-            ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach((d, i) => {
-                if(document.getElementById('uDayBtn_'+d)) document.getElementById('uDayBtn_'+d).innerText = sD[i];
-                if(document.getElementById('aDayBtn_'+d)) document.getElementById('aDayBtn_'+d).innerText = sD[i];
-            });
-
-            // Translations applied
-            if(document.getElementById("lblProfClearFav")) setTextAndAnimateWidth(document.getElementById("lblProfClearFav"), txt.lblProfClearFav);
-            if(document.getElementById("lblProfClearHist")) setTextAndAnimateWidth(document.getElementById("lblProfClearHist"), txt.lblProfClearHist);
-            if(document.getElementById("lblProfReduceLag")) setTextAndAnimateWidth(document.getElementById("lblProfReduceLag"), txt.lblProfReduceLag);
-            
-            const btnOrigin=document.getElementById("txtStatOrigin"),btnOld=document.getElementById("txtStatOldClass");
-            if(btnOrigin)setTextAndAnimateWidth(btnOrigin,txt.statTabOrigin);
-            if(btnOld)setTextAndAnimateWidth(btnOld,txt.statTabOldClass);
-            updateFilterLabels(txt.all);
-            
-            document.querySelectorAll('.empty-msg, .stats-empty-title').forEach(el=>el.innerText=txt.empty);
-            document.querySelectorAll('.stats-empty-sub').forEach(el=>el.innerText=txt.emptySub);
-            document.querySelectorAll('.stats-dash-label-title').forEach(el=>el.innerText=txt.totalStudents);
-            
-            // Login Screen Menus
-            if(document.getElementById('menuAboutText')) document.getElementById('menuAboutText').innerText = txt.menuAbout;
-            if(document.getElementById('menuHelpText')) document.getElementById('menuHelpText').innerText = txt.menuHelp;
-            if(document.getElementById('menuFaqText')) document.getElementById('menuFaqText').innerText = txt.menuAbout === 'Mengenai Aplikasi' ? 'Soalan Lazim / Bantuan' : (txt.menuAbout === '关于应用' ? '常见问题 / 帮助' : 'FAQ / Help');
-            if(document.getElementById('menuFeedbackText')) document.getElementById('menuFeedbackText').innerText = txt.menuFeedback;
-            
-            // Main App Menus
-            if(document.getElementById('menuHeaderMain')) document.getElementById('menuHeaderMain').innerText = txt.menuHeaderMain;
-            if(document.getElementById('menuThemeTextMain')) document.getElementById('menuThemeTextMain').innerText = isDark ? txt.menuThemeLight : txt.menuThemeDark;
-            if(document.getElementById('menuDensityTextMain')) document.getElementById('menuDensityTextMain').innerText = isCompactMode ? txt.menuDensityComfort : txt.menuDensityCompact;
-            if(document.getElementById('profThemeTxt')) document.getElementById('profThemeTxt').innerText = isDark ? txt.menuThemeDark : txt.menuThemeLight;
-            if(document.getElementById('profDensityTxt')) document.getElementById('profDensityTxt').innerText = isCompactMode ? txt.menuDensityComfort : txt.menuDensityCompact;
-            if(document.getElementById('menuProfileText')) document.getElementById('menuProfileText').innerText = txt.menuProfileText;
-            if(document.getElementById('menuFaqText2')) document.getElementById('menuFaqText2').innerText = txt.menuAbout === 'Mengenai Aplikasi' ? 'Soalan Lazim / Bantuan' : (txt.menuAbout === '关于应用' ? '常见问题 / 帮助' : 'FAQ / Help');
-            if(document.getElementById('menuFeedbackText2')) document.getElementById('menuFeedbackText2').innerText = txt.menuFeedback;
-            if(document.getElementById('menuAboutText2')) document.getElementById('menuAboutText2').innerText = txt.menuAbout;
-            if(document.getElementById('menuLogoutTextMain')) document.getElementById('menuLogoutTextMain').innerText = txt.logoutConfirm;
-            if(document.getElementById('menuMiniGamesText')) document.getElementById('menuMiniGamesText').innerText = txt.lblMiniGames || "Mini-Games";
-            if(document.getElementById('minigamesHeader')) document.getElementById('minigamesHeader').innerText = txt.lblMiniGames || "Mini-Games";
-            if(document.getElementById('menuPlinkoText3')) document.getElementById('menuPlinkoText3').innerText = txt.menuPlinkoText || "Plinko";
-            if(document.getElementById('menuGuessText3')) document.getElementById('menuGuessText3').innerText = txt.menuGuessText || "Guess Who?";
-
-            if(document.getElementById('authEmail')) document.getElementById('authEmail').placeholder = txt.authEmailPh;
-            if(document.getElementById('authPassword')) document.getElementById('authPassword').placeholder = txt.authPassPh;
-            
-            if(window.isSignUpMode) {
-              if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleS;
-              if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubS;
-              if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authSignUpBtn;
-              if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleS;
-            } else {
-              if(document.getElementById('authTitle')) document.getElementById('authTitle').innerText = txt.authTitleL;
-              if(document.getElementById('authSub')) document.getElementById('authSub').innerText = txt.authSubL;
-              if(document.getElementById('authSubmitBtn')) document.getElementById('authSubmitBtn').innerText = txt.authLoginBtn;
-              if(document.getElementById('authToggleBtn')) document.getElementById('authToggleBtn').innerText = txt.authToggleL;
-            }
-            
-            if(document.getElementById('lblFeedbackTitle')) setTextAndAnimateWidth(document.getElementById('lblFeedbackTitle'), txt.fbTitle);
-            if(document.getElementById('lblFeedbackSub')) setTextAndAnimateWidth(document.getElementById('lblFeedbackSub'), txt.fbSub);
-            if(document.getElementById('feedbackText')) document.getElementById('feedbackText').placeholder = txt.fbPh;
-            if(document.getElementById('submitFeedbackBtn')) document.getElementById('submitFeedbackBtn').innerText = txt.fbBtn;
-            
-            if(document.getElementById('labelFaqTitle')) setTextAndAnimateWidth(document.getElementById('labelFaqTitle'), txt.faqTitle);
-            if(document.getElementById('faqQ1')) setTextAndAnimateWidth(document.getElementById('faqQ1'), txt.faqQ1);
-            if(document.getElementById('faqA1')) {
-                let iconUp='thumb_up', iconDown='thumb_down';
-                if(window.globalSettings && window.globalSettings.statusIconStyle === 'trending') { iconUp='trending_up'; iconDown='trending_down'; }
-                else if(window.globalSettings && window.globalSettings.statusIconStyle === 'arrows') { iconUp='arrow_upward'; iconDown='arrow_downward'; }
-                document.getElementById('faqA1').innerHTML = txt.faqA1.replace('thumb_up', iconUp).replace('thumb_down', iconDown);
-            }
-            if(document.getElementById('faqQ2')) setTextAndAnimateWidth(document.getElementById('faqQ2'), txt.faqQ2);
-            if(document.getElementById('faqA2')) document.getElementById('faqA2').innerHTML = txt.faqA2;
-            if(document.getElementById('faqQ3')) setTextAndAnimateWidth(document.getElementById('faqQ3'), txt.faqQ3);
-            if(document.getElementById('faqA3')) document.getElementById('faqA3').innerHTML = txt.faqA3;
-            if(document.getElementById('faqQ4')) setTextAndAnimateWidth(document.getElementById('faqQ4'), txt.faqQ4);
-            if(document.getElementById('faqA4')) document.getElementById('faqA4').innerHTML = txt.faqA4;
-            if(document.getElementById('faqQ5')) setTextAndAnimateWidth(document.getElementById('faqQ5'), txt.faqQ5);
-            if(document.getElementById('faqA5')) document.getElementById('faqA5').innerHTML = txt.faqA5;
-            
-            if(document.getElementById('logoutTitle')) document.getElementById('logoutTitle').innerText = txt.logoutTitle;
-            if(document.getElementById('logoutMsg')) document.getElementById('logoutMsg').innerText = txt.logoutMsg;
-            if(document.getElementById('logoutCancelBtn')) document.getElementById('logoutCancelBtn').innerText = txt.logoutCancel;
-            if(document.getElementById('logoutConfirmBtn')) document.getElementById('logoutConfirmBtn').innerText = txt.logoutConfirm;
-
-            if(document.getElementById('lblAdminThemeTitle')) document.getElementById('lblAdminThemeTitle').innerText = txt.adminThemeTitle;
-            if(document.getElementById('lblAdminThemeDesc')) document.getElementById('lblAdminThemeDesc').innerText = txt.adminThemeDesc;
-            if(document.getElementById('lblAdminMaintTitle')) document.getElementById('lblAdminMaintTitle').innerText = txt.adminMaintTitle;
-            if(document.getElementById('lblAdminUpdateTitle')) document.getElementById('lblAdminUpdateTitle').innerText = txt.adminUpdateTitle;
-            if(document.getElementById('lblAdminUpdateDesc')) document.getElementById('lblAdminUpdateDesc').innerText = txt.adminUpdateDesc;
-            if(document.getElementById('lblAdminUICust')) document.getElementById('lblAdminUICust').innerText = txt.adminUICust;
-            if(document.getElementById('lblAdminNoGlass')) document.getElementById('lblAdminNoGlass').innerText = txt.adminNoGlass;
-            if(document.getElementById('lblAdminHideTheme')) document.getElementById('lblAdminHideTheme').innerText = txt.adminHideTheme;
-            if(document.getElementById('lblAdminHideStats')) document.getElementById('lblAdminHideStats').innerText = txt.adminHideStats;
-            if(document.getElementById('lblAdminHideIds')) document.getElementById('lblAdminHideIds').innerText = txt.adminHideIds || "Hide Student IDs Globally";
-            if(document.getElementById('lblAdminExportExcludeIds')) document.getElementById('lblAdminExportExcludeIds').innerText = txt.adminExportExcludeIds || "Exclude IDs from export";
-            if(document.getElementById('lblAdminEditAbout')) document.getElementById('lblAdminEditAbout').innerText = txt.adminEditAbout;
-            if(document.getElementById('lblAdminForceCoach')) document.getElementById('lblAdminForceCoach').innerText = txt.adminForceCoach || "Force Welcome Guide & Coach Marks";
-            if(document.getElementById('lblAdminStatusIcons')) document.getElementById('lblAdminStatusIcons').innerText = txt.lblAdminStatusIcons || "Status Icon Variant";
-            
-            if(document.getElementById('lblAdminTextStyle')) document.getElementById('lblAdminTextStyle').innerText = txt.adminEditAbout === '编辑“关于应用”文本' ? '学生姓名样式' : (txt.adminEditAbout === 'Sunting Teks \'Mengenai Aplikasi\'' ? 'Gaya Nama Murid' : 'Student Name Style');
-            
-            // Translations for Admin Form labels and placeholders
-            if(document.getElementById('adminStudentSearch')) document.getElementById('adminStudentSearch').placeholder = txt.adminSearchStudent;
-            if(document.getElementById('adminStId')) document.getElementById('adminStId').placeholder = txt.adminIdPlaceholder;
-            if(document.getElementById('adminStName')) document.getElementById('adminStName').placeholder = txt.adminNamePlaceholder;
-            if(document.getElementById('adminStCn')) document.getElementById('adminStCn').placeholder = txt.adminCnPlaceholder;
-            if(document.getElementById('adminStOld')) document.getElementById('adminStOld').placeholder = txt.adminOldPlaceholder;
-            if(document.getElementById('adminStSch')) document.getElementById('adminStSch').placeholder = txt.adminSchPlaceholder;
-            if(document.getElementById('adminStMoe')) document.getElementById('adminStMoe').placeholder = txt.adminMoePlaceholder || "MOE Email (e.g. m-12345678@moe-dl.edu.my)";
-            if(document.getElementById('lblAdminImportTitle')) document.getElementById('lblAdminImportTitle').innerText = txt.adminImportTitle || "Import JSON Student Data";
-            if(document.getElementById('lblAdminImportBtn')) document.getElementById('lblAdminImportBtn').innerText = txt.adminImportBtn || "Select JSON File to Import";
-            if(document.getElementById('lblAdminImportDuty')) document.getElementById('lblAdminImportDuty').innerText = txt.adminImportDuty || "Import JSON";
-            if(document.getElementById('lblAdminExportDuty')) document.getElementById('lblAdminExportDuty').innerText = txt.adminExportDuty || "Export JSON";
-            if(document.getElementById('lblAdminExportDutyPng')) document.getElementById('lblAdminExportDutyPng').innerText = txt.adminExportDutyPng || "Export PNG";
-            if(document.getElementById('adminBtnUpdateQueue1')) document.getElementById('adminBtnUpdateQueue1').innerText = txt.adminUpdateQueue;
-            if(document.getElementById('adminBtnDelete')) document.getElementById('adminBtnDelete').innerText = txt.adminDelete;
-
-            if(document.getElementById('lblAdminNotice')) document.getElementById('lblAdminNotice').innerText = txt.adminNoticeLabel;
-            if(document.getElementById('adminClassNotice')) document.getElementById('adminClassNotice').placeholder = txt.adminNoticePlaceholder;
-            if(document.getElementById('lblAdminNoticeIcon')) document.getElementById('lblAdminNoticeIcon').innerText = txt.adminIconLabel;
-            if(document.getElementById('lblAdminNoticeColor')) document.getElementById('lblAdminNoticeColor').innerText = txt.adminColorLabel;
-            if(document.getElementById('lblAdminNoticeStyle')) document.getElementById('lblAdminNoticeStyle').innerText = txt.adminStyleLabel;
-            if(document.getElementById('lblAdminGuru')) document.getElementById('lblAdminGuru').innerText = txt.adminGuruLabel;
-            if(document.getElementById('lblAdminPenolong')) document.getElementById('lblAdminPenolong').innerText = txt.adminPenolongLabel;
-            if(document.getElementById('adminTg')) document.getElementById('adminTg').placeholder = txt.adminGuruLabel;
-            if(document.getElementById('adminTp')) document.getElementById('adminTp').placeholder = txt.adminPenolongLabel;
-            if(document.getElementById('adminBtnUpdateQueue2')) document.getElementById('adminBtnUpdateQueue2').innerText = txt.adminUpdateQueue;
-
-            if(document.getElementById('adminStudentSelectHeader')) {
-               if(window.adminSelectedStudentId === "NEW") {
-                  document.getElementById('adminStudentSelectHeader').innerHTML = `<span><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> ${txt.adminAddStudent}</span><span class="material-icons-round">expand_more</span>`;
-               }
-            }
-            if (window.refreshAdminStudentDropdown) window.refreshAdminStudentDropdown(window.adminSelectedStudentId);
-
-            // Admin Options Dropdowns
-            if(document.getElementById('optThDyn')) {
-                document.getElementById('optThDyn').innerText = txt.optThemeDyn;
-                document.getElementById('optThMorn').innerText = txt.optThemeMorn;
-                document.getElementById('optThAft').innerText = txt.optThemeAft;
-                document.getElementById('optThNight').innerText = txt.optThemeNight;
-                document.getElementById('optThXmas').innerText = txt.optThemeXmas;
-                document.getElementById('optThBeta1').innerText = txt.optThemeBeta1;
-                document.getElementById('optThBeta2').innerText = txt.optThemeBeta2;
-
-                document.getElementById('optMaintNo').innerText = txt.optMaintNo;
-                document.getElementById('optMaintYes').innerText = txt.optMaintYes;
-                
-                document.getElementById('optUpdNo').innerText = txt.optUpdateNo;
-                document.getElementById('optUpdYes').innerText = txt.optUpdateYes;
-
-                document.getElementById('optGlassNo').innerText = txt.optGlassNo;
-                document.getElementById('optGlassYes').innerText = txt.optGlassYes;
-                if(document.getElementById('optGlassDyn')) document.getElementById('optGlassDyn').innerText = txt.optGlassDyn;
-
-                document.getElementById('optHideThNo').innerText = txt.optUpdateNo;
-                document.getElementById('optHideThYes').innerText = txt.optUpdateYes;
-
-                document.getElementById('optHideStNo').innerText = txt.optUpdateNo;
-                document.getElementById('optHideStYes').innerText = txt.optUpdateYes;
-                
-                if(document.getElementById('optHideIdsNo')) document.getElementById('optHideIdsNo').innerText = txt.optUpdateNo;
-                if(document.getElementById('optHideIdsYes')) document.getElementById('optHideIdsYes').innerText = txt.optUpdateYes;
-
-                if(document.getElementById('optForceCoachNo')) document.getElementById('optForceCoachNo').innerText = txt.optUpdateNo;
-                if(document.getElementById('optForceCoachYes')) document.getElementById('optForceCoachYes').innerText = txt.optUpdateYes;
-                
-                if(document.getElementById('optStatThumbs')) document.getElementById('optStatThumbs').innerText = txt.optStatThumbs || "Thumbs (Default)";
-                if(document.getElementById('optStatTrending')) document.getElementById('optStatTrending').innerText = txt.optStatTrending || "Trending Arrows";
-                if(document.getElementById('optStatArrows')) document.getElementById('optStatArrows').innerText = txt.optStatArrows || "Standard Arrows";
-
-                document.getElementById('optTextOrig').innerText = txt.optTextOrig;
-                document.getElementById('optTextRedesign').innerText = txt.optTextRedesign;
-            }
-
-            if (window.renderUpdateStep) window.renderUpdateStep();
-            if (document.getElementById('lblAllClasses')) setTextAndAnimateWidth(document.getElementById('lblAllClasses'), txt.allClasses || "All Classes");
-            if (document.getElementById('lblAdminExportAll')) document.getElementById('lblAdminExportAll').innerText = txt.allClasses || "All Classes";
-            if (document.getElementById('optExportAll')) document.getElementById('optExportAll').innerText = txt.allClasses || "All Classes";
-            
-            if(document.getElementById('adminOverlay').classList.contains('open')){
-                window.openAdminPanel();
-            }
-            
-            // Re-apply to update lag profile text
-            if(window.applyGlobalSettings) window.applyGlobalSettings();
-            
-            if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
-
-            if(titleEl){titleEl.classList.remove("blur-fade-out");titleEl.classList.add("blur-fade-in");setTimeout(()=>titleEl.classList.remove("blur-fade-in"),400)}
-            if(searchInput)searchInput.classList.remove("anim-placeholder");
-            if(authEmail)authEmail.classList.remove("anim-placeholder");
-            if(authPassword)authPassword.classList.remove("anim-placeholder");
-            
-            if(tCard&&tCard.classList.contains('show')){
-                tCard.style.height='auto';
-                const newHeight=tCard.offsetHeight;
-                tCard.style.height=startHeight+'px';
-                tCard.offsetHeight;
-                tCard.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                tCard.style.height=newHeight+'px';
-                setTimeout(()=>{tCard.style.height='auto';tCard.style.overflow='visible';tCard.style.transition=''},400);
-            }
-            if(sGrid){
-                sGrid.style.height='auto';
-                const sGridNewHeight=sGrid.offsetHeight;
-                if(sGridStartHeight > 0 && sGridStartHeight !== sGridNewHeight) {
-                    sGrid.style.height=sGridStartHeight+'px';
-                    void sGrid.offsetHeight;
-                    sGrid.style.transition='height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                    sGrid.style.height=sGridNewHeight+'px';
-                    setTimeout(()=>{sGrid.style.height='auto';sGrid.style.overflow='';sGrid.style.transition=''},400);
-                } else {
-                    sGrid.style.height='auto';
-                    sGrid.style.overflow='';
-                }
-            }
-        } catch(err) {
-            console.error("Language translation error:", err);
-        } finally {
-            fadeTargets.forEach(el=>{
-                el.classList.remove('fade-out');
-            });
-        }
-    },250);
-}
-
-window.ehadirCache = {};
-
-window.getClassCode = (cls) => {
-    const map = { 'Biru': '2b', 'Hijau': '2h', 'Kuning': '2k', 'Merah': '2m', 'Perang': '2p', 'Ungu': '2u' };
-    return map[cls] || cls.toLowerCase();
-};
-
-window.ehadirAbortController = null;
-
-window.ehadirAbortController = null;
-
-window.openOfficialEHadir = () => {
-    triggerHaptic();
-    if (currentClass === 'All') {
-        window.open('https://parents.chsmelaka.com', '_blank');
-        return;
-    }
-    const code = window.getClassCode(currentClass);
-    window.open(`https://parents.chsmelaka.com/${code}`, '_blank');
-};
-
-window.openEHadirModal = async () => {
-    triggerHaptic();
-    if (currentClass === 'All') {
-        window.showToast("Please select a specific class first", "error_outline");
-        return;
-    }
-
-    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
-    const overlay = document.getElementById('ehadirOverlay');
-    if (overlay) overlay.classList.add('open');
-    
-    const titleEl = document.getElementById('ehadirModalTitle');
-    const subEl = document.getElementById('ehadirModalSub');
-    if (titleEl) titleEl.innerText = txt.ehadirTitle || "E-Datang Attendance";
-    if (subEl) subEl.innerText = txt.ehadirLoading || "Fetching latest data...";
-    
-    await window.fetchLiveEHadir(currentClass);
-};
-
-window.closeEHadirModal = () => {
-    triggerHaptic();
-    if (window.ehadirAbortController) {
-        try { window.ehadirAbortController.abort(); } catch(e) {}
-    }
-    const modal = document.getElementById("ehadirCard");
-    if (modal) modal.style.transform = '';
-    const overlay = document.getElementById('ehadirOverlay');
-    if (overlay) overlay.classList.remove('open');
-};
-
-window.fetchLiveEHadir = async (cls) => {
-    const classLetter = (cls || 'H').charAt(0).toUpperCase(); 
-    const targetClass = `2${classLetter}`; 
-    const listContainer = document.getElementById('ehadirListContainer');
-    const card = document.getElementById('ehadirCard');
-    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
-
-    const updateContainer = (newHtml) => {
-        if (!listContainer) return;
-        const startHeight = card ? card.offsetHeight : 0;
-        listContainer.innerHTML = newHtml;
-        if (card && typeof card.animate === 'function' && startHeight > 0) {
-            const targetHeight = card.offsetHeight;
-            if (startHeight !== targetHeight) {
-                card.animate([
-                    { height: startHeight + 'px' },
-                    { height: targetHeight + 'px' }
-                ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
-            }
-        }
-    };
-
-    updateContainer(`
-        <div style="text-align:center; padding:35px 20px; color:var(--ios-text-sec); font-size:14px;">
-            <span class="material-icons-round spin-anim" style="font-size:38px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
-            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Connecting to live CHS database..."}</div>
-        </div>
-    `);
-
-    const setEl = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = val;
-    };
-
-    setEl('ehadirCountPresent', '-');
-    setEl('ehadirCountAbsent', '-');
-    setEl('ehadirRate', '-%');
-    const pBar = document.getElementById('ehadirProgressBar');
-    if (pBar) pBar.style.width = '0%';
-
-    let allStudents = [];
-    let allAttendance = [];
-    let dateStr = new Date().toISOString().split('T')[0];
-
-    try {
-        let fetchedData = null;
-
-        // 1. Try Vercel API Route with timeout
-        try {
-            window.ehadirAbortController = new AbortController();
-            const timeout = setTimeout(() => window.ehadirAbortController.abort(), 4000);
-            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
-            clearTimeout(timeout);
-            if (res.ok) {
-                const ct = res.headers.get("content-type") || "";
-                if (ct.includes("application/json")) {
-                    fetchedData = await res.json();
-                }
-            }
-        } catch (e) {}
-
-        // 2. Fallback to direct CORS Proxy if Vercel serverless is starting up
-        if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
-            const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
-            const studentsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
-            const attUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
-
-            const [sRes, aRes] = await Promise.all([
-                fetch(studentsUrl),
-                fetch(attUrl)
-            ]);
-
-            const sJson = sRes.ok ? await sRes.json() : [];
-            const aJson = aRes.ok ? await aRes.json() : [];
-            fetchedData = { date: todayStr, students: sJson, attendance: aJson };
-        }
-
-        allStudents = Array.isArray(fetchedData.students) ? fetchedData.students : [];
-        allAttendance = Array.isArray(fetchedData.attendance) ? fetchedData.attendance : [];
-        dateStr = fetchedData.date || dateStr;
-
-        // Filter students by class
-        const classRoster = allStudents.filter(s => {
-            if (!s.class) return false;
-            return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
-        }).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-
-        // Match attendance
-        const attMap = new Map();
-        allAttendance.forEach(att => {
-            if (att.id) attMap.set(String(att.id), att);
-            else if (att.name) attMap.set(String(att.name).toUpperCase(), att);
-        });
-
-        let presentStudents = [];
-        let absentStudents = [];
-
-        // Match Chinese Name from Firebase (window.smkData)
-        const getCnName = (id, name) => {
-            const match = (window.smkData || []).find(s => {
-                if (s.id && id && String(s.id).trim() === String(id).trim()) return true;
-                if (s.name && name && s.name.trim().toUpperCase() === name.trim().toUpperCase()) return true;
-                return false;
-            });
-            return (match && match.cn && match.cn !== "-") ? match.cn : "";
-        };
-
-        classRoster.forEach((st, idx) => {
-            const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase()) : null);
-            const cnName = getCnName(st.id, st.name);
-
-            if (att && att.attendance_time) {
-                presentStudents.push({
-                    no: idx + 1,
-                    id: st.id,
-                    name: st.name,
-                    cn: cnName,
-                    time: att.attendance_time,
-                    lateCount: att.late_count || 0
-                });
-            } else {
-                absentStudents.push({
-                    no: idx + 1,
-                    id: st.id,
-                    name: st.name,
-                    cn: cnName
-                });
-            }
-        });
-
-        const presentCount = presentStudents.length;
-        const totalCount = classRoster.length > 0 ? classRoster.length : (presentCount + absentStudents.length);
-        const absentCount = Math.max(0, totalCount - presentCount);
-        const rateRaw = totalCount > 0 ? (presentCount / totalCount) * 100 : 0;
-
-        setEl('ehadirCountPresent', presentCount);
-        setEl('ehadirCountAbsent', absentCount);
-        setEl('ehadirRate', `${Math.round(rateRaw)}%`);
-        if (pBar) pBar.style.width = `${rateRaw}%`;
-        setEl('ehadirModalSub', `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`);
-
-        let html = '';
-
-        // Present Section
-        if (presentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
-            presentStudents.forEach(st => {
-                const isLate = st.lateCount > 0;
-                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;">${st.cn}</div>` : '';
-
-                html += `
-                <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); margin-bottom:8px;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:30px; height:30px; border-radius:10px; background:var(--ios-input); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:var(--ios-text-sec); flex-shrink:0;">${st.no}</div>
-                        <div style="display:flex; flex-direction:column; gap:0;">
-                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2;">${st.name}</div>
-                            ${cnHtml}
-                            <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;"><span class="material-icons-round" style="font-size:10px; vertical-align:middle;">schedule</span> ${st.time}</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0;">
-                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3); margin:0;">${txt.ehadirLate || "Late"} (${st.lateCount})</span>` : ''}
-                        <span class="ehadir-pill ehadir-hadir" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">check_circle</span> ${txt.ehadirPresent || "Present"}</span>
-                    </div>
-                </div>`;
-            });
-        }
-
-        // Absent Section
-        if (absentStudents.length > 0) {
-            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
-            absentStudents.forEach(st => {
-                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.15; margin-top:2px;">${st.cn}</div>` : '';
-
-                html += `
-                <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.15); box-shadow:var(--shadow-sm); margin-bottom:8px;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:30px; height:30px; border-radius:10px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.2); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#FF3B30; flex-shrink:0;">${st.no}</div>
-                        <div style="display:flex; flex-direction:column; gap:0;">
-                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2;">${st.name}</div>
-                            ${cnHtml}
-                        </div>
-                    </div>
-                    <span class="ehadir-pill ehadir-tidak" style="margin:0; flex-shrink:0;"><span class="material-icons-round" style="font-size:12px;">cancel</span> ${txt.ehadirAbsent || "Absent"}</span>
-                </div>`;
-            });
-        }
-        
-        if (!html) {
-            html = `<div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">No students found for this class in the database.</div>`;
-        }
-
-        updateContainer(html);
-
-    } catch (err) {
-        console.error("E-Datang error:", err);
-        setEl('ehadirModalSub', 'Portal loaded. Tap below to view.');
-        updateContainer(`
-            <div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">
-                <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">cloud_off</span>
-                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${txt.ehadirError || "Could not connect to API."}</div>
-            </div>
-        `);
-    }
+    updateFilterLabels(txt.all);
+    if(!skipSync && window.cloudSyncUserData) window.cloudSyncUserData();
+    if(window.filterData) window.filterData();
 };
 
 window.switchClass=function(cls){
@@ -3371,26 +2730,6 @@ function updateModalContent(student, index) {
         navBtns[1].disabled = (index === currentFilteredData.length - 1);
         navBtns[1].style.opacity = (index === currentFilteredData.length - 1) ? '0.3' : '1';
     }
-    
-    const floatContainer = document.getElementById('cardFloatBg');
-    if(floatContainer) {
-        floatContainer.innerHTML = '';
-        let iconName = '', color = '', animName = '', posStyle = '';
-        if (['thumb_up', 'trending_up', 'arrow_upward'].includes(rank.icon)) { iconName = rank.icon; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
-        else if (['thumb_down', 'trending_down', 'arrow_downward'].includes(rank.icon)) { iconName = rank.icon; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
-        if (iconName) {
-            let html = '';
-            for (let i = 0; i < 12; i++) {
-                const left = Math.floor(Math.random() * 100);
-                const delay = Math.random() * 2;
-                const duration = 4 + Math.random() * 3;
-                const size = 50 + Math.random() * 80;
-                const blur = 4 + Math.random() * 6;
-                html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`;
-            }
-            floatContainer.innerHTML = html;
-        }
-    }
 
     if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
         const targetWrapWidth = wrap.offsetWidth;
@@ -3429,10 +2768,12 @@ window.shareResult = async function() {
     triggerHaptic();
     const btn = document.getElementById('btnShare');
     const icon = btn.querySelector('span');
-    const originalIcon = icon.innerText;
+    const originalIcon = icon ? icon.innerText : "ios_share";
     
-    icon.innerText = "autorenew"; 
-    icon.classList.add('spin-anim');
+    if(icon) {
+        icon.innerText = "autorenew"; 
+        icon.classList.add('spin-anim');
+    }
     btn.style.opacity = "0.5";
     btn.style.pointerEvents = "none";
     
@@ -3481,54 +2822,10 @@ window.shareResult = async function() {
             stIcon.style.display = rank.icon === 'remove' ? 'none' : 'block';
         }
         
-        const isSolid = document.body.classList.contains('no-glass');
-        const isDarkTheme = document.body.getAttribute('data-theme') === 'dark';
-        
         const rawClass = student.newClass.split(" ")[1] || "Biru";
         const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
         const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
-        const bgColors = {'Biru':'#E6F2FF','Hijau':'#EBF9ED','Kuning':'#FFF4E6','Merah':'#FFECEB','Perang':'#F6F3EF','Ungu':'#F7EEFC'};
-        
         const color = textColors[cssClass] || '#007AFF';
-        const bgCol = bgColors[cssClass] || '#E6F2FF';
-        
-        const innerCard = document.getElementById('shareCardInner');
-        const scOldBg = document.getElementById('scOldBg');
-        const scNewBg = document.getElementById('scNewBg');
-        const scSchBg = document.getElementById('scSchBg');
-        
-        const txtMain = isDarkTheme ? '#FFFFFF' : '#1D1D1F';
-        const txtSec = isDarkTheme ? 'rgba(255,255,255,0.6)' : '#8E8E93';
-        const txtArrow = isDarkTheme ? 'rgba(255,255,255,0.2)' : '#C7C7CC';
-        
-        document.getElementById('scName').style.color = txtMain;
-        document.getElementById('scOld').style.color = txtMain;
-        document.getElementById('scSch').style.color = txtMain;
-        
-        document.getElementById('scId').style.color = txtSec;
-        document.getElementById('scCn').style.color = txtSec;
-        document.getElementById('scOldTitle').style.color = txtSec;
-        document.getElementById('scSchTitle').style.color = txtSec;
-        document.getElementById('scFooter').style.color = txtSec;
-        document.getElementById('scArrow').style.color = txtArrow;
-
-        if (!isSolid) {
-            innerCard.style.background = isDarkTheme ? 'rgba(30,30,30,0.65)' : 'rgba(255,255,255,0.75)';
-            innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.5)';
-            
-            const panelBg = isDarkTheme ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.6)';
-            scOldBg.style.background = panelBg;
-            scSchBg.style.background = panelBg;
-            scNewBg.style.background = window.hexToRgba(color, isDarkTheme ? 0.2 : 0.15);
-        } else {
-            innerCard.style.background = isDarkTheme ? '#1C1C1E' : '#FFFFFF';
-            innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : 'none';
-            
-            const panelBg = isDarkTheme ? '#2C2C2E' : '#F2F2F7';
-            scOldBg.style.background = panelBg;
-            scSchBg.style.background = panelBg;
-            scNewBg.style.background = isDarkTheme ? window.hexToRgba(color, 0.2) : bgCol;
-        }
         
         const av = document.getElementById('scAvatar');
         av.innerText = student.name.charAt(0);
@@ -3537,7 +2834,7 @@ window.shareResult = async function() {
         document.getElementById('scNewTitle').style.color = color;
         document.getElementById('scNew').style.color = color;
         
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => setTimeout(r, 60));
         
         const canvas = await html2canvas(container, {
             scale: 2,
@@ -3551,19 +2848,12 @@ window.shareResult = async function() {
             
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    const shareTexts = {
-                        en: `Here's ${student.name}'s info.`,
-                        bm: `Ini maklumat ${student.name}.`,
-                        cn: `这是 ${student.name} 的信息。`
-                    };
                     await navigator.share({
                         title: appTitleStr,
-                        text: shareTexts[curLang] || shareTexts.en,
+                        text: `${student.name} - Class Allocation 2026`,
                         files: [file]
                     });
-                } catch (e) {
-                    console.log("Sharing cancelled", e);
-                }
+                } catch (e) {}
             } else {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -3575,8 +2865,10 @@ window.shareResult = async function() {
                 URL.revokeObjectURL(url);
                 window.showToast(lTxt.saved, "download_done");
             }
-            icon.classList.remove('spin-anim');
-            icon.innerText = originalIcon;
+            if(icon) {
+                icon.classList.remove('spin-anim');
+                icon.innerText = originalIcon;
+            }
             btn.style.opacity = "1";
             btn.style.pointerEvents = "auto";
         }, 'image/png');
@@ -3584,49 +2876,82 @@ window.shareResult = async function() {
     } catch (err) {
         console.error(err);
         window.showToast(lTxt.fail, "error");
-        icon.classList.remove('spin-anim');
-        icon.innerText = originalIcon;
+        if(icon) {
+            icon.classList.remove('spin-anim');
+            icon.innerText = originalIcon;
+        }
         btn.style.opacity = "1";
         btn.style.pointerEvents = "auto";
     }
 };
 
-window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(window.favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
-function toggleFavId(id){const index=window.favorites.indexOf(id);if(index===-1){window.favorites.push(id);showToast(uiText[curLang].toastFavAdded,"star")}else{window.favorites.splice(index,1);showToast(uiText[curLang].toastFavRem,"star_border")}if(window.cloudSyncUserData)window.cloudSyncUserData();if(isFavMode)filterData();else{const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);if(badge){if(index===-1)badge.classList.add('show');else badge.classList.remove('show')}} window.updateProfileStats();}
-window.toggleFavMode=function(){triggerHaptic();isFavMode=!isFavMode;const btn=document.getElementById('btnFavToggle');if(isFavMode){btn.classList.add('active');btn.querySelector('span').innerText='favorite';window.showToast(uiText[curLang].toastFavModeOn,"favorite")}else{btn.classList.remove('active');btn.querySelector('span').innerText='favorite_border';window.showToast(uiText[curLang].toastFavModeOff,"list")}filterData()}
+window.toggleCurrentFav=function(){
+    triggerHaptic();
+    if(!currentStudentId)return;
+    toggleFavId(currentStudentId);
+    const btnStar=document.getElementById('btnStar');
+    if(window.favorites.includes(currentStudentId)){
+        btnStar.classList.add('active');
+        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>';
+    }else{
+        btnStar.classList.remove('active');
+        btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>';
+    }
+};
+
+function toggleFavId(id){
+    const index=window.favorites.indexOf(id);
+    if(index===-1){
+        window.favorites.push(id);
+        window.showToast(uiText[curLang].toastFavAdded,"star");
+    }else{
+        window.favorites.splice(index,1);
+        window.showToast(uiText[curLang].toastFavRem,"star_border");
+    }
+    if(window.cloudSyncUserData) window.cloudSyncUserData();
+    if(isFavMode) filterData();
+    else{
+        const badge=document.querySelector(`.ios-cell[data-id="${id}"] .fav-badge`);
+        if(badge){
+            if(index===-1) badge.classList.add('show');
+            else badge.classList.remove('show');
+        }
+    } 
+    if(window.updateProfileStats) window.updateProfileStats();
+}
+
+window.toggleFavMode=function(){
+    triggerHaptic();
+    isFavMode=!isFavMode;
+    const btn=document.getElementById('btnFavToggle');
+    if(isFavMode){
+        btn.classList.add('active');
+        btn.querySelector('span').innerText='favorite';
+        window.showToast(uiText[curLang].toastFavModeOn,"favorite");
+    }else{
+        btn.classList.remove('active');
+        btn.querySelector('span').innerText='favorite_border';
+        window.showToast(uiText[curLang].toastFavModeOff,"list");
+    }
+    filterData();
+};
 
 function applyModalColors(student){
     const rawClass = student.newClass.split(" ")[1]||"Biru";
     const cssClass = rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
     const textColors = {'Biru':'#007AFF','Hijau':'#34C759','Kuning':'#FF9500','Merah':'#FF3B30','Perang':'#A2845E','Ungu':'#AF52DE'};
-    const darkBgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.2) 0%, rgba(30,30,30,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.2) 0%, rgba(30,30,30,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.2) 0%, rgba(30,30,30,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.2) 0%, rgba(30,30,30,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.2) 0%, rgba(30,30,30,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.2) 0%, rgba(30,30,30,0.85) 80%)'};
     const bgColors = {'Biru':'linear-gradient(to bottom, rgba(0,122,255,0.15) 0%, rgba(255,255,255,0.85) 80%)','Hijau':'linear-gradient(to bottom, rgba(52,199,89,0.15) 0%, rgba(255,255,255,0.85) 80%)','Kuning':'linear-gradient(to bottom, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0.85) 80%)','Merah':'linear-gradient(to bottom, rgba(255,59,48,0.15) 0%, rgba(255,255,255,0.85) 80%)','Perang':'linear-gradient(to bottom, rgba(162,132,94,0.15) 0%, rgba(255,255,255,0.85) 80%)','Ungu':'linear-gradient(to bottom, rgba(175,82,222,0.15) 0%, rgba(255,255,255,0.85) 80%)'};
-    
-    const solidBgColors = {'Biru':'linear-gradient(to bottom, #E6F2FF 0%, #FFFFFF 80%)','Hijau':'linear-gradient(to bottom, #EBF9ED 0%, #FFFFFF 80%)','Kuning':'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 80%)','Merah':'linear-gradient(to bottom, #FFECEB 0%, #FFFFFF 80%)','Perang':'linear-gradient(to bottom, #F6F3EF 0%, #FFFFFF 80%)','Ungu':'linear-gradient(to bottom, #F7EEFC 0%, #FFFFFF 80%)'};
-    const solidDarkBgColors = {'Biru':'linear-gradient(to bottom, #001A33 0%, #1C1C1E 80%)','Hijau':'linear-gradient(to bottom, #0B2612 0%, #1C1C1E 80%)','Kuning':'linear-gradient(to bottom, #331E00 0%, #1C1C1E 80%)','Merah':'linear-gradient(to bottom, #330C0A 0%, #1C1C1E 80%)','Perang':'linear-gradient(to bottom, #201A13 0%, #1C1C1E 80%)','Ungu':'linear-gradient(to bottom, #23102C 0%, #1C1C1E 80%)'};
     
     const modalCard = document.getElementById('modalCard'), mNew = document.getElementById('mNew'), btnDone = document.getElementById('btnClose');
     const classColor = textColors[cssClass]||'#007AFF';
     
-    const isSolid = document.body.classList.contains('no-glass');
-
-    if(isDark){
-        modalCard.style.background = isSolid ? (solidDarkBgColors[cssClass]||'#1C1C1E') : (darkBgColors[cssClass]||'rgba(40,40,40,0.85)');
-        mNew.style.color = classColor;
-    }else{
-        modalCard.style.background = isSolid ? (solidBgColors[cssClass]||'#FFFFFF') : (bgColors[cssClass]||'rgba(255,255,255,0.85)');
-        mNew.style.color = classColor;
-    }
-    btnDone.style.backgroundColor = classColor;
-    btnDone.style.color = '#FFFFFF';
+    if(modalCard) modalCard.style.background = isDark ? 'rgba(40,40,40,0.85)' : (bgColors[cssClass]||'rgba(255,255,255,0.85)');
+    if(mNew) mNew.style.color = classColor;
+    if(btnDone) { btnDone.style.backgroundColor = classColor; btnDone.style.color = '#FFFFFF'; }
 }
 
 window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
-window.openAbout=function(){
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(()=>document.getElementById("aboutOverlay").classList.add("open"),10)
-}
+window.openAbout=function(){ triggerHaptic(); document.getElementById('authMenu').classList.remove('show'); setTimeout(()=>document.getElementById("aboutOverlay").classList.add("open"),10) }
 window.closeAbout=function(){const modal=document.getElementById("aboutCard");modal.style.transform='';document.getElementById("aboutOverlay").classList.remove("open")}
 
 window.downloadDutyRoster = async function() {
@@ -3652,7 +2977,7 @@ window.downloadDutyRoster = async function() {
         const daysTrans = {en:['Monday','Tuesday','Wednesday','Thursday','Friday'], bm:['Isnin','Selasa','Rabu','Khamis','Jumaat'], cn:['星期一','星期二','星期三','星期四','星期五']};
         const currentDays = daysTrans[curLang] || daysTrans.en;
         
-        const rawDuty = window.adminTempDuty['Hijau'] || {};
+        const rawDuty = (window.adminTempDuty && window.adminTempDuty['Hijau']) ? window.adminTempDuty['Hijau'] : (window.dutyData && window.dutyData['Hijau'] ? window.dutyData['Hijau'] : {});
         const emptyDay = { wipe: [], sweep: [], arrange: [], trash: [] };
 
         const container = document.getElementById('dutyA4Container');
@@ -3673,7 +2998,9 @@ window.downloadDutyRoster = async function() {
             const renderA4List = (ids) => {
                 if(!ids || ids.length === 0) return `<div style="color:#C7C7CC; font-weight:600; font-size:60px; display:flex; height:100%; align-items:center; justify-content:center;">-</div>`;
                 return '<div style="display:flex; flex-direction:column; justify-content:center; height:100%; gap:20px;">' + ids.map(id => {
-                    const stu = window.adminTempStudents.find(s => s.id === id);
+                    const stu = (window.adminTempStudents && window.adminTempStudents.length > 0) 
+                        ? window.adminTempStudents.find(s => s.id === id) 
+                        : (window.smkData || []).find(s => s.id === id);
                     let nameHtml = stu ? stu.name : id;
                     if(stu && stu.cn && stu.cn !== "-") {
                         nameHtml += `<div style="font-size:38px; font-weight:600; color:#8E8E93; margin-top:6px;">${stu.cn}</div>`;
@@ -3696,7 +3023,9 @@ window.downloadDutyRoster = async function() {
         const ukId = rawDuty.unitKebersihan || "-";
         let ukName = "-";
         if (ukId !== "-") {
-            const stu = window.adminTempStudents.find(s => s.id === ukId);
+            const stu = (window.adminTempStudents && window.adminTempStudents.length > 0)
+                ? window.adminTempStudents.find(s => s.id === ukId)
+                : (window.smkData || []).find(s => s.id === ukId);
             if (stu) {
                 ukName = stu.name;
                 if (stu.cn && stu.cn !== "-") ukName += ` (${stu.cn})`;
@@ -3713,7 +3042,7 @@ window.downloadDutyRoster = async function() {
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
                     await navigator.share({ title: '2 Hijau Duty Roster', files: [file] });
-                } catch (e) { console.log("Sharing cancelled", e); }
+                } catch (e) {}
             } else {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -3740,13 +3069,13 @@ window.downloadDutyRoster = async function() {
 };
 
 /* ==========================================
-   E-DATANG ATTENDANCE INTEGRATION
+   E-DATANG LIVE ATTENDANCE INTEGRATION
 ========================================== */
 window.ehadirAbortController = null;
 
 window.getClassCode = (cls) => {
     const map = { 'Biru': '2b', 'Hijau': '2h', 'Kuning': '2k', 'Merah': '2m', 'Perang': '2p', 'Ungu': '2u' };
-    return map[cls] || cls.toLowerCase();
+    return map[cls] || (cls ? cls.toLowerCase() : '2h');
 };
 
 window.openOfficialEHadir = () => {
@@ -3987,6 +3316,7 @@ window.fetchLiveEHadir = async (cls) => {
         `);
     }
 };
+
 window.openProfile=function(){
     triggerHaptic();
     window.updateProfileStats();
@@ -3994,28 +3324,25 @@ window.openProfile=function(){
         document.getElementById('profEmail').innerText = window.cloudUser.email;
         document.getElementById('profUid').innerText = "UID: " + window.cloudUser.uid.substring(0,8) + "...";
     }
-    
-    // Trigger animations
     document.querySelectorAll('#profileCard .prof-anim').forEach(el => {
         el.style.animation = 'none';
         void el.offsetWidth;
         el.style.animation = '';
     });
-    
     setTimeout(()=>document.getElementById("profileOverlay").classList.add("open"),10);
-}
+};
 window.closeProfile=function(){
     const modal=document.getElementById("profileCard");
     modal.style.transform='';
     document.getElementById("profileOverlay").classList.remove("open");
-}
+};
 window.updateProfileStats=function(){
     const favEl = document.getElementById('profFavCount');
     const histEl = document.getElementById('profHistCount');
     if(favEl) favEl.innerText = window.favorites.length + " Saved";
     if(histEl) histEl.innerText = window.searchHistory.length + " Searches";
     if(window.updateProfileThemeText) window.updateProfileThemeText();
-}
+};
 window.clearUserFavorites=function(){
     if(window.favorites.length === 0) return;
     window.showConfirmDialog(
@@ -4023,7 +3350,7 @@ window.clearUserFavorites=function(){
         uiText[curLang].confirmClearFav || "Are you sure you want to clear all favorites?", 
         function() {
             window.favorites = [];
-            window.cloudSyncUserData();
+            if(window.cloudSyncUserData) window.cloudSyncUserData();
             window.updateProfileStats();
             if(isFavMode) filterData();
             else {
@@ -4034,14 +3361,10 @@ window.clearUserFavorites=function(){
         "Clear", 
         "#FF3B30"
     );
-}
+};
 
-window.openFaq=function(){
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(()=>document.getElementById("faqOverlay").classList.add("open"),10)
-}
-window.closeFaq=function(){const modal=document.getElementById("faqCard");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")}
+window.openFaq=function(){ triggerHaptic(); document.getElementById('authMenu').classList.remove('show'); setTimeout(()=>document.getElementById("faqOverlay").classList.add("open"),10) };
+window.closeFaq=function(){const modal=document.getElementById("faqCard");modal.style.transform='';document.getElementById("faqOverlay").classList.remove("open")};
 function triggerHaptic(){if(navigator.vibrate)navigator.vibrate(10)}
 function saveSearchHistory(term){term=term.trim();if(!term)return;window.searchHistory=window.searchHistory.filter(t=>t.toLowerCase()!==term.toLowerCase());window.searchHistory.unshift(term);if(window.searchHistory.length>5)window.searchHistory.pop();if(window.cloudSyncUserData)window.cloudSyncUserData();renderSearchHistory(); window.updateProfileStats();}
 window.clearSearchHistory=function(){triggerHaptic();window.searchHistory=[];if(window.cloudSyncUserData)window.cloudSyncUserData();const drawer=document.getElementById('historyDrawer');if(drawer)drawer.classList.remove('open');setTimeout(()=>{const cont=document.getElementById('searchHistoryPills');if(cont)cont.innerHTML=''},400); window.updateProfileStats(); window.showToast("History Cleared", "delete");}
@@ -4054,61 +3377,189 @@ window.openStats=function(){
     if(currentStatView==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}
     if(filterState.year2025!==""){btnOld.parentElement.style.display='none';window.switchStat('origin')}else{btnOld.parentElement.style.display='flex'}
     
-    // Change Title if in "All Classes" Mode
     const titleEl = document.getElementById('labelStatsTitle');
     if (currentClass === 'All') {
         titleEl.innerText = uiText[curLang].allClasses || "All Classes";
     } else {
         titleEl.innerText = uiText[curLang].labelStatsTitle || "Statistics";
     }
-
     renderStats();
     setTimeout(()=>document.getElementById("statsOverlay").classList.add("open"),10)
-}
+};
 window.closeStats=function(){const modal=document.getElementById("statsCard");modal.style.transform='';document.getElementById("statsOverlay").classList.remove("open")}
 window.switchStat=function(mode){if(currentStatMode===mode)return;triggerHaptic();updateStatsUI(mode,currentStatView)}
 window.toggleStatViewMode=function(){const newView=currentStatView==='list'?'map':'list';document.getElementById('iconStatView').innerText=newView==='list'?'pie_chart':'list';window.switchStatView(newView)}
 window.switchStatView=function(view){if(currentStatView===view)return;triggerHaptic();updateStatsUI(currentStatMode,view)}
-function updateStatsUI(mode,view){const card=document.getElementById('statsCard'),body=card.querySelector('.m-body');const currentHeight=card.offsetHeight;card.style.height=currentHeight+'px';const targets=[document.getElementById('statsVisuals'),document.getElementById('statsSummaryCard'),document.getElementById('statsDynamicRows'),document.getElementById('statsMap')].filter(Boolean);targets.forEach(el=>{el.classList.remove('fade-in');el.classList.add('fade-out')});setTimeout(()=>{currentStatMode=mode;currentStatView=view;if(view==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));if(mode==='origin')document.getElementById('btnStatOrigin').classList.add('active');else document.getElementById('btnStatOldClass').classList.add('active');renderStats();card.style.height='auto';const newHeight=card.offsetHeight;card.style.height=currentHeight+'px';card.offsetHeight;card.style.transition='transform .4s var(--ease-ios), background .4s, height .4s var(--ease-ios)';card.style.height=newHeight+'px';targets.forEach(el=>{el.classList.remove('fade-out');el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)});setTimeout(()=>{card.style.height=null;card.style.transition='';},400)},250)}
-window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
-function renderStats(){const counts={};const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];const count=dataToAnalyze.length;const txt=uiText[curLang];let context="";const query=document.getElementById("searchInput").value;const f25=filterState.year2025;const fOrigin=filterState.origin;if(query)context=`"${query}"`;else if(f25||fOrigin)context="Filtered";else if(isFavMode)context="Favorites";else if(currentClass==='All')context=txt.allClasses||"All Classes";else context=`2 ${currentClass}`;if(count===0)context="";const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");if(totalCountEl)totalCountEl.innerText=count;const listContainer=document.getElementById("statsListContainer");if(count===0){subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');if(listContainer)listContainer.classList.add("is-empty");document.getElementById("statsSummaryCard").style.display='flex';document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;document.getElementById("statsVisuals").style.display='none';document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;return}else{subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;sortToggles.forEach(el=>el.style.display='flex');document.getElementById("statsSummaryCard").style.display='flex';if(listContainer)listContainer.classList.remove("is-empty");if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}}dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];let legendHtml='';const segments=[];let currentDeg=0;if(currentStatView==='list'){document.getElementById("statsListContainer").style.removeProperty('display');document.getElementById("statsMap").style.display='none';if(pieSorted.length>0){const limit=6;pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];segments.push({color:color,start:currentDeg,end:currentDeg+percent});currentDeg+=percent;const delay=index*0.05;legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`});if(pieSorted.length>limit){segments.push({color:'#E5E5EA',start:currentDeg,end:100});legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`}document.getElementById("statsLegend").innerHTML=legendHtml;const pieEl=document.getElementById("statsPie");if(pieAnimId)cancelAnimationFrame(pieAnimId);pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';let start=null;const duration=1000;function step(timestamp){if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;if(progress<1)pieAnimId=requestAnimationFrame(step)}pieAnimId=requestAnimationFrame(step);const compBar=document.getElementById("statsCompBar");let compHtml="";pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}compBar.innerHTML=compHtml}let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');document.getElementById('statsDynamicRows').innerHTML=rowsHTML;setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)}else{document.getElementById("statsListContainer").style.display='none';document.getElementById("statsMap").style.display='flex';let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applyStatFilter('${currentStatMode}', '${label.replace(/'/g, "\\'")}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');document.getElementById("statsMap").innerHTML=bubbleHtml}}
 
-// Touch Handlers mapping
+function updateStatsUI(mode,view){
+    const card=document.getElementById('statsCard'),body=card.querySelector('.m-body');
+    const currentHeight=card.offsetHeight;
+    card.style.height=currentHeight+'px';
+    const targets=[document.getElementById('statsVisuals'),document.getElementById('statsSummaryCard'),document.getElementById('statsDynamicRows'),document.getElementById('statsMap')].filter(Boolean);
+    targets.forEach(el=>{el.classList.remove('fade-in');el.classList.add('fade-out')});
+    setTimeout(()=>{
+        currentStatMode=mode;currentStatView=view;
+        if(view==='list'){body.classList.add('view-mode-list');body.classList.remove('view-mode-map')}
+        else{body.classList.add('view-mode-map');body.classList.remove('view-mode-list')}
+        document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
+        if(mode==='origin')document.getElementById('btnStatOrigin').classList.add('active');
+        else document.getElementById('btnStatOldClass').classList.add('active');
+        renderStats();
+        card.style.height='auto';
+        const newHeight=card.offsetHeight;
+        card.style.height=currentHeight+'px';
+        card.offsetHeight;
+        card.style.transition='transform .4s var(--ease-ios), background .4s, height .4s var(--ease-ios)';
+        card.style.height=newHeight+'px';
+        targets.forEach(el=>{el.classList.remove('fade-out');el.classList.add('fade-in');setTimeout(()=>el.classList.remove('fade-in'),300)});
+        setTimeout(()=>{card.style.height=null;card.style.transition='';},400)
+    },250);
+}
+window.toggleStatSort=function(){triggerHaptic();const list=document.getElementById('statsDynamicRows');if(list)list.classList.add('fade-out');setTimeout(()=>{statSortCount=!statSortCount;renderStats();if(list){list.classList.remove('fade-out');list.classList.add('fade-in');setTimeout(()=>list.classList.remove('fade-in'),300)}},250)}
+
+function renderStats(){
+    const counts={};
+    const dataToAnalyze=currentFilteredData.length>0?currentFilteredData:[];
+    const count=dataToAnalyze.length;
+    const txt=uiText[curLang];
+    let context="";
+    const query=document.getElementById("searchInput").value;
+    const f25=filterState.year2025;
+    const fOrigin=filterState.origin;
+    if(query)context=`"${query}"`;
+    else if(f25||fOrigin)context="Filtered";
+    else if(isFavMode)context="Favorites";
+    else if(currentClass==='All')context=txt.allClasses||"All Classes";
+    else context=`2 ${currentClass}`;
+    
+    if(count===0)context="";
+    const subEl=document.getElementById("labelStatsSub"),sortToggles=document.querySelectorAll('#statsControls .sort-toggle'),totalCountEl=document.getElementById("statsTotalCount");
+    if(totalCountEl)totalCountEl.innerText=count;
+    const listContainer=document.getElementById("statsListContainer");
+    
+    if(count===0){
+        subEl.style.display='none';sortToggles.forEach(el=>el.style.display='none');
+        if(listContainer)listContainer.classList.add("is-empty");
+        document.getElementById("statsSummaryCard").style.display='flex';
+        document.getElementById("statsDynamicRows").innerHTML=`<div class="stats-empty-state-card"><span class="material-icons-round stats-empty-icon">data_exploration</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div>`;
+        document.getElementById("statsVisuals").style.display='none';
+        document.getElementById("statsMap").innerHTML=`<div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;"><div class="stats-dash-card" style="width:100%; margin-bottom:20px;"><div class="stats-dash-left"><div class="stats-dash-label stats-dash-label-title">${txt.totalStudents}</div><div class="stats-dash-count">0</div></div><span class="material-icons-round stats-dash-icon">groups</span></div><div class="stats-empty-state"><span class="material-icons-round stats-empty-icon">wrong_location</span><div class="stats-empty-title">${txt.empty}</div><div class="stats-empty-sub">${txt.emptySub}</div></div></div>`;
+        return;
+    }else{
+        subEl.style.display='block';subEl.innerText=`${txt.analyzing} ${count} Students (${context})`;
+        sortToggles.forEach(el=>el.style.display='flex');
+        document.getElementById("statsSummaryCard").style.display='flex';
+        if(listContainer)listContainer.classList.remove("is-empty");
+        if(currentStatView==='list'){document.getElementById("statsVisuals").style.removeProperty('display')}
+    }
+    
+    dataToAnalyze.forEach(s=>{let key="-";if(currentStatMode==='origin')key=s.sch||"-";else key=s.oldClass||"-";counts[key]=(counts[key]||0)+1});
+    const sorted=Object.entries(counts).sort((a,b)=>statSortCount?b[1]-a[1]:a[0].localeCompare(b[0]));
+    document.getElementById('iconStatSort').innerText=statSortCount?"sort":"sort_by_alpha";
+    const pieSorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    const colors=['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#8E8E93'];
+    let legendHtml='';
+    const segments=[];
+    let currentDeg=0;
+    
+    if(currentStatView==='list'){
+        document.getElementById("statsListContainer").style.removeProperty('display');
+        document.getElementById("statsMap").style.display='none';
+        if(pieSorted.length>0){
+            const limit=6;
+            pieSorted.slice(0,limit).forEach((item,index)=>{
+                const percent=(item[1]/count)*100;
+                const color=colors[index%colors.length];
+                segments.push({color:color,start:currentDeg,end:currentDeg+percent});
+                currentDeg+=percent;
+                const delay=index*0.05;
+                legendHtml+=`<div class="legend-item" style="animation-delay:${delay}s"><div class="legend-dot" style="background:${color}"></div>${item[0]}</div>`
+            });
+            if(pieSorted.length>limit){
+                segments.push({color:'#E5E5EA',start:currentDeg,end:100});
+                legendHtml+=`<div class="legend-item" style="animation-delay:${limit*0.05}s"><div class="legend-dot" style="background:#E5E5EA"></div>Others</div>`
+            }
+            document.getElementById("statsLegend").innerHTML=legendHtml;
+            const pieEl=document.getElementById("statsPie");
+            if(pieAnimId)cancelAnimationFrame(pieAnimId);
+            pieEl.style.transition='none';pieEl.style.transform='scale(0.5) rotate(-20deg)';pieEl.style.opacity='0';void pieEl.offsetWidth;
+            pieEl.style.transition='transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';pieEl.style.transform='scale(1) rotate(0deg)';pieEl.style.opacity='1';
+            let start=null;const duration=1000;
+            function step(timestamp){
+                if(!start)start=timestamp;const progress=Math.min((timestamp-start)/duration,1);const ease=1-Math.pow(1-progress,4);const revealPercent=ease*100;const gradParts=[];
+                for(let s of segments){if(s.start>=revealPercent)break;let end=Math.min(s.end,revealPercent);gradParts.push(`${s.color} ${s.start}% ${end}%`)}
+                if(revealPercent<100)gradParts.push(`transparent ${revealPercent}% 100%`);
+                pieEl.style.background=`conic-gradient(${gradParts.join(', ')})`;
+                if(progress<1)pieAnimId=requestAnimationFrame(step)
+            }
+            pieAnimId=requestAnimationFrame(step);
+            const compBar=document.getElementById("statsCompBar");let compHtml="";
+            pieSorted.slice(0,limit).forEach((item,index)=>{const percent=(item[1]/count)*100;const color=colors[index%colors.length];compHtml+=`<div class="comp-segment" style="width:0%; background:${color}" data-width="${percent}%"></div>`});
+            if(pieSorted.length>limit){const sumTop=pieSorted.slice(0,limit).reduce((acc,curr)=>acc+curr[1],0);compHtml+=`<div class="comp-segment" style="width:0%; background:rgba(128,128,128,0.3)" data-width="${((count-sumTop)/count)*100}%"></div>`}
+            compBar.innerHTML=compHtml
+        }
+        let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});if(max===0)max=1;
+        const rowsHTML=sorted.map((item,index)=>{const[label,cnt]=item;const percent=(cnt/max)*100;const color=colors[index%colors.length];return`<div class="stat-row-new"><div class="stat-row-label">${label}</div><div class="stat-progress-thick"><div class="stat-fill-thick" style="width:0%; background:${color}" data-width="${percent}%"></div></div><div class="stat-count-bold">${cnt}</div></div>`}).join('');
+        document.getElementById('statsDynamicRows').innerHTML=rowsHTML;
+        setTimeout(()=>{document.querySelectorAll('.stat-fill-thick, .comp-segment').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')})},100)
+    }else{
+        document.getElementById("statsListContainer").style.display='none';
+        document.getElementById("statsMap").style.display='flex';
+        let max=0;Object.values(counts).forEach(c=>{if(c>max)max=c});
+        const bubbleHtml=sorted.map((item,index)=>{const[label,cnt]=item;const scale=0.5+(cnt/max)*1.5;const size=Math.max(50,40*scale);const color=colors[index%colors.length];return`<div class="bubble" style="width:${size}px; height:${size}px; background:${color}30; color:${color}; border-color: ${color}50;" onclick="window.applyStatFilter('${currentStatMode}', '${label.replace(/'/g, "\\'")}')"><span class="b-count">${cnt}</span><span class="b-label">${label}</span></div>`}).join('');
+        document.getElementById("statsMap").innerHTML=bubbleHtml
+    }
+}
+
 window.handleTouchStart=function(e,id){activeContextId=id;longPressTimer=setTimeout(()=>{window.showContextMenu(id)},500)}
 window.handleTouchEnd=function(){clearTimeout(longPressTimer)}
 window.handleTouchMove=function(){clearTimeout(longPressTimer)}
 window.handleContextMenu=function(e,id){e.preventDefault();activeContextId=id;window.showContextMenu(id)}
-window.showContextMenu=function(id){triggerHaptic();if(navigator.vibrate)navigator.vibrate([15]);const student=window.smkData.find(s=>s.id===String(id));if(!student)return;document.getElementById('ctxHeader').innerText=student.name;const isFav=window.favorites.includes(id);document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;document.getElementById('ctxBtnCopyId').innerText=uiText[curLang].ctxCopyIdBtn;if(document.getElementById('ctxBtnCopyMoe'))document.getElementById('ctxBtnCopyMoe').innerText=uiText[curLang].ctxCopyMoeBtn;document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";document.getElementById('ctxBackdrop').classList.add('active');const row=document.querySelector(`.ios-cell[data-id="${id}"]`);if(row)row.classList.add('context-active')}
-window.hideContextMenu=function(){document.getElementById('ctxBackdrop').classList.remove('active');if(activeContextId){const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);if(row)row.classList.remove('context-active')}activeContextId=null}
-window.ctxAction=function(action){if(!activeContextId)return;const student=window.smkData.find(s=>s.id===String(activeContextId));if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}else if(action==='copy_moe'){if(student.moe&&student.moe!=="-"){navigator.clipboard.writeText(student.moe).then(()=>{window.showToast(uiText[curLang].ctxCopyMoeToast,"email")})}else{window.showToast(uiText[curLang].ctxNoMoeToast,"error_outline")}}else if(action==='fav'){toggleFavId(activeContextId)}else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}window.hideContextMenu()}
+window.showContextMenu=function(id){
+    triggerHaptic();
+    if(navigator.vibrate)navigator.vibrate([15]);
+    const student=window.smkData.find(s=>s.id===String(id));
+    if(!student)return;
+    document.getElementById('ctxHeader').innerText=student.name;
+    const isFav=window.favorites.includes(id);
+    document.getElementById('ctxBtnCopy').innerText=uiText[curLang].ctxCopyBtn;
+    document.getElementById('ctxBtnCopyCn').innerText=uiText[curLang].ctxCopyCnBtn;
+    document.getElementById('ctxBtnCopyId').innerText=uiText[curLang].ctxCopyIdBtn;
+    if(document.getElementById('ctxBtnCopyMoe'))document.getElementById('ctxBtnCopyMoe').innerText=uiText[curLang].ctxCopyMoeBtn;
+    document.getElementById('ctxFavText').innerText=isFav?uiText[curLang].ctxUnfavBtn:uiText[curLang].ctxFavBtn;
+    document.getElementById('ctxFavIcon').innerText=isFav?"star":"star_border";
+    document.getElementById('ctxBackdrop').classList.add('active');
+    const row=document.querySelector(`.ios-cell[data-id="${id}"]`);
+    if(row)row.classList.add('context-active')
+}
+window.hideContextMenu=function(){
+    document.getElementById('ctxBackdrop').classList.remove('active');
+    if(activeContextId){
+        const row=document.querySelector(`.ios-cell[data-id="${activeContextId}"]`);
+        if(row)row.classList.remove('context-active')
+    }
+    activeContextId=null
+}
+window.ctxAction=function(action){
+    if(!activeContextId)return;
+    const student=window.smkData.find(s=>s.id===String(activeContextId));
+    if(action==='copy'){navigator.clipboard.writeText(student.name).then(()=>{window.showToast(uiText[curLang].ctxCopy,"content_copy")})}
+    else if(action==='copy_cn'){if(student.cn&&student.cn!=="-"){navigator.clipboard.writeText(student.cn).then(()=>{window.showToast(uiText[curLang].ctxCopyCnToast,"g_translate")})}else{window.showToast(curLang==='en'?"No Chinese Name":(curLang==='bm'?"Tiada Nama Cina":"无中文名"),"error_outline")}}
+    else if(action==='copy_id'){navigator.clipboard.writeText(student.id).then(()=>{window.showToast(uiText[curLang].ctxCopyIdToast,"badge")})}
+    else if(action==='copy_moe'){if(student.moe&&student.moe!=="-"){navigator.clipboard.writeText(student.moe).then(()=>{window.showToast(uiText[curLang].ctxCopyMoeToast,"email")})}else{window.showToast(uiText[curLang].ctxNoMoeToast,"error_outline")}}
+    else if(action==='fav'){toggleFavId(activeContextId)}
+    else if(action==='filter'){filterState.origin=student.sch;updateFilterLabels(student.sch);document.getElementById('searchInput').value="";window.toggleFilters();filterData();window.showToast("Filtered by "+student.sch,"filter_list")}
+    window.hideContextMenu()
+}
 window.showAuthDialog=function(title,msg){document.getElementById('dialogTitle').innerText=title;document.getElementById('dialogMsg').innerText=msg;document.getElementById('authDialogOverlay').classList.add('active');document.getElementById('authMenu').classList.remove('show')}
 window.closeAuthDialog=function(){document.getElementById('authDialogOverlay').classList.remove('active')}
 
-window.confirmSignOut=function(){
-    triggerHaptic();
-    document.getElementById('logoutConfirmOverlay').classList.add('active');
-};
-window.closeLogoutConfirm=function(){
-    document.getElementById('logoutConfirmOverlay').classList.remove('active');
-};
-window.proceedSignOut=function(){
-    window.closeLogoutConfirm();
-    if(window.appSignOut)window.appSignOut();
-};
+window.confirmSignOut=function(){ triggerHaptic(); document.getElementById('logoutConfirmOverlay').classList.add('active'); };
+window.closeLogoutConfirm=function(){ document.getElementById('logoutConfirmOverlay').classList.remove('active'); };
+window.proceedSignOut=function(){ window.closeLogoutConfirm(); if(window.appSignOut)window.appSignOut(); };
 
-// ==========================================
-// FEEDBACK SYSTEM LOGIC
-// ==========================================
-window.openFeedback = function() {
-    triggerHaptic();
-    document.getElementById('authMenu').classList.remove('show');
-    setTimeout(() => document.getElementById("feedbackOverlay").classList.add("open"), 10);
-};
-
-window.closeFeedback = function(e) {
-    document.getElementById("feedbackOverlay").classList.remove("open");
-};
-
+window.openFeedback = function() { triggerHaptic(); document.getElementById('authMenu').classList.remove('show'); setTimeout(() => document.getElementById("feedbackOverlay").classList.add("open"), 10); };
+window.closeFeedback = function(e) { document.getElementById("feedbackOverlay").classList.remove("open"); };
 window.submitFeedback = async function() {
     const text = document.getElementById('feedbackText').value.trim();
     if(!text) return;
@@ -4118,30 +3569,19 @@ window.submitFeedback = async function() {
     try {
         const userEmail = window.cloudUser ? window.cloudUser.email : "anonymous_" + Date.now();
         const docId = Date.now().toString() + "_" + Math.floor(Math.random()*1000);
-        
         if(window.firestoreSetDoc && window.firestoreDoc && window.db) {
             await window.firestoreSetDoc(window.firestoreDoc(window.db, "feedback", docId), {
-                text: text,
-                user: userEmail,
-                timestamp: Date.now()
+                text: text, user: userEmail, timestamp: Date.now()
             });
             document.getElementById('feedbackText').value = '';
             window.closeFeedback();
             window.showToast(uiText[curLang].toastFb, "check_circle");
-        } else {
-            alert("Database connection not ready. Please try again.");
-        }
-    } catch (error) {
-        console.error(error);
-        alert("Error submitting feedback. Please try again later.");
-    }
+        } else { alert("Database connection not ready."); }
+    } catch (error) { console.error(error); alert("Error submitting feedback."); }
     btn.innerText = uiText[curLang].fbBtn;
     btn.disabled = false;
 };
 
-// ==========================================
-// STARTUP UPDATE SCREEN LOGIC (TWO-STEP & BULLETS)
-// ==========================================
 window.showUpdateScreen = function() {
     const uSettings = window.globalSettings.updateScreen || {};
     let added = uSettings.changelogAdded || uSettings.changelog || '';
@@ -4150,11 +3590,8 @@ window.showUpdateScreen = function() {
     window.updateDataSteps.removed = removed;
     
     let subText = "just now";
-    if (uSettings.timestamp) {
-        subText = window.getRelativeTime(uSettings.timestamp);
-    } else if (uSettings.lastUpdateText) {
-        subText = uSettings.lastUpdateText;
-    }
+    if (uSettings.timestamp) subText = window.getRelativeTime(uSettings.timestamp);
+    else if (uSettings.lastUpdateText) subText = uSettings.lastUpdateText;
     document.getElementById('updateSubText').innerText = `last update: ${subText}`;
     
     window.currentUpdateStep = 1;
@@ -4198,7 +3635,6 @@ window.renderUpdateStep = function() {
         icon.innerText = uSettings.iconAdded || "new_releases";
         iconBg.style.background = "var(--ios-blue)";
         iconBg.style.boxShadow = "0 8px 24px var(--ios-blue-light)";
-        
         addedText.innerHTML = formatUpdateText(window.updateDataSteps.added);
         btn.innerText = window.updateDataSteps.removed.trim() ? (txt.updateNext || "Next") : (txt.updateDone || "Done");
     } else {
@@ -4207,7 +3643,6 @@ window.renderUpdateStep = function() {
         icon.innerText = uSettings.iconRemoved || "build_circle";
         iconBg.style.background = "#FF9500";
         iconBg.style.boxShadow = "0 8px 24px rgba(255,149,0,0.3)";
-        
         removedText.innerHTML = formatUpdateText(window.updateDataSteps.removed);
         btn.innerText = txt.updateDone || "Done";
     }
@@ -4234,11 +3669,10 @@ window.closeWelcomeGuide = function() {
     overlay.style.opacity = '0';
     setTimeout(() => { 
         overlay.style.display = 'none'; 
-        window.startCoachMarks(); // Start interactive tutorial
+        window.startCoachMarks();
     }, 400);
 };
 
-// COACH MARKS LOGIC
 window.coachSteps = [
     { target: '.search-box', textKey: 'coachStep1', pos: 'bottom' },
     { target: '#btnFavToggle', textKey: 'coachStep2', pos: 'bottom' },
@@ -4273,7 +3707,7 @@ window.nextCoachStep = function() {
     const step = window.coachSteps[window.currentCoachStep];
     const targetEl = document.querySelector(step.target);
     if (!targetEl) {
-        window.nextCoachStep(); // skip if missing
+        window.nextCoachStep();
         return;
     }
 
@@ -4304,18 +3738,17 @@ window.nextCoachStep = function() {
             tooltip.style.right = 'auto';
             tooltip.style.transform = 'translateX(-50%)';
         } else if (step.pos === 'menu') {
-            tooltip.style.top = '145px'; // Safely clear the header height
+            tooltip.style.top = '145px';
             tooltip.style.left = 'auto';
             tooltip.style.right = '16px';
             tooltip.style.transform = 'none';
         }
         
-        // Restore transition and fade in smoothly
         setTimeout(() => {
             tooltip.style.transition = 'all 0.3s var(--ease-spring)';
             tooltip.style.opacity = '1';
         }, 10);
-    }, 350); // wait for scroll to finish
+    }, 350);
 };
 
 window.closeUpdateScreen = function() {
@@ -4331,9 +3764,6 @@ window.closeUpdateScreen = function() {
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initApp)}else{initApp()}
 
-// ==========================================
-// GENERIC CUSTOM DROPDOWN LOGIC
-// ==========================================
 window.toggleCustomSelect = (dropdownId) => {
   document.querySelectorAll('.custom-select-dropdown').forEach(d => { 
     if(d.id !== dropdownId) {
@@ -4394,16 +3824,12 @@ window.setCustomColorHex = (hex) => {
     window.updateCustomColorPreview(hex);
 };
 
-// ==========================================
-// ADMIN DASHBOARD LOGIC
-// ==========================================
-window.adminTempStudents =[];
+window.adminTempStudents = [];
 window.adminTempTeachers = {};
 window.adminTempNotices = {};
 window.adminTempDuty = {};
 window.adminSelectedStudentId = "NEW";
 
-// NEW FUNCTION: Switch Admin Tab WITH Height Animation!
 window.switchAdminTab = (tab) => {
     const card = document.getElementById('adminCard');
     const isAlreadyOpen = document.getElementById('adminOverlay').classList.contains('open');
@@ -4411,7 +3837,7 @@ window.switchAdminTab = (tab) => {
     
     if (isAlreadyOpen && card) {
         startCardHeight = card.offsetHeight;
-        card.style.height = ''; // allow natural growth
+        card.style.height = '';
     }
     
     ['students', 'teachers', 'settings', 'audit', 'feedback', 'analytics'].forEach(t => {
@@ -4421,13 +3847,8 @@ window.switchAdminTab = (tab) => {
         if(btn) btn.classList.toggle('active', t === tab);
     });
     
-    if (tab === 'feedback' && window.loadAdminFeedback) {
-        window.loadAdminFeedback();
-    }
-    
-    if (tab === 'analytics' && window.loadAdminAnalytics) {
-        window.loadAdminAnalytics();
-    }
+    if (tab === 'feedback' && window.loadAdminFeedback) window.loadAdminFeedback();
+    if (tab === 'analytics' && window.loadAdminAnalytics) window.loadAdminAnalytics();
     
     if (isAlreadyOpen && card && typeof card.animate === 'function' && startCardHeight > 0) {
         const targetCardHeight = card.offsetHeight;
@@ -4447,7 +3868,6 @@ window.openAdminPanel = () => {
   window.adminTempDuty = JSON.parse(JSON.stringify(window.dutyData || {}));
   
   const emptyDay = () => ({ wipe: [], sweep: [], arrange: [], trash: [] });
-  // Migrate if old single-day structure
   if (!window.adminTempDuty['Hijau'] || !window.adminTempDuty['Hijau']['Monday']) {
       window.adminTempDuty['Hijau'] = { Monday: emptyDay(), Tuesday: emptyDay(), Wednesday: emptyDay(), Thursday: emptyDay(), Friday: emptyDay() };
   }
@@ -4458,7 +3878,8 @@ window.openAdminPanel = () => {
   document.getElementById('adminThemeHeader').innerHTML = `<span>${themeOpts[t]||'Dynamic'}</span><span class="material-icons-round">expand_more</span>`;
   
   const maint = (window.globalSettings.maintenance === 'true') ? 'true' : 'false';
-  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?uiText[curLang].optMaintYes:uiText[curLang].optMaintNo}</span><span class="material-icons-round">expand_more</span>`;
+  document.getElementById('adminMaintDropdown').setAttribute('data-value', maint);
+  document.getElementById('adminMaintHeader').innerHTML = `<span>${maint==='true'?uiText[curLang].optMaintYes:uiText[curLang].optMaintNo}</span><span class="material-icons-round">expand_more</span>`;
   
   const glass = window.globalSettings.disableGlass || 'dynamic';
   document.getElementById('adminGlassDropdown').setAttribute('data-value', glass);
@@ -4466,68 +3887,8 @@ window.openAdminPanel = () => {
   if (glass === 'true') glassText = uiText[curLang].optGlassYes || 'Yes (Solid Colors)';
   if (glass === 'false') glassText = uiText[curLang].optGlassNo || 'No (Keep Glassmorphism)';
   document.getElementById('adminGlassHeader').innerHTML = `<span>${glassText}</span><span class="material-icons-round">expand_more</span>`;
-  
-  const statIcons = window.globalSettings.statusIconStyle || 'thumbs';
-  document.getElementById('adminStatusIconsDropdown').setAttribute('data-value', statIcons);
-  let statText = uiText[curLang].optStatThumbs || 'Thumbs (Default)';
-  if (statIcons === 'trending') statText = uiText[curLang].optStatTrending || 'Trending Arrows';
-  if (statIcons === 'arrows') statText = uiText[curLang].optStatArrows || 'Standard Arrows';
-  document.getElementById('adminStatusIconsHeader').innerHTML = `<span>${statText}</span><span class="material-icons-round">expand_more</span>`;
-
-  const hideTh = (window.globalSettings.hideTheme === 'true') ? 'true' : 'false';
-  document.getElementById('adminHideThemeDropdown').setAttribute('data-value', hideTh);
-  document.getElementById('adminHideThemeHeader').innerHTML = `<span>${hideTh==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const hideSt = (window.globalSettings.hideStats === 'true') ? 'true' : 'false';
-  document.getElementById('adminHideStatsDropdown').setAttribute('data-value', hideSt);
-  document.getElementById('adminHideStatsHeader').innerHTML = `<span>${hideSt==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const hideIds = (window.globalSettings.hideIds === 'true') ? 'true' : 'false';
-  document.getElementById('adminHideIdsDropdown').setAttribute('data-value', hideIds);
-  document.getElementById('adminHideIdsHeader').innerHTML = `<span>${hideIds==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const forceCoach = (window.globalSettings.forceCoachMarks === 'true') ? 'true' : 'false';
-  document.getElementById('adminForceCoachDropdown').setAttribute('data-value', forceCoach);
-  document.getElementById('adminForceCoachHeader').innerHTML = `<span>${forceCoach==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-
-  const abt = window.globalSettings.aboutData || {};
-  document.getElementById('adminAboutTitle').value = abt.title || "Student Allocation List 2026";
-  document.getElementById('adminAboutVersion').value = abt.version || "Version 6.0 (Secured Edition)";
-  document.getElementById('adminAboutDesc').value = abt.desc || "Check allocations, view origin maps, and use Quick Actions (Long Press).";
-  document.getElementById('adminAboutDesign').value = abt.design || "Designed with Smooth iOS Performance in mind";
-  document.getElementById('adminAboutFooter').value = abt.footer || "Hosted on Vercel | Secured by Firebase";
-
-  const upd = window.globalSettings.updateScreen || { enabled: 'false', timestamp: Date.now(), iconAdded: 'new_releases', iconRemoved: 'build_circle', changelogAdded: '', changelogRemoved: '' };
-  const uEnabled = upd.enabled === 'true' ? 'true' : 'false';
-  document.getElementById('adminUpdateScreenDropdown').setAttribute('data-value', uEnabled);
-  document.getElementById('adminUpdateScreenHeader').innerHTML = `<span>${uEnabled==='true'?uiText[curLang].optUpdateYes:uiText[curLang].optUpdateNo}</span><span class="material-icons-round">expand_more</span>`;
-  
-  // Update the non-editable last update text (12hr format fix)
-  let lastUpdTextStr = "N/A";
-  if(upd.timestamp) {
-      lastUpdTextStr = new Date(upd.timestamp).toLocaleString('en-US', {
-          month: 'short', day: 'numeric', year: 'numeric',
-          hour: 'numeric', minute: '2-digit', hour12: true
-      });
-  }
-  const adminLastUpdateText = document.getElementById('adminLastUpdateText');
-  if(adminLastUpdateText) {
-      adminLastUpdateText.innerText = "Last update: " + lastUpdTextStr;
-  }
-  
-  const iconNames = { 'new_releases': 'Sparkles', 'rocket_launch': 'Rocket', 'campaign': 'Alert', 'celebration': 'Party', 'build_circle': 'Tool', 'bug_report': 'Bug', 'star': 'Star', 'favorite': 'Heart', 'info': 'Info', 'check_circle': 'Check', 'warning': 'Warning', 'error': 'Error' };
-  const i1 = upd.iconAdded || 'new_releases';
-  const i2 = upd.iconRemoved || 'build_circle';
-  document.getElementById('adminIcon1Dropdown').setAttribute('data-value', i1);
-  document.getElementById('adminIcon1Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i1}</span> ${iconNames[i1]||i1}</span><span class="material-icons-round">expand_more</span>`;
-  document.getElementById('adminIcon2Dropdown').setAttribute('data-value', i2);
-  document.getElementById('adminIcon2Header').innerHTML = `<span><span class="material-icons-round" style="font-size:14px; vertical-align:middle;">${i2}</span> ${iconNames[i2]||i2}</span><span class="material-icons-round">expand_more</span>`;
-  
-  document.getElementById('adminUpdateAdded').value = upd.changelogAdded || upd.changelog || '';
-  document.getElementById('adminUpdateRemoved').value = upd.changelogRemoved || '';
 
   if(window.renderAuditLogUI) window.renderAuditLogUI();
-
   window.refreshAdminStudentDropdown("NEW");
   window.loadAdminTeacherForm();
   window.switchAdminTab('students');
@@ -4589,7 +3950,7 @@ window.refreshAdminStudentDropdown = (selectId = "NEW") => {
   const list = document.getElementById('adminStudentList');
   let addText = (uiText[curLang] && uiText[curLang].adminAddStudent) ? uiText[curLang].adminAddStudent : "Add New Student";
   let html = `<div class="custom-option student-opt" onclick="window.selectAdminStudent('NEW', '<span class=\\'material-icons-round\\' style=\\'font-size:16px; vertical-align:text-bottom;\\'>person_add</span> ${addText}')"><strong><span class="material-icons-round" style="font-size:16px; vertical-align:text-bottom;">person_add</span> ${addText}</strong></div>`;
-  const sorted =[...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
+  const sorted = [...window.adminTempStudents].sort((a,b)=>a.name.localeCompare(b.name));
   sorted.forEach(s => { html += `<div class="custom-option student-opt" onclick="window.selectAdminStudent('${s.id}', '${s.name.replace(/'/g, "\\'")}')">${s.name} <span style="opacity:0.5;font-size:12px;">(${s.newClass})</span></div>`; });
   list.innerHTML = html;
 
@@ -4625,9 +3986,7 @@ window.loadAdminStudentForm = () => {
 
 window.adminApplyStudent = () => {
   const oldId = window.adminSelectedStudentId;
-  
   let rawId = document.getElementById('adminStId').value.trim();
-  // If blank, assign "-" and pad with invisible characters to keep internal IDs unique
   if (!rawId || rawId.replace(/\u200B/g, '') === "-") {
     rawId = "-";
     while(window.adminTempStudents.some(s => s.id === rawId && s.id !== oldId)) {
@@ -4635,7 +3994,6 @@ window.adminApplyStudent = () => {
     }
   }
   const newId = rawId;
-  
   const name = document.getElementById('adminStName').value.trim().toUpperCase();
   if(!name) { if(window.showToast) window.showToast("Name is required", "error_outline"); return; }
   
@@ -4680,14 +4038,9 @@ window.importStudents = function(event) {
                 window.adminTempStudents = data;
                 window.refreshAdminStudentDropdown("NEW");
                 if(window.showToast) window.showToast(uiText[curLang].adminImportSuccess || "Students Imported to Queue!", "check_circle");
-            } else {
-                alert("Invalid JSON format. Expected an array.");
-            }
-        } catch(err) {
-            alert("Error parsing JSON file.");
-            console.error(err);
-        }
-        event.target.value = ''; // Reset input
+            } else { alert("Invalid JSON format."); }
+        } catch(err) { alert("Error parsing JSON file."); }
+        event.target.value = '';
     };
     reader.readAsText(file);
 };
@@ -4704,22 +4057,10 @@ window.importDutyJSON = function(event) {
                 if(document.getElementById('adminTClassDropdown').getAttribute('data-value') === 'Hijau') {
                     window.renderAdminDutyDropdowns();
                     window.renderAdminDutyChips();
-                    const ukId = (window.adminTempDuty['Hijau'] && window.adminTempDuty['Hijau'].unitKebersihan) ? window.adminTempDuty['Hijau'].unitKebersihan : "-";
-                    let ukName = "- None -";
-                    if (ukId !== "-") {
-                        const stu = window.adminTempStudents.find(s => s.id === ukId);
-                        if (stu) ukName = stu.name;
-                    }
-                    window.selectOption('adminUkDropdown', ukId, ukName, 'adminUkHeader');
                 }
                 if(window.showToast) window.showToast(uiText[curLang].adminImportSuccess || "Imported to Queue!", "check_circle");
-            } else {
-                alert("Invalid JSON format.");
-            }
-        } catch(err) {
-            alert("Error parsing JSON file.");
-            console.error(err);
-        }
+            } else { alert("Invalid JSON format."); }
+        } catch(err) { alert("Error parsing JSON file."); }
         event.target.value = ''; 
     };
     reader.readAsText(file);
@@ -4780,16 +4121,11 @@ window.exportStudents = (format) => {
         mimeType = "application/json";
         filename += ".json";
     } else if (format === 'txt') {
-        content = "Student Allocation List 2026\n";
-        content += "Class: " + (selectedClass === 'All' ? "All Classes" : selectedClass) + "\n";
-        content += "============================\n\n";
-        
-        // Sorts students by Class first, then alphabetically by name
+        content = "Student Allocation List 2026\nClass: " + (selectedClass === 'All' ? "All Classes" : selectedClass) + "\n============================\n\n";
         const sorted = [...exportData].sort((a,b) => {
             if(a.newClass === b.newClass) return a.name.localeCompare(b.name);
             return (a.newClass || "").localeCompare(b.newClass || "");
         });
-        
         sorted.forEach(s => {
             content += `Name: ${s.name}\nChinese Name: ${s.cn || "-"}\n`;
             if (!excludeIds) content += `ID: ${s.id}\n`;
@@ -4808,12 +4144,10 @@ window.exportStudents = (format) => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
     if(window.showToast) window.showToast("Exported " + format.toUpperCase(), "download_done");
 };
 
 window.adminCurrentDutyDay = 'Monday';
-
 window.switchAdminDutyDay = (day) => {
     window.adminCurrentDutyDay = day;
     ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(d => {
@@ -4826,7 +4160,6 @@ window.switchAdminDutyDay = (day) => {
 
 window.renderAdminDutyDropdowns = () => {
     const hijauStudents = window.adminTempStudents.filter(s => s.newClass.toUpperCase().includes('HIJAU')).sort((a,b)=>a.name.localeCompare(b.name));
-    
     ['wipe', 'sweep', 'arrange', 'trash'].forEach(cat => {
         let html = '';
         hijauStudents.forEach(s => {
@@ -4836,7 +4169,6 @@ window.renderAdminDutyDropdowns = () => {
         document.getElementById('adminDutyList_' + cat).innerHTML = html;
     });
 
-    // Populate Unit Kebersihan dropdown
     let ukHtml = `<div class="custom-option uk-opt" onclick="window.selectOption('adminUkDropdown', '-', '- None -', 'adminUkHeader')">- None -</div>`;
     hijauStudents.forEach(s => {
         const cnText = (s.cn && s.cn !== "-") ? ` (${s.cn})` : "";
@@ -4901,12 +4233,10 @@ window.adminRemoveDuty = (cat, id) => {
 
 window.loadAdminTeacherForm = () => {
   const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
-  
   if (cls === 'Hijau') {
       document.getElementById('adminDutySection').style.display = 'block';
-      const dData = window.adminTempDuty['Hijau'] || {};
       window.renderAdminDutyDropdowns();
-      
+      const dData = window.adminTempDuty['Hijau'] || {};
       const ukId = dData.unitKebersihan || "-";
       let ukName = "- None -";
       if (ukId !== "-") {
@@ -4914,7 +4244,6 @@ window.loadAdminTeacherForm = () => {
           if (stu) ukName = stu.name;
       }
       window.selectOption('adminUkDropdown', ukId, ukName, 'adminUkHeader');
-      
       window.renderAdminDutyChips();
   } else {
       document.getElementById('adminDutySection').style.display = 'none';
@@ -4928,45 +4257,24 @@ window.loadAdminTeacherForm = () => {
   if (typeof noticeData === 'object' && noticeData !== null) {
       document.getElementById('adminClassNotice').value = noticeData.text || "";
       let iconValue = noticeData.icon || 'info';
-      let iconLabel = iconValue.charAt(0).toUpperCase() + iconValue.slice(1);
-      window.selectIconOption('adminNoticeIconDropdown', iconValue, iconLabel, 'adminNoticeIconHeader');
-      
+      window.selectIconOption('adminNoticeIconDropdown', iconValue, iconValue.charAt(0).toUpperCase() + iconValue.slice(1), 'adminNoticeIconHeader');
       let colorValue = noticeData.color || '#FF9500';
-      let colorLabels = {'#FF9500': 'Orange', '#FF3B30': 'Red', '#007AFF': 'Blue', '#34C759': 'Green', '#AF52DE': 'Purple', '#8E8E93': 'Gray'};
-      if (colorLabels[colorValue]) {
-          window.selectColorOption('adminNoticeColorDropdown', colorValue, colorLabels[colorValue], 'adminNoticeColorHeader');
-      } else {
-          // Custom Hex Logic Trigger
-          window.selectColorOption('adminNoticeColorDropdown', 'custom', 'Custom Color', 'adminNoticeColorHeader');
-          document.getElementById('adminNoticeColorHex').value = colorValue;
-          window.updateCustomColorPreview(colorValue);
-      }
-      
-      let styleValue = noticeData.style || 'soft';
-      let styleLabels = {'soft': 'Soft (Default)', 'solid': 'Solid Fill', 'outline': 'Outline Only', 'glow': 'Glowing'};
-      window.selectOption('adminNoticeStyleDropdown', styleValue, styleLabels[styleValue] || 'Soft (Default)', 'adminNoticeStyleHeader');
+      window.selectColorOption('adminNoticeColorDropdown', colorValue, 'Color', 'adminNoticeColorHeader');
   } else {
       document.getElementById('adminClassNotice').value = noticeData;
-      window.selectIconOption('adminNoticeIconDropdown', 'info', 'Info', 'adminNoticeIconHeader');
-      window.selectColorOption('adminNoticeColorDropdown', '#FF9500', 'Orange', 'adminNoticeColorHeader');
-      window.selectOption('adminNoticeStyleDropdown', 'soft', 'Soft (Default)', 'adminNoticeStyleHeader');
   }
 };
 
 window.adminApplyTeacher = () => {
   const cls = document.getElementById('adminTClassDropdown').getAttribute('data-value') || 'Biru';
   window.adminTempTeachers[cls] = { g: document.getElementById('adminTg').value.trim(), p: document.getElementById('adminTp').value.trim() };
-  
   if (cls === 'Hijau') {
       if(!window.adminTempDuty['Hijau']) window.adminTempDuty['Hijau'] = { wipe: [], sweep: [], arrange: [], trash: [] };
       const ukDrop = document.getElementById('adminUkDropdown');
       window.adminTempDuty['Hijau'].unitKebersihan = ukDrop ? ukDrop.getAttribute('data-value') : "-";
   }
-  
   let noticeColor = document.getElementById('adminNoticeColorDropdown').getAttribute('data-value');
-  if (noticeColor === 'custom') {
-      noticeColor = document.getElementById('adminNoticeColorHex').value || '#FF9500';
-  }
+  if (noticeColor === 'custom') noticeColor = document.getElementById('adminNoticeColorHex').value || '#FF9500';
 
   window.adminTempNotices[cls] = {
       text: document.getElementById('adminClassNotice').value.trim(),
@@ -4974,7 +4282,6 @@ window.adminApplyTeacher = () => {
       color: noticeColor,
       style: document.getElementById('adminNoticeStyleDropdown').getAttribute('data-value') || 'soft'
   };
-  
   if(window.showToast) window.showToast("Class Updated in Queue", "school");
 };
 
@@ -4985,10 +4292,8 @@ window.applyPendingUpdate = () => {
     window.classNotices = window.pendingDataUpdate.notices;
     window.dutyData = window.pendingDataUpdate.duty;
     window.pendingDataUpdate = null;
-
     if(window.initFilterChips) window.initFilterChips();
     if(window.filterData) window.filterData();
-
     document.getElementById('updatePromptBanner').classList.remove('show');
     if(window.showToast) window.showToast("Data Updated Live", "check_circle");
   }
@@ -4998,17 +4303,7 @@ window.getClosestMatch = function(query) {
     if (!query || query.length < 2) return null;
     let bestMatch = null;
     let bestDist = Infinity;
-    
-    // Normalize spaces to prevent space-bar typos from ruining the distance calculation
     const qLower = query.toLowerCase().trim().replace(/\s+/g, ' ');
-    
-    // QWERTY Keyboard adjacency map for advanced typo detection
-    const qwertyAdj = {
-        'q': 'wase', 'w': 'qeasd', 'e': 'wrsdf', 'r': 'etdfg', 't': 'ryfgh', 'y': 'tughj', 'u': 'yihjk', 'i': 'uojkl', 'o': 'ipkl', 'p': 'ol',
-        'a': 'qwsz', 's': 'awedxz', 'd': 'serfxc', 'f': 'drtgcv', 'g': 'ftyhvb', 'h': 'gyujbn', 'j': 'huiknm', 'k': 'jiolm', 'l': 'kop',
-        'z': 'asx', 'x': 'zsdc', 'c': 'xdfv', 'v': 'cfgb', 'b': 'vghn', 'n': 'bhjm', 'm': 'njk'
-    };
-    
     const levenshtein = (a, b) => {
         if(!a || !b) return Infinity;
         const matrix = Array.from({length: a.length + 1}, () => new Array(b.length + 1).fill(0));
@@ -5016,42 +4311,20 @@ window.getClosestMatch = function(query) {
         for(let j=0; j<=b.length; j++) matrix[0][j] = j;
         for(let i=1; i<=a.length; i++) {
             for(let j=1; j<=b.length; j++) {
-                let cost = 1;
-                const charA = a[i-1];
-                const charB = b[j-1];
-                if (charA === charB) {
-                    cost = 0;
-                } else if (qwertyAdj[charA] && qwertyAdj[charA].includes(charB)) {
-                    cost = 0.3; // Much lower penalty for hitting adjacent QWERTY keys
-                } else if (charA === ' ' || charB === ' ') {
-                    cost = 0.5; // Lower penalty for space bar typos
-                }
+                const cost = a[i-1] === b[j-1] ? 0 : 1;
                 matrix[i][j] = Math.min(matrix[i-1][j]+1, matrix[i][j-1]+1, matrix[i-1][j-1]+cost);
             }
         }
         return matrix[a.length][b.length];
     };
     
-    // Smarter Threshold: Scales based on word length to allow heavy QWERTY shifts
-    let allowedDist = 1;
-    if (qLower.length >= 4) allowedDist = 2;
-    if (qLower.length >= 8) allowedDist = qLower.length * 0.4;
-    
+    let allowedDist = qLower.length >= 4 ? 2 : 1;
     window.smkData.forEach(s => {
         const nLower = s.name ? s.name.toLowerCase().trim().replace(/\s+/g, ' ') : "";
-        const cLower = (s.cn && s.cn !== '-') ? s.cn.toLowerCase().trim().replace(/\s+/g, ' ') : "";
-        
         const nameDist = nLower ? levenshtein(qLower, nLower) : Infinity;
-        const cnDist = cLower ? levenshtein(qLower, cLower) : Infinity;
-        
-        // Failsafe: Prevent 100% wrong matches
-        if (nameDist <= allowedDist && nameDist < bestDist && nameDist < qLower.length * 0.9) {
+        if (nameDist <= allowedDist && nameDist < bestDist) {
             bestDist = nameDist;
             bestMatch = s.name;
-        }
-        if (cnDist <= allowedDist && cnDist < bestDist && cnDist < qLower.length * 0.9) {
-            bestDist = cnDist;
-            bestMatch = s.cn;
         }
     });
     return bestMatch;
@@ -5074,7 +4347,6 @@ function filterData(){
             clearBtn.classList.remove('show');
             tabs.classList.remove('collapsed');
         }
-        
         tCard.classList.remove('show');
         if(wrapSortClass)wrapSortClass.classList.remove("collapsed");
         if(wrapSortBday)wrapSortBday.classList.remove("collapsed");
@@ -5091,62 +4363,9 @@ function filterData(){
         if(wrapSortClass)wrapSortClass.classList.add("collapsed");
         if(wrapSortBday)wrapSortBday.classList.add("collapsed");
         if(currentSortType!=='name'){
-            // Reset to name sort when entering a specific class
             currentSortType='name';
             sortAsc=true;
             updateSortUI();
-        }
-        
-        const noticeRaw=window.classNotices && window.classNotices[currentClass];
-        if(noticeRaw){
-            let text="",icon="info",color="#FF9500", style="soft";
-            if(typeof noticeRaw==='object'&&noticeRaw!==null){
-                text=noticeRaw.text||"";
-                icon=noticeRaw.icon||"info";
-                color=noticeRaw.color||"#FF9500";
-                style=noticeRaw.style||"soft";
-            }else{
-                text=noticeRaw;
-            }
-            if(text){
-                const banner=document.getElementById('classNoticeBanner');
-                const textEl=document.getElementById('classNoticeText');
-                const iconEl=document.getElementById('classNoticeIcon');
-                textEl.innerText=text;
-                iconEl.innerText=icon;
-                
-                banner.classList.add('show');
-
-                if(style === 'solid') {
-                    banner.style.background = color;
-                    banner.style.border = 'none';
-                    banner.style.boxShadow = `0 4px 12px ${window.hexToRgba(color, 0.3)}`;
-                    textEl.style.color = '#FFFFFF';
-                    iconEl.style.color = '#FFFFFF';
-                } else if(style === 'outline') {
-                    banner.style.background = 'transparent';
-                    banner.style.border = `2px solid ${color}`;
-                    banner.style.boxShadow = 'none';
-                    textEl.style.color = 'var(--ios-text)';
-                    iconEl.style.color = color;
-                } else if(style === 'glow') {
-                    banner.style.background = window.hexToRgba(color, 0.1);
-                    banner.style.border = `1px solid ${color}`;
-                    banner.style.boxShadow = `0 0 16px ${window.hexToRgba(color, 0.5)}, inset 0 0 8px ${window.hexToRgba(color, 0.2)}`;
-                    textEl.style.color = 'var(--ios-text)';
-                    iconEl.style.color = color;
-                } else { // soft
-                    banner.style.background = window.hexToRgba(color, 0.15);
-                    banner.style.border = `1px solid ${window.hexToRgba(color, 0.3)}`;
-                    banner.style.boxShadow = 'none';
-                    textEl.style.color = 'var(--ios-text)';
-                    iconEl.style.color = color;
-                }
-            }else{
-                document.getElementById('classNoticeBanner').classList.remove('show');
-            }
-        }else{
-            document.getElementById('classNoticeBanner').classList.remove('show');
         }
     }
     
@@ -5179,10 +4398,6 @@ function filterData(){
     
     const grid=document.getElementById("studentGrid");
     if(grid){
-        const startHeight = grid.offsetHeight;
-        grid.style.height = startHeight + 'px';
-        grid.style.overflow = 'hidden';
-        
         if(filtered.length===0){
             let emptyHtml = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px 20px; text-align:center; animation: fadeUp .5s forwards; opacity:0; width:100%;">`;
             if(query.length > 1) {
@@ -5191,16 +4406,11 @@ function filterData(){
                     const didYouMeanTxt = curLang === 'bm' ? "Maksud anda" : (curLang === 'cn' ? "您是想搜" : "Did you mean");
                     emptyHtml += `<div style="margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--ios-sep); width: 100%; max-width: 300px;">
                         <div style="font-size:14px; font-weight:600; color:var(--ios-text-sec); margin-bottom:10px;">${didYouMeanTxt}</div>
-                        <a href="javascript:void(0)" onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" style="color:var(--ios-blue); font-weight:800; text-decoration:none; padding:10px 24px; background:var(--ios-blue-light); border-radius:100px; display:inline-flex; align-items:center; gap:8px; font-size:16px; box-shadow: 0 4px 12px rgba(0,122,255,0.15); transition: transform 0.2s;"><span class="material-icons-round" style="font-size:18px;">search</span> ${suggestion}</a>
+                        <a href="javascript:void(0)" onclick="window.applySearch('${suggestion.replace(/'/g, "\\'")}')" style="color:var(--ios-blue); font-weight:800; text-decoration:none; padding:10px 24px; background:var(--ios-blue-light); border-radius:100px; display:inline-flex; align-items:center; gap:8px; font-size:16px;">${suggestion}</a>
                     </div>`;
                 }
             }
-            emptyHtml += `<div style="background:var(--ios-input); width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:16px; border:1px solid var(--glass-border); box-shadow:var(--glass-shadow), inset 0 1px 1px rgba(255,255,255,0.2);">
-                    <span class="material-icons-round" style="font-size:36px; color:var(--ios-text-sec);">person_search</span>
-                </div>
-                <div class="empty-msg" style="padding:0; opacity:1; animation:none; font-size:18px; font-weight:700; color:var(--ios-text); margin-bottom:8px; letter-spacing:-0.01em;">${uiText[curLang].empty}</div>
-                <div class="stats-empty-sub" style="font-size:14px; color:var(--ios-text-sec); max-width:250px; line-height:1.4;">${uiText[curLang].emptySub}</div>
-            </div>`;
+            emptyHtml += `<div class="empty-msg" style="padding:0; opacity:1; animation:none; font-size:18px; font-weight:700; color:var(--ios-text);">${uiText[curLang].empty}</div></div>`;
             grid.innerHTML = emptyHtml;
         }
         else{
@@ -5219,29 +4429,10 @@ function filterData(){
             }).join('');
             grid.innerHTML=html;
         }
-
-        grid.style.height = 'auto';
-        const targetHeight = grid.offsetHeight;
-        
-        if(startHeight > 0 && startHeight !== targetHeight) {
-            grid.style.height = startHeight + 'px';
-            void grid.offsetHeight; // Force reflow
-            grid.style.transition = 'height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-            grid.style.height = targetHeight + 'px';
-            
-            setTimeout(() => {
-                grid.style.transition = '';
-                grid.style.height = 'auto';
-                grid.style.overflow = '';
-            }, 400);
-        } else {
-            grid.style.transition = '';
-            grid.style.height = 'auto';
-            grid.style.overflow = '';
-        }
     }
 }
 </script>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
