@@ -3314,9 +3314,7 @@ function updateModalContent(student, index) {
     const inner = document.getElementById('mTextInner');
     const card = document.getElementById('modalCard');
     
-    // Only run dimension morphing if already open (Next/Prev navigation)
     const isAlreadyOpen = document.getElementById('modalOverlay').classList.contains('open');
-    
     let startWrapWidth = 0, startWrapHeight = 0, startCardHeight = 0;
     
     if (isAlreadyOpen) {
@@ -3328,13 +3326,10 @@ function updateModalContent(student, index) {
     if (wrap && typeof wrap.getAnimations === 'function') wrap.getAnimations().forEach(a => a.cancel());
     if (card && typeof card.getAnimations === 'function') card.getAnimations().forEach(a => a.cancel());
 
-
-    // Remove any fixed styles to allow natural reflow
     if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
     if (inner) { inner.style.width = ''; inner.style.height = ''; }
     if (card) { card.style.height = ''; }
     
-    // Update DOM content
     const nameEl = document.getElementById("mName");
     const cnEl = document.getElementById("mCn");
     if(nameEl) nameEl.innerText = student.name;
@@ -3397,19 +3392,16 @@ function updateModalContent(student, index) {
         }
     }
 
-    // Wait for DOM to calculate new natural sizes, then FLIP animate
     if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
         const targetWrapWidth = wrap.offsetWidth;
         const targetWrapHeight = wrap.offsetHeight;
         const targetCardHeight = card ? card.offsetHeight : 0;
         
         if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
-            // Freeze inner text layout to prevent glitching mid-animation
             if (inner) {
                 inner.style.width = targetWrapWidth + 'px';
                 inner.style.height = targetWrapHeight + 'px';
             }
-            
             const wrapAnim = wrap.animate([
                 { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
                 { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
@@ -3431,6 +3423,7 @@ function updateModalContent(student, index) {
         }
     }
 }
+
 window.shareResult = async function() {
     if (!currentStudentId) return;
     triggerHaptic();
@@ -3438,13 +3431,11 @@ window.shareResult = async function() {
     const icon = btn.querySelector('span');
     const originalIcon = icon.innerText;
     
-    // Add Loading Animation
     icon.innerText = "autorenew"; 
-    icon.classList.add('spin-anim'); // Activates CSS spin animation
+    icon.classList.add('spin-anim');
     btn.style.opacity = "0.5";
     btn.style.pointerEvents = "none";
     
-    // Localization for generation text
     const localTxt = {
         en: { gen: "Generating Image...", saved: "Image Saved!", fail: "Failed to generate image" },
         bm: { gen: "Menjana Imej...", saved: "Imej Disimpan!", fail: "Gagal menjana imej" },
@@ -3457,17 +3448,14 @@ window.shareResult = async function() {
         const student = window.smkData.find(s => s.id === currentStudentId);
         const container = document.getElementById('shareCardContainer');
         
-        // Match Background
         const bodyStyle = window.getComputedStyle(document.body);
         container.style.backgroundImage = bodyStyle.backgroundImage;
         container.style.backgroundColor = bodyStyle.backgroundColor;
         
-        // Translate text
         const txt = uiText[curLang] || uiText.en;
         document.getElementById('scOldTitle').innerText = txt.mLabelOld || "Previous Class";
         document.getElementById('scNewTitle').innerText = txt.mLabelCur || "Current Class";
         
-        // Populate Data
         document.getElementById('scName').innerText = student.name;
         const hideIds = (window.globalSettings && window.globalSettings.hideIds === 'true');
         if(hideIds) {
@@ -3482,11 +3470,9 @@ window.shareResult = async function() {
         document.getElementById('scSchTitle').innerText = txt.mLabelSch || "Primary School";
         document.getElementById('scSch').innerText = student.sch || "-";
         
-        // Translate Footer using main App Title (removing line breaks)
         let appTitleStr = (txt.title || "Student Allocation 2026").replace(/<br\s*\/?>/gi, ' ');
         document.getElementById('scFooter').innerText = appTitleStr;
 
-        // Status Icon Logic (Thumb up/down)
         const rank = getRankStatus(student.oldClass, student.newClass);
         const stIcon = document.getElementById('scStatusIcon');
         if (stIcon) {
@@ -3495,7 +3481,6 @@ window.shareResult = async function() {
             stIcon.style.display = rank.icon === 'remove' ? 'none' : 'block';
         }
         
-        // Colors & Theme (Glass vs Solid & Dark vs Light)
         const isSolid = document.body.classList.contains('no-glass');
         const isDarkTheme = document.body.getAttribute('data-theme') === 'dark';
         
@@ -3528,7 +3513,6 @@ window.shareResult = async function() {
         document.getElementById('scArrow').style.color = txtArrow;
 
         if (!isSolid) {
-            // Glassmorphism Mode (html2canvas renders semi-transparent colors over the gradient background)
             innerCard.style.background = isDarkTheme ? 'rgba(30,30,30,0.65)' : 'rgba(255,255,255,0.75)';
             innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.5)';
             
@@ -3537,7 +3521,6 @@ window.shareResult = async function() {
             scSchBg.style.background = panelBg;
             scNewBg.style.background = window.hexToRgba(color, isDarkTheme ? 0.2 : 0.15);
         } else {
-            // Solid Mode
             innerCard.style.background = isDarkTheme ? '#1C1C1E' : '#FFFFFF';
             innerCard.style.border = isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : 'none';
             
@@ -3554,10 +3537,8 @@ window.shareResult = async function() {
         document.getElementById('scNewTitle').style.color = color;
         document.getElementById('scNew').style.color = color;
         
-        // Wait a tiny bit to ensure DOM updates
         await new Promise(r => setTimeout(r, 50));
         
-        // Render
         const canvas = await html2canvas(container, {
             scale: 2,
             useCORS: true,
@@ -3584,30 +3565,30 @@ window.shareResult = async function() {
                     console.log("Sharing cancelled", e);
                 }
             } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            window.showToast(lTxt.saved, "download_done");
-        }
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                window.showToast(lTxt.saved, "download_done");
+            }
+            icon.classList.remove('spin-anim');
+            icon.innerText = originalIcon;
+            btn.style.opacity = "1";
+            btn.style.pointerEvents = "auto";
+        }, 'image/png');
+        
+    } catch (err) {
+        console.error(err);
+        window.showToast(lTxt.fail, "error");
         icon.classList.remove('spin-anim');
         icon.innerText = originalIcon;
         btn.style.opacity = "1";
         btn.style.pointerEvents = "auto";
-    }, 'image/png');
-    
-} catch (err) {
-    console.error(err);
-    window.showToast(lTxt.fail, "error");
-    icon.classList.remove('spin-anim');
-    icon.innerText = originalIcon;
-    btn.style.opacity = "1";
-    btn.style.pointerEvents = "auto";
-}
+    }
 };
 
 window.toggleCurrentFav=function(){triggerHaptic();if(!currentStudentId)return;toggleFavId(currentStudentId);const btnStar=document.getElementById('btnStar');if(window.favorites.includes(currentStudentId)){btnStar.classList.add('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star</span>'}else{btnStar.classList.remove('active');btnStar.innerHTML='<span class="material-icons-round" style="font-size:20px">star_border</span>'}}
@@ -3758,6 +3739,254 @@ window.downloadDutyRoster = async function() {
     }
 };
 
+/* ==========================================
+   E-DATANG ATTENDANCE INTEGRATION
+========================================== */
+window.ehadirAbortController = null;
+
+window.getClassCode = (cls) => {
+    const map = { 'Biru': '2b', 'Hijau': '2h', 'Kuning': '2k', 'Merah': '2m', 'Perang': '2p', 'Ungu': '2u' };
+    return map[cls] || cls.toLowerCase();
+};
+
+window.openOfficialEHadir = () => {
+    triggerHaptic();
+    if (currentClass === 'All') {
+        window.open('https://parents.chsmelaka.com', '_blank');
+        return;
+    }
+    const code = window.getClassCode(currentClass);
+    window.open(`https://parents.chsmelaka.com/${code}`, '_blank');
+};
+
+window.openEHadirModal = async () => {
+    triggerHaptic();
+    if (currentClass === 'All') {
+        window.showToast("Please select a specific class first", "error_outline");
+        return;
+    }
+
+    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
+    const overlay = document.getElementById('ehadirOverlay');
+    if (overlay) overlay.classList.add('open');
+    
+    const titleEl = document.getElementById('ehadirModalTitle');
+    const subEl = document.getElementById('ehadirModalSub');
+    if (titleEl) titleEl.innerText = txt.ehadirTitle || "E-Datang Attendance";
+    if (subEl) subEl.innerText = txt.ehadirLoading || "Fetching latest data...";
+    
+    await window.fetchLiveEHadir(currentClass);
+};
+
+window.closeEHadirModal = () => {
+    triggerHaptic();
+    if (window.ehadirAbortController) {
+        try { window.ehadirAbortController.abort(); } catch(e) {}
+    }
+    const modal = document.getElementById("ehadirCard");
+    if (modal) modal.style.transform = '';
+    const overlay = document.getElementById('ehadirOverlay');
+    if (overlay) overlay.classList.remove('open');
+};
+
+window.fetchLiveEHadir = async (cls) => {
+    const classLetter = (cls || 'H').charAt(0).toUpperCase(); 
+    const targetClass = `2${classLetter}`; 
+    const listContainer = document.getElementById('ehadirListContainer');
+    const card = document.getElementById('ehadirCard');
+    const txt = (window.uiText && window.uiText[curLang]) ? window.uiText[curLang] : {};
+
+    const updateContainer = (newHtml) => {
+        if (!listContainer) return;
+        const startHeight = card ? card.offsetHeight : 0;
+        listContainer.innerHTML = newHtml;
+        if (card && typeof card.animate === 'function' && startHeight > 0) {
+            const targetHeight = card.offsetHeight;
+            if (startHeight !== targetHeight) {
+                card.animate([
+                    { height: startHeight + 'px' },
+                    { height: targetHeight + 'px' }
+                ], { duration: 350, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            }
+        }
+    };
+
+    updateContainer(`
+        <div style="text-align:center; padding:35px 20px; color:var(--ios-text-sec); font-size:14px;">
+            <span class="material-icons-round spin-anim" style="font-size:38px; color:var(--ios-blue); margin-bottom:12px;">autorenew</span>
+            <div style="font-weight:600; font-size:15px;">${txt.ehadirLoading || "Connecting to live CHS database..."}</div>
+        </div>
+    `);
+
+    const setEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = val;
+    };
+
+    setEl('ehadirCountPresent', '-');
+    setEl('ehadirCountAbsent', '-');
+    setEl('ehadirRate', '-%');
+    const pBar = document.getElementById('ehadirProgressBar');
+    if (pBar) pBar.style.width = '0%';
+
+    let allStudents = [];
+    let allAttendance = [];
+    let dateStr = new Date().toISOString().split('T')[0];
+
+    try {
+        let fetchedData = null;
+
+        try {
+            window.ehadirAbortController = new AbortController();
+            const timeout = setTimeout(() => window.ehadirAbortController.abort(), 4000);
+            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
+            clearTimeout(timeout);
+            if (res.ok) {
+                const ct = res.headers.get("content-type") || "";
+                if (ct.includes("application/json")) {
+                    fetchedData = await res.json();
+                }
+            }
+        } catch (e) {}
+
+        if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
+            const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
+            const studentsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
+            const attUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
+
+            const [sRes, aRes] = await Promise.all([
+                fetch(studentsUrl),
+                fetch(attUrl)
+            ]);
+
+            const sJson = sRes.ok ? await sRes.json() : [];
+            const aJson = aRes.ok ? await aRes.json() : [];
+            fetchedData = { date: todayStr, students: sJson, attendance: aJson };
+        }
+
+        allStudents = Array.isArray(fetchedData.students) ? fetchedData.students : [];
+        allAttendance = Array.isArray(fetchedData.attendance) ? fetchedData.attendance : [];
+        dateStr = fetchedData.date || dateStr;
+
+        const classRoster = allStudents.filter(s => {
+            if (!s.class) return false;
+            return s.class.replace(/\s+/g, '').toUpperCase() === targetClass;
+        }).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+        const attMap = new Map();
+        allAttendance.forEach(att => {
+            if (att.id) attMap.set(String(att.id), att);
+            else if (att.name) attMap.set(String(att.name).toUpperCase(), att);
+        });
+
+        const getCnName = (id, name) => {
+            const match = (window.smkData || []).find(s => {
+                if (s.id && id && String(s.id).trim() === String(id).trim()) return true;
+                if (s.name && name && s.name.trim().toUpperCase() === name.trim().toUpperCase()) return true;
+                return false;
+            });
+            return (match && match.cn && match.cn !== "-") ? match.cn : "";
+        };
+
+        let presentStudents = [];
+        let absentStudents = [];
+
+        classRoster.forEach((st, idx) => {
+            const att = attMap.get(String(st.id)) || (st.name ? attMap.get(String(st.name).toUpperCase()) : null);
+            const cnName = getCnName(st.id, st.name);
+
+            if (att && att.attendance_time) {
+                presentStudents.push({
+                    no: idx + 1,
+                    id: st.id,
+                    name: st.name,
+                    cn: cnName,
+                    time: att.attendance_time,
+                    lateCount: att.late_count || 0
+                });
+            } else {
+                absentStudents.push({
+                    no: idx + 1,
+                    id: st.id,
+                    name: st.name,
+                    cn: cnName
+                });
+            }
+        });
+
+        const presentCount = presentStudents.length;
+        const totalCount = classRoster.length > 0 ? classRoster.length : (presentCount + absentStudents.length);
+        const absentCount = Math.max(0, totalCount - presentCount);
+        const rateRaw = totalCount > 0 ? (presentCount / totalCount) * 100 : 0;
+
+        setEl('ehadirCountPresent', presentCount);
+        setEl('ehadirCountAbsent', absentCount);
+        setEl('ehadirRate', `${Math.round(rateRaw)}%`);
+        if (pBar) pBar.style.width = `${rateRaw}%`;
+        setEl('ehadirModalSub', `${txt.ehadirDate || "Date"}: ${dateStr} • ${txt.ehadirClass || "Class"}: ${targetClass}`);
+
+        let html = '';
+
+        if (presentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#34C759; text-transform:uppercase; margin:8px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirPresent || "Present"} (${presentStudents.length})</div>`;
+            presentStudents.forEach(st => {
+                const isLate = st.lateCount > 0;
+                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;">${st.cn}</div>` : '';
+
+                html += `
+                <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm); margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:30px; height:30px; border-radius:10px; background:var(--ios-input); border:1px solid var(--chip-border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:var(--ios-text-sec); flex-shrink:0;">${st.no}</div>
+                        <div style="display:flex; flex-direction:column; gap:0;">
+                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2;">${st.name}</div>
+                            ${cnHtml}
+                            <div style="font-size:11px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;"><span class="material-icons-round" style="font-size:10px; vertical-align:middle;">schedule</span> ${st.time}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0;">
+                        ${isLate ? `<span class="ehadir-pill" style="background:rgba(255,149,0,0.15); color:#FF9500; border:1px solid rgba(255,149,0,0.3); margin:0;">${txt.ehadirLate || "Late"} (${st.lateCount})</span>` : ''}
+                        <span class="ehadir-pill ehadir-hadir" style="margin:0;"><span class="material-icons-round" style="font-size:12px;">check_circle</span> ${txt.ehadirPresent || "Present"}</span>
+                    </div>
+                </div>`;
+            });
+        }
+
+        if (absentStudents.length > 0) {
+            html += `<div style="font-size:12px; font-weight:800; color:#FF3B30; text-transform:uppercase; margin:16px 0 6px 4px; letter-spacing:0.5px;">${txt.ehadirAbsent || "Absent"} (${absentStudents.length})</div>`;
+            absentStudents.forEach(st => {
+                const cnHtml = st.cn ? `<div style="font-size:12px; font-weight:600; color:var(--ios-text-sec); line-height:1.2; margin-top:2px;">${st.cn}</div>` : '';
+
+                html += `
+                <div style="background:var(--ios-card); padding:12px 16px; border-radius:18px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,59,48,0.15); box-shadow:var(--shadow-sm); margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:30px; height:30px; border-radius:10px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.2); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#FF3B30; flex-shrink:0;">${st.no}</div>
+                        <div style="display:flex; flex-direction:column; gap:0;">
+                            <div style="font-size:14px; font-weight:700; color:var(--ios-text); letter-spacing:-0.01em; line-height:1.2;">${st.name}</div>
+                            ${cnHtml}
+                        </div>
+                    </div>
+                    <span class="ehadir-pill ehadir-tidak" style="margin:0; flex-shrink:0;"><span class="material-icons-round" style="font-size:12px;">cancel</span> ${txt.ehadirAbsent || "Absent"}</span>
+                </div>`;
+            });
+        }
+
+        if (!html) {
+            html = `<div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">No students found for this class in the database.</div>`;
+        }
+
+        updateContainer(html);
+
+    } catch (err) {
+        console.error("E-Datang error:", err);
+        setEl('ehadirModalSub', 'Portal loaded. Tap below to view.');
+        updateContainer(`
+            <div style="text-align:center; padding:30px 20px; color:var(--ios-text-sec); font-size:14px;">
+                <span class="material-icons-round" style="font-size:42px; color:var(--ios-text-sec); margin-bottom:12px; opacity:0.5;">cloud_off</span>
+                <div style="margin-bottom:8px; font-weight:600; font-size:15px; color:var(--ios-text);">${txt.ehadirError || "Could not connect to API."}</div>
+            </div>
+        `);
+    }
+};
 window.openProfile=function(){
     triggerHaptic();
     window.updateProfileStats();
