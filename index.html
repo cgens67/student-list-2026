@@ -3199,18 +3199,12 @@ function updateModalContent(student, index) {
     }
 
     // Wait for DOM to calculate new natural sizes, then FLIP animate
-    if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0) {
+    if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0 && startWrapHeight > 0) {
         const targetWrapWidth = wrap.offsetWidth;
         const targetWrapHeight = wrap.offsetHeight;
         const targetCardHeight = card ? card.offsetHeight : 0;
         
-        if (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight) {
-            // Freeze inner text layout to prevent glitching mid-animation
-            if (inner) {
-                inner.style.width = targetWrapWidth + 'px';
-                inner.style.height = targetWrapHeight + 'px';
-            }
-            
+        if (targetWrapWidth > 0 && targetWrapHeight > 0 && (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight)) {
             const wrapAnim = wrap.animate([
                 { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
                 { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
@@ -3219,12 +3213,16 @@ function updateModalContent(student, index) {
             wrapAnim.onfinish = wrapAnim.oncancel = () => {
                 if (inner) {
                     inner.style.width = '';
-                    inner.style.height= '';
+                    inner.style.height = '';
+                }
+                if (wrap) {
+                    wrap.style.width = '';
+                    wrap.style.height = '';
                 }
             };
         }
         
-        if (card && startCardHeight > 0 && startCardHeight !== targetCardHeight) {
+        if (card && startCardHeight > 0 && targetCardHeight > 0 && startCardHeight !== targetCardHeight) {
             card.animate([
                 { height: startCardHeight + 'px' },
                 { height: targetCardHeight + 'px' }
@@ -3441,7 +3439,26 @@ function applyModalColors(student){
     btnDone.style.color = '#FFFFFF';
 }
 
-window.closeModal=function(){const modal=document.getElementById("modalCard");modal.style.transform='';document.getElementById("modalOverlay").classList.remove("open")}
+window.closeModal=function(){
+    const modal=document.getElementById("modalCard");
+    if(modal) {
+        modal.style.transform='';
+        if(typeof modal.getAnimations === 'function') modal.getAnimations().forEach(a => a.cancel());
+        modal.style.height='';
+    }
+    const wrap=document.getElementById("mTextBgWrap");
+    if(wrap) {
+        if(typeof wrap.getAnimations === 'function') wrap.getAnimations().forEach(a => a.cancel());
+        wrap.style.width='';
+        wrap.style.height='';
+    }
+    const inner=document.getElementById("mTextInner");
+    if(inner) {
+        inner.style.width='';
+        inner.style.height='';
+    }
+    document.getElementById("modalOverlay").classList.remove("open");
+}
 window.openAbout=function(){
     triggerHaptic();
     document.getElementById('authMenu').classList.remove('show');
