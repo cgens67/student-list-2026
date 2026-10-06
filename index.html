@@ -4848,27 +4848,8 @@ function filterData(){
 
                 return `<div class="ios-cell" data-id="${student.id}" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
             }).join('');
-            grid.innerHTML=html;
+            grid.innerHTML = html;
             window.observeAvatars();
-        }
-    }le.height = 'auto';
-        const targetHeight = grid.offsetHeight;
-        
-        if(startHeight > 0 && startHeight !== targetHeight) {
-            grid.style.height = startHeight + 'px';
-            void grid.offsetHeight; // Force reflow
-            grid.style.transition = 'height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-            grid.style.height = targetHeight + 'px';
-            
-            setTimeout(() => {
-                grid.style.transition = '';
-                grid.style.height = 'auto';
-                grid.style.overflow = '';
-            }, 400);
-        } else {
-            grid.style.transition = '';
-            grid.style.height = 'auto';
-            grid.style.overflow = '';
         }
     }
 }
