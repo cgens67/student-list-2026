@@ -463,8 +463,10 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 #profileCard .info-item:active { background: rgba(0,0,0,0.05); transform: scale(0.98); }
 [data-theme="dark"] #profileCard .info-item:active { background: rgba(255,255,255,0.05); }
 
-.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;background-size:cover;background-position:center;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
-.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
+.avatar-spinner{position:absolute;inset:0;border-radius:50%;background:inherit;display:flex;align-items:center;justify-content:center;color:#fff;z-index:2;}
+.avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;opacity:0;transition:opacity 0.25s ease;z-index:3;}
+.avatar-initial{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:inherit;font-weight:inherit;color:#fff;z-index:1;}
 .cell-content{flex:1;min-width:0;pointer-events:none}.name-txt{font-size:15px;font-weight:700;color:var(--ios-text);letter-spacing:-.01em;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal}
 #mName{font-size:18px;font-weight:700;}.sub-txt{font-size:13px;color:var(--ios-text-sec);margin-top:2px}
 .fav-badge{font-size:16px;color:#FF2D55;display:none;margin-right:10px;animation:popIn .3s var(--ease-spring)}.fav-badge.show{display:block}@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
@@ -3147,11 +3149,16 @@ function updateModalContent(student, index) {
     const avEl = document.getElementById("mAvatar");
     if(avEl) {
         avEl.className = `avatar av-${cssClass}`;
+        const initial = student.name.charAt(0);
         const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
         if(cleanId) {
-            avEl.innerHTML = `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" onerror="this.remove(); document.getElementById('mAvatar').innerText = '${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            avEl.innerHTML = `
+                <div class="avatar-initial" style="font-size:32px;">${initial}</div>
+                <div class="avatar-spinner"><span class="material-icons-round spin-anim" style="font-size:24px;">autorenew</span></div>
+                <img class="avatar-img" src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" decoding="async" onload="this.style.opacity='1'; const sp=this.previousElementSibling; if(sp) sp.style.display='none';" onerror="this.remove(); const sp=this.previousElementSibling; if(sp) sp.remove();">
+            `;
         } else {
-            avEl.innerText = student.name.charAt(0);
+            avEl.innerHTML = `<div class="avatar-initial" style="font-size:32px;">${initial}</div>`;
         }
     }
     
@@ -3357,7 +3364,7 @@ window.shareResult = async function() {
         av.style.overflow = "hidden";
         const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
         if (cleanId) {
-            av.innerHTML = `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" crossOrigin="anonymous" onerror="this.remove(); document.getElementById('scAvatar').innerText = '${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+            av.innerHTML = `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" crossOrigin="anonymous" onerror="this.remove(); document.getElementById('scAvatar').innerText = '${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;">`;
         } else {
             av.innerText = student.name.charAt(0);
         }
@@ -4816,10 +4823,11 @@ function filterData(){
                 const subRight = (student.cn && student.cn !== "-") ? student.cn : student.newClass;
                 const subTxtHtml = hideIds ? subRight : `${student.id} &bull; ${subRight}`;
                 
-                const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
+                const initial = student.name.charAt(0);
+const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
 const avatarContent = cleanId
-    ? `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" loading="lazy" onerror="this.remove(); this.parentElement.innerText='${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-    : student.name.charAt(0);
+    ? `<div class="avatar-initial">${initial}</div><div class="avatar-spinner"><span class="material-icons-round spin-anim" style="font-size:16px;">autorenew</span></div><img class="avatar-img" src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" loading="lazy" decoding="async" onload="this.style.opacity='1'; const sp=this.previousElementSibling; if(sp) sp.style.display='none';" onerror="this.remove(); const sp=this.previousElementSibling; if(sp) sp.remove();">`
+    : `<div class="avatar-initial">${initial}</div>`;
 
 return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
             }).join('');
