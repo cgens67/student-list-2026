@@ -447,8 +447,8 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 
 .teacher-row{display:flex;flex-direction:column;align-items:flex-start;gap:4px;transition:all .3s var(--ease-ios)}.t-label{font-size:10px;font-weight:700;color:var(--ios-text-sec);text-transform:uppercase;letter-spacing:.02em;transition:width .3s var(--ease-ios);white-space:nowrap}.t-name{font-size:15px;font-weight:700;color:var(--ios-text);line-height:1.3;text-align:left;transition:opacity .25s var(--ease-ios),transform .25s var(--ease-ios),color .4s ease}
 .student-grid{display:flex;flex-direction:column;gap:0;background:var(--ios-card);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),var(--glass-highlight);border-radius:16px;overflow:hidden;transition:opacity .2s ease,background-color .4s;min-height:50px}.student-grid.compact-mode .ios-cell{padding:8px 16px;min-height:48px;gap:10px}.student-grid.compact-mode .avatar{display:none}.student-grid.compact-mode .name-txt{font-size:14px;line-height:1.2}.student-grid.compact-mode .sub-txt{display:none}.student-grid.compact-mode .fav-badge{font-size:14px;margin-right:6px}.student-grid.compact-mode .chevron{font-size:16px}
-.ios-cell{padding:12px 16px;display:flex;align-items:center;gap:14px;position:relative;background:0 0;cursor:pointer;opacity:1;transform:none;transition:background-color .15s ease;contain:content;content-visibility:auto;contain-intrinsic-size:0 68px;}.ios-cell::after{content:'';position:absolute;bottom:0;right:0;width:calc(100% - 74px);height:1px;background:var(--ios-sep)}.student-grid.compact-mode .ios-cell::after{width:calc(100% - 16px)}.ios-cell:last-child::after{display:none}.ios-cell:active{background:rgba(0,0,0,0.08);transition:background .1s}[data-theme="dark"] .ios-cell:active{background:rgba(255,255,255,0.12)}.ios-cell.context-active{background:var(--ios-blue-light)!important;transform:scale(.98)}
-@keyframes smoothSlide{to{opacity:1;transform:translateY(0)}}@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.ios-cell{padding:12px 16px;display:flex;align-items:center;gap:14px;position:relative;background:0 0;cursor:pointer;opacity:0;transform:translate3d(0,15px,0);animation:smoothSlide .5s var(--ease-ios) forwards;transition:background-color .2s,transform .2s;contain:content;will-change:transform,opacity}.ios-cell::after{content:'';position:absolute;bottom:0;right:0;width:calc(100% - 74px);height:1px;background:var(--ios-sep)}.student-grid.compact-mode .ios-cell::after{width:calc(100% - 16px)}.ios-cell:last-child::after{display:none}.ios-cell:active{background:rgba(0,0,0,0.08);transition:background .1s}[data-theme="dark"] .ios-cell:active{background:rgba(255,255,255,0.12)}.ios-cell.context-active{background:var(--ios-blue-light)!important;transform:scale(.98)}
+@keyframes smoothSlide{to{opacity:1;transform:translate3d(0,0,0)}}@keyframes fadeUp{to{opacity:1;transform:translate3d(0,0,0)}}
 
 /* PROFILE ANIMATIONS */
 @keyframes profileSlideIn {
@@ -463,11 +463,11 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 #profileCard .info-item:active { background: rgba(0,0,0,0.05); transform: scale(0.98); }
 [data-theme="dark"] #profileCard .info-item:active { background: rgba(255,255,255,0.05); }
 
-.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
+.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;transform:translateZ(0);backface-visibility:hidden;contain:paint;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
 .avatar-initial{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:inherit;font-weight:inherit;color:#fff;z-index:1;}
 .avatar-spinner{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;z-index:2;opacity:1;transition:opacity 0.2s;}
-.avatar-spinner::after{content:'';width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spinIcon 0.8s linear infinite;}
-.avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;opacity:0;transition:opacity 0.25s ease;z-index:3;will-change:opacity;}
+.avatar-spinner::after{content:'';width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spinIcon 0.8s linear infinite;will-change:transform;}
+.avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;opacity:0;transition:opacity 0.25s ease;z-index:3;transform:translateZ(0);will-change:opacity;}
 .avatar-img.loaded{opacity:1;}
 .cell-content{flex:1;min-width:0;pointer-events:none}.name-txt{font-size:15px;font-weight:700;color:var(--ios-text);letter-spacing:-.01em;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal}
 #mName{font-size:18px;font-weight:700;}.sub-txt{font-size:13px;color:var(--ios-text-sec);margin-top:2px}
@@ -3202,25 +3202,54 @@ function updateModalContent(student, index) {
     const floatContainer = document.getElementById('cardFloatBg');
     if(floatContainer) {
         floatContainer.innerHTML = '';
-        if(!window.userReduceLag && window.innerWidth > 600) {
-            let iconName = '', color = '', animName = '', posStyle = '';
-            if (['thumb_up', 'trending_up', 'arrow_upward'].includes(rank.icon)) { iconName = rank.icon; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
-            else if (['thumb_down', 'trending_down', 'arrow_downward'].includes(rank.icon)) { iconName = rank.icon; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
-            if (iconName) {
-                let html = '';
-                for (let i = 0; i < 4; i++) {
-                    const left = Math.floor(Math.random() * 100);
-                    const delay = Math.random() * 1.5;
-                    html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:5s; font-size:55px; opacity:0.08;">${iconName}</span>`;
-                }
-                floatContainer.innerHTML = html;
+        let iconName = '', color = '', animName = '', posStyle = '';
+        if (['thumb_up', 'trending_up', 'arrow_upward'].includes(rank.icon)) { iconName = rank.icon; color = '#34C759'; animName = 'floatUp'; posStyle = 'bottom:-80px; top:auto;'; }
+        else if (['thumb_down', 'trending_down', 'arrow_downward'].includes(rank.icon)) { iconName = rank.icon; color = '#FF3B30'; animName = 'floatDown'; posStyle = 'top:-60px; bottom:auto;'; }
+        if (iconName) {
+            let html = '';
+            for (let i = 0; i < 12; i++) {
+                const left = Math.floor(Math.random() * 100);
+                const delay = Math.random() * 2;
+                const duration = 4 + Math.random() * 3;
+                const size = 50 + Math.random() * 80;
+                const blur = 4 + Math.random() * 6;
+                html += `<span class="material-icons-round float-icon" style="left:${left}%; color:${color}; animation-name:${animName}; ${posStyle} animation-delay:${delay}s; animation-duration:${duration}s; font-size:${size}px; filter:blur(${blur}px);">${iconName}</span>`;
             }
+            floatContainer.innerHTML = html;
         }
     }
 
-    if (wrap) { wrap.style.width = ''; wrap.style.height = ''; }
-    if (inner) { inner.style.width = ''; inner.style.height = ''; }
-    if (card) { card.style.height = ''; }
+    // Wait for DOM to calculate new natural sizes, then FLIP animate
+    if (isAlreadyOpen && wrap && typeof wrap.animate === 'function' && startWrapWidth > 0 && startWrapHeight > 0) {
+        const targetWrapWidth = wrap.offsetWidth;
+        const targetWrapHeight = wrap.offsetHeight;
+        const targetCardHeight = card ? card.offsetHeight : 0;
+        
+        if (targetWrapWidth > 0 && targetWrapHeight > 0 && (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight)) {
+            const wrapAnim = wrap.animate([
+                { width: startWrapWidth + 'px', height: startWrapHeight + 'px' },
+                { width: targetWrapWidth + 'px', height: targetWrapHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            
+            wrapAnim.onfinish = wrapAnim.oncancel = () => {
+                if (inner) {
+                    inner.style.width = '';
+                    inner.style.height = '';
+                }
+                if (wrap) {
+                    wrap.style.width = '';
+                    wrap.style.height = '';
+                }
+            };
+        }
+        
+        if (card && startCardHeight > 0 && targetCardHeight > 0 && startCardHeight !== targetCardHeight) {
+            card.animate([
+                { height: startCardHeight + 'px' },
+                { height: targetCardHeight + 'px' }
+            ], { duration: 300, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+        }
+    }
 }
 window.shareResult = async function() {
     if (!currentStudentId) return;
@@ -4651,31 +4680,32 @@ window.loadedFaceCache = new Set();
 window.failedFaceCache = new Set();
 
 const faceObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+    for(let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        if (!entry.isIntersecting) continue;
         const img = entry.target;
         observer.unobserve(img);
 
         const src = img.dataset.src;
-        if (!src) return;
+        if (!src) continue;
 
         img.onload = () => {
             img.classList.add('loaded');
             window.loadedFaceCache.add(src);
-            const spinner = img.parentElement.querySelector('.avatar-spinner');
-            if (spinner) spinner.remove();
+            const sp = img.previousElementSibling;
+            if (sp && sp.classList.contains('avatar-spinner')) sp.remove();
         };
 
         img.onerror = () => {
             window.failedFaceCache.add(src);
-            const spinner = img.parentElement.querySelector('.avatar-spinner');
-            if (spinner) spinner.remove();
+            const sp = img.previousElementSibling;
+            if (sp && sp.classList.contains('avatar-spinner')) sp.remove();
             img.remove();
         };
 
         img.src = src;
-    });
-}, { rootMargin: '100px 0px' });
+    }
+}, { rootMargin: '150px 0px' });
 
 window.observeAvatars = () => {
     document.querySelectorAll('.avatar-img:not([src])').forEach(el => faceObserver.observe(el));
@@ -4822,7 +4852,8 @@ function filterData(){
             grid.innerHTML = emptyHtml;
         }
         else{
-            const html=filtered.map((student)=>{
+            const html=filtered.map((student,index)=>{
+                const delay=Math.min(index*0.015,0.3);
                 const rank=getRankStatus(student.oldClass,student.newClass);
                 const rawClass=student.newClass.split(" ")[1]||"Biru";
                 const cssClass=rawClass.charAt(0).toUpperCase()+rawClass.slice(1).toLowerCase();
@@ -4846,9 +4877,9 @@ function filterData(){
                     }
                 }
 
-                return `<div class="ios-cell" data-id="${student.id}" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
+                return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`;
             }).join('');
-            grid.innerHTML = html;
+            grid.innerHTML=html;
             window.observeAvatars();
         }
     }
