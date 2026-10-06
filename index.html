@@ -464,9 +464,11 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 [data-theme="dark"] #profileCard .info-item:active { background: rgba(255,255,255,0.05); }
 
 .avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
-.avatar-spinner{position:absolute;inset:0;border-radius:50%;background:inherit;display:flex;align-items:center;justify-content:center;color:#fff;z-index:2;}
-.avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;opacity:0;transition:opacity 0.25s ease;z-index:3;}
 .avatar-initial{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:inherit;font-weight:inherit;color:#fff;z-index:1;}
+.avatar-spinner{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;z-index:2;opacity:1;transition:opacity 0.2s;}
+.avatar-spinner::after{content:'';width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spinIcon 0.8s linear infinite;}
+.avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block;opacity:0;transition:opacity 0.25s ease;z-index:3;will-change:opacity;}
+.avatar-img.loaded{opacity:1;}
 .cell-content{flex:1;min-width:0;pointer-events:none}.name-txt{font-size:15px;font-weight:700;color:var(--ios-text);letter-spacing:-.01em;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal}
 #mName{font-size:18px;font-weight:700;}.sub-txt{font-size:13px;color:var(--ios-text-sec);margin-top:2px}
 .fav-badge{font-size:16px;color:#FF2D55;display:none;margin-right:10px;animation:popIn .3s var(--ease-spring)}.fav-badge.show{display:block}@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
@@ -3151,12 +3153,18 @@ function updateModalContent(student, index) {
         avEl.className = `avatar av-${cssClass}`;
         const initial = student.name.charAt(0);
         const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
-        if(cleanId) {
-            avEl.innerHTML = `
-                <div class="avatar-initial" style="font-size:32px;">${initial}</div>
-                <div class="avatar-spinner"><span class="material-icons-round spin-anim" style="font-size:24px;">autorenew</span></div>
-                <img class="avatar-img" src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" decoding="async" onload="this.style.opacity='1'; const sp=this.previousElementSibling; if(sp) sp.style.display='none';" onerror="this.remove(); const sp=this.previousElementSibling; if(sp) sp.remove();">
-            `;
+        const photoUrl = cleanId ? `https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg` : null;
+
+        if(photoUrl && !window.failedFaceCache.has(photoUrl)) {
+            if (window.loadedFaceCache.has(photoUrl)) {
+                avEl.innerHTML = `<div class="avatar-initial" style="font-size:32px;">${initial}</div><img class="avatar-img loaded" src="${photoUrl}" alt="${student.name}" decoding="async">`;
+            } else {
+                avEl.innerHTML = `
+                    <div class="avatar-initial" style="font-size:32px;">${initial}</div>
+                    <div class="avatar-spinner"></div>
+                    <img class="avatar-img" src="${photoUrl}" alt="${student.name}" decoding="async" onload="this.classList.add('loaded'); window.loadedFaceCache.add('${photoUrl}'); const sp=this.previousElementSibling; if(sp) sp.remove();" onerror="window.failedFaceCache.add('${photoUrl}'); this.remove(); const sp=this.previousElementSibling; if(sp) sp.remove();">
+                `;
+            }
         } else {
             avEl.innerHTML = `<div class="avatar-initial" style="font-size:32px;">${initial}</div>`;
         }
@@ -4667,6 +4675,41 @@ window.getClosestMatch = function(query) {
 
 window.updateCounter = function(targetValue){const el=document.getElementById('studentCount');if(!el)return;if(animationFrameId)cancelAnimationFrame(animationFrameId);if(targetValue===0)el.classList.remove('show');else el.classList.add('show');let startValue=parseInt(el.innerText)||0;const range=targetValue-startValue;if(range===0){el.innerText=targetValue;return}const duration=1200;let startTime=null;function step(timestamp){if(!startTime)startTime=timestamp;const progress=Math.min((timestamp-startTime)/duration,1);const ease=1-Math.pow(1-progress,3);el.innerText=Math.round(startValue+(range*ease));if(progress<1)animationFrameId=requestAnimationFrame(step);else{el.innerText=targetValue;animationFrameId=null}}animationFrameId=requestAnimationFrame(step)}
 
+// Global Image Cache & Observer for 60 FPS rendering
+window.loadedFaceCache = new Set();
+window.failedFaceCache = new Set();
+
+const faceObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const img = entry.target;
+        observer.unobserve(img);
+
+        const src = img.dataset.src;
+        if (!src) return;
+
+        img.onload = () => {
+            img.classList.add('loaded');
+            window.loadedFaceCache.add(src);
+            const spinner = img.parentElement.querySelector('.avatar-spinner');
+            if (spinner) spinner.remove();
+        };
+
+        img.onerror = () => {
+            window.failedFaceCache.add(src);
+            const spinner = img.parentElement.querySelector('.avatar-spinner');
+            if (spinner) spinner.remove();
+            img.remove();
+        };
+
+        img.src = src;
+    });
+}, { rootMargin: '100px 0px' });
+
+window.observeAvatars = () => {
+    document.querySelectorAll('.avatar-img:not([src])').forEach(el => faceObserver.observe(el));
+};
+
 function filterData(){
     const query=document.getElementById("searchInput").value.toLowerCase();
     const f25=filterState.year2025;
@@ -4825,13 +4868,24 @@ function filterData(){
                 
                 const initial = student.name.charAt(0);
 const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
-const avatarContent = cleanId
-    ? `<div class="avatar-initial">${initial}</div><div class="avatar-spinner"><span class="material-icons-round spin-anim" style="font-size:16px;">autorenew</span></div><img class="avatar-img" src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" loading="lazy" decoding="async" onload="this.style.opacity='1'; const sp=this.previousElementSibling; if(sp) sp.style.display='none';" onerror="this.remove(); const sp=this.previousElementSibling; if(sp) sp.remove();">`
-    : `<div class="avatar-initial">${initial}</div>`;
+const photoUrl = cleanId ? `https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg` : null;
+
+let avatarContent = `<div class="avatar-initial">${initial}</div>`;
+
+if (photoUrl && !window.failedFaceCache.has(photoUrl)) {
+    if (window.loadedFaceCache.has(photoUrl)) {
+        // Instant load from cache: No spinners, no animation lag!
+        avatarContent += `<img class="avatar-img loaded" src="${photoUrl}" alt="${student.name}" decoding="async">`;
+    } else {
+        // Lazy-loaded with observer
+        avatarContent += `<div class="avatar-spinner"></div><img class="avatar-img" data-src="${photoUrl}" alt="${student.name}" decoding="async">`;
+    }
+}
 
 return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
             }).join('');
             grid.innerHTML=html;
+            window.observeAvatars();
         }
 
         grid.style.height = 'auto';
