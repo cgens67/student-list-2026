@@ -463,7 +463,8 @@ button,input,textarea,select{font-family:var(--font-stack)!important}input,texta
 #profileCard .info-item:active { background: rgba(0,0,0,0.05); transform: scale(0.98); }
 [data-theme="dark"] #profileCard .info-item:active { background: rgba(255,255,255,0.05); }
 
-.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
+.avatar{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;position:relative;z-index:2;overflow:hidden;background-size:cover;background-position:center;transition:transform .2s cubic-bezier(0.175,0.885,0.32,1.275)}.av-Biru{background:#007AFF}.av-Hijau{background:#34C759}.av-Kuning{background:#FF9500}.av-Merah{background:#FF3B30}.av-Perang{background:#A2845E}.av-Ungu{background:#AF52DE}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
 .cell-content{flex:1;min-width:0;pointer-events:none}.name-txt{font-size:15px;font-weight:700;color:var(--ios-text);letter-spacing:-.01em;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal}
 #mName{font-size:18px;font-weight:700;}.sub-txt{font-size:13px;color:var(--ios-text-sec);margin-top:2px}
 .fav-badge{font-size:16px;color:#FF2D55;display:none;margin-right:10px;animation:popIn .3s var(--ease-spring)}.fav-badge.show{display:block}@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
@@ -3145,8 +3146,13 @@ function updateModalContent(student, index) {
     const cssClass = rawClass.charAt(0).toUpperCase() + rawClass.slice(1).toLowerCase();
     const avEl = document.getElementById("mAvatar");
     if(avEl) {
-        avEl.innerText = student.name.charAt(0);
         avEl.className = `avatar av-${cssClass}`;
+        const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
+        if(cleanId) {
+            avEl.innerHTML = `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" onerror="this.remove(); document.getElementById('mAvatar').innerText = '${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+            avEl.innerText = student.name.charAt(0);
+        }
     }
     
     document.getElementById("mNew").innerText = student.newClass;
@@ -3347,8 +3353,14 @@ window.shareResult = async function() {
         }
         
         const av = document.getElementById('scAvatar');
-        av.innerText = student.name.charAt(0);
         av.style.backgroundColor = color;
+        av.style.overflow = "hidden";
+        const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
+        if (cleanId) {
+            av.innerHTML = `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" crossOrigin="anonymous" onerror="this.remove(); document.getElementById('scAvatar').innerText = '${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+        } else {
+            av.innerText = student.name.charAt(0);
+        }
         
         document.getElementById('scNewTitle').style.color = color;
         document.getElementById('scNew').style.color = color;
@@ -4804,7 +4816,12 @@ function filterData(){
                 const subRight = (student.cn && student.cn !== "-") ? student.cn : student.newClass;
                 const subTxtHtml = hideIds ? subRight : `${student.id} &bull; ${subRight}`;
                 
-                return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${student.name.charAt(0)}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
+                const cleanId = (student.id && student.id !== "-") ? String(student.id).trim() : null;
+const avatarContent = cleanId
+    ? `<img src="https://cdn.owonico.link/files/sems/meb2099/student/${cleanId}.jpg" alt="${student.name}" loading="lazy" onerror="this.remove(); this.parentElement.innerText='${student.name.charAt(0)}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+    : student.name.charAt(0);
+
+return `<div class="ios-cell" data-id="${student.id}" style="animation-delay:${delay}s" onclick="window.openStudent(event, '${student.id}')" ontouchstart="window.handleTouchStart(event, '${student.id}')" ontouchend="window.handleTouchEnd(event)" ontouchmove="window.handleTouchMove(event)" oncontextmenu="window.handleContextMenu(event, '${student.id}')"><div class="avatar av-${cssClass}">${avatarContent}</div><div class="cell-content"><div class="name-txt">${student.name}</div><div class="sub-txt">${subTxtHtml}</div></div><div class="status-group"><span class="material-icons-round fav-badge ${favClass}">favorite</span><span class="material-icons-round chevron" style="color:${rank.color}">${rank.icon}</span><span class="material-icons-round chevron">chevron_right</span></div></div>`
             }).join('');
             grid.innerHTML=html;
         }
