@@ -931,7 +931,7 @@ window.hexToRgba = function(hex, alpha) {
 
       <hr style="border:none; border-top:1px solid var(--ios-sep); margin:15px 0;">
 
-      <label id="lblDoodleHeader" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Background Doodle</label>
+      <label id="lblDoodleHeader" style="font-size:12px; font-weight:bold; color:var(--ios-text-sec); margin-bottom:8px; display:block;">Background Doodle</label><div class="info-group" style="margin-bottom:10px;"><div class="info-item" onclick="window.toggleDoodleVisibility()" style="cursor:pointer;padding:12px 14px;"><span class="m-label anim-text-change" style="display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ios-text);"><span class="material-icons-round" id="iconToggleDoodle" style="font-size:20px;color:var(--ios-blue);">visibility</span> <span id="txtToggleDoodle">Show Doodle</span></span><span class="m-val-highlight" id="valToggleDoodle" style="color:var(--ios-blue);font-weight:700;">On</span></div></div>
       <div style="display:flex; gap:10px;">
           <button class="btn-done anim-text-change" id="btnDrawDoodle" style="flex:2; background:var(--ios-blue); font-size:15px; border-radius:12px;" onclick="window.startDoodleMode()">
              <span class="material-icons-round" style="font-size:18px; vertical-align:middle; margin-right:4px;">draw</span> Draw on Background
@@ -2222,7 +2222,7 @@ function closeAnyModal(overlayId){if(overlayId==='modalOverlay')window.closeModa
 // USER THEME CUSTOMIZER & DOODLE LOGIC
 // ==========================================
 window.userThemeObj = JSON.parse(localStorage.getItem('userThemeObj')) || { type: 'default', c1: '#e0c3fc', c2: '#8ec5fc', c3: '#4facfe' };
-window.userDoodle = JSON.parse(localStorage.getItem('userDoodle')) || [];
+window.userDoodle = JSON.parse(localStorage.getItem('userDoodle')) || []; window.userDoodleEnabled = localStorage.getItem('userDoodleEnabled') !== 'false'; window.updateDoodleToggleUI = function() { const txtEl = document.getElementById('txtToggleDoodle'), valEl = document.getElementById('valToggleDoodle'), iconEl = document.getElementById('iconToggleDoodle'); const L = {en:{s:'Show Doodle',on:'On',off:'Off'},bm:{s:'Papar Lukisan',on:'Hidup',off:'Mati'},cn:{s:'显示背景涂鸦',on:'开',off:'关'}}[typeof curLang!=='undefined'?curLang:'en'] || {s:'Show Doodle',on:'On',off:'Off'}; if(txtEl) txtEl.innerText = L.s; if(valEl) { valEl.innerText = window.userDoodleEnabled ? L.on : L.off; valEl.style.color = window.userDoodleEnabled ? 'var(--ios-blue)' : 'var(--ios-text-sec)'; } if(iconEl) { iconEl.innerText = window.userDoodleEnabled ? 'visibility' : 'visibility_off'; iconEl.style.color = window.userDoodleEnabled ? 'var(--ios-blue)' : 'var(--ios-text-sec)'; } }; window.toggleDoodleVisibility = function() { triggerHaptic(); window.userDoodleEnabled = !window.userDoodleEnabled; localStorage.setItem('userDoodleEnabled', window.userDoodleEnabled); window.updateDoodleToggleUI(); window.renderDoodle(); if(window.cloudSyncUserData) window.cloudSyncUserData(); const msg = {en:window.userDoodleEnabled?'Doodle Enabled':'Doodle Disabled',bm:window.userDoodleEnabled?'Lukisan Diaktifkan':'Lukisan Dimatikan',cn:window.userDoodleEnabled?'涂鸦已开启':'涂鸦已关闭'}[typeof curLang!=='undefined'?curLang:'en']; if(window.showToast) window.showToast(msg, window.userDoodleEnabled ? 'visibility' : 'visibility_off'); };
 
 window.activeColorSlot = 1;
 
@@ -2259,7 +2259,7 @@ window.openThemeCustomizer = function() {
     document.getElementById('uSlot2').style.backgroundColor = window.userThemeObj.c2;
     document.getElementById('uSlot3').style.backgroundColor = window.userThemeObj.c3;
     
-    document.getElementById('userCustomColorsWrapper').style.display = (t === 'custom') ? 'block' : 'none';
+    document.getElementById('userCustomColorsWrapper').style.display = (t === 'custom') ? 'block' : 'none'; if(window.updateDoodleToggleUI) window.updateDoodleToggleUI();
     
     setTimeout(() => document.getElementById('themeCustomizerOverlay').classList.add('open'), 10);
 };
@@ -2430,7 +2430,7 @@ window.initDoodle = function() {
     c.height = window.innerHeight * dpr;
     dCtx.scale(dpr, dpr);
     
-    window.addEventListener('resize', () => { if(window.userDoodle.length === 0 && !c.classList.contains('draw-mode')) return;
+    window.addEventListener('resize', () => { if((!window.userDoodleEnabled || window.userDoodle.length === 0) && !c.classList.contains('draw-mode')) return;
         c.width = window.innerWidth * dpr;
         c.height = window.innerHeight * dpr;
         dCtx.scale(dpr, dpr);
@@ -2472,7 +2472,7 @@ function dPushPt(x,y) {
 }
 
 window.renderDoodle = function() {
-    if(!dCtx) return; const dCanvas = document.getElementById('bgDoodleCanvas'); if(dCanvas) { const needD = window.userDoodle.length > 0 || dCanvas.classList.contains('draw-mode'); dCanvas.style.display = needD ? 'block' : 'none'; if(!needD) return; }
+    if(!dCtx) return; const dCanvas = document.getElementById('bgDoodleCanvas'); if(dCanvas) { const needD = (window.userDoodleEnabled && window.userDoodle.length > 0) || dCanvas.classList.contains('draw-mode'); dCanvas.style.display = needD ? 'block' : 'none'; if(!needD) return; }
     const w = window.innerWidth;
     const h = window.innerHeight;
     dCtx.clearRect(0, 0, w, h);
@@ -2566,7 +2566,7 @@ window.clearDoodle = function() {
 window.startDoodleMode = function() {
     triggerHaptic();
     document.getElementById('themeCustomizerOverlay').classList.remove('open');
-    const dCvs = document.getElementById('bgDoodleCanvas'); dCvs.style.display = 'block'; dCvs.classList.add('draw-mode'); window.dispatchEvent(new Event('resize'));
+    window.userDoodleEnabled = true; localStorage.setItem('userDoodleEnabled', 'true'); if(window.updateDoodleToggleUI) window.updateDoodleToggleUI(); const dCvs = document.getElementById('bgDoodleCanvas'); dCvs.style.display = 'block'; dCvs.classList.add('draw-mode'); window.dispatchEvent(new Event('resize'));
     document.getElementById('doodleToolbar').classList.add('show');
     
     // Dim the main UI to focus on drawing
@@ -4962,7 +4962,7 @@ window.fetchStaffList = async () => {
         if (Array.isArray(data)) return data;
         if (Array.isArray(data.staff)) return data.staff;
         if (Array.isArray(data.data)) return data.data;
-        if (Array.isArray(data.result)) return data.result;
+        if (Array.isArray(data.records)) return data.records; if (Array.isArray(data.result)) return data.result;
         return [];
     };
 
@@ -4972,7 +4972,7 @@ window.fetchStaffList = async () => {
         try {
             const c = new AbortController();
             const timer = setTimeout(() => c.abort(), 3500);
-            const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: c.signal });
+            const res = await fetch(`/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStaff")}`, { signal: c.signal });
             clearTimeout(timer);
             if (res.ok) {
                 const json = await res.json();
@@ -4982,7 +4982,6 @@ window.fetchStaffList = async () => {
 
         if (staffList.length === 0) {
             const urls = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStaff")}`,
                 `https://parents.chsmelaka.com/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStaff")}`
             ];
 
@@ -5240,7 +5239,7 @@ window.fetchLiveEHadir = async (cls) => {
                     if (window.ehadirAbortController) window.ehadirAbortController.abort();
                 }, 5000);
 
-                const res = await fetch(`/api/ehadir?t=${Date.now()}`, { signal: window.ehadirAbortController.signal });
+                const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date()); const norm = (p) => { if (!Array.isArray(p)) p = p?.data || p?.records || Object.values(p || {}).find(v => Array.isArray(v)) || []; return Array.isArray(p) ? p : []; }; const [sR, aR] = await Promise.all([fetch(`/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStudents")}`, { signal: window.ehadirAbortController.signal }), fetch(`/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr)}`, { signal: window.ehadirAbortController.signal })]); const res = { ok: false }; if (sR.ok) { const sArr = norm(await sR.json()); const aArr = aR.ok ? norm(await aR.json()) : []; if (sArr.length > 0) fetchedData = { date: todayStr, students: sArr, attendance: aArr }; }
                 clearTimeout(timeoutId);
                 if (res.ok) {
                     const ct = res.headers.get("content-type") || "";
@@ -5255,8 +5254,8 @@ window.fetchLiveEHadir = async (cls) => {
 
             if (!fetchedData || !fetchedData.students || fetchedData.students.length === 0) {
                 const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
-                const sUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/getStudents"))}`;
-                const aUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://parents.chsmelaka.com/api/proxy?target=" + encodeURIComponent("https://chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr))}`;
+                const sUrl = `https://parents.chsmelaka.com/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/getStudents")}`;
+                const aUrl = `https://parents.chsmelaka.com/api/proxy?target=${encodeURIComponent("https://www.chsmelaka.com/api/school/edatang/getAttendance?date=" + todayStr)}`;
 
                 const [sRes, aRes] = await Promise.allSettled([
                     fetch(sUrl).then(r => r.ok ? r.json() : []),
@@ -5697,7 +5696,7 @@ window.cloudSyncUserData=async function(){
             reduceLag: window.userReduceLag || false,
             language: curLang,
             userThemeObj: window.userThemeObj || { type: 'default', c1: '#e0c3fc', c2: '#8ec5fc', c3: '#4facfe' },
-            userDoodle: window.userDoodle || []
+            userDoodle: window.userDoodle || [], userDoodleEnabled: window.userDoodleEnabled !== false
         }, {merge: !0});
     } catch(e) {
         console.error("Sync error:", e);
@@ -5730,7 +5729,7 @@ onAuthStateChanged(auth, async (user) => {
     let prefReduceLag = false;
     let prefLanguage = null;
     let prefUserThemeObj = null;
-    let prefUserDoodle = null;
+    let prefUserDoodle = null, prefUserDoodleEnabled = true;
 
     try {
       const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -5743,7 +5742,7 @@ onAuthStateChanged(auth, async (user) => {
         prefReduceLag = dData.reduceLag || false;
         prefLanguage = dData.language;
         prefUserThemeObj = dData.userThemeObj;
-        prefUserDoodle = dData.userDoodle;
+        prefUserDoodle = dData.userDoodle; prefUserDoodleEnabled = dData.userDoodleEnabled !== false;
       }
     } catch (e) {
       console.warn("Failed to fetch user profile, using defaults.");
@@ -5775,7 +5774,7 @@ onAuthStateChanged(auth, async (user) => {
         if (window.updateProfileThemeText) window.updateProfileThemeText();
     }
     
-    if (prefUserDoodle) {
+    window.userDoodleEnabled = prefUserDoodleEnabled; localStorage.setItem('userDoodleEnabled', prefUserDoodleEnabled); if(window.updateDoodleToggleUI) window.updateDoodleToggleUI(); if(window.renderDoodle) window.renderDoodle(); if (prefUserDoodle) {
         window.userDoodle = prefUserDoodle;
         localStorage.setItem('userDoodle', JSON.stringify(prefUserDoodle));
         if (window.renderDoodle) window.renderDoodle();
