@@ -2694,7 +2694,7 @@ window.showToast=function(msg,iconName="check_circle"){const container=document.
 
 // REFINED TABS RENDERING WITH "ALL CLASSES"
 function renderTabs(){ if(window.syncClassGlobals) window.syncClassGlobals(); if(currentClass!=='All'&&!classes.includes(currentClass))currentClass=classes[0]||'All';
-    const tabContainer=document.getElementById("classTabs");
+    const tabContainer=document.getElementById("classTabs"); const _ck=classes.join('|'); if(tabContainer&&tabContainer.dataset.clsKey===_ck)return; if(tabContainer)tabContainer.dataset.clsKey=_ck;
     const allText = uiText[curLang].allClasses || "All Classes";
     let html = `<div id="tab-All" class="tab-item ${currentClass==='All'?'active':''}" onclick="window.switchClass('All')"><span class="anim-text-change" id="lblAllClasses" style="display:inline-block">${allText}</span></div>`;
     html += classes.map((c)=>`<div id="tab-${c}" class="tab-item ${c===currentClass?'active':''}" onclick="window.switchClass('${c}')">${c}</div>`).join('');
