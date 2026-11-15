@@ -3452,10 +3452,10 @@ function applyModalColors(student){
     const isSolid = document.body.classList.contains('no-glass');
 
     if(isDark){
-        modalCard.style.background = isSolid ? `linear-gradient(to bottom, ${window.hexToRgba(classColor,0.22)} 0%, #1C1C1E 80%)` : `linear-gradient(to bottom, ${window.hexToRgba(classColor,0.2)} 0%, rgba(30,30,30,0.85) 80%)`;
+        const _defC=window.defaultClassConfig?.find(d=>d.name.toLowerCase()===cssClass.toLowerCase());const _isCustomC=!_defC||(classColor.toUpperCase()!==_defC.color.toUpperCase()&&classColor.toUpperCase()!==(_defC.darkColor||'').toUpperCase());const _mix=(h,b,t)=>{const p=c=>{c=String(c||'#007AFF').replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');return[parseInt(c.slice(0,2),16)||0,parseInt(c.slice(2,4),16)||0,parseInt(c.slice(4,6),16)||0]};const[r1,g1,b1]=p(h),[r2,g2,b2]=p(b);return`rgb(${Math.round(r1*t+r2*(1-t))},${Math.round(g1*t+g2*(1-t))},${Math.round(b1*t+b2*(1-t))})`};modalCard.style.background = isSolid ? ((!_isCustomC&&solidDarkBgColors[cssClass])||`linear-gradient(to bottom, ${_mix(classColor,'#0A0A0C',0.2)} 0%, #1C1C1E 80%)`) : ((!_isCustomC&&darkBgColors[cssClass])||`linear-gradient(to bottom, ${window.hexToRgba(classColor,0.2)} 0%, rgba(30,30,30,0.85) 80%)`);
         mNew.style.color = classColor;
     }else{
-        modalCard.style.background = isSolid ? `linear-gradient(to bottom, ${window.hexToRgba(classColor,0.16)} 0%, #FFFFFF 80%)` : `linear-gradient(to bottom, ${window.hexToRgba(classColor,0.15)} 0%, rgba(255,255,255,0.85) 80%)`;
+        const _defC=window.defaultClassConfig?.find(d=>d.name.toLowerCase()===cssClass.toLowerCase());const _isCustomC=!_defC||(classColor.toUpperCase()!==_defC.color.toUpperCase()&&classColor.toUpperCase()!==(_defC.darkColor||'').toUpperCase());const _mix=(h,b,t)=>{const p=c=>{c=String(c||'#007AFF').replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');return[parseInt(c.slice(0,2),16)||0,parseInt(c.slice(2,4),16)||0,parseInt(c.slice(4,6),16)||0]};const[r1,g1,b1]=p(h),[r2,g2,b2]=p(b);return`rgb(${Math.round(r1*t+r2*(1-t))},${Math.round(g1*t+g2*(1-t))},${Math.round(b1*t+b2*(1-t))})`};modalCard.style.background = isSolid ? ((!_isCustomC&&solidBgColors[cssClass])||`linear-gradient(to bottom, ${_mix(classColor,'#FFFFFF',0.1)} 0%, #FFFFFF 80%)`) : ((!_isCustomC&&bgColors[cssClass])||`linear-gradient(to bottom, ${window.hexToRgba(classColor,0.15)} 0%, rgba(255,255,255,0.85) 80%)`);
         mNew.style.color = classColor;
     }
     btnDone.style.backgroundColor = classColor;
