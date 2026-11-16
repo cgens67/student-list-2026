@@ -3093,7 +3093,7 @@ window.switchLanguage=function(lang, skipSync=false){
     },250);
 }
 
-window.switchClass=function(cls){
+9if(currentClass===cls)return;triggerHaptic();const oldCls=currentClass;document.getElementById('tab-'+currentClass)?.classList.remove('active');const newTab=document.getElementById('tab-'+cls);if(newTab)newTab.classList.add('active');currentClass=cls;updateAppThemeColor(cls==='All'?'Biru':cls);const track=document.getElementById('classTabs');if(track&&newTab)track.scrollTo({left:newTab.offsetLeft-(track.offsetWidth/2)+(newTab.offsetWidth/2),behavior:'smooth'});const grid=document.getElementById('studentGrid');clearTimeout(window._clsSwitchTmr);clearTimeout(window._clsEndTmr);if(!grid||document.body.classList.contains('no-glass')){if(grid){grid.style.transition='';grid.style.transform='';grid.style.opacity='';grid.style.pointerEvents=''}filterData();return}const ord=['All',...classes],oI=ord.indexOf(oldCls),nI=ord.indexOf(cls),dir=(oI!==-1&&nI!==-1&&nI<oI)?-1:1;grid.style.pointerEvents='none';grid.style.transition='transform 0.14s cubic-bezier(0.4,0,1,1), opacity 0.13s ease';grid.style.transform=`translate3d(${-18*dir}px,0,0)`;grid.style.opacity='0';window._clsSwitchTmr=setTimeout(()=>{window._inClsAnim=true;filterData();window._inClsAnim=false;grid.style.transition='none';grid.style.transform=`translate3d(${20*dir}px,0,0)`;grid.style.opacity='0';void grid.offsetWidth;grid.style.transition='transform 0.28s cubic-bezier(0.25,1,0.5,1), opacity 0.24s ease';grid.style.transform='translate3d(0,0,0)';grid.style.opacity='1';grid.style.pointerEvents='';window._clsEndTmr=setTimeout(()=>{grid.style.transition='';grid.style.transform='';grid.style.opacity=''},290)},135);return;
     if(currentClass===cls)return;
     triggerHaptic();
     document.getElementById(`tab-${currentClass}`).classList.remove('active');
@@ -4716,7 +4716,7 @@ window.observeAvatars = () => {
     });
 };
 
-function filterData(){
+function filterData(){ if(!window._inClsAnim){ clearTimeout(window._clsSwitchTmr); clearTimeout(window._clsEndTmr); const _fg=document.getElementById('studentGrid'); if(_fg){ _fg.style.transition=''; _fg.style.transform=''; _fg.style.opacity=''; _fg.style.pointerEvents=''; } }
     const query=document.getElementById("searchInput").value.toLowerCase();
     const f25=filterState.year2025;
     const fOrigin=filterState.origin;
