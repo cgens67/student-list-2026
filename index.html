@@ -3000,7 +3000,7 @@ window.switchClass=function(cls){
 }
 
 function getRankStatus(oldC,newC){if(!oldC||oldC==="-")return{icon:'remove',color:'rgba(128,128,128,0.5)'};const charOld=oldC.replace(/[^A-Z]/g,'').slice(-1);const charNew=(newC.split(' ')[1]||newC).charAt(0);const valOld=window.getClassRank(oldC);const valNew=window.getClassRank(newC);let iconUp='thumb_up',iconDown='thumb_down';if(window.globalSettings&&window.globalSettings.statusIconStyle==='trending'){iconUp='trending_up';iconDown='trending_down';}else if(window.globalSettings&&window.globalSettings.statusIconStyle==='arrows'){iconUp='arrow_upward';iconDown='arrow_downward';}if(valNew<valOld)return{icon:iconUp,color:'#34C759'};if(valNew>valOld)return{icon:iconDown,color:'#FF3B30'};return{icon:'remove',color:'rgba(128,128,128,0.5)'}}
-window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;updateModalContent(currentFilteredData[newIndex],newIndex)}
+window.navStudent=function(direction){triggerHaptic();if(currentFilteredData.length===0)return;let newIndex=modalCurrentIndex+direction;if(newIndex<0||newIndex>=currentFilteredData.length)return;window._modalNavDir=direction;updateModalContent(currentFilteredData[newIndex],newIndex)}
 window.openStudent=function(event,id){triggerHaptic();const index=currentFilteredData.findIndex(s=>s.id===String(id));if(index===-1)return;const searchVal=document.getElementById("searchInput").value;if(searchVal.length>1)saveSearchHistory(searchVal);updateModalContent(currentFilteredData[index],index);setTimeout(()=>document.getElementById("modalOverlay").classList.add("open"),10)}
 
 function updateModalContent(student, index) {
@@ -3014,7 +3014,7 @@ function updateModalContent(student, index) {
     // Only run dimension morphing if already open (Next/Prev navigation)
     const isAlreadyOpen = document.getElementById('modalOverlay').classList.contains('open');
     
-    let startWrapWidth = 0, startWrapHeight = 0, startCardHeight = 0; clearTimeout(window._modalMorphTimer); if (isAlreadyOpen) { startWrapWidth = wrap ? wrap.offsetWidth : 0; startWrapHeight = wrap ? wrap.offsetHeight : 0; startCardHeight = card ? card.offsetHeight : 0; }
+    let startCardHeight = 0; if (card && card._mSzAnim) { card._mSzAnim.cancel(); card._mSzAnim = null; } if (card) card.style.height = ''; if (isAlreadyOpen && card) startCardHeight = card.offsetHeight;
     
     if (false) {
         startWrapWidth = wrap ? wrap.offsetWidth : 0;
@@ -3109,7 +3109,7 @@ function updateModalContent(student, index) {
     }
 
     // Wait for DOM to calculate new natural sizes, then FLIP animate
-    if (isAlreadyOpen && wrap && startWrapWidth > 0 && startWrapHeight > 0) { const targetWrapWidth = wrap.offsetWidth; const targetWrapHeight = wrap.offsetHeight; const targetCardHeight = card ? card.offsetHeight : 0; const morphWrap = targetWrapWidth > 0 && targetWrapHeight > 0 && (startWrapWidth !== targetWrapWidth || startWrapHeight !== targetWrapHeight); const morphCard = card && startCardHeight > 0 && targetCardHeight > 0 && startCardHeight !== targetCardHeight; if (morphWrap) { wrap.style.width = startWrapWidth + 'px'; wrap.style.height = startWrapHeight + 'px'; } if (morphCard) { card.style.height = startCardHeight + 'px'; } if (morphWrap || morphCard) { void (wrap || card).offsetWidth; if (morphWrap) { wrap.style.transition = 'width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1)'; wrap.style.width = targetWrapWidth + 'px'; wrap.style.height = targetWrapHeight + 'px'; } if (morphCard) { card.style.transition = 'transform 0.4s var(--ease-ios), background 0.4s, height 0.3s cubic-bezier(0.25, 1, 0.5, 1)'; card.style.height = targetCardHeight + 'px'; } window._modalMorphTimer = setTimeout(() => { if (wrap) { wrap.style.transition = ''; wrap.style.width = ''; wrap.style.height = ''; } if (card) { card.style.transition = ''; card.style.height = ''; } }, 320); } else { if (wrap) wrap.style.transition = ''; if (card) card.style.transition = ''; } } else { if (wrap) wrap.style.transition = ''; if (card) card.style.transition = ''; } if (false) {
+    if (isAlreadyOpen && card && startCardHeight > 0) { const targetCardHeight = card.offsetHeight; if (targetCardHeight > 0 && Math.abs(startCardHeight - targetCardHeight) >= 2 && typeof card.animate === 'function') { card._mSzAnim = card.animate([{ height: startCardHeight + 'px' }, { height: targetCardHeight + 'px' }], { duration: 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }); card._mSzAnim.onfinish = card._mSzAnim.oncancel = () => { card._mSzAnim = null; }; } const dir = window._modalNavDir || 0; if (dir && inner && typeof inner.animate === 'function') { const dx = dir > 0 ? 10 : -10; [inner, ...card.querySelectorAll('.info-group .m-val, .info-group .m-val-highlight, #mRankIcon, #mRoleBadges')].forEach(el => { if (el && el.animate) el.animate([{ opacity: 0.6, transform: `translateX(${dx}px)` }, { opacity: 1, transform: 'translateX(0)' }], { duration: 200, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }); }); } } window._modalNavDir = 0; if (false) {
         const targetWrapWidth = wrap.offsetWidth;
         const targetWrapHeight = wrap.offsetHeight;
         const targetCardHeight = card ? card.offsetHeight : 0;
